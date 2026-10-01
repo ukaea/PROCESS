@@ -20,7 +20,10 @@ from scipy.interpolate import interp1d
 from process.core import constants
 from process.core.io.mfile import MFile, MFileErrorClass
 from process.data_structure.build_variables import TFCSRadialConfiguration
-from process.data_structure.impurity_radiation_variables import N_IMPURITIES
+from process.data_structure.impurity_radiation_variables import (
+    N_IMPURITIES,
+    ImpurityRadiationData,
+)
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.pfcoil_variables import NFIXMX
 from process.data_structure.physics_variables import (
@@ -84,7 +87,10 @@ from process.models.physics.plasma_geometry import (
     PlasmaGeometryModelType,
     PlasmaShapeModelType,
 )
-from process.models.physics.profiles import PlasmaProfileShapeType
+from process.models.physics.profiles import (
+    PlasmaProfileShapeType,
+    calculate_profile_shell_contributions,
+)
 from process.models.pulse import PulseTimings
 from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil.base import (
@@ -3000,25 +3006,17 @@ def plot_main_plasma_information(
     # ================================================
 
     # Add ion density information
+    impurity_data = ImpurityRadiationData()
     textstr_ions = (
         f"             $\\mathbf{{Ion \\ to \\ electron}}$\n"
         f"             $\\mathbf{{relative \\ number}}$\n"
         f"             $\\mathbf{{densities:}}$\n \n"
         f"             Effective charge: {mfile.get('n_charge_plasma_effective_vol_avg', scan=scan):.3f}\n\n"
-        f"             H:    {mfile.get('f_nd_impurity_electrons(01)', scan=scan):.4e}\n"
-        f"             He:  {mfile.get('f_nd_impurity_electrons(02)', scan=scan):.4e}\n"
-        f"             Be:  {mfile.get('f_nd_impurity_electrons(03)', scan=scan):.4e}\n"
-        f"             C:    {mfile.get('f_nd_impurity_electrons(04)', scan=scan):.4e}\n"
-        f"             N:    {mfile.get('f_nd_impurity_electrons(05)', scan=scan):.4e}\n"
-        f"             O:    {mfile.get('f_nd_impurity_electrons(06)', scan=scan):.4e}\n"
-        f"             Ne:  {mfile.get('f_nd_impurity_electrons(07)', scan=scan):.4e}\n"
-        f"             Si:   {mfile.get('f_nd_impurity_electrons(08)', scan=scan):.4e}\n"
-        f"             Ar:  {mfile.get('f_nd_impurity_electrons(09)', scan=scan):.4e}\n"
-        f"             Fe:  {mfile.get('f_nd_impurity_electrons(10)', scan=scan):.4e}\n"
-        f"             Ni:   {mfile.get('f_nd_impurity_electrons(11)', scan=scan):.4e}\n"
-        f"             Kr:   {mfile.get('f_nd_impurity_electrons(12)', scan=scan):.4e}\n"
-        f"             Xe:  {mfile.get('f_nd_impurity_electrons(13)', scan=scan):.4e}\n"
-        f"             W:   {mfile.get('f_nd_impurity_electrons(14)', scan=scan):.4e}"
+        + "\n".join(
+            f"             {label.replace('_', '') + ':':<6}"
+            f"{mfile.get(f'f_nd_impurity_electrons({index:02d})', scan=scan):.4e}"
+            for index, label in enumerate(impurity_data.imp_label[:14], start=1)
+        )
     )
 
     axis.text(
@@ -4472,26 +4470,10 @@ def read_imprad_data(_skiprows, data_path):
         path to impurity data
 
     """
-    label = [
-        "H_",
-        "He",
-        "Be",
-        "C_",
-        "N_",
-        "O_",
-        "Ne",
-        "Si",
-        "Ar",
-        "Fe",
-        "Ni",
-        "Kr",
-        "Xe",
-        "W_",
-    ]
-    lzdata = [0.0 for x in range(len(label))]
+    lzdata = [0.0 for x in range(len(ImpurityRadiationData().imp_label))]
 
-    for i in range(len(label)):
-        file_iden = data_path + label[i].ljust(3, "_")
+    for i in range(len(ImpurityRadiationData().imp_label)):
+        file_iden = data_path + ImpurityRadiationData().imp_label[i].ljust(3, "_")
 
         Te = None
         lz = None
@@ -4599,7 +4581,7 @@ def profiles_with_pedestal(mfile, scan: int):
 def plot_line_brem_power_density_profile(
     axis: plt.Axes, mfile: MFile, scan: int, impp: str, demo_ranges: bool
 ):
-    """Function to plot Line and Bremsstrahlung radiation power density profile.
+    """Function to plot Line and Bremsstrahlung radiation power density [MW/m³] profile.
 
     Parameters
     ----------
@@ -4617,7 +4599,7 @@ def plot_line_brem_power_density_profile(
     """
     axis.set_xlabel(r"$\rho \quad [r/a]$")
     axis.set_ylabel(r"$P_{\mathrm{rad}}$ $[\mathrm{MW.m}^{-3}]$")
-    axis.set_title("Raw Data: Line & Bremsstrahlung radiation profile")
+    axis.set_title("Raw Data: Line & Bremsstrahlung Radiation Density Profile")
 
     # read in the impurity data
     imp_data = read_imprad_data(_skiprows=2, data_path=impp)
@@ -4627,70 +4609,72 @@ def plot_line_brem_power_density_profile(
         mfile.get(f"f_nd_impurity_electrons({i:02d})", scan=scan) for i in range(1, 15)
     ])
 
-    rho, ne, te = profiles_with_pedestal(mfile, scan)
+    rho, nd_electron, temp_electron_kev = profiles_with_pedestal(mfile=mfile, scan=scan)
+    # imp_data Te values are in eV, but te from profiles_with_pedestal is in keV
+    temp_electron_ev = temp_electron_kev * 1.0e3
 
     # Intailise the radiation profile arrays
-    pimpden = np.zeros([imp_data.shape[0], te.shape[0]])
-    lz = np.zeros([imp_data.shape[0], te.shape[0]])
-    prad = np.zeros(te.shape[0])
+    pden_rad_array = np.zeros([imp_data.shape[0], temp_electron_kev.shape[0]])
+    lz = np.zeros([imp_data.shape[0], temp_electron_kev.shape[0]])
+    pden_total_profile = np.zeros(temp_electron_kev.shape[0])
 
     # Intailise the impurity radiation profile
-    for k in range(te.shape[0]):
-        for i in range(imp_data.shape[0]):
-            if te[k] <= imp_data[i][0][0]:
-                lz[i][k] = imp_data[i][0][1]
-            elif te[k] >= imp_data[i][imp_data.shape[1] - 1][0]:
-                lz[i][k] = imp_data[i][imp_data.shape[1] - 1][1]
+    for temp_point in range(temp_electron_kev.shape[0]):
+        for impurity in range(imp_data.shape[0]):
+            if temp_electron_ev[temp_point] <= imp_data[impurity][0][0]:
+                lz[impurity][temp_point] = imp_data[impurity][0][1]
+            elif (
+                temp_electron_ev[temp_point]
+                >= imp_data[impurity][imp_data.shape[1] - 1][0]
+            ):
+                lz[impurity][temp_point] = imp_data[impurity][imp_data.shape[1] - 1][1]
             else:
                 # Use np.interp for log-log interpolation
-                log_te_data = np.log([row[0] for row in imp_data[i]])
-                log_lz_data = np.log([row[1] for row in imp_data[i]])
-                lz[i][k] = np.exp(np.interp(np.log(te[k]), log_te_data, log_lz_data))
-            pimpden[i][k] = imp_frac[i] * ne[k] * ne[k] * lz[i][k]
+                log_te_data = np.log([row[0] for row in imp_data[impurity]])
+                log_lz_data = np.log([row[1] for row in imp_data[impurity]])
+                lz[impurity][temp_point] = np.exp(
+                    np.interp(
+                        np.log(temp_electron_ev[temp_point]), log_te_data, log_lz_data
+                    )
+                )
+            pden_rad_array[impurity][temp_point] = (
+                imp_frac[impurity]
+                * nd_electron[temp_point]
+                * nd_electron[temp_point]
+                * lz[impurity][temp_point]
+            )
 
         for l_ in range(imp_data.shape[0]):
-            prad[k] += pimpden[l_][k] * 1.0e-6
+            pden_total_profile[temp_point] += pden_rad_array[l_][temp_point] * 1.0e-6
 
-    axis.plot(rho, prad, label="Total", linestyle="dotted")
-    axis.plot(rho, pimpden[0] * 1.0e-6, label="H")
-    axis.plot(rho, pimpden[1] * 1.0e-6, label="He")
-    if imp_frac[2] > 1.0e-30:
-        axis.plot(rho, pimpden[2] * 1.0e-6, label="Be")
-    if imp_frac[3] > 1.0e-30:
-        axis.plot(rho, pimpden[3] * 1.0e-6, label="C")
-    if imp_frac[4] > 1.0e-30:
-        axis.plot(rho, pimpden[4] * 1.0e-6, label="N")
-    if imp_frac[5] > 1.0e-30:
-        axis.plot(rho, pimpden[5] * 1.0e-6, label="O")
-    if imp_frac[6] > 1.0e-30:
-        axis.plot(rho, pimpden[6] * 1.0e-6, label="Ne")
-    if imp_frac[7] > 1.0e-30:
-        axis.plot(rho, pimpden[7] * 1.0e-6, label="Si")
-    if imp_frac[8] > 1.0e-30:
-        axis.plot(rho, pimpden[8] * 1.0e-6, label="Ar")
-    if imp_frac[9] > 1.0e-30:
-        axis.plot(rho, pimpden[9] * 1.0e-6, label="Fe")
-    if imp_frac[10] > 1.0e-30:
-        axis.plot(rho, pimpden[10] * 1.0e-6, label="Ni")
-    if imp_frac[11] > 1.0e-30:
-        axis.plot(rho, pimpden[11] * 1.0e-6, label="Kr")
-    if imp_frac[12] > 1.0e-30:
-        axis.plot(rho, pimpden[12] * 1.0e-6, label="Xe")
-    if imp_frac[13] > 1.0e-30:
-        axis.plot(rho, pimpden[13] * 1.0e-6, label="W")
-    axis.legend(loc="upper left", bbox_to_anchor=(-0.1, -0.1), ncol=4)
+    # Plot the total radiation profile and individual impurity contributions
+    axis.plot(rho, pden_total_profile, label="Total", linestyle="dotted")
+    axis.plot(rho, pden_rad_array[0] * 1.0e-6, label="H")
+    axis.plot(rho, pden_rad_array[1] * 1.0e-6, label="He")
+
+    # Plot the remaining impurity contributions if their fraction is significant
+    for ind in range(2, imp_data.shape[0]):
+        if imp_frac[ind] > 1.0e-30:
+            axis.plot(
+                rho,
+                pden_rad_array[ind] * 1.0e-6,
+                label=ImpurityRadiationData().imp_label[ind].replace("_", ""),
+            )
+
     axis.minorticks_on()
     # Plot a vertical line at the core region radius
     core_radius = mfile.get("radius_plasma_core_norm", scan=scan)
 
     # Plot a vertical line at the core region radius
     axis.axvline(x=core_radius, color="black", linestyle="--", linewidth=1.0, alpha=0.7)
-    # Plot a box in the bottom left with f_{core,reduce}
+    # Plot a box in the bottom left with f_{core,reduce} and \rho_{core}
     props_core_reduce = {"boxstyle": "round", "facecolor": "khaki", "alpha": 0.8}
     axis.text(
         0.02,
         0.02,
-        rf"$f_{{\text{{core,reduce}}}}$ =  {1.0}",
+        rf"$f_{{\text{{core,reduce}}}}$ =  {1.0}"
+        "\n"
+        rf"$\rho_{{\text{{core}}}}$ =  {core_radius:.3f}",
         transform=axis.transAxes,
         fontsize=8,
         verticalalignment="bottom",
@@ -4699,17 +4683,173 @@ def plot_line_brem_power_density_profile(
 
     # Ranges
     # ---
+    axis.legend(loc="upper left", bbox_to_anchor=(-0.1, -0.1), ncol=4)
     axis.set_xlim([0, 1.0])
     axis.set_yscale("log")
     axis.yaxis.grid(True, which="both", alpha=0.2)
     # DEMO : Fixed ranges for comparison
     if demo_ranges:
-        axis.set_ylim([1e-6, 0.5])
+        axis.set_ylim([1e-4, 0.5])
 
     # Adaptive ranges
     else:
-        axis.set_ylim([1e-6, axis.get_ylim()[1]])
+        axis.set_ylim([1e-4, axis.get_ylim()[1]])
     # ---
+
+
+def plot_line_brem_power_profile(
+    axis: plt.Axes,
+    mfile: MFile,
+    scan: int,
+    impp: str,
+):
+    """Function to plot Line and Bremsstrahlung radiation power [MW] profile.
+
+    Parameters
+    ----------
+    axis : plt.Axes
+        axis object to add plot to
+    mfile : MFile
+        MFile object containing plasma and impurity profile information.
+    scan : int
+        scan number to use
+    impp : str
+        impurity path
+
+    """
+    axis.set_xlabel(r"$\rho \quad [r/a]$")
+    axis.set_ylabel(r"$P_{\mathrm{rad}}$ $[\mathrm{MW}]$")
+    axis.set_title("Line & Bremsstrahlung Radiation Power Profile")
+
+    # read in the impurity data
+    imp_data = read_imprad_data(_skiprows=2, data_path=impp)
+
+    # find impurity densities
+    imp_frac = np.array([
+        mfile.get(f"f_nd_impurity_electrons({i:02d})", scan=scan) for i in range(1, 15)
+    ])
+    vol_plasma = mfile.get("vol_plasma", scan=scan)
+    p_plasma_rad_imps_mw = mfile.get("p_plasma_rad_mw", scan=scan) - mfile.get(
+        "p_plasma_sync_mw", scan=scan
+    )
+
+    rho, nd_electron, temp_electron_kev = profiles_with_pedestal(mfile=mfile, scan=scan)
+    # imp_data Te values are in eV, but te from profiles_with_pedestal is in keV
+    temp_electron_ev = temp_electron_kev * 1.0e3
+
+    # Intailise the radiation profile arrays
+    p_rad_array = np.zeros([imp_data.shape[0], temp_electron_kev.shape[0]])
+    lz = np.zeros([imp_data.shape[0], temp_electron_kev.shape[0]])
+    p_total_profile = np.zeros(temp_electron_kev.shape[0])
+
+    # Intailise the impurity radiation profile
+    for temp_point in range(temp_electron_kev.shape[0]):
+        for impurity in range(imp_data.shape[0]):
+            if temp_electron_ev[temp_point] <= imp_data[impurity][0][0]:
+                lz[impurity][temp_point] = imp_data[impurity][0][1]
+            elif (
+                temp_electron_ev[temp_point]
+                >= imp_data[impurity][imp_data.shape[1] - 1][0]
+            ):
+                lz[impurity][temp_point] = imp_data[impurity][imp_data.shape[1] - 1][1]
+            else:
+                # Use np.interp for log-log interpolation
+                log_te_data = np.log([row[0] for row in imp_data[impurity]])
+                log_lz_data = np.log([row[1] for row in imp_data[impurity]])
+                lz[impurity][temp_point] = np.exp(
+                    np.interp(
+                        np.log(temp_electron_ev[temp_point]), log_te_data, log_lz_data
+                    )
+                )
+
+            # Calculate the absolue radiation power for each volumetric shell for each
+            # impurity
+            p_rad_array[impurity] = calculate_profile_shell_contributions(
+                profile_x=rho,
+                profile_y=(
+                    imp_frac[impurity] * nd_electron * nd_electron * lz[impurity]
+                ),
+                vol_plasma=vol_plasma,
+                profile_dx=rho[1] - rho[0],
+            )
+
+        for l_ in range(imp_data.shape[0]):
+            p_total_profile[temp_point] += p_rad_array[l_][temp_point] * 1.0e-6
+
+    axis.plot(
+        rho, p_total_profile, label="$P_{\\Sigma\\text{Impurities}}$", linestyle="dotted"
+    )
+
+    # Plot individual impurity radiation profiles
+    axis.plot(rho, p_rad_array[0] * 1.0e-6, label="H")
+    axis.plot(rho, p_rad_array[1] * 1.0e-6, label="He")
+    # Only plot impurities with a significant fraction
+    for ind in range(2, imp_data.shape[0]):
+        if imp_frac[ind] > 1.0e-30:
+            axis.plot(
+                rho,
+                p_rad_array[ind] * 1.0e-6,
+                label=ImpurityRadiationData().imp_label[ind].replace("_", ""),
+            )
+
+    axis.plot(
+        rho,
+        np.cumsum(p_total_profile),
+        label="$\\Sigma P_{\\Sigma\\text{Impurities}}$",
+        color="black",
+    )
+    axis.axhline(
+        y=p_plasma_rad_imps_mw,
+        color="black",
+        linestyle="--",
+        label="$P_{\\text{total}}$",
+    )
+
+    axis.minorticks_on()
+    # Plot a vertical line at the core region radius
+    core_radius = mfile.get("radius_plasma_core_norm", scan=scan)
+
+    # Plot a vertical line at the core region radius
+    axis.axvline(x=core_radius, color="black", linestyle="--", linewidth=1.0, alpha=0.7)
+    # Plot a box in the bottom left with f_{core,reduce} and \rho_{core}
+    props_core_reduce = {"boxstyle": "round", "facecolor": "khaki", "alpha": 0.8}
+    axis.text(
+        0.05,
+        0.02,
+        rf"$f_{{\text{{core,reduce}}}}$ =  {1.0}"
+        "\n"
+        rf"$\rho_{{\text{{core}}}}$ =  {core_radius:.3f}",
+        transform=axis.transAxes,
+        fontsize=8,
+        verticalalignment="bottom",
+        bbox=props_core_reduce,
+    )
+
+    cumulative_thermal_energy_mj = np.cumsum(p_total_profile)
+    half_thermal_energy_mj = 0.5 * p_plasma_rad_imps_mw
+    half_thermal_energy_position = np.interp(
+        half_thermal_energy_mj,
+        cumulative_thermal_energy_mj,
+        np.linspace(0, 1, temp_electron_kev.shape[0]),
+    )
+    axis.axhline(
+        y=half_thermal_energy_mj,
+        label="$50\\%\\ P_{\\text{total}}$",
+        color="tab:green",
+        linestyle=":",
+    )
+    axis.axvline(
+        x=half_thermal_energy_position,
+        color="tab:green",
+        linestyle=":",
+    )
+
+    # Ranges
+    # ---
+    axis.set_xlim([0, 1.0])
+    axis.legend(loc="upper left", bbox_to_anchor=(1.0, 1.0), ncol=1)
+    axis.set_yscale("log")
+    axis.yaxis.grid(True, which="both", alpha=0.2)
 
 
 def plot_line_brem_loss_function_profile(
@@ -4740,53 +4880,48 @@ def plot_line_brem_loss_function_profile(
         mfile.get(f"f_nd_impurity_electrons({i:02d})", scan=scan) for i in range(1, 15)
     ])
 
-    rho, _, te = profiles_with_pedestal(mfile, scan)
+    rho, _, temp_electron_kev = profiles_with_pedestal(mfile, scan)
+    # imp_data Te values are in eV, but te from profiles_with_pedestal is in keV
+    temp_electron_ev = temp_electron_kev * 1.0e3
 
     # Intailise the radiation profile arrays
-    lz = np.zeros([imp_data.shape[0], te.shape[0]])
+    lz = np.zeros([imp_data.shape[0], temp_electron_kev.shape[0]])
 
     # Intailise the impurity radiation profile
-    for k in range(te.shape[0]):
-        for i in range(imp_data.shape[0]):
-            if te[k] <= imp_data[i][0][0]:
-                lz[i][k] = imp_data[i][0][1]
-            elif te[k] >= imp_data[i][imp_data.shape[1] - 1][0]:
-                lz[i][k] = imp_data[i][imp_data.shape[1] - 1][1]
+    for temp_point in range(temp_electron_kev.shape[0]):
+        for impurity in range(imp_data.shape[0]):
+            if temp_electron_ev[temp_point] <= imp_data[impurity][0][0]:
+                lz[impurity][temp_point] = imp_data[impurity][0][1]
+            elif (
+                temp_electron_ev[temp_point]
+                >= imp_data[impurity][imp_data.shape[1] - 1][0]
+            ):
+                lz[impurity][temp_point] = imp_data[impurity][imp_data.shape[1] - 1][1]
             else:
                 # Use np.interp for log-log interpolation
-                log_te_data = np.log([row[0] for row in imp_data[i]])
-                log_lz_data = np.log([row[1] for row in imp_data[i]])
-                lz[i][k] = np.exp(np.interp(np.log(te[k]), log_te_data, log_lz_data))
+                log_te_data = np.log([row[0] for row in imp_data[impurity]])
+                log_lz_data = np.log([row[1] for row in imp_data[impurity]])
+                lz[impurity][temp_point] = np.exp(
+                    np.interp(
+                        np.log(temp_electron_ev[temp_point]), log_te_data, log_lz_data
+                    )
+                )
 
+    # Plot the radiation loss function profiles
     axis.plot(rho, lz[0], label="H")
     axis.plot(rho, lz[1], label="He")
-    if imp_frac[2] > 1.0e-30:
-        axis.plot(rho, lz[2], label="Be")
-    if imp_frac[3] > 1.0e-30:
-        axis.plot(rho, lz[3], label="C")
-    if imp_frac[4] > 1.0e-30:
-        axis.plot(rho, lz[4], label="N")
-    if imp_frac[5] > 1.0e-30:
-        axis.plot(rho, lz[5], label="O")
-    if imp_frac[6] > 1.0e-30:
-        axis.plot(rho, lz[6], label="Ne")
-    if imp_frac[7] > 1.0e-30:
-        axis.plot(rho, lz[7], label="Si")
-    if imp_frac[8] > 1.0e-30:
-        axis.plot(rho, lz[8], label="Ar")
-    if imp_frac[9] > 1.0e-30:
-        axis.plot(rho, lz[9], label="Fe")
-    if imp_frac[10] > 1.0e-30:
-        axis.plot(rho, lz[10], label="Ni")
-    if imp_frac[11] > 1.0e-30:
-        axis.plot(rho, lz[11], label="Kr")
-    if imp_frac[12] > 1.0e-30:
-        axis.plot(rho, lz[12], label="Xe")
-    if imp_frac[13] > 1.0e-30:
-        axis.plot(rho, lz[13], label="W")
+    # Plot the remaining impurities if their fraction is significant
+    impurity_data = ImpurityRadiationData()
+    for ind in range(2, imp_data.shape[0]):
+        if imp_frac[ind] > 1.0e-30:
+            axis.plot(
+                rho,
+                lz[ind],
+                label=impurity_data.imp_label[ind].replace("_", ""),
+            )
+
     axis.legend(loc="best", ncol=4)
     axis.minorticks_on()
-
     axis.set_xlabel(r"$\rho \quad [r/a]$")
     axis.set_ylabel(r"$L_z$ $[\mathrm{W}\mathrm{m}^3]$")
     axis.set_title("Line & Bremsstrahlung Loss Function ($L_z$) Profiles")
@@ -4795,11 +4930,13 @@ def plot_line_brem_loss_function_profile(
     axis.yaxis.grid(True, which="both", alpha=0.2)
 
 
-def plot_rad_contour(axis: "mpl.axes.Axes", mfile: "Any", scan: int, impp: str):
-    """Plots the contour of line and bremsstrahlung radiation density for a plasma cross-section.
+def plot_rad_density_contour(axis: "mpl.axes.Axes", mfile: "Any", scan: int, impp: str):
+    """Plots the contour of line and bremsstrahlung radiation density [MW/m³] for a
+    plasma cross-section.
 
-    This function reads impurity and plasma profile data, computes the radiation density profile,
-    interpolates it onto a 2D grid, and plots the upper and lower half contours on the provided axis.
+    This function reads impurity and plasma profile data, computes the radiation
+    density profile, interpolates it onto a 2D grid, and plots the upper and lower
+    half contours on the provided axis.
 
     Parameters
     ----------
@@ -4814,10 +4951,12 @@ def plot_rad_contour(axis: "mpl.axes.Axes", mfile: "Any", scan: int, impp: str):
 
     Notes
     -----
-    - The function assumes the existence of several global or previously defined variables and functions,
-        such as `read_imprad_data`, `interp1d_profile`, and plasma pedestal parameters.
-    - The plotted contours represent the radiation density in units of MW.m^-3.
-    - The function adds colorbar, axis labels, title, and core reduction annotation to the plot.
+    - The function assumes the existence of several global or previously defined
+    variables and functions, such as `read_imprad_data`, `interp1d_profile`, and plasma
+    pedestal parameters.
+    - The plotted contours represent the radiation density in units of [MW/m³]
+    - The function adds colorbar, axis labels, title, and core reduction annotation to
+    the plot.
     """
     rminor = mfile.get("rminor", scan=scan)
     rmajor = mfile.get("rmajor", scan=scan)
@@ -4832,6 +4971,8 @@ def plot_rad_contour(axis: "mpl.axes.Axes", mfile: "Any", scan: int, impp: str):
 
     # Initialize the radius
     rho, ne, te = profiles_with_pedestal(mfile, scan)
+    # imp_data Te values are in eV, but te from profiles_with_pedestal is in keV
+    te_ev = te * 1.0e3
 
     # Intailise the radiation profile arrays
     pimpden = np.zeros([imp_data.shape[0], te.shape[0]])
@@ -4844,19 +4985,19 @@ def plot_rad_contour(axis: "mpl.axes.Axes", mfile: "Any", scan: int, impp: str):
         for impurity in range(imp_data.shape[0]):
             # Check if profile temperature is lower than dataset minimum.
             # If so, use the minimum loss function value
-            if te[rho] <= imp_data[impurity][0][0]:
+            if te_ev[rho] <= imp_data[impurity][0][0]:
                 lz[impurity][rho] = imp_data[impurity][0][1]
 
             # Check if profile temperature is higher than dataset maximum.
             # If so, use the maximum loss function value
-            elif te[rho] >= imp_data[impurity][imp_data.shape[1] - 1][0]:
+            elif te_ev[rho] >= imp_data[impurity][imp_data.shape[1] - 1][0]:
                 lz[impurity][rho] = imp_data[impurity][imp_data.shape[1] - 1][1]
             else:
                 # If profile valie is within dataset range, use log-log interpolation to find value for loss function
                 log_te_data = np.log([row[0] for row in imp_data[impurity]])
                 log_lz_data = np.log([row[1] for row in imp_data[impurity]])
                 lz[impurity][rho] = np.exp(
-                    np.interp(np.log(te[rho]), log_te_data, log_lz_data)
+                    np.interp(np.log(te_ev[rho]), log_te_data, log_lz_data)
                 )
             # Find the power density for each impurity at each rho
             pimpden[impurity][rho] = (
@@ -4870,10 +5011,10 @@ def plot_rad_contour(axis: "mpl.axes.Axes", mfile: "Any", scan: int, impp: str):
 
     # Plot the upper half contour
     p_rad_upper = axis.contourf(
-        r_grid, z_grid, p_rad_grid, levels=50, cmap="plasma", zorder=2
+        r_grid, z_grid, p_rad_grid, levels=25, cmap="turbo", zorder=2
     )
     # Plot the lower half contour (mirror)
-    axis.contourf(r_grid, -z_grid, p_rad_grid, levels=50, cmap="plasma", zorder=2)
+    axis.contourf(r_grid, -z_grid, p_rad_grid, levels=25, cmap="turbo", zorder=2)
 
     axis.figure.colorbar(
         p_rad_upper,
@@ -13804,26 +13945,8 @@ def plot_ion_charge_profile(axis: plt.Axes, mfile: MFile, scan: int):
         mfile.get("f_nd_impurity_electrons(14)", scan=scan),
     ])
 
-    imp_label = [
-        "H",
-        "He",
-        "Be",
-        "C",
-        "N",
-        "O",
-        "Ne",
-        "Si",
-        "Ar",
-        "Fe",
-        "Ni",
-        "Kr",
-        "Xe",
-        "W",
-    ]
-    full_charge_array = [1, 2, 4, 6, 7, 8, 10, 14, 18, 26, 28, 36, 54, 74]
-
     n_charge_plasma_profile = []
-    avg_ionisation_percentages = []
+    impurity_data = ImpurityRadiationData()
     for imp in range(N_IMPURITIES):
         if imp_frac[imp] > 1.0e-30:
             profile = [
@@ -13831,17 +13954,16 @@ def plot_ion_charge_profile(axis: plt.Axes, mfile: MFile, scan: int):
                 for i in range(n_plasma_profile_elements)
             ]
             n_charge_plasma_profile.append(profile)
-            z_max = full_charge_array[imp]
+            z_max = impurity_data.imp_full_ion_charge[imp]
             # Calculate relative ionisation state as percent of full ionisation
             rel_ion_state = [
                 100.0 * (val / z_max if z_max > 0 else 0) for val in profile
             ]
             avg_ionisation = np.mean(rel_ion_state)
-            avg_ionisation_percentages.append((imp_label[imp], avg_ionisation))
             axis.plot(
                 np.linspace(0, 1, n_plasma_profile_elements),
                 rel_ion_state,
-                label=f"{imp_label[imp]} (Z={z_max}): avg {avg_ionisation:.1f}%",
+                label=f"{impurity_data.imp_label[imp].replace('_', '')} (Z={z_max}): avg {avg_ionisation:.1f}%",
             )
     axis.set_ylabel("Relative Ionisation State [% of $Z$]")
     axis.legend()
@@ -16805,6 +16927,7 @@ def main_plot(
     # Plot impurity profiles
     ax11 = pages["profiles"].add_subplot(233)
     ax11.set_position([0.7, 0.45, 0.25, 0.5])
+
     plot_line_brem_power_density_profile(
         axis=ax11, mfile=m_file, scan=scan, impp=imp, demo_ranges=demo_ranges
     )
@@ -16842,7 +16965,9 @@ def main_plot(
     )
 
     if i_shape == 1:
-        plot_rad_contour(pages["rad_contour"].add_subplot(122), m_file, scan, imp)
+        plot_rad_density_contour(
+            pages["rad_contour"].add_subplot(122, aspect="equal"), m_file, scan, imp
+        )
 
     if i_shape != 1:
         msg = (
@@ -16855,6 +16980,10 @@ def main_plot(
         pages["rad_contour"].text(
             0.75, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12
         )
+
+    plot_line_brem_power_profile(
+        _add_page("line_brem_power").add_subplot(121), m_file, scan, imp
+    )
 
     plot_fusion_rate_profiles(
         _add_page("fusion_rate").add_subplot(122), pages["fusion_rate"], m_file, scan
