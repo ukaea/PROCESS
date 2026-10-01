@@ -52,7 +52,11 @@ def eurofer97_thermal_conductivity(temp: float, fw_th_conductivity: float) -> fl
 
 
 @unwrap_parameter
-def calculate_tresca_stress(*args, **kwargs):
+def calculate_tresca_stress(
+    stress_x: float | np.ndarray,
+    stress_y: float | np.ndarray,
+    stress_z: float | np.ndarray,
+):
     """Calculates the Tresca (maximum shear stress) criterion from three principal
     stress components.
 
@@ -71,7 +75,7 @@ def calculate_tresca_stress(*args, **kwargs):
         Tresca stress (maximum shear stress criterion) in Pa, defined as the
         maximum of |stress_x - stress_y|, |stress_y - stress_z|, |stress_x - stress_z|.
     """
-    return calculate_tresca_stress_numba(*args, **kwargs)
+    return calculate_tresca_stress_numba(stress_x, stress_y, stress_z)
 
 
 @numba.njit(cache=True)
@@ -94,7 +98,14 @@ def calculate_tresca_stress_numba(
 
 
 @unwrap_parameter
-def calculate_von_mises_stress(*args, **kwargs):
+def calculate_von_mises_stress(
+    stress_x: float | np.ndarray,
+    stress_y: float | np.ndarray,
+    stress_z: float | np.ndarray,
+    stress_shear_xy: float | np.ndarray,
+    stress_shear_yz: float | np.ndarray,
+    stress_shear_zx: float | np.ndarray,
+):
     """Calculates the von Mises stress criterion from three principal stress components.
 
     Parameters
@@ -122,7 +133,9 @@ def calculate_von_mises_stress(*args, **kwargs):
     ----------
     [1] https://en.wikipedia.org/wiki/Von_Mises_yield_criterion
     """
-    return calculate_von_mises_stress_numba(*args, **kwargs)
+    return calculate_von_mises_stress_numba(
+        stress_x, stress_y, stress_z, stress_shear_xy, stress_shear_yz, stress_shear_zx
+    )
 
 
 @numba.njit(cache=True)

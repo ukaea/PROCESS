@@ -234,7 +234,6 @@ def get_dicts():
 
         module_tree = ast.parse(inspect.getsource(module))
         initial_values_dict = {}
-        variable_names = []
         var_names_and_descriptions = {}
         dict_module_entry = {}
         variable_types = {}
@@ -255,7 +254,6 @@ def get_dicts():
                 raise TypeError(error_msg)
 
             variable_types[field.name] = var_type
-            variable_names.append(field.name)
 
             initial_value = getattr(data_structure, field.name)
             if isinstance(initial_value, Parameter):
@@ -293,7 +291,7 @@ def get_dicts():
                 ):
                     var_names_and_descriptions[last_var.target.id] = ""
 
-        dict_module_entry[module_name] = variable_names
+        dict_module_entry[module_name] = list(variable_types.keys())
 
         output_dict["DICT_MODULE"].update(dict_module_entry)
         output_dict["DICT_DEFAULT"].update(initial_values_dict)

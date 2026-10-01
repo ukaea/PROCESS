@@ -39,12 +39,12 @@ def turn_on_access_records(monkeypatch):
 
 @dataclass
 class ShouldFailMutatableDefault(PROCESSModelData):
-    mutable_default: Parameter[float] = Parameter("mutable_default", 123.0)  # ruff:ignore[RUF009]
+    mutable_default: Parameter[float] = Parameter("mutable_default", 123.0)  # noqa: RUF009
 
 
 @dataclass
 class ShouldFailMutatableDefaultAnnotated(PROCESSModelData):
-    mutable_default: Annotated[Parameter[float], ParameterMetadata()] = Parameter(  # ruff:ignore[RUF009]
+    mutable_default: Annotated[Parameter[float], ParameterMetadata()] = Parameter(  # noqa: RUF009
         "mutable_default", 123.0
     )
 
@@ -101,8 +101,8 @@ def example_model_dataclass():
 
 
 def test_process_model_data_parameter(example_model_dataclass):
-    assert example_model_dataclass.my_param == 42.0  # ruff:ignore[RUF069]
-    assert example_model_dataclass.my_param.value == 42.0  # ruff:ignore[RUF069]
+    assert example_model_dataclass.my_param == 42.0  # noqa: RUF069
+    assert example_model_dataclass.my_param.value == 42.0  # noqa: RUF069
     assert example_model_dataclass.my_param.description == "My parameter"
     assert example_model_dataclass.my_param.long_name == "my_parameter"
 
@@ -112,7 +112,7 @@ def test_process_model_data_parameter_mutation(example_model_dataclass):
     assert isinstance(example_model_dataclass.my_param, Parameter)
     assert example_model_dataclass.my_param == 84
 
-    example_model_dataclass.my_param = example_model_dataclass.my_param * 2  # ruff:ignore[PLR6104]
+    example_model_dataclass.my_param = example_model_dataclass.my_param * 2  # noqa: PLR6104
     assert isinstance(example_model_dataclass.my_param, Parameter)
     assert example_model_dataclass.my_param == 168
 
@@ -140,7 +140,7 @@ def test_parameter_use_record(turn_on_access_records, example_model_dataclass):
 
     # Used once in the calculation and thrice to access the usage records
     assert len(example_model_dataclass.my_param.usage_records) == 1
-    assert example_model_dataclass.my_param.usage_records[0].value == 42.0  # ruff:ignore[RUF069]
+    assert example_model_dataclass.my_param.usage_records[0].value == 42.0  # noqa: RUF069
 
 
 def test_parameter_use_record_not_created_on_edit(
@@ -159,19 +159,19 @@ def test_parameter_edit_record(turn_on_access_records, example_model_dataclass):
 
     example_model_dataclass.my_param = 2.0
 
-    assert example_model_dataclass.my_param == 2.0  # ruff:ignore[RUF069]
+    assert example_model_dataclass.my_param == 2.0  # noqa: RUF069
     assert len(example_model_dataclass.my_param.edit_records) == 1
-    assert example_model_dataclass.my_param.edit_records[0].value == 42.0  # ruff:ignore[RUF069]
-    assert example_model_dataclass.my_param.edit_records[0].new_value == 2.0  # ruff:ignore[RUF069]
+    assert example_model_dataclass.my_param.edit_records[0].value == 42.0  # noqa: RUF069
+    assert example_model_dataclass.my_param.edit_records[0].new_value == 2.0  # noqa: RUF069
 
 
 def test_parameter_edit_inplace_record(turn_on_access_records, example_model_dataclass):
     example_model_dataclass.my_param *= 2.0
 
-    assert example_model_dataclass.my_param == 84.0  # ruff:ignore[RUF069]
+    assert example_model_dataclass.my_param == 84.0  # noqa: RUF069
     assert len(example_model_dataclass.my_param.edit_records) == 1
-    assert example_model_dataclass.my_param.edit_records[0].value == 42.0  # ruff:ignore[RUF069]
-    assert example_model_dataclass.my_param.edit_records[0].new_value == 84.0  # ruff:ignore[RUF069]
+    assert example_model_dataclass.my_param.edit_records[0].value == 42.0  # noqa: RUF069
+    assert example_model_dataclass.my_param.edit_records[0].new_value == 84.0  # noqa: RUF069
 
 
 def test_parameter_edit_record_another_parameter(
@@ -179,10 +179,10 @@ def test_parameter_edit_record_another_parameter(
 ):
     example_model_dataclass.my_param = Parameter("another_param", 7.0)
 
-    assert example_model_dataclass.my_param == 7.0  # ruff:ignore[RUF069]
+    assert example_model_dataclass.my_param == 7.0  # noqa: RUF069
     assert len(example_model_dataclass.my_param.edit_records) == 1
-    assert example_model_dataclass.my_param.edit_records[0].value == 42.0  # ruff:ignore[RUF069]
-    assert example_model_dataclass.my_param.edit_records[0].new_value == 7.0  # ruff:ignore[RUF069]
+    assert example_model_dataclass.my_param.edit_records[0].value == 42.0  # noqa: RUF069
+    assert example_model_dataclass.my_param.edit_records[0].new_value == 7.0  # noqa: RUF069
 
 
 def test_parameter_edit_record_no_frame_filter(
@@ -276,7 +276,7 @@ def test_ops_in_place(val1, val2):
     val2_copy = copy.deepcopy(val2)
     try:
         val1_copy += val2_copy
-    except Exception:  # ruff:ignore[BLE001]
+    except Exception:  # noqa: BLE001
         pytest.skip("Not a valid in-place addition type combination.")
 
     param1 = Parameter("param1", val1)
