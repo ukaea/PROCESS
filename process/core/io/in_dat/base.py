@@ -453,16 +453,6 @@ def get_parameters(data, use_string_values=True):
                                 line_string += str(val) + ", "
                             line_value = line_string.rstrip(", ")
 
-                        if isinstance(line_value, str):
-                            split_line = line_value.split(" ")
-                            try:
-                                float(split_line[0])
-                            except ValueError:
-                                pass
-                            else:
-                                if len(split_line) > 1:
-                                    line_value = ", ".join(list(split_line))
-
                     else:
                         # Store the parameter value preserving its type
                         # (data[item].get_value preserves the parameter's type,
