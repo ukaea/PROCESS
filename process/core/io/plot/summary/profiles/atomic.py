@@ -6,7 +6,10 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
-from process.data_structure.impurity_radiation_variables import N_IMPURITIES
+from process.data_structure.impurity_radiation_variables import (
+    N_IMPURITIES,
+    ImpurityRadiationData,
+)
 
 if TYPE_CHECKING:
     import matplotlib.pyplot as plt
@@ -36,25 +39,8 @@ def plot_ion_charge_profile(axis: plt.Axes, mfile: MFile, scan: int):
         mfile.get("f_nd_impurity_electrons(14)", scan=scan),
     ])
 
-    imp_label = [
-        "H",
-        "He",
-        "Be",
-        "C",
-        "N",
-        "O",
-        "Ne",
-        "Si",
-        "Ar",
-        "Fe",
-        "Ni",
-        "Kr",
-        "Xe",
-        "W",
-    ]
-    full_charge_array = [1, 2, 4, 6, 7, 8, 10, 14, 18, 26, 28, 36, 54, 74]
-
     n_charge_plasma_profile = []
+    impurity_data = ImpurityRadiationData()
     for imp in range(N_IMPURITIES):
         if imp_frac[imp] > 1.0e-30:
             profile = [
@@ -62,7 +48,7 @@ def plot_ion_charge_profile(axis: plt.Axes, mfile: MFile, scan: int):
                 for i in range(n_plasma_profile_elements)
             ]
             n_charge_plasma_profile.append(profile)
-            z_max = full_charge_array[imp]
+            z_max = impurity_data.imp_full_ion_charge[imp]
             # Calculate relative ionisation state as percent of full ionisation
             rel_ion_state = [
                 100.0 * (val / z_max if z_max > 0 else 0) for val in profile
@@ -71,7 +57,8 @@ def plot_ion_charge_profile(axis: plt.Axes, mfile: MFile, scan: int):
             axis.plot(
                 np.linspace(0, 1, n_plasma_profile_elements),
                 rel_ion_state,
-                label=(f"{imp_label[imp]} (Z={z_max}): avg {avg_ionisation:.1f}%"),
+                label=f"{impurity_data.imp_label[imp].replace('_', '')} (Z={z_max}): "
+                f"avg {avg_ionisation:.1f}%",
             )
     axis.set_ylabel("Relative Ionisation State [% of $Z$]")
     axis.legend()

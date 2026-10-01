@@ -98,6 +98,7 @@ from process.core.io.plot.summary.profiles.atomic import (
 from process.core.io.plot.summary.profiles.misc import (
     plot_line_brem_loss_function_profile,
     plot_line_brem_power_density_profile,
+    plot_line_brem_power_profile,
 )
 from process.core.io.plot.summary.profiles.plasma import (
     plot_beta_profiles,
@@ -118,7 +119,7 @@ from process.core.io.plot.summary.profiles.radiation import (
     plot_cs_radial_stress_profile,
     plot_larmor_radius_profile,
     plot_plasma_pressure_gradient_profiles,
-    plot_rad_contour,
+    plot_rad_density_contour,
 )
 from process.core.io.plot.summary.profiles.stress import (
     plot_cs_hoop_stress_contour_profile,
@@ -274,6 +275,7 @@ def main_plot(
     # Plot impurity profiles
     ax11 = pages["profiles"].add_subplot(233)
     ax11.set_position([0.7, 0.45, 0.25, 0.5])
+
     plot_line_brem_power_density_profile(
         axis=ax11, mfile=m_file, scan=scan, impp=imp, demo_ranges=demo_ranges
     )
@@ -311,7 +313,9 @@ def main_plot(
     )
 
     if i_shape == 1:
-        plot_rad_contour(pages["rad_contour"].add_subplot(122), m_file, scan, imp)
+        plot_rad_density_contour(
+            pages["rad_contour"].add_subplot(122, aspect="equal"), m_file, scan, imp
+        )
 
     if i_shape != 1:
         msg = (
@@ -324,7 +328,9 @@ def main_plot(
         pages["rad_contour"].text(
             0.75, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12
         )
-
+    plot_line_brem_power_profile(
+        _add_page("line_brem_power").add_subplot(121), m_file, scan, imp
+    )
     plot_fusion_rate_profiles(
         _add_page("fusion_rate").add_subplot(122),
         pages["fusion_rate"],
