@@ -87,7 +87,10 @@ from process.models.physics.plasma_geometry import (
     PlasmaGeometryModelType,
     PlasmaShapeModelType,
 )
-from process.models.physics.profiles import PlasmaProfileShapeType
+from process.models.physics.profiles import (
+    PlasmaProfileShapeType,
+    calculate_profile_shell_contributions,
+)
 from process.models.pulse import PulseTimings
 from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil.base import (
@@ -4766,15 +4769,16 @@ def plot_line_brem_power_profile(
                         np.log(temp_electron_ev[temp_point]), log_te_data, log_lz_data
                     )
                 )
-            p_rad_array[impurity][temp_point] = (
-                imp_frac[impurity]
-                * nd_electron[temp_point]
-                * nd_electron[temp_point]
-                * lz[impurity][temp_point]
-                * vol_plasma
-                * rho[temp_point]
-                * (rho[1] - rho[0])
-                * 2.0
+
+            # Calculate the absolue radiation power for each volumetric shell for each
+            # impurity
+            p_rad_array[impurity] = calculate_profile_shell_contributions(
+                profile_x=rho,
+                profile_y=(
+                    imp_frac[impurity] * nd_electron * nd_electron * lz[impurity]
+                ),
+                vol_plasma=vol_plasma,
+                profile_dx=rho[1] - rho[0],
             )
 
         for l_ in range(imp_data.shape[0]):
