@@ -3006,25 +3006,17 @@ def plot_main_plasma_information(
     # ================================================
 
     # Add ion density information
+    impurity_data = ImpurityRadiationData()
     textstr_ions = (
         f"             $\\mathbf{{Ion \\ to \\ electron}}$\n"
         f"             $\\mathbf{{relative \\ number}}$\n"
         f"             $\\mathbf{{densities:}}$\n \n"
         f"             Effective charge: {mfile.get('n_charge_plasma_effective_vol_avg', scan=scan):.3f}\n\n"
-        f"             {ImpurityRadiationData().imp_label[0].replace('_', '')}:    {mfile.get('f_nd_impurity_electrons(01)', scan=scan):.4e}\n"
-        f"             {ImpurityRadiationData().imp_label[1].replace('_', '')}:  {mfile.get('f_nd_impurity_electrons(02)', scan=scan):.4e}\n"
-        f"             {ImpurityRadiationData().imp_label[2].replace('_', '')}:  {mfile.get('f_nd_impurity_electrons(03)', scan=scan):.4e}\n"
-        f"             {ImpurityRadiationData().imp_label[3].replace('_', '')}:    {mfile.get('f_nd_impurity_electrons(04)', scan=scan):.4e}\n"
-        f"             {ImpurityRadiationData().imp_label[4].replace('_', '')}:    {mfile.get('f_nd_impurity_electrons(05)', scan=scan):.4e}\n"
-        f"             {ImpurityRadiationData().imp_label[5].replace('_', '')}:    {mfile.get('f_nd_impurity_electrons(06)', scan=scan):.4e}\n"
-        f"             {ImpurityRadiationData().imp_label[6].replace('_', '')}:  {mfile.get('f_nd_impurity_electrons(07)', scan=scan):.4e}\n"
-        f"             {ImpurityRadiationData().imp_label[7].replace('_', '')}:   {mfile.get('f_nd_impurity_electrons(08)', scan=scan):.4e}\n"
-        f"             {ImpurityRadiationData().imp_label[8].replace('_', '')}:  {mfile.get('f_nd_impurity_electrons(09)', scan=scan):.4e}\n"
-        f"             {ImpurityRadiationData().imp_label[9].replace('_', '')}:  {mfile.get('f_nd_impurity_electrons(10)', scan=scan):.4e}\n"
-        f"             {ImpurityRadiationData().imp_label[10].replace('_', '')}:   {mfile.get('f_nd_impurity_electrons(11)', scan=scan):.4e}\n"
-        f"             {ImpurityRadiationData().imp_label[11].replace('_', '')}:   {mfile.get('f_nd_impurity_electrons(12)', scan=scan):.4e}\n"
-        f"             {ImpurityRadiationData().imp_label[12].replace('_', '')}:  {mfile.get('f_nd_impurity_electrons(13)', scan=scan):.4e}\n"
-        f"             {ImpurityRadiationData().imp_label[13].replace('_', '')}:   {mfile.get('f_nd_impurity_electrons(14)', scan=scan):.4e}"
+        + "\n".join(
+            f"             {label.replace('_', '')}:  "
+            f"{mfile.get(f'f_nd_impurity_electrons({index:02d})', scan=scan):.4e}"
+            for index, label in enumerate(impurity_data.imp_label[:14], start=1)
+        )
     )
 
     axis.text(
