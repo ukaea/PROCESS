@@ -240,7 +240,7 @@ ITERATION_VARIABLES = {
     176: IterationVariable("f_st_coil_aspect", "stellarator", 0.70, 1.30),
     177: IterationVariable("f_a_tf_turn_cable_space_extra_void", "tfcoil", 0.01, 1.0),
     178: IterationVariable(
-        "molflow_plasma_fuelling_required",
+        "molflow_plasma_fuelling",
         "physics",
         1.0e20,
         1.0e23,

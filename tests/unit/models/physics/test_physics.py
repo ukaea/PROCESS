@@ -1873,7 +1873,7 @@ class PhyauxParam(NamedTuple):
 
     expected_fusrat: Any = None
 
-    expected_molflow_plasma_fuelling_required: Any = None
+    expected_molflow_plasma_fuelling_equilibrium: Any = None
 
     expected_rndfuel: Any = None
 
@@ -1898,7 +1898,7 @@ class PhyauxParam(NamedTuple):
             expected_burnup=0.20383508579699033,
             expected_figmer=55.195367036602576,
             expected_fusrat=3.7484146722826997e20,
-            expected_molflow_plasma_fuelling_required=1.838944781084418e21,
+            expected_molflow_plasma_fuelling_equilibrium=1.838944781084418e21,
             expected_rndfuel=3.7484146722826997e20,
             expected_t_alpha_confinement=37.993985551650177,
         ),
@@ -1917,7 +1917,7 @@ class PhyauxParam(NamedTuple):
             expected_burnup=0.20387039462081086,
             expected_figmer=55.195367036602576,
             expected_fusrat=3.7467489360461772e20,
-            expected_molflow_plasma_fuelling_required=1.8378092331723546e21,
+            expected_molflow_plasma_fuelling_equilibrium=1.8378092331723546e21,
             expected_rndfuel=3.7467489360461772e20,
             expected_t_alpha_confinement=38.010876984618747,
         ),
@@ -1945,7 +1945,7 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
         burnup,
         figmer,
         fusrat,
-        molflow_plasma_fuelling_required,
+        molflow_plasma_fuelling_equilibrium,
         rndfuel,
         t_alpha_confinement,
         _,
@@ -1969,8 +1969,8 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
 
     assert fusrat == pytest.approx(phyauxparam.expected_fusrat)
 
-    assert molflow_plasma_fuelling_required == pytest.approx(
-        phyauxparam.expected_molflow_plasma_fuelling_required
+    assert molflow_plasma_fuelling_equilibrium == pytest.approx(
+        phyauxparam.expected_molflow_plasma_fuelling_equilibrium
     )
 
     assert rndfuel == pytest.approx(phyauxparam.expected_rndfuel)
