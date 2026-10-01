@@ -3013,7 +3013,7 @@ def plot_main_plasma_information(
         f"             $\\mathbf{{densities:}}$\n \n"
         f"             Effective charge: {mfile.get('n_charge_plasma_effective_vol_avg', scan=scan):.3f}\n\n"
         + "\n".join(
-            f"             {label.replace('_', '')+ ':':<6}"
+            f"             {label.replace('_', '') + ':':<6}"
             f"{mfile.get(f'f_nd_impurity_electrons({index:02d})', scan=scan):.4e}"
             for index, label in enumerate(impurity_data.imp_label[:14], start=1)
         )
@@ -4911,12 +4911,13 @@ def plot_line_brem_loss_function_profile(
     axis.plot(rho, lz[0], label="H")
     axis.plot(rho, lz[1], label="He")
     # Plot the remaining impurities if their fraction is significant
+    impurity_data = ImpurityRadiationData()
     for ind in range(2, imp_data.shape[0]):
         if imp_frac[ind] > 1.0e-30:
             axis.plot(
                 rho,
                 lz[ind],
-                label=ImpurityRadiationData().imp_label[ind].replace("_", ""),
+                label=impurity_data.imp_label[ind].replace("_", ""),
             )
 
     axis.legend(loc="best", ncol=4)
@@ -13945,7 +13946,7 @@ def plot_ion_charge_profile(axis: plt.Axes, mfile: MFile, scan: int):
     ])
 
     n_charge_plasma_profile = []
-    avg_ionisation_percentages = []
+    impurity_data = ImpurityRadiationData()
     for imp in range(N_IMPURITIES):
         if imp_frac[imp] > 1.0e-30:
             profile = [
@@ -13953,20 +13954,16 @@ def plot_ion_charge_profile(axis: plt.Axes, mfile: MFile, scan: int):
                 for i in range(n_plasma_profile_elements)
             ]
             n_charge_plasma_profile.append(profile)
-            z_max = ImpurityRadiationData().imp_full_ion_charge[imp]
+            z_max = impurity_data.imp_full_ion_charge[imp]
             # Calculate relative ionisation state as percent of full ionisation
             rel_ion_state = [
                 100.0 * (val / z_max if z_max > 0 else 0) for val in profile
             ]
             avg_ionisation = np.mean(rel_ion_state)
-            avg_ionisation_percentages.append((
-                ImpurityRadiationData().imp_label[imp].replace("_", ""),
-                avg_ionisation,
-            ))
             axis.plot(
                 np.linspace(0, 1, n_plasma_profile_elements),
                 rel_ion_state,
-                label=f"{ImpurityRadiationData().imp_label[imp].replace('_', '')} (Z={z_max}): avg {avg_ionisation:.1f}%",
+                label=f"{impurity_data.imp_label[imp].replace('_', '')} (Z={z_max}): avg {avg_ionisation:.1f}%",
             )
     axis.set_ylabel("Relative Ionisation State [% of $Z$]")
     axis.legend()
