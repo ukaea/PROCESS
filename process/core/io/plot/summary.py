@@ -15,7 +15,6 @@ import numpy as np
 from matplotlib import patches
 from matplotlib.patches import Circle, Rectangle
 from matplotlib.path import Path as mplPath
-from scipy.integrate import cumulative_simpson
 from scipy.interpolate import interp1d
 
 from process.core import constants
@@ -12103,7 +12102,7 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, fig, mfile: MFile, scan: i
         for i in range(n_plasma_profile_elements)
     ]
 
-    fusrat_plasma_total_profile = [
+    fusden_plasma_total_profile = [
         fusden_plasma_dt_profile[i]
         + fusden_plasma_dd_triton_profile[i]
         + fusden_plasma_dd_helion_profile[i]
@@ -12145,8 +12144,8 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, fig, mfile: MFile, scan: i
         label=r"$\mathrm{D-3He}$",
     )
     axis.plot(
-        np.linspace(0, 1, len(fusrat_plasma_total_profile)),
-        fusrat_plasma_total_profile,
+        np.linspace(0, 1, len(fusden_plasma_total_profile)),
+        fusden_plasma_total_profile,
         color=axis.spines["left"].get_edgecolor(),
         linestyle="None",
         marker="d",
@@ -12156,8 +12155,8 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, fig, mfile: MFile, scan: i
 
     # Show the plasma volume-averaged rate density and its position on the
     # profile.
-    profile_positions = np.linspace(0, 1, len(fusrat_plasma_total_profile))
-    profile_rates = np.asarray(fusrat_plasma_total_profile)
+    profile_positions = np.linspace(0, 1, len(fusden_plasma_total_profile))
+    profile_rates = np.asarray(fusden_plasma_total_profile)
     average_rate = mfile.get("fusden_plasma_vol_avg", scan=scan)
     axis.axhline(
         average_rate,
@@ -12208,7 +12207,7 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, fig, mfile: MFile, scan: i
         linestyle="--",
     )
     ax2.plot(
-        np.linspace(0, 1, len(fusrat_plasma_total_profile)),
+        np.linspace(0, 1, len(fusden_plasma_total_profile)),
         (
             np.array(fusden_plasma_dhe3_profile) * constants.D_HELIUM_ENERGY
             + np.array(fusden_plasma_dd_helion_profile) * constants.DD_HELIUM_ENERGY
@@ -12453,148 +12452,107 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, fig, mfile: MFile, scan: i
         transform=fig.transFigure,
     )
 
-def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
+
+def plot_fusion_rate_profiles(axis: plt.Axes, mfile: MFile, scan: int):
     """Plot the fusion rate profiles on the given axis"""
-    fusrat_plasma_dt_profile = []
-    fusrat_plasma_dd_triton_profile = []
-    fusrat_plasma_dd_helion_profile = []
-    fusrat_plasma_dhe3_profile = []
+    fusden_plasma_dt_profile = []
+    fusden_plasma_dd_triton_profile = []
+    fusden_plasma_dd_helion_profile = []
+    fusden_plasma_dhe3_profile = []
 
-    n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
     vol_plasma = mfile.get("vol_plasma", scan=scan)
-    
-    rho, ne, te = profiles_with_pedestal(mfile, scan)
-    
-    
-    
-    fusrat_plasma_dt_profile = [
-        mfile.get(f"fusrat_plasma_dt_profile{i}", scan=scan)
+    n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
+    fusrat_total = mfile.get("fusrat_total", scan=scan)
+
+    rho, _, _ = profiles_with_pedestal(mfile, scan)
+
+    fusden_plasma_dt_profile = [
+        mfile.get(f"fusden_plasma_dt_profile{i}", scan=scan)
         for i in range(n_plasma_profile_elements)
     ]
 
-    fusrat_plasma_dd_triton_profile = [
-        mfile.get(f"fusrat_plasma_dd_triton_profile{i}", scan=scan)
+    fusden_plasma_dd_triton_profile = [
+        mfile.get(f"fusden_plasma_dd_triton_profile{i}", scan=scan)
         for i in range(n_plasma_profile_elements)
     ]
 
-    fusrat_plasma_dd_helion_profile = [
-        mfile.get(f"fusrat_plasma_dd_helion_profile{i}", scan=scan)
+    fusden_plasma_dd_helion_profile = [
+        mfile.get(f"fusden_plasma_dd_helion_profile{i}", scan=scan)
         for i in range(n_plasma_profile_elements)
     ]
-    fusrat_plasma_dhe3_profile = [
-        mfile.get(f"fusrat_plasma_dhe3_profile{i}", scan=scan)
+    fusden_plasma_dhe3_profile = [
+        mfile.get(f"fusden_plasma_dhe3_profile{i}", scan=scan)
         for i in range(n_plasma_profile_elements)
     ]
 
     fusden_plasma_total_profile = [
-        fusrat_plasma_dt_profile[i]
-        + fusrat_plasma_dd_triton_profile[i]
-        + fusrat_plasma_dd_helion_profile[i]
-        + fusrat_plasma_dhe3_profile[i]
-        for i in range(len(fusrat_plasma_dt_profile))
+        fusden_plasma_dt_profile[i]
+        + fusden_plasma_dd_triton_profile[i]
+        + fusden_plasma_dd_helion_profile[i]
+        + fusden_plasma_dhe3_profile[i]
+        for i in range(len(fusden_plasma_dt_profile))
     ]
-    
-    # Integrand for the volume integral N = vol_plasma * 2 * integral(fusden(rho) * rho, drho)
-    fusrat_plasma_total_profile = np.array([
-        fusden_plasma_total_profile[i] * vol_plasma * 2 * rho[i]
-        for i in range(len(fusden_plasma_total_profile))
-    ])
 
-    # Simpson's rule matches the quadrature used internally for fusrat_total, so the
-    # cumulative integral naturally lands on the reported total at rho=1
-    cum_fusrat = cumulative_simpson(fusrat_plasma_total_profile, x=rho, initial=0.0)
-    print(cum_fusrat[-1])
+    # Convert each reaction-rate density into shell contributions, then integrate
+    # cumulatively to obtain the fusion-rate profile for that reaction.
+    reaction_profiles = {
+        r"D-T": fusden_plasma_dt_profile,
+        r"D-D Triton": fusden_plasma_dd_triton_profile,
+        r"D-D Helion": fusden_plasma_dd_helion_profile,
+        r"D-$^3$He": fusden_plasma_dhe3_profile,
+        "Total": fusden_plasma_total_profile,
+    }
+    cum_fusrat_profiles = {
+        label: calculate_profile_shell_contributions(
+            profile_x=rho,
+            profile_y=np.array(profile),
+            vol_plasma=vol_plasma,
+            profile_dx=rho[1] - rho[0],
+        )
+        for label, profile in reaction_profiles.items()
+    }
+    cum_fusrat_profiles["Total cumulative"] = np.cumsum(cum_fusrat_profiles["Total"])
     axis.spines["left"].set_color("red")
     axis.yaxis.label.set_color("black")
     axis.tick_params(axis="y", colors="red")
 
-    # Plot fusion rates (dashed lines, left axis) with axis color and different linestyles
-    # axis.plot(
-    #     np.linspace(0, 1, len(fusrat_plasma_dt_profile)),
-    #     fusrat_plasma_dt_profile,
-    #     color=axis.spines["left"].get_edgecolor(),
-    #     linestyle="-",
-    #     label=r"$\mathrm{D-T}$",
-    # )
-    # axis.plot(
-    #     np.linspace(0, 1, len(fusrat_plasma_dd_triton_profile)),
-    #     fusrat_plasma_dd_triton_profile,
-    #     color=axis.spines["left"].get_edgecolor(),
-    #     linestyle=":",
-    #     label=r"$\mathrm{D-D \ Triton}$",
-    # )
-    # axis.plot(
-    #     np.linspace(0, 1, len(fusrat_plasma_dd_helion_profile)),
-    #     fusrat_plasma_dd_helion_profile,
-    #     color=axis.spines["left"].get_edgecolor(),
-    #     linestyle="-.",
-    #     label=r"$\mathrm{D-D \ Helion}$",
-    # )
-    # axis.plot(
-    #     np.linspace(0, 1, len(fusrat_plasma_dhe3_profile)),
-    #     fusrat_plasma_dhe3_profile,
-    #     color=axis.spines["left"].get_edgecolor(),
-    #     linestyle="--",
-    #     label=r"$\mathrm{D-3He}$",
-    # )
-    axis.plot(
-        np.linspace(0, 1, len(fusrat_plasma_total_profile)),
-        cum_fusrat,
-        color=axis.spines["left"].get_edgecolor(),
-        linestyle="None",
-        marker="d",
-        markersize=1,
-        label=r"Total",
+    line_colors = {
+        "D-T": "red",
+        "D-D Triton": "tab:blue",
+        "D-D Helion": "tab:green",
+        "D-$^3$He": "tab:orange",
+        "Total": "tab:purple",
+        "Total cumulative": "black",
+    }
+    for label, cum_fusrat in cum_fusrat_profiles.items():
+        axis.plot(
+            rho,
+            cum_fusrat,
+            color=line_colors[label],
+            linestyle="-",
+            label=label,
+        )
+
+    axis.axhline(
+        y=fusrat_total,
+        color="tab:brown",
+        linestyle="-",
+        label="Total Fusion Rate",
     )
 
-    # # Plot fusion power (solid lines, right axis) with axis color and different linestyles
-    # ax2 = axis.twinx()
-    # ax2.spines["right"].set_color("blue")
-    # ax2.yaxis.label.set_color("black")
-    # ax2.tick_params(axis="y", colors="blue")
-    # ax2.plot(
-    #     np.linspace(0, 1, len(fusrat_plasma_dt_profile)),
-    #     np.array(fusrat_plasma_dt_profile) * constants.D_T_ENERGY,
-    #     color=ax2.spines["right"].get_edgecolor(),
-    #     linestyle="-",
-    # )
+    half_total_rate = fusrat_total / 2
+    half_total_rate_position = np.interp(
+        half_total_rate,
+        cum_fusrat_profiles["Total cumulative"],
+        rho,
+    )
 
-    # ax2.plot(
-    #     np.linspace(0, 1, len(fusrat_plasma_dd_triton_profile)),
-    #     np.array(fusrat_plasma_dd_triton_profile) * constants.DD_TRITON_ENERGY,
-    #     color=ax2.spines["right"].get_edgecolor(),
-    #     linestyle=":",
-    # )
-    # ax2.plot(
-    #     np.linspace(0, 1, len(fusrat_plasma_dd_helion_profile)),
-    #     np.array(fusrat_plasma_dd_helion_profile) * constants.DD_HELIUM_ENERGY,
-    #     color=ax2.spines["right"].get_edgecolor(),
-    #     linestyle="-.",
-    # )
-    # ax2.plot(
-    #     np.linspace(0, 1, len(fusrat_plasma_dhe3_profile)),
-    #     np.array(fusrat_plasma_dhe3_profile) * constants.D_HELIUM_ENERGY,
-    #     color=ax2.spines["right"].get_edgecolor(),
-    #     linestyle="--",
-    # )
-    # ax2.plot(
-    #     np.linspace(0, 1, len(fusrat_plasma_total_profile)),
-    #     (
-    #         np.array(fusrat_plasma_dhe3_profile) * constants.D_HELIUM_ENERGY
-    #         + np.array(fusrat_plasma_dd_helion_profile) * constants.DD_HELIUM_ENERGY
-    #         + np.array(fusrat_plasma_dd_triton_profile) * constants.DD_TRITON_ENERGY
-    #         + np.array(fusrat_plasma_dt_profile) * constants.D_T_ENERGY
-    #     ),
-    #     color=ax2.spines["right"].get_edgecolor(),
-    #     linestyle="None",
-    #     marker="d",
-    #     markersize=1,
-    #     label=r"Total",
-    # )
-
-    # =================================================
-
-    
+    axis.axvline(
+        x=half_total_rate_position,
+        color="tab:pink",
+        linestyle="-",
+        label="Half Total Fusion Rate Position",
+    )
 
     # =================================================
 
@@ -12608,26 +12566,13 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         framealpha=1.0,
         frameon=True,
     )
-    #axis.set_yscale("log")
+    axis.set_yscale("log")
     axis.grid(True, which="both", linestyle="--", alpha=0.5)
     axis.set_xlim([0, 1.025])
+    axis.set_ylim(bottom=1e12)
+    axis.yaxis.minorticks_on()
     axis.minorticks_on()
-    #axis.set_ylim([1e10, 1e23])
-    # axis.yaxis.set_major_locator(plt.LogLocator(base=10.0, numticks=10))
-    # axis.yaxis.set_minor_locator(
-    #     plt.LogLocator(base=10.0, subs=np.arange(1, 10) * 0.1, numticks=100)
-    # )
-    # axis.tick_params(axis="y", which="minor", colors="red")
 
-    # ax2.set_title("Fusion Rate and Fusion Power Profiles")
-    # ax2.set_ylabel("Fusion Power [W]")
-    # ax2.set_yscale("log")
-    # ax2.minorticks_on()
-    # ax2.yaxis.set_major_locator(plt.LogLocator(base=10.0, numticks=10))
-    # ax2.yaxis.set_minor_locator(
-    #     plt.LogLocator(base=10.0, subs=np.arange(1, 10) * 0.1, numticks=100)
-    # )
-    # ax2.tick_params(axis="y", which="minor", colors="blue")
 
 def plot_cover_page(
     axis: plt.Axes,
@@ -17161,9 +17106,14 @@ def main_plot(
         _add_page("line_brem_power").add_subplot(121), m_file, scan, imp
     )
 
-    plot_fusion_rate_profiles(
-        _add_page("fusion_rate").add_subplot(122), pages["fusion_rate"], m_file, scan
+    plot_fusion_rate_density_profiles(
+        _add_page("fusion_rate_density").add_subplot(122),
+        pages["fusion_rate_density"],
+        m_file,
+        scan,
     )
+
+    plot_fusion_rate_profiles(_add_page("fusion_rate").add_subplot(121), m_file, scan)
 
     _add_page("rx_1_2"), _add_page("rx_3_4")
     if m_file.get("i_plasma_shape", scan=scan) == PlasmaShapeModelType.SAUTER:
