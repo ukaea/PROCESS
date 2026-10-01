@@ -5389,7 +5389,7 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
         # Current per turn [A/turn]
         c_tf_turn = c_tf_coil / n_tf_coil_turns
 
-        # Radial and toroidal dimension of conduit/stabiliser region containing tape 
+        # Radial and toroidal dimension of conduit/stabiliser region containing tape
         # stack and cooling pipe [m]
         dr_tf_turn_stabiliser = dr_tf_turn - 2.0e0 * dx_tf_turn_insulation
         dx_tf_turn_stabiliser = dx_tf_turn - 2.0e0 * dx_tf_turn_insulation
@@ -5502,64 +5502,80 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
         else:
             strain = self.data.tfcoil.str_wp
 
-        # =================================================================
+        match SuperconductorModel(i_tf_superconductor):
+            # =================================================================
 
-        if i_tf_superconductor == SuperconductorModel.CROCO_REBCO:
-            #  Find critical current density in superconducting cable, j_crit_cable
-            j_superconductor_critical, _, bc20m, tc0m = superconductors.jcrit_rebco(
-                temp_conductor=temp_tf_peak, b_conductor=b_tf_inboard_peak
-            )
-
-        # =================================================================
-
-        # Durham Ginzburg-Landau critical surface model for REBCO
-        elif i_tf_superconductor == SuperconductorModel.DURHAM_REBCO:
-            bc20m = 430  # [T]
-            tc0m = 185  # [K]
-
-            # If strain limit achieved, throw a warning and use the lower strain
-            if abs(strain) > 0.7e-2:
-                logger.error(
-                    f"TF strain={strain} was outside the region of applicability. "
-                    f"Used lower strain."
+            case SuperconductorModel.CROCO_REBCO:
+                b_c20_max = (
+                    SuperconductorModel.CROCO_REBCO.b_crit_zero_field_strain
+                )  # [T]
+                t_c0 = SuperconductorModel.CROCO_REBCO.temp_crit_zero_field_strain  # [K]
+                #  Find critical current density in superconducting cable, j_crit_cable
+                j_superconductor_critical, _, bc20m, tc0m = superconductors.jcrit_rebco(
+                    temp_conductor=temp_tf_peak,
+                    b_conductor=b_tf_inboard_peak,
+                    temp_c0_max=t_c0,
+                    b_c20_max=b_c20_max,
                 )
-                strain = np.sign(strain) * 0.7e-2
 
-            j_superconductor_critical, _, _ = superconductors.gl_rebco(
-                temp_conductor=temp_tf_peak,
-                b_conductor=b_tf_inboard_peak,
-                strain=strain,
-                b_c20max=bc20m,
-                t_c0=tc0m,
-            )
+            # =================================================================
 
-        # =================================================================
+            # Durham Ginzburg-Landau critical surface model for REBCO
+            case SuperconductorModel.DURHAM_REBCO:
+                bc20m = SuperconductorModel.DURHAM_REBCO.b_crit_zero_field_strain  # [T]
+                tc0m = (
+                    SuperconductorModel.DURHAM_REBCO.temp_crit_zero_field_strain
+                )  # [K]
 
-        # Hazelton experimental data + Zhai conceptual model for REBCO
-        elif i_tf_superconductor == SuperconductorModel.HAZELTON_ZHAI_REBCO:
-            bc20m = 138  # [T]
-            tc0m = 92  # [K]
+                # If strain limit achieved, throw a warning and use the lower strain
+                if abs(strain) > 0.7e-2:
+                    logger.error(
+                        f"TF strain={strain} was outside the region of applicability. "
+                        f"Used lower strain."
+                    )
+                    strain = np.sign(strain) * 0.7e-2
 
-            # If strain limit achieved, throw a warning and use the lower strain
-            if abs(strain) > 0.7e-2:
-                logger.error(
-                    f"TF strain={strain} was outside the region of applicability. "
-                    f"Used lower strain."
+                j_superconductor_critical, _, _ = superconductors.gl_rebco(
+                    temp_conductor=temp_tf_peak,
+                    b_conductor=b_tf_inboard_peak,
+                    strain=strain,
+                    b_c20max=bc20m,
+                    t_c0=tc0m,
                 )
-                strain = np.sign(strain) * 0.7e-2
 
-            # 'high current density' as per parameterisation described in Wolf,
-            #  and based on Hazelton experimental data and Zhai conceptual model;
-            #  see subroutine for full references
-            j_superconductor_critical, _, _ = superconductors.hijc_rebco(
-                temp_conductor=temp_tf_peak,
-                b_conductor=b_tf_inboard_peak,
-                b_c20max=bc20m,
-                t_c0=tc0m,
-                dr_hts_tape=dr_tf_hts_tape,
-                dx_hts_tape_rebco=dx_tf_hts_tape_rebco,
-                dx_hts_tape_total=dx_tf_hts_tape_total,
-            )
+            # =================================================================
+
+            # Hazelton experimental data + Zhai conceptual model for REBCO
+            case SuperconductorModel.HAZELTON_ZHAI_REBCO:
+                bc20m = (
+                    SuperconductorModel.HAZELTON_ZHAI_REBCO.b_crit_zero_field_strain
+                )  # [T]
+                tc0m = (
+                    SuperconductorModel.HAZELTON_ZHAI_REBCO.temp_crit_zero_field_strain
+                )  # [K]
+
+                # If strain limit achieved, throw a warning and use the lower strain
+                if abs(strain) > 0.7e-2:
+                    logger.error(
+                        f"TF strain={strain} was outside the region of applicability. "
+                        f"Used lower strain."
+                    )
+                    strain = np.sign(strain) * 0.7e-2
+
+                # 'high current density' as per parameterisation described in Wolf,
+                #  and based on Hazelton experimental data and Zhai conceptual model;
+                #  see subroutine for full references
+                j_superconductor_critical, _, _ = superconductors.hijc_rebco(
+                    temp_conductor=temp_tf_peak,
+                    b_conductor=b_tf_inboard_peak,
+                    b_c20max=bc20m,
+                    t_c0=tc0m,
+                    dr_hts_tape=dr_tf_hts_tape,
+                    dx_hts_tape_rebco=dx_tf_hts_tape_rebco,
+                    dx_hts_tape_total=dx_tf_hts_tape_total,
+                )
+
+            # =================================================================
 
         # =================================================================
 
