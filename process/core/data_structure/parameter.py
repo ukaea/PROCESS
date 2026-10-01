@@ -172,7 +172,7 @@ class Parameter(DefaultParameter, Generic[ParameterValueType]):
 
         return super().value
 
-    def set_value(self, new_value, source=""):
+    def set_value(self, new_value, source="", *, typecheck: bool = False):
         """Update the data that this Parameter wraps."""
         if KEEP_EDIT_USE_RECORDS:
             try:
@@ -197,7 +197,7 @@ class Parameter(DefaultParameter, Generic[ParameterValueType]):
                     frame_code=called_from.code_context,
                 )
             )
-        return super().set_value(new_value, source)
+        return super().set_value(new_value, source, typecheck=typecheck)
 
     @property
     def edit_records(self) -> list[EditRecord]:
@@ -374,16 +374,10 @@ class PROCESSModelData:
 
         # Not everything is a Parameter in PROCESS
         if isinstance(current_value, Parameter):
-            logger.debug(
-                "Doing self.%s = %r only copies %s into "
-                "%s.value. Use set_field to exactly set the dataclass field "
-                "i.e. if you do not want self.%s to be a Parameter anymore.",
-                name,
-                value,
-                value,
-                name,
-                name,
-            )
+            # It should be noted that doing self.name = value does NOT set self.name
+            # exactly equal to value. Instead, if self.name is Parameter, value is
+            # copied into the Parameter.
+            # If the field needs to be exactly overwritten use set_field
             if isinstance(value, Parameter):
                 current_value.set_value(value.value, source=value.name)
                 return
