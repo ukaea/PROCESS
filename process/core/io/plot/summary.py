@@ -13449,7 +13449,8 @@ def plot_tf_step_vertical_tape_turn(
         f"$\\mathbf{{Strand \\ Space:}}$\n\n"
         f"$\\Delta r:$ {mfile.get('dr_tf_turn_tape_stack', scan=scan):.3e} m\n"
         f"$\\Delta x:$ {mfile.get('dx_tf_turn_tape_stack', scan=scan):.3e} m\n"
-        f"Tape stack space area: {mfile.get('a_tf_turn_tape_stack', scan=scan):.3e} m$^2$"
+        f"Tape stack space area: {mfile.get('a_tf_turn_tape_stack', scan=scan):.3e} m$^2$\n"
+        f"Strands per turn: {mfile.get('n_tf_turn_superconducting_strands', scan=scan)}"
     )
 
     axis.text(
@@ -13477,7 +13478,7 @@ def plot_tf_step_vertical_tape_turn(
 
     axis.text(
         0.5,
-        0.6,
+        0.55,
         textstr_stabiliser,
         fontsize=9,
         verticalalignment="top",

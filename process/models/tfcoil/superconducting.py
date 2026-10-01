@@ -5288,7 +5288,6 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
 
         if output:
             self.output_general_tf_info()
-            self.output_croco_info()
 
     def output(self) -> None:
         """Output the results of the superconducting TF coil model for a STEP vertically
@@ -5390,8 +5389,8 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
         # Current per turn [A/turn]
         c_tf_turn = c_tf_coil / n_tf_coil_turns
 
-        # Radial and toroidal dimension of conductor region containing tape stack and
-        # cooling pipe [m]
+        # Radial and toroidal dimension of conduit/stabiliser region containing tape 
+        # stack and cooling pipe [m]
         dr_tf_turn_stabiliser = dr_tf_turn - 2.0e0 * dx_tf_turn_insulation
         dx_tf_turn_stabiliser = dx_tf_turn - 2.0e0 * dx_tf_turn_insulation
 
