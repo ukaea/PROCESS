@@ -306,6 +306,8 @@ class Caller:
                         self.models.cicc_sctfcoil.run()
                     case SuperconductingTFTurnType.CROSS_CONDUCTOR:
                         self.models.croco_sctfcoil.run()
+                    case SuperconductingTFTurnType.STEP_STACKED_TAPE:
+                        self.models.step_sctfcoil.run()
 
             case TFConductorModel.HELIUM_COOLED_ALUMINIUM:
                 self.models.aluminium_tf_coil.run()
