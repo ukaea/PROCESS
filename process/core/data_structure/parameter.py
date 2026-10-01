@@ -170,7 +170,9 @@ class Parameter(DefaultParameter, Generic[ParameterValueType]):
                 )
             )
 
-        return super().value
+        # This should really call super().value but doing so is slow in PROCESS
+        # which calls .value hundreds of thousands of times per iteration!
+        return self._value
 
     def set_value(self, new_value, source="", *, typecheck: bool = False):
         """Update the data that this Parameter wraps."""
