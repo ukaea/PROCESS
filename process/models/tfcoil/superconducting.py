@@ -35,6 +35,7 @@ class SuperconductingTFTurnType(IntEnum):
 
     CABLE_IN_CONDUIT = (1, "CICC", "Cable-in-Conduit Conductor")
     CROSS_CONDUCTOR = (2, "CroCo", "Cross Conductor")
+    STEP_STACKED_TAPE = (3, "STEP", "STEP Stacked Tape")
 
     def __new__(cls, value: int, abbreviation: str, full_name: str):
         """Create a new SuperconductingTFTurnType enum member
