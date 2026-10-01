@@ -138,9 +138,14 @@ def test_parameter_use_record(turn_on_access_records, example_model_dataclass):
 
     _some_param = example_model_dataclass.my_param * 2
 
-    # Used once in the calculation and thrice to access the usage records
     assert len(example_model_dataclass.my_param.usage_records) == 1
     assert example_model_dataclass.my_param.usage_records[0].value == 42.0  # noqa: RUF069
+
+    example_model_dataclass.my_param = 7.0
+    _some_other_param = example_model_dataclass.my_param + 4.0
+
+    assert len(example_model_dataclass.my_param.usage_records) == 2
+    assert example_model_dataclass.my_param.usage_records[1].value == 7.0  # noqa: RUF069
 
 
 def test_parameter_use_record_not_created_on_edit(
@@ -163,6 +168,12 @@ def test_parameter_edit_record(turn_on_access_records, example_model_dataclass):
     assert len(example_model_dataclass.my_param.edit_records) == 1
     assert example_model_dataclass.my_param.edit_records[0].value == 42.0  # noqa: RUF069
     assert example_model_dataclass.my_param.edit_records[0].new_value == 2.0  # noqa: RUF069
+
+    example_model_dataclass.my_param = 4.0
+
+    assert len(example_model_dataclass.my_param.edit_records) == 2
+    assert example_model_dataclass.my_param.edit_records[1].value == 2.0  # noqa: RUF069
+    assert example_model_dataclass.my_param.edit_records[1].new_value == 4.0  # noqa: RUF069
 
 
 def test_parameter_edit_inplace_record(turn_on_access_records, example_model_dataclass):

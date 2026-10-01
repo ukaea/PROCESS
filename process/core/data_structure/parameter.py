@@ -187,7 +187,7 @@ class Parameter(DefaultParameter, Generic[ParameterValueType]):
 
             self._edited.append(
                 EditRecord(
-                    value=np.copy(self.history()[0].value),
+                    value=np.copy(self.history()[-1].value),
                     new_value=np.copy(new_value._value)
                     if isinstance(new_value, Parameter)
                     else np.copy(new_value),
