@@ -3013,7 +3013,7 @@ def plot_main_plasma_information(
         f"             $\\mathbf{{densities:}}$\n \n"
         f"             Effective charge: {mfile.get('n_charge_plasma_effective_vol_avg', scan=scan):.3f}\n\n"
         + "\n".join(
-            f"             {label.replace('_', '')}:  "
+            f"             {label.replace('_', '')+ ':':<6}"
             f"{mfile.get(f'f_nd_impurity_electrons({index:02d})', scan=scan):.4e}"
             for index, label in enumerate(impurity_data.imp_label[:14], start=1)
         )
