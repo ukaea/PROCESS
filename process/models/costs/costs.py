@@ -2346,10 +2346,10 @@ class Costs(Model):
         This routine evaluates the Account 2272 - Fuel processing
         """
         if self.data.ife.ife != 1:
-            #  Previous calculation, using molflow_plasma_fuelling_required in Amps:
+            #  Previous calculation, using molflow_plasma_fuelling in Amps:
             #  1.3 should have been
             # self.data.physics.m_fuel_amu*umass/electron_charge*1000*s/day = 2.2
-            # wtgpd = burnup * molflow_plasma_fuelling_required * 1.3e0
+            # wtgpd = burnup * molflow_plasma_fuelling * 1.3e0
 
             #  New calculation: 2 nuclei * reactions/sec * kg/nucleus * g/kg * sec/day
             self.data.physics.wtgpd = (
