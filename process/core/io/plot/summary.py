@@ -102,7 +102,10 @@ from process.models.tfcoil.quench import (
     _build_cumulative_quench_integral,
     calculate_quench_protection_current_density,
 )
-from process.models.tfcoil.superconducting import SuperconductingTFTurnType
+from process.models.tfcoil.superconducting import (
+    SuperconductingTFTurnType,
+    SuperconductingTFWPShapeType,
+)
 
 
 @dataclass
@@ -6207,10 +6210,13 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
         # ================================================================
 
         # Plot the rectangular WP
-        if i_tf_wp_geom == 0:
+        if (
+            SuperconductingTFWPShapeType(i_tf_wp_geom)
+            == SuperconductingTFWPShapeType.RECTANGULAR
+        ):
             if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.INTEGER:
                 long_turns = round(turn_layers)
-                short_turns = round(turn_pancakes)
+                n_turns_toroidal = round(turn_pancakes)
             else:
                 wp_side_ratio = (
                     dr_tf_wp_with_insulation
@@ -6222,7 +6228,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
                 side_unit = n_tf_coil_turns / wp_side_ratio
                 root_turns = round(np.sqrt(side_unit), 1)
                 long_turns = round(root_turns * wp_side_ratio)
-                short_turns = round(root_turns)
+                n_turns_toroidal = round(root_turns)
 
             # Plots the surrounding insualtion
             axis.add_patch(
@@ -6255,94 +6261,26 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
                     color="blue",
                 )
             )
-            # Dvides the WP up into the turn segments
-            for i in range(1, long_turns):
+            # Divides the WP up into the turn segments
+            wp_inner_margin = dx_tf_wp_insulation + dx_tf_wp_insertion_gap
+            wp_r_min = r_tf_wp_inboard_inner + wp_inner_margin
+            wp_r_max = wp_r_min + dr_tf_wp_with_insulation - 2 * wp_inner_margin
+            wp_t_min = -0.5 * dx_tf_wp_primary_toroidal + wp_inner_margin
+            wp_t_max = -wp_t_min
+
+            for r_line in np.linspace(wp_r_min, wp_r_max, long_turns + 1)[1:-1]:
                 axis.plot(
-                    [
-                        (
-                            r_tf_wp_inboard_inner
-                            + dx_tf_wp_insulation
-                            + dx_tf_wp_insertion_gap
-                        )
-                        + i
-                        * (
-                            (
-                                dr_tf_wp_with_insulation
-                                - dx_tf_wp_insulation
-                                - dx_tf_wp_insertion_gap
-                            )
-                            / long_turns
-                        ),
-                        (
-                            r_tf_wp_inboard_inner
-                            + dx_tf_wp_insulation
-                            + dx_tf_wp_insertion_gap
-                        )
-                        + i
-                        * (
-                            (
-                                dr_tf_wp_with_insulation
-                                - dx_tf_wp_insulation
-                                - dx_tf_wp_insertion_gap
-                            )
-                            / long_turns
-                        ),
-                    ],
-                    [
-                        -0.5 * dx_tf_wp_primary_toroidal
-                        + (dx_tf_wp_insulation + dx_tf_wp_insertion_gap),
-                        0.5 * dx_tf_wp_primary_toroidal
-                        - (dx_tf_wp_insulation + dx_tf_wp_insertion_gap),
-                    ],
+                    [r_line, r_line],
+                    [wp_t_min, wp_t_max],
                     color="white",
                     linewidth="0.25",
                     linestyle="dashed",
                 )
 
-            for i in range(1, short_turns):
+            for t_line in np.linspace(wp_t_min, wp_t_max, n_turns_toroidal + 1)[1:-1]:
                 axis.plot(
-                    [
-                        (
-                            r_tf_wp_inboard_inner
-                            + dx_tf_wp_insulation
-                            + dx_tf_wp_insertion_gap
-                        ),
-                        (
-                            r_tf_wp_inboard_outer
-                            - dx_tf_wp_insulation
-                            - dx_tf_wp_insertion_gap
-                        ),
-                    ],
-                    [
-                        (
-                            -0.5 * dx_tf_wp_primary_toroidal
-                            + dx_tf_wp_insulation
-                            + dx_tf_wp_insertion_gap
-                        )
-                        + (
-                            i
-                            * (
-                                dx_tf_wp_primary_toroidal
-                                - dx_tf_wp_insulation
-                                - dx_tf_wp_insertion_gap
-                            )
-                            / short_turns
-                        ),
-                        (
-                            -0.5 * dx_tf_wp_primary_toroidal
-                            + dx_tf_wp_insulation
-                            + dx_tf_wp_insertion_gap
-                        )
-                        + (
-                            i
-                            * (
-                                dx_tf_wp_primary_toroidal
-                                - dx_tf_wp_insulation
-                                - dx_tf_wp_insertion_gap
-                            )
-                            / short_turns
-                        ),
-                    ],
+                    [wp_r_min, wp_r_max],
+                    [t_line, t_line],
                     color="white",
                     linewidth="0.25",
                     linestyle="dashed",
@@ -6351,7 +6289,10 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
         # ================================================================
 
         # Plot the double rectangle winding pack
-        if i_tf_wp_geom == 1:
+        if (
+            SuperconductingTFWPShapeType(i_tf_wp_geom)
+            == SuperconductingTFWPShapeType.DOUBLE_RECTANGULAR
+        ):
             # Inner WP insulation
             axis.add_patch(
                 Rectangle(
@@ -6417,7 +6358,10 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
         # ================================================================
 
         # Trapezium WP
-        if i_tf_wp_geom == 2:
+        if (
+            SuperconductingTFWPShapeType(i_tf_wp_geom)
+            == SuperconductingTFWPShapeType.TRAPEZOIDAL
+        ):
             # WP insulation
             x = [
                 r_tf_wp_inboard_inner,
@@ -6595,7 +6539,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
             f"Max $\\Delta r$: {mfile.get('dx_tf_side_case_peak', scan=scan):.3f} m"
         )
         axis.text(
-            0.55,
+            0.525,
             0.975,
             textstr_casing,
             fontsize=9,
@@ -6619,7 +6563,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
             f"$\\Delta r$: {mfile.get('dx_tf_wp_insertion_gap', scan=scan):.4f} m"
         )
         axis.text(
-            0.55,
+            0.525,
             0.575,
             textstr_wp_insulation,
             fontsize=9,
@@ -6655,7 +6599,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
         )
 
         axis.text(
-            0.775,
+            0.75,
             0.95,
             textstr_wp,
             fontsize=9,
@@ -6681,10 +6625,10 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
             f"Total area of steel in coil: {mfile.get('a_tf_coil_inboard_steel', scan=scan):.4f} $\\mathrm{{m}}^2$\n"
             f"Total area fraction of steel: {mfile.get('f_a_tf_coil_inboard_steel', scan=scan):.4f}\n"
             f"Total area fraction of insulation: {mfile.get('f_a_tf_coil_inboard_insulation', scan=scan):.4f}\n"
-            f"$A$, all insulation in coil: {mfile.get('a_tf_coil_inboard_insulation', scan=scan):.4f} $\\mathrm{{m}}^2$\n"
+            f"$A$, all insulation in coil: {mfile.get('a_tf_coil_inboard_insulation', scan=scan):.4f} $\\mathrm{{m}}^2$"
         )
         axis.text(
-            0.775,
+            0.75,
             0.58,
             textstr_general_info,
             fontsize=9,
@@ -6706,7 +6650,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
         axis.set_title("Top-down view of inboard TF coil at midplane")
         axis.set_xlabel("Radial distance [m]")
         axis.set_ylabel("Toroidal distance [m]")
-        axis.legend(loc="upper left")
+        axis.legend(loc="lower center", bbox_to_anchor=(0.5, -0.4))
 
 
 def plot_resistive_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
@@ -13321,6 +13265,242 @@ def plot_tf_corc_cable_summary_box(axis, fig, mfile: MFile, scan: int):
     )
 
 
+def plot_tf_step_vertical_tape_turn(
+    axis: plt.Axes,
+    fig: plt.Figure,
+    mfile: MFile,
+    scan: int,
+    dr_tf_turn: float,
+    dx_tf_turn: float,
+    dia_tf_turn_coolant_channel: float,
+    dx_tf_turn_insulation: float,
+    dr_tf_turn_tape_stack: float,
+    dx_tf_turn_tape_stack: float,
+    x_tf_turn_coolant_channel_centre: float,
+    dr_tf_turn_stabiliser: float,
+) -> None:
+    """
+    Plots TF coil STEP styled vertical tape turn structure.
+    """
+    axis.add_patch(
+        Rectangle(
+            [0, 0],
+            dr_tf_turn,
+            dx_tf_turn,
+            facecolor="red",
+            edgecolor="black",
+        ),
+    )
+    # Plot the steel conduit
+    axis.add_patch(
+        Rectangle(
+            [dx_tf_turn_insulation, dx_tf_turn_insulation],
+            (dr_tf_turn - 2 * dx_tf_turn_insulation),
+            (dx_tf_turn - 2 * dx_tf_turn_insulation),
+            facecolor="#b87333",
+            edgecolor="#8B4000",
+        ),
+    )
+
+    # Plot the coolant channel
+    axis.add_patch(
+        Circle(
+            [(dr_tf_turn / 2), x_tf_turn_coolant_channel_centre],
+            dia_tf_turn_coolant_channel / 2,
+            facecolor="white",
+            edgecolor="black",
+        ),
+    )
+
+    # Outline of the space available for the tape stack
+    axis.add_patch(
+        Rectangle(
+            [(dr_tf_turn_stabiliser * 0.1 + dx_tf_turn_insulation), (dx_tf_turn * 0.5)],
+            (dr_tf_turn_tape_stack),
+            (dx_tf_turn_tape_stack),
+            facecolor="none",
+            edgecolor="black",
+            linewidth=1,
+        ),
+    )
+
+    # Tapes are packed from the bottom of the stack at the pitch used by the model
+    # to count them. Layer thicknesses are scaled so each tape sums to that pitch.
+    dx_hts_tape_total = mfile.get("dx_tf_hts_tape_total", scan=scan)
+    dx_hts_tape_rebco = mfile.get("dx_tf_hts_tape_rebco", scan=scan)
+    dx_hts_tape_copper = mfile.get("dx_tf_hts_tape_copper", scan=scan)
+    dx_hts_tape_hastelloy = mfile.get("dx_tf_hts_tape_hastelloy", scan=scan)
+    tape_scale = dx_hts_tape_total / (
+        dx_hts_tape_rebco + dx_hts_tape_copper + dx_hts_tape_hastelloy
+    )
+    dr_hts_tape = mfile.get("dr_tf_hts_tape", scan=scan)
+
+    for i in range(int(mfile.get("n_tf_turn_superconducting_strands", scan=scan))):
+        plot_hts_tape_geometry(
+            axis=axis,
+            r_left=(dr_tf_turn / 2) - (dr_hts_tape / 2),
+            z_bottom=(dx_tf_turn * 0.5) + i * dx_hts_tape_total,
+            dr_hts_tape=dr_hts_tape,
+            dx_hts_tape_rebco=dx_hts_tape_rebco * tape_scale,
+            dx_hts_tape_copper=dx_hts_tape_copper * tape_scale,
+            dx_hts_tape_hastelloy=dx_hts_tape_hastelloy * tape_scale,
+            show_legend=False,
+        )
+
+    axis.set_xlim(-dr_tf_turn * 0.05, dr_tf_turn * 1.05)
+    axis.set_ylim(-dx_tf_turn * 0.05, dx_tf_turn * 1.05)
+
+    axis.minorticks_on()
+    axis.set_title("WP Turn Structure")
+    axis.set_xlabel("r [m]")
+    axis.set_ylabel("x [m]")
+
+    # Add info about the steel casing surrounding the WP
+    textstr_turn_insulation = f"$\\mathbf{{Turn \\ Insulation:}}$\n\n$\\Delta r:${mfile.get('t_tf_superconductor_quench', scan=scan):.3e} m"
+
+    axis.text(
+        0.5,
+        0.9,
+        textstr_turn_insulation,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "red",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    textstr_turn = (
+        f"$\\mathbf{{Turn:}}$\n\n"
+        f"$\\Delta r$: {mfile.get('dr_tf_turn', scan=scan):.3e} m\n"
+        f"$\\Delta x$: {mfile.get('dx_tf_turn', scan=scan):.3e} m"
+    )
+
+    axis.text(
+        0.65,
+        0.9,
+        textstr_turn,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    textstr_turn_strand_space = (
+        f"$\\mathbf{{Strand \\ Space:}}$\n\n"
+        f"$\\Delta r:$ {mfile.get('dr_tf_turn_tape_stack', scan=scan):.3e} m\n"
+        f"$\\Delta x:$ {mfile.get('dx_tf_turn_tape_stack', scan=scan):.3e} m\n"
+        f"Tape stack space area: {mfile.get('a_tf_turn_tape_stack', scan=scan):.3e} m$^2$\n"
+        f"Strands per turn: {mfile.get('n_tf_turn_superconducting_strands', scan=scan)}"
+    )
+
+    axis.text(
+        0.525,
+        0.7,
+        textstr_turn_strand_space,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "royalblue",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    textstr_stabiliser = (
+        f"$\\mathbf{{Stabiliser:}}$\n\n"
+        f"$\\Delta r$: {mfile.get('dr_tf_turn_stabiliser', scan=scan):.3e} m\n"
+        f"$\\Delta x$: {mfile.get('dx_tf_turn_stabiliser', scan=scan):.3e} m\n"
+        f"Stabiliser area: {mfile.get('a_tf_turn_stabiliser', scan=scan):.3e} m$^2$"
+    )
+
+    axis.text(
+        0.575,
+        0.55,
+        textstr_stabiliser,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "#b87333",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # Add info about the steel casing surrounding the WP
+    textstr_turn_cooling = (
+        f"$\\mathbf{{Cooling:}}$\n\n"
+        f"$\\varnothing$: {mfile.get('dia_tf_turn_coolant_channel', scan=scan):.3e} m\n"
+        f"Total area of all coolant channels: {mfile.get('a_tf_wp_coolant_channels', scan=scan):.4f} m$^2$"
+    )
+
+    axis.text(
+        0.5,
+        0.8,
+        textstr_turn_cooling,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "white",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    textstr_superconductor = (
+        f"$\\mathbf{{Superconductor:}}$\n \n"
+        f"Superconductor used: {SuperconductorModel(mfile.get('i_tf_sc_mat', scan=scan)).full_name}\n"
+        f"Critical field at zero \ntemperature and strain: {mfile.get('b_tf_superconductor_critical_zero_temp_strain', scan=scan):.4f} T\n"
+        f"Critical temperature at \nzero field and strain: {mfile.get('temp_tf_superconductor_critical_zero_field_strain', scan=scan):.4f} K\n"
+        f"Temperature at conductor: {mfile.get('tftmp', scan=scan):.4f} K\n"
+        f"Field at conductor: {mfile.get('b_tf_inboard_peak_with_ripple', scan=scan):.4f} T\n"
+        f"Superconductor critical current density at \noperating conditions: {mfile.get('j_tf_superconductor_critical', scan=scan):.2e} A/m$^2$\n"
+        f"$I_{{\\text{{TF,turn critical}}}}$: {mfile.get('c_turn_cables_critical', scan=scan):,.2f} A\n"
+        f"$I_{{\\text{{TF,turn}}}}$: {mfile.get('c_tf_turn', scan=scan):,.2f} A\n"
+        f"Critcal current ratio: {mfile.get('f_c_tf_turn_operating_critical', scan=scan):,.4f}\n"
+        f"Superconductor temperature \nmargin: {mfile.get('temp_tf_superconductor_margin', scan=scan):,.4f} K\n"
+        f"\n$\\mathbf{{Quench:}}$\n \n"
+        f"Quench dump time: {mfile.get('t_tf_superconductor_quench', scan=scan):.4e} s\n"
+        f"Quench detection time: {mfile.get('t_tf_quench_detection', scan=scan):.4e} s\n"
+        f"User input max temperature \nduring quench: {mfile.get('temp_tf_conductor_quench_max', scan=scan):.2f} K\n"
+        f"Required maxium WP current \ndensity for heat protection:\n{mfile.get('j_tf_wp_quench_heat_max', scan=scan):.2e} A/m$^2$\n"
+    )
+    axis.text(
+        0.75,
+        0.9,
+        textstr_superconductor,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "#6dd3f7",  # light blue for superconductors
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+
 def reaction_plot_grid(
     rminor,
     rmajor,
@@ -17195,14 +17375,13 @@ def main_plot(
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file.get("i_tf_sup", scan=scan) == TFConductorModel.SUPERCONDUCTING:
         # TF coil with WP
-        ax19 = _add_page("tf_wp").add_subplot(221, aspect="equal")
-        ax19.set_position([
-            0.025,
-            0.45,
-            0.5,
-            0.5,
-        ])  # Half height, a bit wider, top left
-        plot_superconducting_tf_wp(ax19, m_file, scan, pages["tf_wp"])
+
+        plot_superconducting_tf_wp(
+            _add_page("tf_wp").add_subplot(221, aspect="equal"),
+            m_file,
+            scan,
+            pages["tf_wp"],
+        )
 
         _add_page("cable")
         if (
@@ -17220,6 +17399,28 @@ def main_plot(
             ax20 = pages["cable"].add_subplot(325, aspect="equal")
             ax20.set_position([0.025, 0.5, 0.4, 0.4])
             plot_tf_cable_in_conduit_turn(ax20, pages["cable"], m_file, scan)
+        elif (
+            m_file.get("i_tf_turn_type", scan=scan)
+            == SuperconductingTFTurnType.STEP_STACKED_TAPE
+        ):
+            plot_tf_step_vertical_tape_turn(
+                axis=pages["cable"].add_subplot(221, aspect="equal"),
+                fig=pages["cable"],
+                mfile=m_file,
+                scan=scan,
+                dr_tf_turn=m_file.get("dr_tf_turn", scan=scan),
+                dx_tf_turn=m_file.get("dx_tf_turn", scan=scan),
+                dia_tf_turn_coolant_channel=m_file.get(
+                    "dia_tf_turn_coolant_channel", scan=scan
+                ),
+                dx_tf_turn_insulation=m_file.get("dx_tf_turn_insulation", scan=scan),
+                dr_tf_turn_tape_stack=m_file.get("dr_tf_turn_tape_stack", scan=scan),
+                dx_tf_turn_tape_stack=m_file.get("dx_tf_turn_tape_stack", scan=scan),
+                x_tf_turn_coolant_channel_centre=m_file.get(
+                    "x_tf_turn_coolant_channel_centre", scan=scan
+                ),
+                dr_tf_turn_stabiliser=m_file.get("dr_tf_turn_stabiliser", scan=scan),
+            )
 
         if (
             m_file.get("i_tf_turn_type", scan=scan)
@@ -17248,18 +17449,7 @@ def main_plot(
                 show_legend=True,
             )
             plot_tf_corc_cable_summary_box(plot_205, pages["cable"], m_file, scan)
-            ax_hts_tape = pages["cable"].add_subplot(339)
-            ax_hts_tape.set_position([0.75, 0.1, 0.2, 0.2])
-            plot_hts_tape_geometry(
-                axis=ax_hts_tape,
-                r_left=0.0,
-                z_bottom=0.0,
-                dr_hts_tape=m_file.get("dr_tf_hts_tape", scan=scan),
-                dx_hts_tape_rebco=m_file.get("dx_tf_hts_tape_rebco", scan=scan),
-                dx_hts_tape_copper=m_file.get("dx_tf_hts_tape_copper", scan=scan),
-                dx_hts_tape_hastelloy=m_file.get("dx_tf_hts_tape_hastelloy", scan=scan),
-                show_legend=True,
-            )
+
         elif (
             m_file.get("i_tf_turn_type", scan=scan)
             == SuperconductingTFTurnType.CABLE_IN_CONDUIT
@@ -17287,6 +17477,23 @@ def main_plot(
                 axes_1=_add_page("quench_time_evo").add_subplot(211),
                 axes_2=pages["quench_time_evo"].add_subplot(212),
             )
+        if (
+            m_file.get("i_tf_turn_type", scan=scan)
+            == SuperconductingTFTurnType.STEP_STACKED_TAPE
+            or SuperconductingTFTurnType.CROSS_CONDUCTOR
+        ):
+            ax_hts_tape = pages["cable"].add_subplot(339)
+            ax_hts_tape.set_position([0.75, 0.1, 0.2, 0.2])
+            plot_hts_tape_geometry(
+                axis=ax_hts_tape,
+                r_left=0.0,
+                z_bottom=0.0,
+                dr_hts_tape=m_file.get("dr_tf_hts_tape", scan=scan),
+                dx_hts_tape_rebco=m_file.get("dx_tf_hts_tape_rebco", scan=scan),
+                dx_hts_tape_copper=m_file.get("dx_tf_hts_tape_copper", scan=scan),
+                dx_hts_tape_hastelloy=m_file.get("dx_tf_hts_tape_hastelloy", scan=scan),
+                show_legend=True,
+            )
     else:
         ax19 = _add_page("tf_wp").add_subplot(211, aspect="equal")
         ax19.set_position([0.06, 0.55, 0.675, 0.4])
@@ -17298,7 +17505,7 @@ def main_plot(
 
     plot_plasma_outboard_toroidal_ripple_map(_add_page(), m_file, scan)
 
-    plot_tf_stress(_add_page().subplots(nrows=3, ncols=1, sharex=True).flatten(), m_file)
+    # plot_tf_stress(_add_page().subplots(nrows=3, ncols=1, sharex=True).flatten(), m_file)
 
     plot_pf_dimensions(
         axis=_add_page("pf_dimensions").add_subplot(121, aspect="equal"),
