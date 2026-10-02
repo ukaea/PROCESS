@@ -102,7 +102,10 @@ from process.models.tfcoil.quench import (
     _build_cumulative_quench_integral,
     calculate_quench_protection_current_density,
 )
-from process.models.tfcoil.superconducting import SuperconductingTFTurnType
+from process.models.tfcoil.superconducting import (
+    SuperconductingTFTurnType,
+    SuperconductingTFWPShapeType,
+)
 
 
 @dataclass
@@ -6207,10 +6210,13 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
         # ================================================================
 
         # Plot the rectangular WP
-        if i_tf_wp_geom == 0:
+        if (
+            SuperconductingTFWPShapeType(i_tf_wp_geom)
+            == SuperconductingTFWPShapeType.RECTANGULAR
+        ):
             if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.INTEGER:
                 long_turns = round(turn_layers)
-                short_turns = round(turn_pancakes)
+                n_turns_toroidal = round(turn_pancakes)
             else:
                 wp_side_ratio = (
                     dr_tf_wp_with_insulation
@@ -6222,7 +6228,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
                 side_unit = n_tf_coil_turns / wp_side_ratio
                 root_turns = round(np.sqrt(side_unit), 1)
                 long_turns = round(root_turns * wp_side_ratio)
-                short_turns = round(root_turns)
+                n_turns_toroidal = round(root_turns)
 
             # Plots the surrounding insualtion
             axis.add_patch(
@@ -6255,94 +6261,26 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
                     color="blue",
                 )
             )
-            # Dvides the WP up into the turn segments
-            for i in range(1, long_turns):
+            # Divides the WP up into the turn segments
+            wp_inner_margin = dx_tf_wp_insulation + dx_tf_wp_insertion_gap
+            wp_r_min = r_tf_wp_inboard_inner + wp_inner_margin
+            wp_r_max = wp_r_min + dr_tf_wp_with_insulation - 2 * wp_inner_margin
+            wp_t_min = -0.5 * dx_tf_wp_primary_toroidal + wp_inner_margin
+            wp_t_max = -wp_t_min
+
+            for r_line in np.linspace(wp_r_min, wp_r_max, long_turns + 1)[1:-1]:
                 axis.plot(
-                    [
-                        (
-                            r_tf_wp_inboard_inner
-                            + dx_tf_wp_insulation
-                            + dx_tf_wp_insertion_gap
-                        )
-                        + i
-                        * (
-                            (
-                                dr_tf_wp_with_insulation
-                                - dx_tf_wp_insulation
-                                - dx_tf_wp_insertion_gap
-                            )
-                            / long_turns
-                        ),
-                        (
-                            r_tf_wp_inboard_inner
-                            + dx_tf_wp_insulation
-                            + dx_tf_wp_insertion_gap
-                        )
-                        + i
-                        * (
-                            (
-                                dr_tf_wp_with_insulation
-                                - dx_tf_wp_insulation
-                                - dx_tf_wp_insertion_gap
-                            )
-                            / long_turns
-                        ),
-                    ],
-                    [
-                        -0.5 * dx_tf_wp_primary_toroidal
-                        + (dx_tf_wp_insulation + dx_tf_wp_insertion_gap),
-                        0.5 * dx_tf_wp_primary_toroidal
-                        - (dx_tf_wp_insulation + dx_tf_wp_insertion_gap),
-                    ],
+                    [r_line, r_line],
+                    [wp_t_min, wp_t_max],
                     color="white",
                     linewidth="0.25",
                     linestyle="dashed",
                 )
 
-            for i in range(1, short_turns):
+            for t_line in np.linspace(wp_t_min, wp_t_max, n_turns_toroidal + 1)[1:-1]:
                 axis.plot(
-                    [
-                        (
-                            r_tf_wp_inboard_inner
-                            + dx_tf_wp_insulation
-                            + dx_tf_wp_insertion_gap
-                        ),
-                        (
-                            r_tf_wp_inboard_outer
-                            - dx_tf_wp_insulation
-                            - dx_tf_wp_insertion_gap
-                        ),
-                    ],
-                    [
-                        (
-                            -0.5 * dx_tf_wp_primary_toroidal
-                            + dx_tf_wp_insulation
-                            + dx_tf_wp_insertion_gap
-                        )
-                        + (
-                            i
-                            * (
-                                dx_tf_wp_primary_toroidal
-                                - dx_tf_wp_insulation
-                                - dx_tf_wp_insertion_gap
-                            )
-                            / short_turns
-                        ),
-                        (
-                            -0.5 * dx_tf_wp_primary_toroidal
-                            + dx_tf_wp_insulation
-                            + dx_tf_wp_insertion_gap
-                        )
-                        + (
-                            i
-                            * (
-                                dx_tf_wp_primary_toroidal
-                                - dx_tf_wp_insulation
-                                - dx_tf_wp_insertion_gap
-                            )
-                            / short_turns
-                        ),
-                    ],
+                    [wp_r_min, wp_r_max],
+                    [t_line, t_line],
                     color="white",
                     linewidth="0.25",
                     linestyle="dashed",
@@ -6351,7 +6289,10 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
         # ================================================================
 
         # Plot the double rectangle winding pack
-        if i_tf_wp_geom == 1:
+        if (
+            SuperconductingTFWPShapeType(i_tf_wp_geom)
+            == SuperconductingTFWPShapeType.DOUBLE_RECTANGULAR
+        ):
             # Inner WP insulation
             axis.add_patch(
                 Rectangle(
@@ -6417,7 +6358,10 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
         # ================================================================
 
         # Trapezium WP
-        if i_tf_wp_geom == 2:
+        if (
+            SuperconductingTFWPShapeType(i_tf_wp_geom)
+            == SuperconductingTFWPShapeType.TRAPEZOIDAL
+        ):
             # WP insulation
             x = [
                 r_tf_wp_inboard_inner,
@@ -17557,7 +17501,7 @@ def main_plot(
 
     plot_plasma_outboard_toroidal_ripple_map(_add_page(), m_file, scan)
 
-    plot_tf_stress(_add_page().subplots(nrows=3, ncols=1, sharex=True).flatten(), m_file)
+    # plot_tf_stress(_add_page().subplots(nrows=3, ncols=1, sharex=True).flatten(), m_file)
 
     plot_pf_dimensions(
         axis=_add_page("pf_dimensions").add_subplot(121, aspect="equal"),
