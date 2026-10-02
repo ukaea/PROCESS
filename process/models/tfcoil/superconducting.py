@@ -5037,6 +5037,7 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
             dr_tf_hts_tape=self.data.superconducting_tfcoil.dr_tf_hts_tape,
             dx_tf_hts_tape_rebco=self.data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
             dx_tf_hts_tape_total=self.data.superconducting_tfcoil.dx_tf_hts_tape_total,
+            n_tf_turn_superconducting_strands=self.data.superconducting_tfcoil.n_tf_turn_superconducting_strands,
         )
 
         self.data.tfcoil.j_tf_wp_critical = (
@@ -5466,6 +5467,7 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
         dr_tf_hts_tape: float,
         dx_tf_hts_tape_rebco: float,
         dx_tf_hts_tape_total: float,
+        n_tf_turn_superconducting_strands: int,
     ) -> TFSuperconductorLimits:
         """TF superconducting STEP turn using HTS tape
 
@@ -5487,6 +5489,8 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
             Width of the REBCO layer in the HTS tape [m]
         dx_tf_hts_tape_total :
             Total width of the HTS tape [m]
+        n_tf_turn_superconducting_strands :
+            Number of HTS tapes stacked in the turn
 
         Returns
         -------
@@ -5597,7 +5601,9 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
 
         a_tf_strand = dr_tf_hts_tape * dx_tf_hts_tape_total
 
-        cur_tf_turn_strand_critical = j_superconductor_critical * a_tf_strand
+        cur_tf_turn_strand_critical = (
+            j_superconductor_critical * a_tf_strand * n_tf_turn_superconducting_strands
+        )
 
         # Critical current density in winding pack
         # a_tf_turn : Area per turn (i.e. entire jacketed conductor with insulation) (m2)
