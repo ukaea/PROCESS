@@ -10,13 +10,8 @@ from process.core.io.plot.summary.common import (
     setup_axis,
     text_layout,
 )
-from process.core.io.plot.summary.rendering import (
-    draw_annotation,
-    draw_text,
-)
-from process.core.io.plot.summary.reporting.text import (
-    plot_info,
-)
+from process.core.io.plot.summary.rendering import draw_annotation, draw_text
+from process.core.io.plot.summary.reporting.text import plot_info
 
 if TYPE_CHECKING:
     import matplotlib.pyplot as plt

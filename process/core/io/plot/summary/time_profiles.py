@@ -6,16 +6,9 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
-from process.core.io.plot.summary.common import (
-    box_style,
-    get_pulse_timings,
-)
-from process.core.io.plot.summary.magnets.cs import (
-    secs_to_hms,
-)
-from process.core.io.plot.summary.rendering import (
-    draw_text,
-)
+from process.core.io.plot.summary.common import box_style, get_pulse_timings
+from process.core.io.plot.summary.magnets.cs import secs_to_hms
+from process.core.io.plot.summary.rendering import draw_text
 
 if TYPE_CHECKING:
     import matplotlib.pyplot as plt

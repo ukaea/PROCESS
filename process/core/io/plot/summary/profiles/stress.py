@@ -6,10 +6,7 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
-from process.core.io.plot.summary.common import (
-    add_colourbar,
-    get_pulse_timings,
-)
+from process.core.io.plot.summary.common import add_colourbar, get_pulse_timings
 from process.models.engineering.materials import (
     calculate_tresca_stress,
     calculate_von_mises_stress,

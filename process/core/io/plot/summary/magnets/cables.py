@@ -9,12 +9,8 @@ import numpy as np
 from matplotlib import patches
 from matplotlib.patches import Rectangle
 
-from process.core.io.plot.summary.common import (
-    box_style,
-)
-from process.core.io.plot.summary.rendering import (
-    draw_text,
-)
+from process.core.io.plot.summary.common import box_style, text_layout
+from process.core.io.plot.summary.rendering import draw_text
 
 if TYPE_CHECKING:
     from process.core.io.mfile import MFile
@@ -93,10 +89,7 @@ def plot_cable_in_conduit_cable(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.4,
         0.3,
         textstr_cable,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig, v_align="top"),
         bbox=box_style("#cccccc"),
     )
 
