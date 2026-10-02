@@ -954,9 +954,9 @@ class PFCoil(Model):
                 if self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
                     self.data.pf_coil.m_pf_coil_conductor[i] = (
                         volpf
-                        * self.data.tfcoil.dcond[
-                            self.data.pf_coil.i_pf_superconductor - 1
-                        ]
+                        * SuperconductorModel(
+                            self.data.pf_coil.i_pf_superconductor
+                        ).material.density
                         * (1.0e0 - self.data.pf_coil.f_a_pf_coil_void[i])
                     )
                 else:
@@ -3683,7 +3683,9 @@ class CSCoil(Model):
                 * 2.0e0
                 * np.pi
                 * self.data.pf_coil.r_pf_coil_middle[self.data.pf_coil.n_cs_pf_coils - 1]
-                * self.data.tfcoil.dcond[self.data.pf_coil.i_cs_superconductor - 1]
+                * SuperconductorModel(
+                    self.data.pf_coil.i_cs_superconductor
+                ).material.density
             )
         else:
             self.data.pf_coil.m_pf_coil_conductor[

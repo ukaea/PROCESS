@@ -1,6 +1,5 @@
 from typing import Any, NamedTuple
 
-import numpy as np
 import pytest
 
 from process.models.superconductors import SuperconductorModel
@@ -1639,8 +1638,6 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     f_a_tf_turn_cable_space_extra_void: Any = None
 
-    dcond: Any = None
-
     den_tf_wp_turn_insulation: Any = None
 
     len_tf_coil: Any = None
@@ -1754,23 +1751,6 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             m_tf_coil_conductor=0.0,
             m_tf_coil_wp_turn_insulation=0.0,
             f_a_tf_turn_cable_space_extra_void=0.30000000000000004,
-            dcond=np.array(
-                np.array(
-                    (
-                        6080.0,
-                        6080.0,
-                        6070.0,
-                        6080.0,
-                        6080.0,
-                        8500.0,
-                        6070.0,
-                        8500.0,
-                        8500.0,
-                    ),
-                    order="F",
-                ),
-                order="F",
-            ).transpose(),
             den_tf_wp_turn_insulation=1800.0,
             len_tf_coil=50.483843027201402,
             den_tf_coil_case=8000.0,
@@ -1801,9 +1781,9 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             expected_m_tf_wp_steel_conduit=115651.90127937049,
             expected_m_tf_coil_case=1034021.9996272125,
             expected_m_tf_coil_wp_insulation=5909.3507916745702,
-            expected_m_tf_coil_superconductor=5802.5700395134345,
+            expected_m_tf_coil_superconductor=8303.019628909025,
             expected_m_tf_coil_copper=58744.465423173802,
-            expected_whtcon=188184.68882144717,
+            expected_whtcon=190685.13841084277,
             expected_m_tf_coil_wp_turn_insulation=7985.7520793894437,
             expected_cplen=20.562180043124066,
         ),
@@ -1828,23 +1808,6 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             m_tf_coil_conductor=0.0,
             m_tf_coil_wp_turn_insulation=0.0,
             f_a_tf_turn_cable_space_extra_void=0.30000000000000004,
-            dcond=np.array(
-                np.array(
-                    (
-                        6080.0,
-                        6080.0,
-                        6070.0,
-                        6080.0,
-                        6080.0,
-                        8500.0,
-                        6070.0,
-                        8500.0,
-                        8500.0,
-                    ),
-                    order="F",
-                ),
-                order="F",
-            ).transpose(),
             den_tf_wp_turn_insulation=1800.0,
             len_tf_coil=50.514015976170839,
             den_tf_coil_case=8000.0,
@@ -1875,9 +1838,9 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             expected_m_tf_wp_steel_conduit=115721.02357090525,
             expected_m_tf_coil_case=1034699.2182961091,
             expected_m_tf_coil_wp_insulation=5912.8826650262808,
-            expected_m_tf_coil_superconductor=5806.038092640837,
+            expected_m_tf_coil_superconductor=8307.982139140671,
             expected_m_tf_coil_copper=58779.575542593491,
-            expected_whtcon=188297.16217276,
+            expected_whtcon=190799.10621926418,
             expected_m_tf_coil_wp_turn_insulation=7990.5249666247555,
             expected_cplen=20.562180043124066,
         ),
@@ -1932,7 +1895,6 @@ def test_superconducting_tf_coil_area_and_masses(
             "f_a_tf_turn_cable_space_extra_void",
             tfcoilareaandmassesparam.f_a_tf_turn_cable_space_extra_void,
         ),
-        ("dcond", tfcoilareaandmassesparam.dcond),
         (
             "den_tf_wp_turn_insulation",
             tfcoilareaandmassesparam.den_tf_wp_turn_insulation,
