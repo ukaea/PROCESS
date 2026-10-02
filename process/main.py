@@ -207,12 +207,12 @@ def process_cli(
     \b
     PROCESS
     Power Reactor Optimisation Code
-    Copyright (c) [2023] [United Kingdom Atomic Energy Authority]
+    Copyright (c) [2023-present] [United Kingdom Atomic Energy Authority]
 
     \b
-    Contact
-    James Morris     : james.morris2@ukaea.uk
-    Jonathan Maddock : jonathan.maddock@ukaea.uk
+    Please use the contact form on our website https://www.ukaea.org/service/process/
+    to send any message to PROCESS maintainers that is unsuitable for a GitHub
+    issue or discussion.
 
     GitHub        : https://github.com/ukaea/PROCESS
     """  # noqa: DOC501
