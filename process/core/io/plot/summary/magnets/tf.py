@@ -11,25 +11,16 @@ from matplotlib import patches
 from matplotlib.patches import Circle, Rectangle
 from matplotlib.path import Path as mplPath
 
-from process.core.io.plot.summary.common import (
-    box_style,
-)
+from process.core.io.plot.summary.common import box_style, text_layout
 from process.core.io.plot.summary.constants import (
     TFC_COLOUR,
     THERMAL_SHIELD_COLOUR,
     rtangle,
     rtangle2,
 )
-from process.core.io.plot.summary.magnets.cables import (
-    plot_hts_tape_geometry,
-)
-from process.core.io.plot.summary.rendering import (
-    draw_annotation,
-    draw_text,
-)
-from process.data_structure.superconducting_tf_coil_variables import (
-    TFWPIntegerTurnType,
-)
+from process.core.io.plot.summary.magnets.cables import plot_hts_tape_geometry
+from process.core.io.plot.summary.rendering import draw_annotation, draw_text
+from process.data_structure.superconducting_tf_coil_variables import TFWPIntegerTurnType
 from process.models.geometry.tfcoil import (
     tfcoil_geometry_d_shape,
     tfcoil_geometry_rectangular_shape,
@@ -1345,10 +1336,7 @@ def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
         0.775,
         0.925,
         textstr_casing,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig, v_align="top"),
         bbox=box_style("grey"),
     )
 
@@ -1366,10 +1354,7 @@ def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
         0.775,
         0.62,
         textstr_wp_insulation,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig, v_align="top"),
         bbox={
             "boxstyle": "round",
             "facecolor": "green",
@@ -1426,10 +1411,7 @@ def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
         0.55,
         0.475,
         textstr_general_info,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig, v_align="top"),
         bbox={
             "boxstyle": "round",
             "facecolor": "wheat",
@@ -1463,10 +1445,7 @@ def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
         0.55,
         0.35,
         textstr_cooling,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig, v_align="top"),
         bbox=box_style("wheat"),
     )
 
@@ -1917,10 +1896,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.4,
         0.9,
         textstr_turn_insulation,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig, v_align="top"),
         bbox=box_style("red"),
     )
 
@@ -1935,10 +1911,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.65,
         0.9,
         textstr_turn_steel,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig, v_align="top"),
         bbox=box_style("grey"),
     )
 
@@ -1970,10 +1943,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.40,
         0.7,
         textstr_turn_cable_space,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig, v_align="top"),
         bbox=box_style("royalblue"),
     )
 
@@ -1996,10 +1966,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.525,
         0.9,
         textstr_turn,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig, v_align="top"),
         bbox=box_style("wheat"),
     )
 
@@ -2015,10 +1982,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.45,
         0.8,
         textstr_turn_cooling,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig, v_align="top"),
         bbox=box_style("white"),
     )
 
@@ -2056,10 +2020,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.75,
         0.9,
         textstr_superconductor,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig, v_align="top"),
         bbox=box_style("#6dd3f7"),  # light blue for superconductors
     )
 
@@ -2179,10 +2140,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.4,
         0.9,
         textstr_turn_insulation,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig, v_align="top"),
         bbox=box_style("red"),
     )
 
@@ -2197,10 +2155,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.65,
         0.9,
         textstr_turn_steel,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig, v_align="top"),
         bbox=box_style("grey"),
     )
 
@@ -2232,10 +2187,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.40,
         0.7,
         textstr_turn_cable_space,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig, v_align="top"),
         bbox=box_style("royalblue"),
     )
 
@@ -2258,10 +2210,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.525,
         0.9,
         textstr_turn,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig, v_align="top"),
         bbox=box_style("wheat"),
     )
 
@@ -2277,10 +2226,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.45,
         0.8,
         textstr_turn_cooling,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig, v_align="top"),
         bbox=box_style("white"),
     )
 
@@ -2318,10 +2264,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.75,
         0.9,
         textstr_superconductor,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig, v_align="top"),
         bbox=box_style("#6dd3f7"),
     )
 
@@ -3408,10 +3351,7 @@ def plot_tf_corc_cable_summary_box(axis, fig, mfile: MFile, scan: int):
         0.4,
         0.4,
         textstr_cable,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig, v_align="top"),
         bbox=box_style("#cccccc"),  # grayish color
     )
 

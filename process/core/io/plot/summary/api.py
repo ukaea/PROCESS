@@ -10,13 +10,8 @@ import matplotlib.backends.backend_pdf as bpdf
 import matplotlib.pyplot as plt
 
 from process.core.io.mfile import MFile
-from process.core.io.plot.summary.common import (
-    color_key,
-)
-from process.core.io.plot.summary.constants import (
-    RADIAL_BUILD,
-    vertical_lower,
-)
+from process.core.io.plot.summary.common import color_key
+from process.core.io.plot.summary.constants import RADIAL_BUILD, vertical_lower
 from process.core.io.plot.summary.geometry.build import (
     plot_geometry_info,
     plot_radial_build,
@@ -31,9 +26,7 @@ from process.core.io.plot.summary.geometry.poloidal import (
     plot_full_machine_poloidal_cross_section,
     poloidal_cross_section,
 )
-from process.core.io.plot.summary.geometry.toroidal import (
-    toroidal_cross_section,
-)
+from process.core.io.plot.summary.geometry.toroidal import toroidal_cross_section
 from process.core.io.plot.summary.magnets.cables import (
     plot_cable_in_conduit_cable,
     plot_hts_tape_geometry,
@@ -45,9 +38,7 @@ from process.core.io.plot.summary.magnets.cs import (
     plot_pf_cs_plasma_mutual_inductance,
     plot_physics_info,
 )
-from process.core.io.plot.summary.magnets.pf import (
-    plot_pf_dimensions,
-)
+from process.core.io.plot.summary.magnets.pf import plot_pf_dimensions
 from process.core.io.plot.summary.magnets.tf import (
     plot_corc_cable_geometry,
     plot_quench_time_evolution,
@@ -65,9 +56,7 @@ from process.core.io.plot.summary.plasma.confinement import (
     plot_confinement_time_comparison,
     plot_sol_power_decay_length_comparison,
 )
-from process.core.io.plot.summary.plasma.current_drive import (
-    plot_bootstrap_comparison,
-)
+from process.core.io.plot.summary.plasma.current_drive import plot_bootstrap_comparison
 from process.core.io.plot.summary.plasma.overview import (
     plot_detailed_plasma_parameters,
     plot_main_plasma_information,
@@ -134,9 +123,7 @@ from process.core.io.plot.summary.reporting.constraints import (
     plot_equality_constraint_equations,
     plot_inequality_constraint_equations,
 )
-from process.core.io.plot.summary.reporting.layouts import (
-    plot_upper_vertical_build,
-)
+from process.core.io.plot.summary.reporting.layouts import plot_upper_vertical_build
 from process.core.io.plot.summary.reporting.misc import (
     RadialBuild,
     plot_density_limit_comparison,
