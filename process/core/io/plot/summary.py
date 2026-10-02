@@ -6539,7 +6539,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
             f"Max $\\Delta r$: {mfile.get('dx_tf_side_case_peak', scan=scan):.3f} m"
         )
         axis.text(
-            0.55,
+            0.525,
             0.975,
             textstr_casing,
             fontsize=9,
@@ -6563,7 +6563,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
             f"$\\Delta r$: {mfile.get('dx_tf_wp_insertion_gap', scan=scan):.4f} m"
         )
         axis.text(
-            0.55,
+            0.525,
             0.575,
             textstr_wp_insulation,
             fontsize=9,
@@ -6599,7 +6599,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
         )
 
         axis.text(
-            0.775,
+            0.75,
             0.95,
             textstr_wp,
             fontsize=9,
@@ -6625,10 +6625,10 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
             f"Total area of steel in coil: {mfile.get('a_tf_coil_inboard_steel', scan=scan):.4f} $\\mathrm{{m}}^2$\n"
             f"Total area fraction of steel: {mfile.get('f_a_tf_coil_inboard_steel', scan=scan):.4f}\n"
             f"Total area fraction of insulation: {mfile.get('f_a_tf_coil_inboard_insulation', scan=scan):.4f}\n"
-            f"$A$, all insulation in coil: {mfile.get('a_tf_coil_inboard_insulation', scan=scan):.4f} $\\mathrm{{m}}^2$\n"
+            f"$A$, all insulation in coil: {mfile.get('a_tf_coil_inboard_insulation', scan=scan):.4f} $\\mathrm{{m}}^2$"
         )
         axis.text(
-            0.775,
+            0.75,
             0.58,
             textstr_general_info,
             fontsize=9,
@@ -13359,7 +13359,7 @@ def plot_tf_step_vertical_tape_turn(
     textstr_turn_insulation = f"$\\mathbf{{Turn \\ Insulation:}}$\n\n$\\Delta r:${mfile.get('t_tf_superconductor_quench', scan=scan):.3e} m"
 
     axis.text(
-        0.4,
+        0.5,
         0.9,
         textstr_turn_insulation,
         fontsize=9,
@@ -13381,7 +13381,7 @@ def plot_tf_step_vertical_tape_turn(
     )
 
     axis.text(
-        0.525,
+        0.65,
         0.9,
         textstr_turn,
         fontsize=9,
@@ -13405,7 +13405,7 @@ def plot_tf_step_vertical_tape_turn(
     )
 
     axis.text(
-        0.5,
+        0.525,
         0.7,
         textstr_turn_strand_space,
         fontsize=9,
@@ -13428,7 +13428,7 @@ def plot_tf_step_vertical_tape_turn(
     )
 
     axis.text(
-        0.5,
+        0.575,
         0.55,
         textstr_stabiliser,
         fontsize=9,
@@ -13451,7 +13451,7 @@ def plot_tf_step_vertical_tape_turn(
     )
 
     axis.text(
-        0.45,
+        0.5,
         0.8,
         textstr_turn_cooling,
         fontsize=9,
@@ -17375,14 +17375,13 @@ def main_plot(
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file.get("i_tf_sup", scan=scan) == TFConductorModel.SUPERCONDUCTING:
         # TF coil with WP
-        ax19 = _add_page("tf_wp").add_subplot(221, aspect="equal")
-        ax19.set_position([
-            0.025,
-            0.45,
-            0.5,
-            0.5,
-        ])  # Half height, a bit wider, top left
-        plot_superconducting_tf_wp(ax19, m_file, scan, pages["tf_wp"])
+
+        plot_superconducting_tf_wp(
+            _add_page("tf_wp").add_subplot(221, aspect="equal"),
+            m_file,
+            scan,
+            pages["tf_wp"],
+        )
 
         _add_page("cable")
         if (
@@ -17404,10 +17403,8 @@ def main_plot(
             m_file.get("i_tf_turn_type", scan=scan)
             == SuperconductingTFTurnType.STEP_STACKED_TAPE
         ):
-            ax20 = pages["cable"].add_subplot(325, aspect="equal")
-            ax20.set_position([0.025, 0.5, 0.4, 0.4])
             plot_tf_step_vertical_tape_turn(
-                axis=ax20,
+                axis=pages["cable"].add_subplot(221, aspect="equal"),
                 fig=pages["cable"],
                 mfile=m_file,
                 scan=scan,
