@@ -49,16 +49,19 @@ class SuperconductorType(IntEnum):
 class SuperconductorMaterial(IntEnum):
     """Enumeration of superconductor materials."""
 
-    NB3SN = (1, SuperconductorType.LOW_TEMPERATURE, "Nb₃Sn")
-    NBTI = (2, SuperconductorType.LOW_TEMPERATURE, "NbTi")
-    BI2212 = (3, SuperconductorType.HIGH_TEMPERATURE, "Bi-2212")
-    REBCO = (4, SuperconductorType.HIGH_TEMPERATURE, "REBCO")
+    NB3SN = (1, SuperconductorType.LOW_TEMPERATURE, 8.7e3, "Nb₃Sn")
+    NBTI = (2, SuperconductorType.LOW_TEMPERATURE, 6.45e3, "NbTi")
+    BI2212 = (3, SuperconductorType.HIGH_TEMPERATURE, 6.3e3, "Bi-2212")
+    REBCO = (4, SuperconductorType.HIGH_TEMPERATURE, 6.35e3, "REBCO")
 
-    def __new__(cls, value: int, sc_type: SuperconductorType, material_name: str):
+    def __new__(
+        cls, value: int, sc_type: SuperconductorType, density: float, material_name: str
+    ):
         """Create a new instance of SuperconductorMaterial."""
         obj = int.__new__(cls, value)
         obj._value_ = value
         obj._sc_type_ = sc_type
+        obj._density_ = density
         obj._material_name_ = material_name
         return obj
 
@@ -66,6 +69,11 @@ class SuperconductorMaterial(IntEnum):
     def sc_type(self):
         """The superconductor type (LTS or HTS) for this material."""
         return self._sc_type_.abbreviation
+
+    @DynamicClassAttribute
+    def density(self):
+        """The density of the superconductor material."""
+        return self._density_
 
     @DynamicClassAttribute
     def material_name(self):

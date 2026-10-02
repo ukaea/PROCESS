@@ -2045,7 +2045,7 @@ class SuperconductingTFCoil(TFCoil):
             * (1.0e0 - self.data.tfcoil.f_a_tf_turn_cable_space_extra_void)
             * (1.0e0 - self.data.tfcoil.f_a_tf_turn_cable_copper)
             - self.data.tfcoil.len_tf_coil * self.data.tfcoil.a_tf_wp_coolant_channels
-        ) * self.data.tfcoil.dcond[self.data.tfcoil.i_tf_sc_mat - 1]
+        ) * SuperconductorModel(self.data.tfcoil.i_tf_sc_mat).material.density
 
         # Copper mass [kg]
         self.data.tfcoil.m_tf_coil_copper = (
