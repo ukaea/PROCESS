@@ -1456,8 +1456,11 @@ class PhysicsData:
     """Plasma safety factor at 95% flux surface (q₉₅) (`iteration variable 18`)
     """
 
-    molflow_plasma_fuelling_required: float = 0.0
+    molflow_plasma_fuelling: float = 0.0
     """plasma fuelling rate (nucleus-pairs/s)"""
+
+    molflow_plasma_fuelling_equilibrium: float = 0.0
+    """Plasma fuelling rate required for fuel-ion equilibrium (nucleus-pairs/s)."""
 
     tauratio: float = 1.0
     """tauratio /1.0/ : ratio of He and pellet particle confinement times"""
