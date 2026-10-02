@@ -5,7 +5,7 @@ import textwrap
 from dataclasses import dataclass
 from importlib import resources
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any, Literal, TypedDict
 
 import matplotlib as mpl
 import matplotlib.backends.backend_pdf as bpdf
@@ -13,8 +13,10 @@ import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import patches
+from matplotlib.axes import Axes
 from matplotlib.patches import Circle, Rectangle
 from matplotlib.path import Path as mplPath
+from matplotlib.transforms import Transform
 from scipy.interpolate import interp1d
 
 from process.core import constants
@@ -182,6 +184,37 @@ ANIMATION_INFO = [
 
 rtangle = np.pi / 2
 rtangle2 = 2 * rtangle
+
+
+def _box_style(colour: str):
+    return {"boxstyle": "round", "facecolor": colour, "alpha": 1.0, "linewidth": 2}
+
+
+white_box = {"boxstyle": "round", "facecolor": "white", "alpha": 1.0}
+
+
+def _text_layout(fig):
+    return {
+        "fontsize": 9,
+        "verticalalignment": "bottom",
+        "horizontalalignment": "left",
+        "transform": fig.transFigure,
+    }
+
+
+def _setup_axis(axis, xmin, xmax, ymin, ymax):
+    axis.set_ylim(ymin, ymax)
+    axis.set_xlim(xmin, xmax)
+    axis.set_axis_off()
+    axis.set_autoscaley_on(False)
+    axis.set_autoscalex_on(False)
+
+
+def _colourbar(contour_fill, axis, colourbar_axis):
+    # Use a dedicated colorbar axes when provided so the main axes width is unchanged.
+    if colourbar_axis is None:
+        return axis.figure.colorbar(contour_fill, ax=axis, pad=0.02)
+    return axis.figure.colorbar(contour_fill, cax=colourbar_axis)
 
 
 def plot_plasma(
@@ -418,17 +451,12 @@ def poloidal_cross_section(
     plot_tf_coils(axis, mfile, scan, colour_scheme)
     plot_pf_coils(axis, mfile, scan, colour_scheme)
 
-    # Ranges
-    # ---
-    # DEMO : Fixed ranges for comparison
     if demo_ranges:
-        axis.set_ylim([-15, 15])
-        axis.set_xlim([0, 20])
+        axis.set_ylim(-15, 15)
+        axis.set_xlim(0, 20)
 
-    # Adaptive ranges
     else:
-        axis.set_xlim([0, axis.get_xlim()[1]])
-    # ---
+        axis.set_xlim(0, axis.get_xlim()[1])
 
 
 def plot_full_machine_poloidal_cross_section(
@@ -521,7 +549,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
 
     # Display the plasma image over the figure, not the axes
     new_ax = axis.inset_axes(
-        [-0.15, 0.6, 0.45, 0.45], transform=axis.transAxes, zorder=1
+        (-0.15, 0.6, 0.45, 0.45), transform=axis.transAxes, zorder=1
     )
     new_ax.imshow(plasma)
     new_ax.axis("off")
@@ -542,7 +570,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         neutron = mpimg.imread(img_path.open("rb"))
 
     new_ax = axis.inset_axes(
-        [0.2, 0.85, 0.03, 0.03], transform=axis.transAxes, zorder=10
+        (0.2, 0.85, 0.03, 0.03), transform=axis.transAxes, zorder=10
     )
     new_ax.imshow(neutron)
     new_ax.axis("off")
@@ -689,7 +717,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
 
     # Display the alpha particle image over the figure, not the axes
     new_ax = axis.inset_axes(
-        [0.16, 0.95, 0.025, 0.025], transform=axis.transAxes, zorder=10
+        (0.16, 0.95, 0.025, 0.025), transform=axis.transAxes, zorder=10
     )
     new_ax.imshow(alpha)
     new_ax.axis("off")
@@ -717,10 +745,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.37,
         0.775,
         f"$P_{{\\text{{neutron}}}}$:\n{mfile.get('p_neutron_total_mw', scan=scan):,.2f} MW",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "grey",
@@ -740,16 +765,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.0725,
         0.83,
         f"$P_{{\\text{{HCD,primary}}}}$: {mfile.get('p_hcd_primary_injected_mw', scan=scan) + mfile.get('p_hcd_primary_extra_heat_mw', scan=scan):.2f} MW",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightyellow",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **_text_layout(fig),
+        bbox=_box_style("lightyellow"),
     )
 
     # Add HCD secondary injected power
@@ -757,16 +774,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.0725,
         0.725,
         f"$P_{{\\text{{HCD,secondary}}}}$: {mfile.get('p_hcd_secondary_injected_mw', scan=scan) + mfile.get('p_hcd_secondary_extra_heat_mw', scan=scan):.2f} MW",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightyellow",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **_text_layout(fig),
+        bbox=_box_style("lightyellow"),
     )
 
     # Load the HCD injector image
@@ -775,11 +784,11 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
 
     # Display the injector image over the figure, not the axes
     new_ax = axis.inset_axes(
-        [-0.2, 0.8, 0.15, 0.15], transform=axis.transAxes, zorder=10
+        (-0.2, 0.8, 0.15, 0.15), transform=axis.transAxes, zorder=10
     )
     new_ax.imshow(hcd_injector_1)
     new_ax.axis("off")
-    new_ax = axis.inset_axes([-0.2, 0.5, 0.15, 0.5], transform=axis.transAxes, zorder=10)
+    new_ax = axis.inset_axes((-0.2, 0.5, 0.15, 0.5), transform=axis.transAxes, zorder=10)
     new_ax.imshow(hcd_injector_2)
     new_ax.axis("off")
 
@@ -815,16 +824,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.04,
         0.45,
         "\n\nH&CD Power Supply\n\n",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightyellow",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **_text_layout(fig),
+        bbox=_box_style("lightyellow"),
         zorder=4,
     )
 
@@ -849,17 +850,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.2,
         0.435,
         f"$P_{{\\text{{secondary,loss}}}}$:\n{mfile.get('p_hcd_secondary_electric_mw', scan=scan) * (1.0 - mfile.get('eta_hcd_secondary_injector_wall_plug', scan=scan)):.2f} MWe",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightblue",
-            "alpha": 1.0,
-            "linewidth": 2,
-            "linestyle": "dashed",
-        },
+        **_text_layout(fig),
+        bbox=_box_style("lightblue") | {"linestyle": "dashed"},
     )
 
     # Draw an arrow from HCD secondary losses to the total secondary heat power
@@ -931,17 +923,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.2,
         0.485,
         f"$P_{{\\text{{primary,loss}}}}$:\n{mfile.get('p_hcd_primary_electric_mw', scan=scan) * (1.0 - mfile.get('eta_hcd_primary_injector_wall_plug', scan=scan)):.2f} MWe",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightblue",
-            "alpha": 1.0,
-            "linewidth": 2,
-            "linestyle": "dashed",
-        },
+        **_text_layout(fig),
+        bbox=_box_style("lightblue") | {"linestyle": "dashed"},
     )
 
     # Draw arrow from HCD primary electric box to HCD power supply box
@@ -976,17 +959,9 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     axis.text(
         0.12,
         0.35,
-        f"$P_{{\\text{{secondary}}}}$:\n{mfile.get('p_hcd_secondary_electric_mw', scan=scan):.2f} MWe \n$\\eta$: {mfile.get('eta_hcd_secondary_injector_wall_plug', scan=scan):.2f}",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightyellow",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        f"$P_{{\\text{{secondary}}}}$:\n{mfile.get('p_hcd_secondary_electric_mw', scan=scan):.2f} MWe\n$\\eta$: {mfile.get('eta_hcd_secondary_injector_wall_plug', scan=scan):.2f}",
+        **_text_layout(fig),
+        bbox=_box_style("lightyellow"),
     )
 
     # Plot HCD primary electric box
@@ -994,16 +969,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.025,
         0.35,
         f"$P_{{\\text{{primary}}}}$:\n{mfile.get('p_hcd_primary_electric_mw', scan=scan):.2f} MWe\n$\\eta$: {mfile.get('eta_hcd_primary_injector_wall_plug', scan=scan):.2f}",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightyellow",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **_text_layout(fig),
+        bbox=_box_style("lightyellow"),
     )
 
     # =============================================
@@ -1021,13 +988,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         verticalalignment="bottom",
         horizontalalignment="center",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightblue",
-            "alpha": 1.0,
-            "linewidth": 2,
-            "linestyle": "dashed",
-        },
+        bbox=_box_style("lightblue") | {"linestyle": "dashed"},
         zorder=4,
     )
 
@@ -1042,7 +1003,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         turbine = mpimg.imread(img_path.open("rb"))
 
     # Display the turbine image over the figure, not the axes
-    new_ax = axis.inset_axes([1.1, 0.0, 0.15, 0.15], transform=axis.transAxes, zorder=10)
+    new_ax = axis.inset_axes((1.1, 0.0, 0.15, 0.15), transform=axis.transAxes, zorder=10)
     new_ax.imshow(turbine)
     new_ax.axis("off")
 
@@ -1050,17 +1011,9 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     axis.text(
         0.9,
         0.25,
-        f"$P_{{\\text{{primary,thermal}}}}$:\n{mfile.get('p_plant_primary_heat_mw', scan=scan):,.2f} MW \n$\\eta_{{\\text{{turbine}}}}$: {mfile.get('eta_turbine', scan=scan):.3f}",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "orange",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        f"$P_{{\\text{{primary,thermal}}}}$:\n{mfile.get('p_plant_primary_heat_mw', scan=scan):,.2f} MW\n$\\eta_{{\\text{{turbine}}}}$: {mfile.get('eta_turbine', scan=scan):.3f}",
+        **_text_layout(fig),
+        bbox=_box_style("orange"),
     )
 
     # Draw arrow from bend to turbine inlet
@@ -1099,7 +1052,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
 
     # Display the generator image over the figure, not the axes
     new_ax = axis.inset_axes(
-        [0.96, 0.0, 0.15, 0.15], transform=axis.transAxes, zorder=10
+        (0.96, 0.0, 0.15, 0.15), transform=axis.transAxes, zorder=10
     )
     new_ax.imshow(generator)
     new_ax.axis("off")
@@ -1124,10 +1077,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.79,
         0.16,
         "Generator",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **_text_layout(fig),
         zorder=20,
     )
 
@@ -1168,7 +1118,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
 
     # Display the pylon image over the figure, not the axes
     new_ax = axis.inset_axes(
-        [0.925, -0.1, 0.1, 0.1], transform=axis.transAxes, zorder=10
+        (0.925, -0.1, 0.1, 0.1), transform=axis.transAxes, zorder=10
     )
     new_ax.imshow(pylon)
     new_ax.axis("off")
@@ -1178,16 +1128,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.68,
         0.15,
         f"$P_{{\\text{{gross}}}}$:\n{mfile.get('p_plant_electric_gross_mw', scan=scan):,.2f} MWe",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lime",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **_text_layout(fig),
+        bbox=_box_style("lime"),
     )
 
     # Gross to net electric power
@@ -1210,17 +1152,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.875,
         0.05,
         f"$P_{{\\text{{loss}}}}$:\n{mfile.get('p_turbine_loss_mw', scan=scan):,.2f} MWth",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "orange",
-            "alpha": 1.0,
-            "linewidth": 2,
-            "linestyle": "dashed",
-        },
+        **_text_layout(fig),
+        bbox=_box_style("orange") | {"linestyle": "dashed"},
     )
 
     # Shield primary thermal to plant total primary thermal arrow
@@ -1243,16 +1176,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.68,
         0.05,
         f"$P_{{\\text{{net,electric}}}}$:\n{mfile.get('p_plant_electric_net_mw', scan=scan):,.2f} MWe",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lime",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **_text_layout(fig),
+        bbox=_box_style("lime"),
     )
 
     # Plot the recirculated electric power box
@@ -1263,16 +1188,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
             f"$P_{{\\text{{recirc,electric}}}}$:\n{mfile.get('p_plant_electric_recirc_mw', scan=scan):,.2f} MWe\n"
             f"$f_{{\\text{{recirc}}}}$:\n{mfile.get('f_p_plant_electric_recirc', scan=scan):,.2f}"
         ),
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lime",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **_text_layout(fig),
+        bbox=_box_style("lime"),
     )
 
     # Gross to recirculated power arrow
@@ -1376,7 +1293,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         fw = mpimg.imread(img_path.open("rb"))
 
     # Display the first wall image over the figure, not the axes
-    new_ax = axis.inset_axes([0.4, 0.625, 0.4, 0.4], transform=axis.transAxes, zorder=10)
+    new_ax = axis.inset_axes((0.4, 0.625, 0.4, 0.4), transform=axis.transAxes, zorder=10)
     new_ax.imshow(fw)
     new_ax.axis("off")
 
@@ -1396,16 +1313,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.46,
         0.85,
         f"$P_{{\\text{{FW, }}\\alpha}}$:\n{mfile.get('p_fw_alpha_mw', scan=scan):.2f} MW",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "red",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **_text_layout(fig),
+        bbox=_box_style("red"),
     )
 
     # Neutron power incident on first wall box
@@ -1413,10 +1322,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.46,
         0.775,
         f"$P_{{\\text{{FW,nuclear}}}}$:\n{mfile.get('p_fw_nuclear_heat_total_mw', scan=scan):,.2f} MW",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "grey",
@@ -1430,10 +1336,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.46,
         0.71,
         f"$P_{{\\text{{FW,rad}}}}$:\n{mfile.get('p_fw_rad_total_mw', scan=scan):,.2f} MW",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "dodgerblue",
@@ -1492,10 +1395,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.5,
         0.555,
         f"Primary thermal\n(inc pump): {mfile.get('p_fw_heat_deposited_mw', scan=scan):,.2f} MWth",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "orange",
@@ -1508,10 +1408,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.7,
         0.555,
         f"Primary thermal\n(inc pump): {mfile.get('p_blkt_heat_deposited_mw', scan=scan):,.2f} MWth",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "orange",
@@ -1524,10 +1421,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.875,
         0.555,
         f"Primary thermal:\n{mfile.get('p_shld_heat_deposited_mw', scan=scan):.2f} MWth",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "orange",
@@ -1615,16 +1509,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.6,
         0.49,
         f"Primary thermal (inc pump): {mfile.get('p_fw_blkt_heat_deposited_mw', scan=scan):,.2f} MWth\n",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "orange",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **_text_layout(fig),
+        bbox=_box_style("orange"),
     )
 
     # Load the blanket image
@@ -1635,7 +1521,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
 
     # Display the blanket image over the figure, not the axes
     new_ax = axis.inset_axes(
-        [0.75, 0.625, 0.4, 0.4], transform=axis.transAxes, zorder=10
+        (0.75, 0.625, 0.4, 0.4), transform=axis.transAxes, zorder=10
     )
     new_ax.imshow(blanket)
     new_ax.axis("off")
@@ -1656,14 +1542,11 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.625,
         0.775,
         (
-            f"$P_{{\\text{{Blkt,nuclear}}}}$:\n{mfile.get('p_blkt_nuclear_heat_total_mw', scan=scan):,.2f} MW \n"
+            f"$P_{{\\text{{Blkt,nuclear}}}}$:\n{mfile.get('p_blkt_nuclear_heat_total_mw', scan=scan):,.2f} MW\n"
             f"$P_{{\\text{{Blkt,multiplication}}}}$:\n{mfile.get('p_blkt_multiplication_mw', scan=scan):,.2f} MW\n"
             f"$f_{{\\text{{multiplication}}}}$:\n{mfile.get('f_p_blkt_multiplication', scan=scan):,.2f}"
         ),
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "grey",
@@ -1678,7 +1561,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
 
     # Display the vacuum vessel image over the figure, not the axes
     new_ax = axis.inset_axes(
-        [0.975, 0.625, 0.4, 0.4], transform=axis.transAxes, zorder=10
+        (0.975, 0.625, 0.4, 0.4), transform=axis.transAxes, zorder=10
     )
     new_ax.imshow(vv)
     new_ax.axis("off")
@@ -1699,17 +1582,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.38,
         0.375,
         f"$P_{{\\text{{shld,secondary}}}}$:\n{mfile.get('p_shld_secondary_heat_mw', scan=scan):,.2f} MWth",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightblue",
-            "alpha": 1.0,
-            "linewidth": 2,
-            "linestyle": "dashed",
-        },
+        **_text_layout(fig),
+        bbox=_box_style("lightblue") | {"linestyle": "dashed"},
     )
 
     # Shield secondary power box to secondary heat total
@@ -1781,7 +1655,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         divertor = mpimg.imread(img_path.open("rb"))
 
     # Display the divertor image over the figure, not the axes
-    new_ax = axis.inset_axes([0.1, 0.4, 0.3, 0.25], transform=axis.transAxes, zorder=10)
+    new_ax = axis.inset_axes((0.1, 0.4, 0.3, 0.25), transform=axis.transAxes, zorder=10)
     new_ax.imshow(divertor)
     new_ax.axis("off")
 
@@ -1790,10 +1664,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.29,
         0.57,
         f"$P_{{\\text{{div,rad}}}}$:\n{mfile.get('p_div_rad_total_mw', scan=scan):,.2f} MW",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "dodgerblue",
@@ -1807,10 +1678,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.4,
         0.58,
         f"$P_{{\\text{{div,nuclear}}}}$:\n{mfile.get('p_div_nuclear_heat_total_mw', scan=scan):,.2f} MW",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "grey",
@@ -1828,10 +1696,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
             f"Solid angle fraction: {mfile.get('f_ster_div_single', scan=scan):.3f}\n"
             f"Primary heat fraction: {mfile.get('f_p_div_primary_heat', scan=scan):.3f}"
         ),
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "orange",
@@ -1845,17 +1710,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.3,
         0.375,
         f"$P_{{\\text{{div,secondary}}}}$:\n{mfile.get('p_div_secondary_heat_mw', scan=scan):.2f} MWth",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightblue",
-            "alpha": 1.0,
-            "linewidth": 2,
-            "linestyle": "dashed",
-        },
+        **_text_layout(fig),
+        bbox=_box_style("lightblue") | {"linestyle": "dashed"},
     )
 
     # Divertor to divertor secondary heat arrow
@@ -1916,10 +1772,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.55,
         0.33,
         f"$P_{{\\text{{div,pump}}}}$: {mfile.get('p_div_coolant_pump_mw', scan=scan):.2f} MW",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "wheat",
@@ -1978,10 +1831,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.875,
         0.325,
         f"$P_{{\\text{{shld,pump}}}}$:\n{mfile.get('p_shld_coolant_pump_mw', scan=scan):.2f} MW",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "wheat",
@@ -1995,10 +1845,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.725,
         0.4,
         f"$P_{{\\text{{FW + Blkt}}}}$:\n{mfile.get('p_fw_blkt_coolant_pump_mw', scan=scan):.2f} MW",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "wheat",
@@ -2060,10 +1907,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
             f"Coolant pumps electric:\n{mfile.get('p_coolant_pump_elec_total_mw', scan=scan):.3f} MWe\n"
             f"$\\eta$: {mfile.get('eta_coolant_pump_electric', scan=scan):.3f}"
         ),
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "lime",
@@ -2077,10 +1921,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.7,
         0.325,
         f"Coolant pumps total:\n{mfile.get('p_coolant_pump_total_mw', scan=scan):.3f} MW",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "wheat",
@@ -2109,10 +1950,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.5,
         0.235,
         f"Coolant pumps losses total:\n{mfile.get('p_coolant_pump_loss_total_mw', scan=scan):.3f} MWth",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "lightblue",
@@ -2165,10 +2003,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.49,
         0.05,
         f"Cryo Plant:\n{mfile.get('p_cryo_plant_electric_mw', scan=scan):.3f} MWe",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "burlywood",
@@ -2197,10 +2032,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.4,
         0.05,
         f"Tritium Plant:\n{mfile.get('p_tritium_plant_electric_mw', scan=scan):.3f} MWe",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "burlywood",
@@ -2229,10 +2061,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.575,
         0.05,
         f"Vacuum pumps:\n{mfile.get('vachtmw', scan=scan):.3f} MWe",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "burlywood",
@@ -2265,10 +2094,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
             f"Minimum base load:\n{mfile.get('p_plant_electric_base', scan=scan) * 1.0e-6:.3f} MWe\n"
             f"Plant floor power density:\n{mfile.get('pflux_plant_floor_electric', scan=scan) * 1.0e-3:.3f} kW$\\text{{m}}^{{-2}}$"
         ),
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "burlywood",
@@ -2282,10 +2108,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.325,
         0.075,
         f"TF coils:\n{mfile.get('p_tf_electric_supplies_mw', scan=scan):.3f} MWe",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "burlywood",
@@ -2299,10 +2122,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.25,
         0.05,
         f"PF coils:\n{mfile.get('p_pf_electric_supplies_mw', scan=scan):.3f} MWe",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "burlywood",
@@ -2361,10 +2181,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.46,
         0.285,
         f"$P_{{\\text{{HCD,loss}}}}$:\n{mfile.get('p_hcd_secondary_heat_mw', scan=scan):.2f} MWth",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "lightblue",
@@ -2411,17 +2228,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.155,
         0.25,
         f"$P_{{\\text{{TF,nuclear}}}}$:\n{mfile.get('p_tf_nuclear_heat_mw', scan=scan):.2f} MWth",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightblue",
-            "alpha": 1.0,
-            "linewidth": 2,
-            "linestyle": "dashed",
-        },
+        **_text_layout(fig),
+        bbox=_box_style("lightblue") | {"linestyle": "dashed"},
     )
 
     # TF nuclear heat to secondary heat total box arrow
@@ -2503,7 +2311,7 @@ def plot_main_plasma_information(
         fontsize=15,
         verticalalignment="center",
         horizontalalignment="center",
-        bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
+        bbox=white_box,
         transform=fig.transFigure,
     )
 
@@ -2525,7 +2333,7 @@ def plot_main_plasma_information(
         fontsize=9,
         color="black",
         ha="center",
-        bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
+        bbox=white_box,
     )
 
     # ============================================
@@ -2546,7 +2354,7 @@ def plot_main_plasma_information(
         fontsize=9,
         color="black",
         ha="center",
-        bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
+        bbox=white_box,
     )
 
     # ============================================
@@ -2569,7 +2377,7 @@ def plot_main_plasma_information(
         rotation=270,
         verticalalignment="center",
         transform=axis.transAxes,
-        bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
+        bbox=white_box,
     )
 
     # =============================================
@@ -2591,7 +2399,7 @@ def plot_main_plasma_information(
         color="black",
         rotation=0,
         verticalalignment="center",
-        bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
+        bbox=white_box,
     )
 
     # =============================================
@@ -2614,7 +2422,7 @@ def plot_main_plasma_information(
         color="black",
         rotation=0,
         verticalalignment="center",
-        bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
+        bbox=white_box,
     )
 
     # ================================================
@@ -2624,7 +2432,7 @@ def plot_main_plasma_information(
     geom_type = PlasmaGeometryModelType(mfile.get("i_plasma_geometry", scan=scan))
 
     textstr_plasma = (
-        f"$\\mathbf{{Shaping:}}$\n \n"
+        f"$\\mathbf{{Shaping:}}$\n\n"
         f"$\\kappa_{{95}}$: {mfile.get('kappa95', scan=scan):.2f} ({geom_type.kappa95_model.description}) | $\\delta_{{95}}$: {mfile.get('triang95', scan=scan):.2f} ({geom_type.triang95_model.description}) | $\\zeta$: {mfile.get('plasma_square', scan=scan):.2f}\n"
         f"$\\kappa$: {mfile.get('kappa', scan=scan):.2f} ({geom_type.kappa_model.description}) | $\\delta$: {mfile.get('triang', scan=scan):.2f} ({geom_type.triang_model.description}) | A: {mfile.get('aspect', scan=scan):.2f}\n"
         f"$ V_{{\\text{{p}}}}:$ {mfile.get('vol_plasma', scan=scan):,.2f}$ \\ \\text{{m}}^3$ | $ A_{{\\text{{p,surface}}}}:$ {mfile.get('a_plasma_surface', scan=scan):,.2f}$ \\ \\text{{m}}^2$ | $ A_{{\\text{{p,poloidal}}}}:$ {mfile.get('a_plasma_poloidal', scan=scan):,.3f}$ \\ \\text{{m}}^2$\n"
@@ -2639,56 +2447,40 @@ def plot_main_plasma_information(
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightyellow",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("lightyellow"),
     )
 
     # ============================================
 
     # Draw a red arrow coming from the right and pointing at the plasma
-    axis.annotate(
-        "",
-        xy=(rmajor + (rminor * 0.8), kappa * rminor * 0.2),  # Pointing at the plasma
-        xytext=(
-            rmajor + (rminor * 1.4),
-            kappa * rminor * 0.2,
-        ),  # Starting point of the arrow
-        arrowprops={"facecolor": "red", "edgecolor": "red", "lw": 2},
-    )
-
-    # Draw a red arrow coming from the right and pointing at the plasma
-    axis.annotate(
-        "",
-        xy=(rmajor + (rminor * 0.8), -kappa * rminor * 0.2),  # Pointing at the plasma
-        xytext=(
-            rmajor + (rminor * 1.4),
-            -kappa * rminor * 0.2,
-        ),  # Starting point of the arrow
-        arrowprops={"facecolor": "red", "edgecolor": "red", "lw": 2},
-    )
+    for kap in (-kappa, kappa):
+        axis.annotate(
+            "",
+            # Pointing at plasma
+            xy=(rmajor + (rminor * 0.8), kap * rminor * 0.2),
+            # Starting point of arrow
+            xytext=(rmajor + (rminor * 1.4), kap * rminor * 0.2),
+            arrowprops={"facecolor": "red", "edgecolor": "red", "lw": 2},
+        )
 
     i_hcd_primary = mfile.get("i_hcd_primary", scan=scan)
     i_hcd_secondary = mfile.get("i_hcd_secondary", scan=scan)
 
     # Add heating and current drive information
     textstr_hcd = (
-        f"$\\mathbf{{Heating \\ & \\ current \\ drive:}}$\n \n"
-        f"Total injected heat: {mfile.get('p_hcd_injected_total_mw', scan=scan):.3f} MW                       \n"
-        f"Ohmic heating power: {mfile.get('p_plasma_ohmic_mw', scan=scan):.3f} MW         \n\n"
-        f"$\\mathbf{{Primary \\ system: {CurrentDriveModel(i_hcd_primary).abbreviation}}}$ \n"
+        f"$\\mathbf{{Heating \\ & \\ current \\ drive:}}$\n\n"
+        f"Total injected heat: {mfile.get('p_hcd_injected_total_mw', scan=scan):.3f} MW\n"
+        f"Ohmic heating power: {mfile.get('p_plasma_ohmic_mw', scan=scan):.3f} MW\n\n"
+        f"$\\mathbf{{Primary \\ system: {CurrentDriveModel(i_hcd_primary).abbreviation}}}$\n"
         f"Current driving power {mfile.get('p_hcd_primary_injected_mw', scan=scan):.4f} MW\n"
         f"Extra heat power: {mfile.get('p_hcd_primary_extra_heat_mw', scan=scan):.4f} MW\n"
-        f"$\\eta_{{\\text{{CD,prim}}}}$: {mfile.get('eta_cd_hcd_primary', scan=scan):.4f} A/W  |   $\\langle\\zeta_{{\\text{{CD,prim}}}}\\rangle$: {mfile.get('eta_cd_dimensionless_hcd_primary', scan=scan):.4f}  \n"
+        f"$\\eta_{{\\text{{CD,prim}}}}$: {mfile.get('eta_cd_hcd_primary', scan=scan):.4f} A/W  |   $\\langle\\zeta_{{\\text{{CD,prim}}}}\\rangle$: {mfile.get('eta_cd_dimensionless_hcd_primary', scan=scan):.4f}\n"
         f"$\\gamma_{{\\text{{CD,prim}}}}$: {mfile.get('eta_cd_norm_hcd_primary', scan=scan):.4f} $\\times 10^{{20}}  \\mathrm{{A}} / \\mathrm{{Wm}}^2$\n"
         f"Current driven by primary: {mfile.get('c_hcd_primary_driven', scan=scan) / 1e6:.3f} MA\n\n"
-        f"$\\mathbf{{Secondary \\ system: {CurrentDriveModel(i_hcd_secondary).abbreviation}}}$ \n"
+        f"$\\mathbf{{Secondary \\ system: {CurrentDriveModel(i_hcd_secondary).abbreviation}}}$\n"
         f"Current driving power {mfile.get('p_hcd_secondary_injected_mw', scan=scan):.4f} MW\n"
         f"Extra heat power: {mfile.get('p_hcd_secondary_extra_heat_mw', scan=scan):.4f} MW\n"
-        f"$\\eta_{{\\text{{CD,sec}}}}$: {mfile.get('eta_cd_hcd_secondary', scan=scan):.4f} A/W  |   $\\langle\\zeta_{{\\text{{CD,sec}}}}\\rangle$: {mfile.get('eta_cd_dimensionless_hcd_secondary', scan=scan):.4f}  \n"
+        f"$\\eta_{{\\text{{CD,sec}}}}$: {mfile.get('eta_cd_hcd_secondary', scan=scan):.4f} A/W  |   $\\langle\\zeta_{{\\text{{CD,sec}}}}\\rangle$: {mfile.get('eta_cd_dimensionless_hcd_secondary', scan=scan):.4f}\n"
         f"$\\gamma_{{\\text{{CD,sec}}}}$: {mfile.get('eta_cd_norm_hcd_secondary', scan=scan):.4f} $\\times 10^{{20}}  \\mathrm{{A}} / \\mathrm{{Wm}}^2$\n"
         f"Current driven by secondary: {mfile.get('c_hcd_secondary_driven', scan=scan) / 1e6:.3f} MA"
     )
@@ -2700,30 +2492,28 @@ def plot_main_plasma_information(
         fontsize=9,
         verticalalignment="top",
         transform=plt.gcf().transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "paleturquoise",
-            "alpha": 1.0,
-            "linewidth": 2,
-            "edgecolor": "black",
-        },
+        bbox=_box_style("paleturquoise") | {"edgecolor": "black"},
     )
 
+    class TextArgs(TypedDict):
+        fontsize: int
+        verticalalignment: str
+        transform: Transform
+
+    text_args = TextArgs({
+        "fontsize": 23,
+        "verticalalignment": "top",
+        "transform": fig.transFigure,
+    })
+
     # Add injected power label
-    axis.text(
-        0.92,
-        0.625,
-        "$P_{\\text{inj}}$",
-        fontsize=23,
-        verticalalignment="top",
-        transform=fig.transFigure,
-    )
+    axis.text(0.92, 0.625, "$P_{\\text{inj}}$", **text_args)
 
     # ================================================
 
     # Add beta information
     textstr_beta = (
-        f"$\\mathbf{{Beta \\ Information:}}$\n \n"
+        f"$\\mathbf{{Beta \\ Information:}}$\n\n"
         f"Total beta,$ \\ \\langle \\beta \\rangle$: {mfile.get('beta_total_vol_avg', scan=scan):.4f}\n"
         f"Thermal beta,$ \\ \\langle \\beta_{{\\text{{thermal}}}} \\rangle$: {mfile.get('beta_thermal_vol_avg', scan=scan):.4f}\n"
         f"Toroidal beta,$ \\ \\langle \\beta_{{\\text{{t}}}} \\rangle$: {mfile.get('beta_toroidal_vol_avg', scan=scan):.4f}\n"
@@ -2742,30 +2532,18 @@ def plot_main_plasma_information(
         fontsize=9,
         verticalalignment="top",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightblue",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("lightblue"),
     )
 
     # Add beta label
-    axis.text(
-        0.27,
-        0.94,
-        "$\\beta$",
-        fontsize=23,
-        verticalalignment="top",
-        transform=fig.transFigure,
-    )
+    axis.text(0.27, 0.94, "$\\beta$", **text_args)
 
     # ================================================
 
     # Add volt-second information
     textstr_volt_second = (
-        f"$\\mathbf{{Volt-second \\ requirements:}}$\n \n"
-        f"Total volt-second consumption: {mfile.get('vs_plasma_total_required', scan=scan):.4f} Vs                \n"
+        f"$\\mathbf{{Volt-second \\ requirements:}}$\n\n"
+        f"Total volt-second consumption: {mfile.get('vs_plasma_total_required', scan=scan):.4f} Vs\n"
         f"  - Internal volt-seconds: {mfile.get('vs_plasma_internal', scan=scan):.4f} Vs\n"
         f"  - Volt-seconds needed for burn: {mfile.get('vs_plasma_burn_required', scan=scan):.4f} Vs\n"
         f"  - Volt-seconds needed for ramp: {mfile.get('vs_plasma_ramp_required', scan=scan):.4f} Vs | $C_{{\\text{{ejima}}}}$: {mfile.get('ejima_coeff', scan=scan):.4f}\n"
@@ -2784,30 +2562,18 @@ def plot_main_plasma_information(
         fontsize=9,
         verticalalignment="top",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightgreen",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("lightgreen"),
     )
 
     # Add volt second label
-    axis.text(
-        0.30,
-        0.77,
-        "Vs",
-        fontsize=23,
-        verticalalignment="top",
-        transform=fig.transFigure,
-    )
+    axis.text(0.30, 0.77, "Vs", **text_args)
 
     # =========================================
 
     # Add divertor information
     textstr_div = (
-        f"\n$P_{{\\text{{sep}}}}$: {mfile.get('p_plasma_separatrix_mw', scan=scan):.2f} MW           \n"
-        f"$\\frac{{P_{{\\text{{sep}}}}}}{{R}}$: {mfile.get('p_plasma_separatrix_rmajor_mw', scan=scan):.2f} MW/m               \n"
+        f"\n$P_{{\\text{{sep}}}}$: {mfile.get('p_plasma_separatrix_mw', scan=scan):.2f} MW\n"
+        f"$\\frac{{P_{{\\text{{sep}}}}}}{{R}}$: {mfile.get('p_plasma_separatrix_rmajor_mw', scan=scan):.2f} MW/m\n"
         f"$\\frac{{P_{{\\text{{sep}}}}B_T}}{{q_{{95}} A  R}}$: {mfile.get('p_div_bt_q_aspect_rmajor_mw', scan=scan):.2f} MW T/m               "
     )
 
@@ -2818,29 +2584,17 @@ def plot_main_plasma_information(
         fontsize=9,
         verticalalignment="top",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "orange",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("orange"),
     )
 
     # Add divertor label
-    axis.text(
-        0.45,
-        0.1,
-        "$P_{\\text{div}}$",
-        fontsize=23,
-        verticalalignment="top",
-        transform=fig.transFigure,
-    )
+    axis.text(0.45, 0.1, "$P_{\\text{div}}$", **text_args)
 
     # ================================================
 
     # Add confinement information
     textstr_confinement = (
-        f"$\\mathbf{{Confinement:}}$\n \n"
+        f"$\\mathbf{{Confinement:}}$\n\n"
         f"Confinement scaling law: {mfile.get('tauelaw', scan=scan)}\n"
         f"Confinement $H$ factor: {mfile.get('hfact', scan=scan):.4f}\n"
         f"Energy confinement time from scaling: {mfile.get('t_energy_confinement', scan=scan):.4f} s\n"
@@ -2858,24 +2612,12 @@ def plot_main_plasma_information(
         fontsize=9,
         verticalalignment="top",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "gainsboro",  # Changed to a not normal color (Aquamarine)
-            "alpha": 1.0,
-            "linewidth": 2,
-            "edgecolor": "black",
-        },
+        # Changed to a not normal color (Aquamarine)
+        bbox=_box_style("gainsboro") | {"edgecolor": "black"},
     )
 
     # Add tau label
-    axis.text(
-        0.3,
-        0.55,
-        "$\\tau_{\\text{e}} $",
-        fontsize=23,
-        verticalalignment="top",
-        transform=fig.transFigure,
-    )
+    axis.text(0.3, 0.55, "$\\tau_{\\text{e}} $", **text_args)
 
     # =========================================
 
@@ -2888,7 +2630,7 @@ def plot_main_plasma_information(
 
     # Display the neutron image over the figure, not the axes
     new_ax = axis.inset_axes(
-        [0.975, 0.275, 0.075, 0.075], transform=axis.transAxes, zorder=10
+        (0.975, 0.275, 0.075, 0.075), transform=axis.transAxes, zorder=10
     )
     new_ax.imshow(alpha_particle)
     new_ax.axis("off")
@@ -2901,7 +2643,7 @@ def plot_main_plasma_information(
     )
 
     textstr_alpha = (
-        f"$P_{{\\alpha,\\text{{loss}}}}$ {mfile.get('p_fw_alpha_mw', scan=scan):.2f} MW \n"
+        f"$P_{{\\alpha,\\text{{loss}}}}$ {mfile.get('p_fw_alpha_mw', scan=scan):.2f} MW\n"
         f"$f_{{\\alpha,\\text{{coupled}}}}$ {mfile.get('f_p_alpha_plasma_deposited', scan=scan):.2f}"
     )
 
@@ -2921,7 +2663,7 @@ def plot_main_plasma_information(
     ) as neutron_image_path:
         neutron = mpimg.imread(neutron_image_path.open("rb"))
     new_ax = axis.inset_axes(
-        [0.975, 0.75, 0.075, 0.075], transform=axis.transAxes, zorder=10
+        (0.975, 0.75, 0.075, 0.075), transform=axis.transAxes, zorder=10
     )
     new_ax.imshow(neutron)
     new_ax.axis("off")
@@ -2935,7 +2677,7 @@ def plot_main_plasma_information(
     )
 
     textstr_neutron = (
-        f"$P_{{\\text{{n,total}}}}$ {mfile.get('p_neutron_total_mw', scan=scan):.2f} MW \n"
+        f"$P_{{\\text{{n,total}}}}$ {mfile.get('p_neutron_total_mw', scan=scan):.2f} MW\n"
         f"$\\phi_{{\\text{{n,avg}}}}$ {mfile.get('pflux_plasma_surface_neutron_avg_mw', scan=scan):.3f} MW/m²"
     )
 
@@ -2953,8 +2695,8 @@ def plot_main_plasma_information(
 
     # Add fusion reaction information
     textstr_reactions = (
-        f"$\\mathbf{{Fusion \\ Reactions:}}$\n \n"
-        f"Fuel mixture: \n"
+        f"$\\mathbf{{Fusion \\ Reactions:}}$\n\n"
+        f"Fuel mixture:\n"
         f"|  D: {mfile.get('f_plasma_fuel_deuterium', scan=scan):.2f}  |  T: {mfile.get('f_plasma_fuel_tritium', scan=scan):.2f}  |  3He: {mfile.get('f_plasma_fuel_helium3', scan=scan):.2f}  |\n\n"
         f"Fusion Power, $P_{{\\text{{fus}}}}:$ {mfile.get('p_fusion_total_mw', scan=scan):,.2f} MW\n"
         f"D-T Power, $P_{{\\text{{fus,DT}}}}:$ {mfile.get('p_dt_total_mw', scan=scan):,.2f} MW\n"
@@ -2977,14 +2719,14 @@ def plot_main_plasma_information(
 
     # Add fuelling information
     textstr_fuelling = (
-        f"$\\mathbf{{Fuelling:}}$\n \n"
+        f"$\\mathbf{{Fuelling:}}$\n\n"
         f"Plasma mass: {mfile.get('m_plasma', scan=scan) * 1000:.4f} g\n"
         f"   - Average mass of all plasma ions: {mfile.get('m_ions_total_amu', scan=scan):.3f} amu\n"
         f"Fuel mass: {mfile.get('m_plasma_fuel_ions', scan=scan) * 1000:.4f} g\n"
         f"   - Average mass of all fuel ions: {mfile.get('m_fuel_amu', scan=scan):.3f} amu\n\n"
         f"Fueling rate: {mfile.get('molflow_plasma_fuelling_required', scan=scan):.3e} nucleus-pairs/s\n"
-        f"Fuel burn-up rate: {mfile.get('rndfuel', scan=scan):.3e} reactions/s \n"
-        f"Burn-up fraction: {mfile.get('burnup', scan=scan):.4f} \n"
+        f"Fuel burn-up rate: {mfile.get('rndfuel', scan=scan):.3e} reactions/s\n"
+        f"Burn-up fraction: {mfile.get('burnup', scan=scan):.4f}\n"
     )
 
     axis.text(
@@ -2994,13 +2736,7 @@ def plot_main_plasma_information(
         fontsize=9,
         verticalalignment="top",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "khaki",
-            "alpha": 1.0,
-            "linewidth": 2,
-            "edgecolor": "black",
-        },
+        bbox=_box_style("khaki") | {"edgecolor": "black"},
     )
 
     # ================================================
@@ -3010,7 +2746,7 @@ def plot_main_plasma_information(
     textstr_ions = (
         f"             $\\mathbf{{Ion \\ to \\ electron}}$\n"
         f"             $\\mathbf{{relative \\ number}}$\n"
-        f"             $\\mathbf{{densities:}}$\n \n"
+        f"             $\\mathbf{{densities:}}$\n\n"
         f"             Effective charge: {mfile.get('n_charge_plasma_effective_vol_avg', scan=scan):.3f}\n\n"
         + "\n".join(
             f"             {label.replace('_', '') + ':':<6}"
@@ -3035,21 +2771,14 @@ def plot_main_plasma_information(
     )
 
     # Add ion charge label
-    axis.text(
-        0.815,
-        0.29,
-        "$Z$",
-        fontsize=23,
-        verticalalignment="top",
-        transform=fig.transFigure,
-    )
+    axis.text(0.815, 0.29, "$Z$", **text_args)
 
     # ================================================
 
     # Add plasma current information
     textstr_currents = (
         f"$\\mathbf{{Plasma\\ currents:}}$\n\n"
-        f"Plasma current ({PlasmaCurrentModel(int(mfile.get('i_plasma_current', scan=scan))).full_name}): {mfile.get('plasma_current_ma', scan=scan):.4f} MA    \n"
+        f"Plasma current ({PlasmaCurrentModel(int(mfile.get('i_plasma_current', scan=scan))).full_name}): {mfile.get('plasma_current_ma', scan=scan):.4f} MA\n"
         f"  - Bootstrap fraction ({BootstrapCurrentFractionModel(int(mfile.get('i_bootstrap_current', scan=scan))).full_name}): {mfile.get('f_c_plasma_bootstrap', scan=scan):.4f}\n"
         f"  - Diamagnetic fraction ({PlasmaDiamagneticCurrentModel(int(mfile.get('i_diamagnetic_current', scan=scan))).full_name}): {mfile.get('f_c_plasma_diamagnetic', scan=scan):.4f}\n"
         f"  - Pfirsch-Schlüter fraction {mfile.get('f_c_plasma_pfirsch_schluter', scan=scan):.4f}\n"
@@ -3064,31 +2793,19 @@ def plot_main_plasma_information(
         fontsize=9,
         verticalalignment="top",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "#C8A2C8",  # Hex code for lilac color
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("#C8A2C8"),  # Hex code for lilac color
     )
 
     # Add plasma current label
-    axis.text(
-        0.93,
-        0.9,
-        "$I_{\\text{p}} $",
-        fontsize=23,
-        verticalalignment="top",
-        transform=fig.transFigure,
-    )
+    axis.text(0.93, 0.9, "$I_{\\text{p}} $", **text_args)
 
     # Add magnetic field information
     textstr_fields = (
         f"$\\mathbf{{Magnetic\\ fields:}}$\n\n"
-        f"Toroidal field at $R_0$, $B_{{T}}$: {mfile.get('b_plasma_toroidal_on_axis', scan=scan):.4f} T                  \n"
-        f"  Ripple at outboard , $\\delta$: {mfile.get('ripple_b_tf_plasma_edge', scan=scan):.2f}%                  \n"
+        f"Toroidal field at $R_0$, $B_{{T}}$: {mfile.get('b_plasma_toroidal_on_axis', scan=scan):.4f} T\n"
+        f"  Ripple at outboard , $\\delta$: {mfile.get('ripple_b_tf_plasma_edge', scan=scan):.2f}%\n"
         f"Surface average poloidal field, $\\langle B_{{p}}(a) \\rangle$: {mfile.get('b_plasma_surface_poloidal_average', scan=scan):.4f} T\n"
-        f"Total field, $B_{{tot}}$: {mfile.get('b_plasma_total', scan=scan):.4f} T                \n"
+        f"Total field, $B_{{tot}}$: {mfile.get('b_plasma_total', scan=scan):.4f} T\n"
         f"Vertical field, $B_{{vert}}$: {mfile.get('b_plasma_vertical_required', scan=scan):.4f} T"
     )
 
@@ -3099,23 +2816,11 @@ def plot_main_plasma_information(
         fontsize=9,
         verticalalignment="top",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "royalblue",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("royalblue"),
     )
 
     # Add magnetic field label
-    axis.text(
-        0.75,
-        0.12,
-        "$B$",
-        fontsize=23,
-        verticalalignment="top",
-        transform=fig.transFigure,
-    )
+    axis.text(0.75, 0.12, "$B$", **text_args)
 
     # Add radiation information
     textstr_radiation = (
@@ -3136,36 +2841,18 @@ def plot_main_plasma_information(
         fontsize=9,
         verticalalignment="top",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lavender",
-            "alpha": 1.0,
-            "linewidth": 2,
-            "edgecolor": "black",
-        },
+        bbox=_box_style("lavender") | {"edgecolor": "black"},
     )
 
     # Add radiation label
-    axis.text(
-        0.725,
-        0.78,
-        "$\\gamma$",
-        fontsize=23,
-        verticalalignment="top",
-        transform=fig.transFigure,
-    )
+    axis.text(0.725, 0.78, "$\\gamma$", **text_args)
 
     # Add L-H threshold information
-    textstr_lh = (
-        f"$\\mathbf{{L-H \\ threshold:}}$\n"
-        f"({PlasmaConfinementTransitionModel(int(mfile.get('i_l_h_threshold', scan=scan))).full_name})\n\n"
-        f"$P_{{\\text{{L-H}}}}:$ {mfile.get('p_l_h_threshold_mw', scan=scan):.4f} MW\n"
-    )
-
-    # Wrap long model names to new line
     model_name = PlasmaConfinementTransitionModel(
         int(mfile.get("i_l_h_threshold", scan=scan))
     ).full_name
+
+    # Wrap long model names to new line
     if len(model_name) > 20:
         model_name = "\n".join(textwrap.wrap(model_name, width=20))
 
@@ -3182,12 +2869,7 @@ def plot_main_plasma_information(
         fontsize=9,
         verticalalignment="top",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "peachpuff",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("peachpuff"),
     )
 
     # Add density limit information
@@ -3205,12 +2887,7 @@ def plot_main_plasma_information(
         fontsize=9,
         verticalalignment="top",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "pink",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("pink"),
     )
 
 
@@ -3420,8 +3097,8 @@ def plot_system_power_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int
     # Add energy produced info
     textstr_energy = (
         f"$\\mathbf{{Energy \\ Production:}}$\n\n"
-        f"Energy produced over whole pulse: {mfile.get('e_plant_net_electric_pulse_mj', scan=scan):,.4f} MJ \n"
-        f"Energy produced over whole pulse: {mfile.get('e_plant_net_electric_pulse_kwh', scan=scan):,.4f} kWh \n"
+        f"Energy produced over whole pulse: {mfile.get('e_plant_net_electric_pulse_mj', scan=scan):,.4f} MJ\n"
+        f"Energy produced over whole pulse: {mfile.get('e_plant_net_electric_pulse_kwh', scan=scan):,.4f} kWh\n"
     )
 
     axis.text(
@@ -3431,12 +3108,7 @@ def plot_system_power_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int
         fontsize=9,
         verticalalignment="top",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "grey",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("grey"),
     )
 
     # Add energy produced info
@@ -3459,7 +3131,7 @@ def plot_system_power_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int
         fontsize=9,
         verticalalignment="top",
         transform=fig.transFigure,
-        bbox={"boxstyle": "round", "facecolor": "grey", "alpha": 1.0, "linewidth": 2},
+        bbox=_box_style("grey"),
     )
 
 
@@ -3507,8 +3179,8 @@ def plot_cryostat(
 
 def color_key(axis: plt.Axes, mfile: MFile, scan: int, colour_scheme: Literal[1, 2]):
     """Function to plot the colour key"""
-    axis.set_ylim([0, 10])
-    axis.set_xlim([0, 10])
+    axis.set_ylim(0, 10)
+    axis.set_xlim(0, 10)
     axis.set_axis_off()
     axis.set_autoscaley_on(False)
     axis.set_autoscalex_on(False)
@@ -3552,7 +3224,7 @@ def color_key(axis: plt.Axes, mfile: MFile, scan: int, colour_scheme: Literal[1,
         axis.text(x_pos, y_pos, text, ha="left", va="top", size="small")
         axis.add_patch(
             patches.Rectangle(
-                [x_pos + 1.5, y_pos - 0.35],
+                (x_pos + 1.5, y_pos - 0.35),
                 0.5,
                 0.4,
                 lw=0 if color != "none" else 1,
@@ -3795,13 +3467,13 @@ def toroidal_cross_section(
     # ---
     # DEMO : Fixed ranges for comparison
     if demo_ranges:
-        axis.set_ylim([0, 20])
-        axis.set_xlim([0, 20])
+        axis.set_ylim(0, 20)
+        axis.set_xlim(0, 20)
 
     # Adaptive ranges
     else:
-        axis.set_ylim([0.0, axis.get_ylim()[1]])
-        axis.set_xlim([0.0, axis.get_xlim()[1]])
+        axis.set_ylim(0.0, axis.get_ylim()[1])
+        axis.set_xlim(0.0, axis.get_xlim()[1])
     # ---
 
 
@@ -4050,14 +3722,14 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
     # Ranges
     # ---
     # DEMO : Fixed ranges for comparison
-    ax_main.set_xlim([0, 1])
-    ax_impurity.set_xlim([0, 1])
+    ax_main.set_xlim(0, 1)
+    ax_impurity.set_xlim(0, 1)
     if demo_ranges:
-        ax_main.set_ylim([0, 20])
+        ax_main.set_ylim(0, 20)
 
     # Adaptive ranges
     else:
-        ax_main.set_ylim([0, ax_main.get_ylim()[1]])
+        ax_main.set_ylim(0, ax_main.get_ylim()[1])
         # Use logarithmic scale for impurity axis if any impurity values are very small
         impurity_data = [
             imp_frac[i] * ne / 1e16
@@ -4067,7 +3739,7 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
         if impurity_data and np.min(impurity_data) / np.max(impurity_data) < 0.01:
             # If range spans more than 100x, use log scale
             ax_impurity.set_yscale("log")
-        ax_impurity.set_ylim([1e-3, ax_impurity.get_ylim()[1]])
+        ax_impurity.set_ylim(1e-3, ax_impurity.get_ylim()[1])
 
     if i_plasma_pedestal != 0:
         # Print pedestal lines
@@ -4199,7 +3871,7 @@ def plot_jprofile(prof, mfile: MFile, scan: int):
     prof.set_ylabel(r"Current density $[kA/m^2]$")
     prof.set_title("$J$ profile")
     prof.minorticks_on()
-    prof.set_xlim([0, 1.0])
+    prof.set_xlim(0, 1.0)
 
     rho = np.linspace(0, 1)
     y2 = (j_plasma_0 * (1 - rho**2) ** alphaj) / 1e3
@@ -4312,14 +3984,14 @@ def plot_t_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
 
     # Ranges
     # ---
-    prof.set_xlim([0, 1])
+    prof.set_xlim(0, 1)
     # DEMO : Fixed ranges for comparison
     if demo_ranges:
-        prof.set_ylim([0, 50])
+        prof.set_ylim(0, 50)
 
     # Adaptive ranges
     else:
-        prof.set_ylim([0, prof.get_ylim()[1]])
+        prof.set_ylim(0, prof.get_ylim()[1])
 
     if i_plasma_pedestal != 0:
         # Plot pedestal lines
@@ -4421,14 +4093,14 @@ def plot_qprofile(prof, demo_ranges: bool, mfile: MFile, scan: int):
 
     # Ranges
     # ---
-    prof.set_xlim([0, 1])
+    prof.set_xlim(0, 1)
     # DEMO : Fixed ranges for comparison
     if demo_ranges:
-        prof.set_ylim([0, 10])
+        prof.set_ylim(0, 10)
 
     # Adaptive ranges
     else:
-        prof.set_ylim([0, q95 * 1.2])
+        prof.set_ylim(0, q95 * 1.2)
 
     prof.text(
         0.6,
@@ -4489,7 +4161,7 @@ def read_imprad_data(_skiprows, data_path):
             if "infinite confinement" in header.content:
                 zav = np.asarray(header.data, dtype=float)
 
-        lzdata[i] = np.column_stack((Te, lz, zav))
+        lzdata[i] = np.column_stack([Te, lz, zav])
 
     # then switch string to floats
     return np.array(lzdata, dtype=float)
@@ -4503,9 +4175,7 @@ def profiles_with_pedestal(mfile, scan: int):
     temp_plasma_electron_on_axis_kev = mfile.get(
         "temp_plasma_electron_on_axis_kev", scan=scan
     )
-    radius_plasma_pedestal_density_norm = mfile.get(
-        "radius_plasma_pedestal_density_norm", scan=scan
-    )
+
     radius_plasma_pedestal_temp_norm = mfile.get(
         "radius_plasma_pedestal_temp_norm", scan=scan
     )
@@ -4513,7 +4183,6 @@ def profiles_with_pedestal(mfile, scan: int):
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
     i_plasma_pedestal = mfile.get("i_plasma_pedestal", scan=scan)
     nd_plasma_pedestal_electron = mfile.get("nd_plasma_pedestal_electron", scan=scan)
-    ne0 = mfile.get("nd_plasma_electron_on_axis", scan=scan)
     radius_plasma_pedestal_density_norm = mfile.get(
         "radius_plasma_pedestal_density_norm", scan=scan
     )
@@ -4684,16 +4353,16 @@ def plot_line_brem_power_density_profile(
     # Ranges
     # ---
     axis.legend(loc="upper left", bbox_to_anchor=(-0.1, -0.1), ncol=4)
-    axis.set_xlim([0, 1.0])
+    axis.set_xlim(0, 1.0)
     axis.set_yscale("log")
     axis.yaxis.grid(True, which="both", alpha=0.2)
     # DEMO : Fixed ranges for comparison
     if demo_ranges:
-        axis.set_ylim([1e-4, 0.5])
+        axis.set_ylim(1e-4, 0.5)
 
     # Adaptive ranges
     else:
-        axis.set_ylim([1e-4, axis.get_ylim()[1]])
+        axis.set_ylim(1e-4, axis.get_ylim()[1])
     # ---
 
 
@@ -4925,12 +4594,12 @@ def plot_line_brem_loss_function_profile(
     axis.set_xlabel(r"$\rho \quad [r/a]$")
     axis.set_ylabel(r"$L_z$ $[\mathrm{W}\mathrm{m}^3]$")
     axis.set_title("Line & Bremsstrahlung Loss Function ($L_z$) Profiles")
-    axis.set_xlim([0, 1.0])
+    axis.set_xlim(0, 1.0)
     axis.set_yscale("log")
     axis.yaxis.grid(True, which="both", alpha=0.2)
 
 
-def plot_rad_density_contour(axis: "mpl.axes.Axes", mfile: "Any", scan: int, impp: str):
+def plot_rad_density_contour(axis: Axes, mfile: MFile, scan: int, impp: str):
     """Plots the contour of line and bremsstrahlung radiation density [MW/m³] for a
     plasma cross-section.
 
@@ -5628,8 +5297,8 @@ def plot_first_wall_top_down_cross_section(axis: plt.Axes, mfile: MFile, scan: i
     axis.set_xlabel("X [cm]")
     axis.set_ylabel("R [cm]")
     axis.set_title("First Wall Top-Down Cross Section")
-    axis.set_xlim([-1, 2 * dx_fw_module + 1])
-    axis.set_ylim([-1, 2 * (dr_fw_wall + radius_fw_channel) + 1])
+    axis.set_xlim(-1, 2 * dx_fw_module + 1)
+    axis.set_ylim(-1, 2 * (dr_fw_wall + radius_fw_channel) + 1)
 
 
 def plot_first_wall_poloidal_cross_section(axis: plt.Axes, mfile: MFile, scan: int):
@@ -5750,8 +5419,8 @@ def plot_first_wall_poloidal_cross_section(axis: plt.Axes, mfile: MFile, scan: i
     axis.set_xlabel("R [m]")
     axis.set_ylabel("Z [m]")
     axis.set_title("First Wall Poloidal Cross Section")
-    axis.set_xlim([-0.01, (dx_fw_module + radius_fw_channel * 2) + 0.01])
-    axis.set_ylim([-0.2, len_fw_channel + 0.2])
+    axis.set_xlim(-0.01, (dx_fw_module + radius_fw_channel * 2) + 0.01)
+    axis.set_ylim(-0.2, len_fw_channel + 0.2)
 
 
 def plot_firstwall(
@@ -6056,7 +5725,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
     if i_tf_sup == 1:
         axis.add_patch(
             Circle(
-                [0, 0],
+                (0, 0),
                 r_tf_inboard_in,
                 facecolor="none",
                 edgecolor="black",
@@ -6067,7 +5736,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
         if i_tf_case_geom == TFPlasmaCaseType.CIRCULAR:
             axis.add_patch(
                 Circle(
-                    [0, 0],
+                    (0, 0),
                     r_tf_inboard_out,
                     facecolor="none",
                     edgecolor="black",
@@ -6575,7 +6244,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
 
         # Add info about the steel casing surrounding the WP
         textstr_casing = (
-            f"$\\mathbf{{Casing:}}$\n \n"
+            f"$\\mathbf{{Casing:}}$\n\n"
             f"Coil half angle: {mfile.get('rad_tf_coil_inboard_toroidal_half', scan=scan):.3f} radians\n\n"
             f"$\\text{{Full Coil Case:}}$\n"
             f"$r_{{start}} \\rightarrow r_{{end}}$: {mfile.get('r_tf_inboard_in', scan=scan):.3f} $\\rightarrow$ {mfile.get('r_tf_inboard_out', scan=scan):.3f} m\n"
@@ -6612,7 +6281,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
 
         # Add info about the steel casing surrounding the WP
         textstr_wp_insulation = (
-            f"$\\mathbf{{Ground \\ Insulation:}}$\n \n"
+            f"$\\mathbf{{Ground \\ Insulation:}}$\n\n"
             f"Area of insulation around WP: {mfile.get('a_tf_wp_ground_insulation', scan=scan):.3f} $\\mathrm{{m}}^2$\n"
             f"$\\Delta r$: {mfile.get('dx_tf_wp_insulation', scan=scan):.4f} m\n\n"
             f"WP Insertion Gap:\n"
@@ -6636,7 +6305,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
 
         # Add info about the Winding Pack
         textstr_wp = (
-            f"$\\mathbf{{Winding \\  Pack:}}$\n \n"
+            f"$\\mathbf{{Winding \\  Pack:}}$\n\n"
             f"$N_{{\\text{{turns}}}}$: "
             f"{int(mfile.get('n_tf_coil_turns', scan=scan))} turns\n"
             f"$r_{{start}} \\rightarrow r_{{end}}$: {mfile.get('r_tf_wp_inboard_inner', scan=scan):.3f} $\\rightarrow$ {mfile.get('r_tf_wp_inboard_outer', scan=scan):.3f} m\n"
@@ -6673,7 +6342,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
 
         # Add info about the Winding Pack
         textstr_general_info = (
-            f"$\\mathbf{{General \\ info:}}$\n \n"
+            f"$\\mathbf{{General \\ info:}}$\n\n"
             f"$N_{{\\text{{TF,coil}}}}$: {mfile.get('n_tf_coils', scan=scan)}\n"
             f"Self inductance of single coil: {mfile.get('ind_tf_coil', scan=scan) * 1e6:.4f} $\\mu$H\n"
             f"Stored energy of all coils: {mfile.get('e_tf_magnetic_stored_total_gj', scan=scan):.4f} GJ\n"
@@ -6735,7 +6404,7 @@ def plot_resistive_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
 
     axis.add_patch(
         Circle(
-            [0, 0],
+            (0, 0),
             r_tf_inboard_in,
             facecolor="none",
             edgecolor="black",
@@ -6746,7 +6415,7 @@ def plot_resistive_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
     if i_tf_case_geom == TFPlasmaCaseType.CIRCULAR:
         axis.add_patch(
             Circle(
-                [0, 0],
+                (0, 0),
                 r_tf_inboard_out,
                 facecolor="none",
                 edgecolor="black",
@@ -7099,7 +6768,7 @@ def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
     """Plot info about the resistive TF coils"""
     # Add info about the steel casing surrounding the WP
     textstr_casing = (
-        f"$\\mathbf{{Casing:}}$\n \n"
+        f"$\\mathbf{{Casing:}}$\n\n"
         f"Coil half angle: {mfile.get('rad_tf_coil_inboard_toroidal_half', scan=scan):.3f} radians\n\n"
         f"$\\text{{Full Coil Case:}}$\n"
         f"$r_{{start}} \\rightarrow r_{{end}}$: {mfile.get('r_tf_inboard_in', scan=scan):.3f} $\\rightarrow$ {mfile.get('r_tf_inboard_out', scan=scan):.3f} m\n"
@@ -7122,12 +6791,12 @@ def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={"boxstyle": "round", "facecolor": "grey", "alpha": 1.0, "linewidth": 2},
+        bbox=_box_style("grey"),
     )
 
     # Add info about the steel casing surrounding the WP
     textstr_wp_insulation = (
-        f"$\\mathbf{{Insulation:}}$\n \n"
+        f"$\\mathbf{{Insulation:}}$\n\n"
         f"Area of insulation around WP: {mfile.get('a_tf_wp_ground_insulation', scan=scan):.3f} $\\mathrm{{m}}^2$\n"
         f"$\\Delta r$: {mfile.get('dx_tf_wp_insulation', scan=scan):.4f} m\n\n"
         f"$\\text{{Turn Insulation:}}$\n"
@@ -7146,7 +6815,7 @@ def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
 
     # Add info about the Winding Pack
     textstr_wp = (
-        f"$\\mathbf{{Winding Pack:}}$\n \n"
+        f"$\\mathbf{{Winding Pack:}}$\n\n"
         f"$N_{{\\text{{turns}}}}$: "
         f"{int(mfile.get('n_tf_coil_turns', scan=scan))} turns\n"
         f"$r_{{start}} \\rightarrow r_{{end}}$: {mfile.get('r_tf_wp_inboard_inner', scan=scan):.3f} $\\rightarrow$ {mfile.get('r_tf_wp_inboard_outer', scan=scan):.3f} m\n"
@@ -7171,7 +6840,7 @@ def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
 
     # Add info about the Winding Pack
     textstr_general_info = (
-        f"$\\mathbf{{General \\ info:}}$\n \n"
+        f"$\\mathbf{{General \\ info:}}$\n\n"
         f"Self inductance: {mfile.get('ind_tf_coil', scan=scan) * 1e6:.4f} $\\mu$H\n"
         f"Stored energy of all coils: {mfile.get('e_tf_magnetic_stored_total_gj', scan=scan):.4f} GJ\n"
     )
@@ -7188,7 +6857,7 @@ def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
 
     # Add info about the Winding Pack
     textstr_cooling = (
-        f"$\\mathbf{{Cooling \\ info:}}$\n \n"
+        f"$\\mathbf{{Cooling \\ info:}}$\n\n"
         f"Coolant inlet temperature: {mfile.get('temp_cp_coolant_inlet', scan=scan):.2f} K\n"
         f"Coolant temperature rise: {mfile.get('dtemp_cp_coolant', scan=scan):.2f} K\n"
         f"Coolant velocity: {mfile.get('vel_cp_coolant_midplane', scan=scan):.2f} $\\mathrm{{ms^{{-1}}}}$\n\n"
@@ -7208,12 +6877,7 @@ def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "wheat",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("wheat"),
     )
 
 
@@ -7438,7 +7102,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
     if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.NON_INTEGER:
         axis.add_patch(
             Rectangle(
-                [0, 0],
+                (0, 0),
                 turn_width,
                 turn_width,
                 facecolor="red",
@@ -7448,7 +7112,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         # Plot the steel conduit
         axis.add_patch(
             Rectangle(
-                [insulation_thickness, insulation_thickness],
+                (insulation_thickness, insulation_thickness),
                 (turn_width - 2 * insulation_thickness),
                 (turn_width - 2 * insulation_thickness),
                 facecolor="grey",
@@ -7459,10 +7123,10 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         # Plot the cable space with rounded corners
         axis.add_patch(
             patches.FancyBboxPatch(
-                [
+                (
                     insulation_thickness + steel_thickness,
                     insulation_thickness + steel_thickness,
-                ],
+                ),
                 (turn_width - 2 * (insulation_thickness + steel_thickness)),
                 (turn_width - 2 * (insulation_thickness + steel_thickness)),
                 boxstyle=patches.BoxStyle(
@@ -7476,10 +7140,10 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         # Plot dashed line around the cable space
         axis.add_patch(
             Rectangle(
-                [
+                (
                     insulation_thickness + steel_thickness,
                     insulation_thickness + steel_thickness,
-                ],
+                ),
                 (turn_width - 2 * (insulation_thickness + steel_thickness)),
                 (turn_width - 2 * (insulation_thickness + steel_thickness)),
                 facecolor="none",
@@ -7492,7 +7156,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         # Plot the coolant channel
         axis.add_patch(
             Circle(
-                [(turn_width / 2), (turn_width / 2)],
+                ((turn_width / 2), (turn_width / 2)),
                 he_pipe_diameter / 2,
                 facecolor="white",
                 edgecolor="black",
@@ -7543,7 +7207,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
     elif TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.INTEGER:
         axis.add_patch(
             Rectangle(
-                [0, 0],
+                (0, 0),
                 turn_width,
                 turn_height,
                 facecolor="red",
@@ -7554,7 +7218,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         # Plot the steel conduit
         axis.add_patch(
             Rectangle(
-                [insulation_thickness, insulation_thickness],
+                (insulation_thickness, insulation_thickness),
                 (turn_width - 2 * insulation_thickness),
                 (turn_height - 2 * insulation_thickness),
                 facecolor="grey",
@@ -7565,10 +7229,10 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         # Plot the cable space with rounded corners
         axis.add_patch(
             patches.FancyBboxPatch(
-                [
+                (
                     insulation_thickness + steel_thickness,
                     insulation_thickness + steel_thickness,
-                ],
+                ),
                 (turn_width - 2 * (insulation_thickness + steel_thickness)),
                 (turn_height - 2 * (insulation_thickness + steel_thickness)),
                 boxstyle=patches.BoxStyle(
@@ -7581,10 +7245,10 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         # Plot dashed line around the cable space
         axis.add_patch(
             Rectangle(
-                [
+                (
                     insulation_thickness + steel_thickness,
                     insulation_thickness + steel_thickness,
-                ],
+                ),
                 (turn_width - 2 * (insulation_thickness + steel_thickness)),
                 (turn_height - 2 * (insulation_thickness + steel_thickness)),
                 facecolor="none",
@@ -7596,7 +7260,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         )
         axis.add_patch(
             Circle(
-                [(turn_width / 2), (turn_height / 2)],
+                ((turn_width / 2), (turn_height / 2)),
                 he_pipe_diameter / 2,
                 facecolor="white",
                 edgecolor="black",
@@ -7655,12 +7319,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "red",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("red"),
     )
 
     # Add info about the steel casing surrounding the WP
@@ -7677,12 +7336,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "grey",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("grey"),
     )
 
     if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.NON_INTEGER:
@@ -7691,15 +7345,15 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
             f"$\\mathbf{{Cable \\ Space:}}$\n\n"
             f"$\\Delta r:$ {cable_space_width:.3e} m\n"
             f"Corner radius, $r$: {radius_tf_turn_cable_space_corners:.3e} m\n"
-            f"Cable area with no cooling \nchannel or gaps: {a_tf_turn_cable_space_no_void:.3e} m$^2$\n"
+            f"Cable area with no cooling\nchannel or gaps: {a_tf_turn_cable_space_no_void:.3e} m$^2$\n"
             f"Extra cable space area void fraction: {f_a_tf_turn_cable_space_extra_void}\n"
             f"True cable space area: {a_tf_turn_cable_space_effective:.3e} m$^2$"
         )
     elif TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.INTEGER:
         textstr_turn_cable_space = (
             f"$\\mathbf{{Cable \\ Space:}}$\n\n"
-            f"Cable space: \n$\\Delta r$: {cable_space_width_radial:.3e} m \n"
-            f"$\\Delta x$: {cable_space_width_toroidal:.3e} m \n"
+            f"Cable space:\n$\\Delta r$: {cable_space_width_radial:.3e} m\n"
+            f"$\\Delta x$: {cable_space_width_toroidal:.3e} m\n"
             f"Corner radius, $r$: {radius_tf_turn_cable_space_corners:.3e} m\n"
             f"Cable area with no cooling channel or gaps: {a_tf_turn_cable_space_no_void:.3e} m$^2$\n"
             f"Extra cable space area void fraction: {f_a_tf_turn_cable_space_extra_void}\n"
@@ -7714,12 +7368,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "royalblue",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("royalblue"),
     )
 
     if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.NON_INTEGER:
@@ -7744,12 +7393,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "wheat",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("wheat"),
     )
 
     # Add info about the steel casing surrounding the WP
@@ -7767,32 +7411,27 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "white",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("white"),
     )
 
     textstr_superconductor = (
-        f"$\\mathbf{{Superconductor:}}$\n \n"
-        f"Superconductor used: \n"
+        f"$\\mathbf{{Superconductor:}}$\n\n"
+        f"Superconductor used:\n"
         f"{SuperconductorModel(mfile.get('i_tf_sc_mat', scan=scan)).full_name}\n"
-        f"Critical field at zero \ntemperature and strain: {mfile.get('b_tf_superconductor_critical_zero_temp_strain', scan=scan):.4f} T\n"
-        f"Critical temperature at \nzero field and strain: {mfile.get('temp_tf_superconductor_critical_zero_field_strain', scan=scan):.4f} K\n"
+        f"Critical field at zero\ntemperature and strain: {mfile.get('b_tf_superconductor_critical_zero_temp_strain', scan=scan):.4f} T\n"
+        f"Critical temperature at\nzero field and strain: {mfile.get('temp_tf_superconductor_critical_zero_field_strain', scan=scan):.4f} K\n"
         f"Temperature at conductor: {mfile.get('tftmp', scan=scan):.4f} K\n"
         f"Field at conductor: {mfile.get('b_tf_inboard_peak_with_ripple', scan=scan):.4f} T\n"
-        f"Superconductor critical current density at \noperating conditions: {mfile.get('j_tf_superconductor_critical', scan=scan):.2e} A/m$^2$\n"
+        f"Superconductor critical current density at\noperating conditions: {mfile.get('j_tf_superconductor_critical', scan=scan):.2e} A/m$^2$\n"
         f"$I_{{\\text{{TF,turn critical}}}}$: {mfile.get('c_turn_cables_critical', scan=scan):,.2f} A\n"
         f"$I_{{\\text{{TF,turn}}}}$: {mfile.get('c_tf_turn', scan=scan):,.2f} A\n"
         f"Critcal current ratio: {mfile.get('f_c_tf_turn_operating_critical', scan=scan):,.4f}\n"
-        f"Superconductor temperature \nmargin: {mfile.get('temp_tf_superconductor_margin', scan=scan):,.4f} K\n"
-        f"\n$\\mathbf{{Quench:}}$\n \n"
+        f"Superconductor temperature\nmargin: {mfile.get('temp_tf_superconductor_margin', scan=scan):,.4f} K\n"
+        f"\n$\\mathbf{{Quench:}}$\n\n"
         f"Quench dump time: {mfile.get('t_tf_superconductor_quench', scan=scan):.4f} s\n"
         f"Quench detection time: {mfile.get('t_tf_quench_detection', scan=scan):.4f} s\n"
-        f"User input max temperature \nduring quench: {mfile.get('temp_tf_conductor_quench_max', scan=scan):.2f} K\n"
-        f"Required maxium WP current \ndensity for heat protection:\n{mfile.get('j_tf_wp_quench_heat_max', scan=scan):.2e} A/m$^2$\n"
+        f"User input max temperature\nduring quench: {mfile.get('temp_tf_conductor_quench_max', scan=scan):.2f} K\n"
+        f"Required maxium WP current\ndensity for heat protection:\n{mfile.get('j_tf_wp_quench_heat_max', scan=scan):.2e} A/m$^2$\n"
     )
     axis.text(
         0.75,
@@ -7802,12 +7441,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "#6dd3f7",  # light blue for superconductors
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("#6dd3f7"),  # light blue for superconductors
     )
 
 
@@ -7851,7 +7485,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
     if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.NON_INTEGER:
         axis.add_patch(
             Rectangle(
-                [0, 0],
+                (0, 0),
                 turn_width,
                 turn_width,
                 facecolor="red",
@@ -7861,7 +7495,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         # Plot the steel conduit
         axis.add_patch(
             Rectangle(
-                [insulation_thickness, insulation_thickness],
+                (insulation_thickness, insulation_thickness),
                 (turn_width - 2 * insulation_thickness),
                 (turn_width - 2 * insulation_thickness),
                 facecolor="grey",
@@ -7869,27 +7503,20 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
             ),
         )
 
-        # Plot the central cable space
-        axis.add_patch(
-            Circle(
-                [(turn_width / 2), (turn_width / 2)],
-                1.5 * dia_tf_turn_croco_cable,
-                facecolor="white",
-                edgecolor="black",
-                linewidth=1.2,
-            ),
-        )
-
-        # PLot the central copper cyclinder
-        axis.add_patch(
-            Circle(
-                [(turn_width / 2), (turn_width / 2)],
-                dia_tf_turn_croco_cable / 2,
-                facecolor="#B87333",
-                edgecolor="black",
-                linewidth=1.2,
-            ),
-        )
+        # Plot the central cable space and copper cylinder
+        for rad, col in [
+            (1.5 * dia_tf_turn_croco_cable, "white"),
+            (dia_tf_turn_croco_cable / 2, "#B87333"),
+        ]:
+            axis.add_patch(
+                Circle(
+                    ((turn_width / 2), (turn_width / 2)),
+                    rad,
+                    facecolor=col,
+                    edgecolor="black",
+                    linewidth=1.2,
+                ),
+            )
 
         # Plot six surrounding Croco cables in a hexagonal layout.
         center_x = turn_width / 2
@@ -7936,12 +7563,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "red",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("red"),
     )
 
     # Add info about the steel casing surrounding the WP
@@ -7958,12 +7580,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "grey",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("grey"),
     )
 
     if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.NON_INTEGER:
@@ -7972,15 +7589,15 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
             f"$\\mathbf{{Cable \\ Space:}}$\n\n"
             f"$\\Delta r:$ {cable_space_width:.3e} m\n"
             f"Corner radius, $r$: {radius_tf_turn_cable_space_corners:.3e} m\n"
-            f"Cable area with no cooling \nchannel or gaps: {a_tf_turn_cable_space_no_void:.3e} m$^2$\n"
+            f"Cable area with no cooling\nchannel or gaps: {a_tf_turn_cable_space_no_void:.3e} m$^2$\n"
             f"Extra cable space area void fraction: {f_a_tf_turn_cable_space_extra_void}\n"
             f"True cable space area: {a_tf_turn_cable_space_effective:.3e} m$^2$"
         )
     elif TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.INTEGER:
         textstr_turn_cable_space = (
             f"$\\mathbf{{Cable \\ Space:}}$\n\n"
-            f"Cable space: \n$\\Delta r$: {cable_space_width_radial:.3e} m \n"
-            f"$\\Delta x$: {cable_space_width_toroidal:.3e} m \n"
+            f"Cable space:\n$\\Delta r$: {cable_space_width_radial:.3e} m\n"
+            f"$\\Delta x$: {cable_space_width_toroidal:.3e} m\n"
             f"Corner radius, $r$: {radius_tf_turn_cable_space_corners:.3e} m\n"
             f"Cable area with no cooling channel or gaps: {a_tf_turn_cable_space_no_void:.3e} m$^2$\n"
             f"Extra cable space area void fraction: {f_a_tf_turn_cable_space_extra_void}\n"
@@ -7995,12 +7612,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "royalblue",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("royalblue"),
     )
 
     if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.NON_INTEGER:
@@ -8025,12 +7637,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "wheat",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("wheat"),
     )
 
     # Add info about the steel casing surrounding the WP
@@ -8048,31 +7655,26 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "white",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("white"),
     )
 
     textstr_superconductor = (
-        f"$\\mathbf{{Superconductor:}}$\n \n"
+        f"$\\mathbf{{Superconductor:}}$\n\n"
         f"Superconductor used: {SuperconductorModel(mfile.get('i_tf_sc_mat', scan=scan)).full_name}\n"
-        f"Critical field at zero \ntemperature and strain: {mfile.get('b_tf_superconductor_critical_zero_temp_strain', scan=scan):.4f} T\n"
-        f"Critical temperature at \nzero field and strain: {mfile.get('temp_tf_superconductor_critical_zero_field_strain', scan=scan):.4f} K\n"
+        f"Critical field at zero\ntemperature and strain: {mfile.get('b_tf_superconductor_critical_zero_temp_strain', scan=scan):.4f} T\n"
+        f"Critical temperature at\nzero field and strain: {mfile.get('temp_tf_superconductor_critical_zero_field_strain', scan=scan):.4f} K\n"
         f"Temperature at conductor: {mfile.get('tftmp', scan=scan):.4f} K\n"
         f"Field at conductor: {mfile.get('b_tf_inboard_peak_with_ripple', scan=scan):.4f} T\n"
-        f"Superconductor critical current density at \noperating conditions: {mfile.get('j_tf_superconductor_critical', scan=scan):.2e} A/m$^2$\n"
+        f"Superconductor critical current density at\noperating conditions: {mfile.get('j_tf_superconductor_critical', scan=scan):.2e} A/m$^2$\n"
         f"$I_{{\\text{{TF,turn critical}}}}$: {mfile.get('c_turn_cables_critical', scan=scan):,.2f} A\n"
         f"$I_{{\\text{{TF,turn}}}}$: {mfile.get('c_tf_turn', scan=scan):,.2f} A\n"
         f"Critcal current ratio: {mfile.get('f_c_tf_turn_operating_critical', scan=scan):,.4f}\n"
-        f"Superconductor temperature \nmargin: {mfile.get('temp_tf_superconductor_margin', scan=scan):,.4f} K\n"
-        f"\n$\\mathbf{{Quench:}}$\n \n"
+        f"Superconductor temperature\nmargin: {mfile.get('temp_tf_superconductor_margin', scan=scan):,.4f} K\n"
+        f"\n$\\mathbf{{Quench:}}$\n\n"
         f"Quench dump time: {mfile.get('t_tf_superconductor_quench', scan=scan):.4e} s\n"
         f"Quench detection time: {mfile.get('t_tf_quench_detection', scan=scan):.4e} s\n"
-        f"User input max temperature \nduring quench: {mfile.get('temp_tf_conductor_quench_max', scan=scan):.2f} K\n"
-        f"Required maxium WP current \ndensity for heat protection:\n{mfile.get('j_tf_wp_quench_heat_max', scan=scan):.2e} A/m$^2$\n"
+        f"User input max temperature\nduring quench: {mfile.get('temp_tf_conductor_quench_max', scan=scan):.2f} K\n"
+        f"Required maxium WP current\ndensity for heat protection:\n{mfile.get('j_tf_wp_quench_heat_max', scan=scan):.2e} A/m$^2$\n"
     )
     axis.text(
         0.75,
@@ -8082,12 +7684,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "#6dd3f7",  # light blue for superconductors
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("#6dd3f7"),
     )
 
 
@@ -8150,7 +7747,7 @@ def plot_cable_in_conduit_cable(axis: plt.Axes, fig, mfile: MFile, scan: int):
     )
 
     textstr_cable = (
-        f"$\\mathbf{{Cable:}}$\n \n"
+        f"$\\mathbf{{Cable:}}$\n\n"
         f"Cable diameter: {cable_diameter_mm:,.4f} mm\n"
         f"Copper area fraction: {mfile.get('f_a_tf_turn_cable_copper', scan=scan):.4f}\n"
         f"Number of strands per turn: {int(mfile.get('n_tf_turn_superconducting_cables', scan=scan)):,}\n"
@@ -8165,12 +7762,7 @@ def plot_cable_in_conduit_cable(axis: plt.Axes, fig, mfile: MFile, scan: int):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "#cccccc",  # grayish color
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("#cccccc"),
     )
 
     axis.set_aspect("equal")
@@ -8263,8 +7855,12 @@ def plot_pf_coils(
     )
 
     # Get axis height for fontsize scaling
-    bbox = axis.get_window_extent().transformed(axis.figure.dpi_scale_trans.inverted())
-    axis_height = bbox.height
+    axis_height = (
+        axis
+        .get_window_extent()
+        .transformed(axis.figure.dpi_scale_trans.inverted())
+        .height
+    )
 
     for i in range(len(coils_r)):
         mirrored_r_points = [x_scale * r for r in r_points[i]]
@@ -8388,16 +7984,7 @@ def plot_header(axis: plt.Axes, mfile: MFile, scan: int):
     scan :
         scan number to use
     """
-    xmin = 0
-    xmax = 1
-    ymin = -16
-    ymax = 1
-
-    axis.set_ylim([ymin, ymax])
-    axis.set_xlim([xmin, xmax])
-    axis.set_axis_off()
-    axis.set_autoscaley_on(False)
-    axis.set_autoscalex_on(False)
+    _setup_axis(axis, xmin=0, xmax=1, ymin=-16, ymax=1)
 
     data2 = [
         (f"!{mfile.get('runtitle', scan=-1)}", "Run title", ""),
@@ -8516,11 +8103,7 @@ def plot_geometry_info(axis: plt.Axes, mfile: MFile, scan: int):
     ymax = 1
 
     axis.text(-0.05, 1, "Geometry:", ha="left", va="center")
-    axis.set_ylim([ymin, ymax])
-    axis.set_xlim([xmin, xmax])
-    axis.set_axis_off()
-    axis.set_autoscaley_on(False)
-    axis.set_autoscalex_on(False)
+    _setup_axis(axis, xmin, xmax, ymin, ymax)
 
     in_blanket_thk = mfile.get("dr_shld_inboard", scan=scan) + mfile.get(
         "dr_blkt_inboard", scan=scan
@@ -8565,11 +8148,7 @@ def plot_physics_info(axis: plt.Axes, mfile: MFile, scan: int):
     ymax = 1
 
     axis.text(-0.05, 1, "Physics:", ha="left", va="center")
-    axis.set_ylim([ymin, ymax])
-    axis.set_xlim([xmin, xmax])
-    axis.set_axis_off()
-    axis.set_autoscaley_on(False)
-    axis.set_autoscalex_on(False)
+    _setup_axis(axis, xmin, xmax, ymin, ymax)
 
     nong = mfile.get("nd_plasma_electron_line", scan=scan) / mfile.get(
         "nd_plasma_electron_max_array(7)", scan=scan
@@ -8639,17 +8218,8 @@ def plot_magnetics_info(axis: plt.Axes, mfile: MFile, scan: int):
     # Check for Copper magnets
     i_tf_sup = int(mfile.get("i_tf_sup", scan=scan)) if "i_tf_sup" in mfile.data else 1
 
-    xmin = 0
-    xmax = 1
-    ymin = -16
-    ymax = 1
-
     axis.text(-0.05, 1, "Coil currents etc:", ha="left", va="center")
-    axis.set_ylim([ymin, ymax])
-    axis.set_xlim([xmin, xmax])
-    axis.set_axis_off()
-    axis.set_autoscaley_on(False)
-    axis.set_autoscalex_on(False)
+    _setup_axis(axis, xmin=0, xmax=1, ymin=-16, ymax=1)
 
     # Number of coils (1 is OH coil)
     number_of_coils = 0
@@ -8675,22 +8245,21 @@ def plot_magnetics_info(axis: plt.Axes, mfile: MFile, scan: int):
 
     t_plant_pulse_burn = mfile.get("t_plant_pulse_burn", scan=scan) / 3600.0
 
-    if "i_tf_bucking" in mfile.data:
-        i_tf_bucking = int(mfile.get("i_tf_bucking", scan=scan))
-    else:
-        i_tf_bucking = 1
+    i_tf_bucking = (
+        int(mfile.get("i_tf_bucking", scan=scan)) if "i_tf_bucking" in mfile.data else 1
+    )
 
     # Get superconductor material (i_tf_sc_mat)
     # If i_tf_sc_mat not present, assume resistive
-    if "i_tf_sc_mat" in mfile.data:
-        i_tf_sc_mat = int(mfile.get("i_tf_sc_mat", scan=scan))
-    else:
-        i_tf_sc_mat = 0
+    i_tf_sc_mat = (
+        int(mfile.get("i_tf_sc_mat", scan=scan)) if "i_tf_sc_mat" in mfile.data else 0
+    )
 
-    if i_tf_sc_mat > 0:
-        tftype = SuperconductorModel(int(mfile.get("i_tf_sc_mat", scan=scan))).full_name
-    else:
-        tftype = "Resistive Copper"
+    tftype = (
+        SuperconductorModel(int(mfile.get("i_tf_sc_mat", scan=scan))).full_name
+        if i_tf_sc_mat > 0
+        else "Resistive Copper"
+    )
 
     vssoft = mfile.get("vs_plasma_res_ramp", scan=scan) + mfile.get(
         "vs_plasma_ind_ramp", scan=scan
@@ -8765,17 +8334,8 @@ def plot_power_info(axis: plt.Axes, mfile: MFile, scan: int):
     scan :
         scan number to use
     """
-    xmin = 0
-    xmax = 1
-    ymin = -16
-    ymax = 1
-
     axis.text(-0.05, 1, "Power flows:", ha="left", va="center")
-    axis.set_ylim([ymin, ymax])
-    axis.set_xlim([xmin, xmax])
-    axis.set_axis_off()
-    axis.set_autoscaley_on(False)
-    axis.set_autoscalex_on(False)
+    _setup_axis(axis, xmin=0, xmax=1, ymin=-16, ymax=1)
 
     gross_eff = 100.0 * (
         mfile.get("p_plant_electric_gross_mw", scan=scan)
@@ -8856,28 +8416,17 @@ def plot_current_drive_info(axis: plt.Axes, mfile: MFile, scan: int):
     scan :
         scan number to use
     """
-    xmin = 0
-    xmax = 1
-    ymin = -16
-    ymax = 1
-    i_hcd_primary = mfile.get("i_hcd_primary", scan=scan)
-    nbi = False
-    ecrh = False
-    ebw = False
-    lhcd = False
-    iccd = False
+    _setup_axis(axis, xmin=0, xmax=1, ymin=-16, ymax=1)
 
-    if i_hcd_primary in {5, 8}:
-        nbi = True
+    i_hcd_primary = mfile.get("i_hcd_primary", scan=scan)
+
+    if nbi := (i_hcd_primary in {5, 8}):
         axis.text(-0.05, 1, "Neutral Beam Current Drive:", ha="left", va="center")
-    if i_hcd_primary in {3, 7, 10, 11, 13}:
-        ecrh = True
+    if ecrh := (i_hcd_primary in {3, 7, 10, 11, 13}):
         axis.text(-0.05, 1, "Electron Cyclotron Current Drive:", ha="left", va="center")
-    if i_hcd_primary == 12:
-        ebw = True
+    if ebw := (i_hcd_primary == 12):
         axis.text(-0.05, 1, "Electron Bernstein Wave Drive:", ha="left", va="center")
-    if i_hcd_primary in {1, 4, 6}:
-        lhcd = True
+    if lhcd := (i_hcd_primary in {1, 4, 6}):
         axis.text(
             -0.05,
             1,
@@ -8885,30 +8434,22 @@ def plot_current_drive_info(axis: plt.Axes, mfile: MFile, scan: int):
             ha="left",
             va="center",
         )
-    if i_hcd_primary == 2:
-        iccd = True
+    if iccd := (i_hcd_primary == 2):
         axis.text(-0.05, 1, "Ion Cyclotron Current Drive:", ha="left", va="center")
 
-    if "i_hcd_secondary" in mfile.data:
+    i_hcd_secondary = mfile.get("i_hcd_secondary", scan=scan) or 0
+    if i_hcd_secondary in {5, 8}:
+        secondary_heating = "NBI"
+    elif i_hcd_secondary in {3, 7, 10, 11, 13}:
+        secondary_heating = "ECH"
+    elif i_hcd_secondary == 12:
+        secondary_heating = "EBW"
+    elif i_hcd_secondary in {1, 4, 6}:
+        secondary_heating = "LHCD"
+    elif i_hcd_secondary == 2:
+        secondary_heating = "ICCD"
+    else:
         secondary_heating = ""
-        i_hcd_secondary = mfile.get("i_hcd_secondary", scan=scan)
-
-        if i_hcd_secondary in {5, 8}:
-            secondary_heating = "NBI"
-        if i_hcd_secondary in {3, 7, 10, 11, 13}:
-            secondary_heating = "ECH"
-        if i_hcd_secondary == 12:
-            secondary_heating = "EBW"
-        if i_hcd_secondary in {1, 4, 6}:
-            secondary_heating = "LHCD"
-        if i_hcd_secondary == 2:
-            secondary_heating = "ICCD"
-
-    axis.set_ylim([ymin, ymax])
-    axis.set_xlim([xmin, xmax])
-    axis.set_axis_off()
-    axis.set_autoscaley_on(False)
-    axis.set_autoscalex_on(False)
 
     pinjie = mfile.get("p_hcd_injected_total_mw", scan=scan)
     p_plasma_separatrix_mw = mfile.get("p_plasma_separatrix_mw", scan=scan)
@@ -8928,166 +8469,88 @@ def plot_current_drive_info(axis: plt.Axes, mfile: MFile, scan: int):
 
     # Assume Martin scaling if pthresh is not printed
     # Accounts for pthresh not being written prior to issue #679 and #680
-    if "p_l_h_threshold_mw" in mfile.data:
-        pthresh = mfile.get("p_l_h_threshold_mw", scan=scan)
-    else:
-        pthresh = mfile.get("l_h_threshold_powers(6)", scan=scan)
+    pthresh_name = (
+        "p_l_h_threshold_mw"
+        if "p_l_h_threshold_mw" in mfile.data
+        else "l_h_threshold_powers(6)"
+    )
+    pthresh = mfile.get(pthresh_name, scan=scan)
     flh = p_plasma_separatrix_mw / pthresh
 
     hstar = mfile.get("hstar", scan=scan)
 
-    if ecrh:
-        data = [
-            (pinjie, "Steady state auxiliary power", "MW"),
-            ("p_hcd_primary_extra_heat_mw", "Power for heating only", "MW"),
-            ("f_c_plasma_bootstrap", "Bootstrap fraction", ""),
-            ("f_c_plasma_auxiliary", "Auxiliary fraction", ""),
-            ("f_c_plasma_inductive", "Inductive fraction", ""),
-            ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
-            (
-                "eta_cd_hcd_primary",
-                "Current drive efficiency",
-                "A W$^{-1}$",
-            ),
-            (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
-            (
-                pdivnr,
-                r"$\frac{P_{\mathrm{div}}}{\langle n \rangle R_{0}}$",
-                r"$\times 10^{-20}$ MW m$^{2}$",
-            ),
-            (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
-            (hstar, "H* (non-rad. corr.)", ""),
-        ]
-        # i_hcd_secondary is now always in the MFILE with = 0 meaning no fixed heating
-        if mfile.get("i_hcd_secondary", scan=scan) != 0:
-            data.insert(
-                1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
-            )
-            data[0] = ((pinjie - pinjmwfix), "Primary auxiliary power", "MW")
-            data.insert(2, (pinjie, "Total auxillary power", "MW"))
-
-    if nbi:
-        data = [
-            (pinjie, "Steady state auxiliary power", "MW"),
-            ("p_hcd_primary_extra_heat_mw", "Power for heating only", "MW"),
-            ("f_c_plasma_bootstrap", "Bootstrap fraction", ""),
-            ("f_c_plasma_auxiliary", "Auxiliary fraction", ""),
-            ("f_c_plasma_inductive", "Inductive fraction", ""),
+    data = [
+        (pinjie, "Steady state auxiliary power", "MW"),
+        ("p_hcd_primary_extra_heat_mw", "Power for heating only", "MW"),
+        ("f_c_plasma_bootstrap", "Bootstrap fraction", ""),
+        ("f_c_plasma_auxiliary", "Auxiliary fraction", ""),
+        ("f_c_plasma_inductive", "Inductive fraction", ""),
+        ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
+        (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
+        (
+            pdivnr,
+            r"$\frac{P_{\mathrm{div}}}{\langle n \rangle R_{0}}$",
+            r"$\times 10^{-20}$ MW m$^{2}$",
+        ),
+        (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
+        (hstar, "H* (non-rad. corr.)", ""),
+    ]
+    # Optional override based on condition
+    field_overrides = {
+        "ecrh": (
+            "eta_cd_hcd_primary",
+            r"$\frac{P_{\mathrm{div}}}{R_{0}}$",
+            "A W$^{-1}$",
+        ),
+        "nbi": (
             ("gamnb", "NB gamma", "$10^{20}$ A W$^{-1}$ m$^{-2}$"),
             ("e_beam_kev", "NB energy", "keV"),
-            ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
-            (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
-            (
-                pdivnr,
-                r"$\frac{P_{\mathrm{div}}}{\langle n \rangle R_{0}}$",
-                r"$\times 10^{-20}$ MW m$^{2}$",
-            ),
-            (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
-            (hstar, "H* (non-rad. corr.)", ""),
-        ]
-        if mfile.get("i_hcd_secondary", scan=scan) != 0:
-            data.insert(
-                1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
-            )
-            data[0] = ((pinjie - pinjmwfix), "Primary auxiliary power", "MW")
-            data.insert(2, (pinjie, "Total auxillary power", "MW"))
+        ),
+        "ebw": (
+            "eta_cd_norm_hcd_primary",
+            "Normalised current drive efficiency of primary HCD system",
+            "(10$^{20}$ A/(Wm$^{2}$))",
+        ),
+        "lhcd": (
+            "eta_cd_norm_hcd_primary",
+            "Normalised current drive efficiency",
+            "(10$^{20}$ A/(Wm$^{2}$))",
+        ),
+        "iccd": (
+            "eta_cd_norm_hcd_primary",
+            "Normalised current drive efficiency",
+            "(10$^{20}$ A/(Wm$^{2}$))",
+        ),
+    }
 
-    if ebw:
-        data = [
-            (pinjie, "Steady state auxiliary power", "MW"),
-            ("p_hcd_primary_extra_heat_mw", "Power for heating only", "MW"),
-            ("f_c_plasma_bootstrap", "Bootstrap fraction", ""),
-            ("f_c_plasma_auxiliary", "Auxiliary fraction", ""),
-            ("f_c_plasma_inductive", "Inductive fraction", ""),
-            ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
-            (
-                "eta_cd_norm_hcd_primary",
-                "Normalised current drive efficiency of primary HCD system",
-                "(10$^{20}$ A/(Wm$^{2}$))",
-            ),
-            (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
-            (
-                pdivnr,
-                r"$\frac{P_{\mathrm{div}}}{\langle n \rangle R_{0}}$",
-                r"$\times 10^{-20}$ MW m$^{2}$",
-            ),
-            (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
-            (hstar, "H* (non-rad. corr.)", ""),
-        ]
-        if "i_hcd_secondary" in mfile.data:
-            data.insert(
-                1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
-            )
-            data[0] = ((pinjie - pinjmwfix), "Primary auxiliary power", "MW")
-            data.insert(2, (pinjie, "Total auxillary power", "MW"))
+    if ecrh:
+        data.insert(6, field_overrides["ecrh"])
+    elif nbi:
+        data.insert(6, field_overrides["nbi"][0])
+        data.insert(7, field_overrides["nbi"][1])
+    elif ebw:
+        data.insert(6, field_overrides["ebw"])
+    elif lhcd:
+        data.insert(6, field_overrides["lhcd"])
+    elif iccd:
+        data.insert(6, field_overrides["iccd"])
 
-    if lhcd:
-        data = [
-            (pinjie, "Steady state auxiliary power", "MW"),
-            ("p_hcd_primary_extra_heat_mw", "Power for heating only", "MW"),
-            ("f_c_plasma_bootstrap", "Bootstrap fraction", ""),
-            ("f_c_plasma_auxiliary", "Auxiliary fraction", ""),
-            ("f_c_plasma_inductive", "Inductive fraction", ""),
-            ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
-            (
-                "eta_cd_norm_hcd_primary",
-                "Normalised current drive efficiency",
-                "(10$^{20}$ A/(Wm$^{2}$))",
-            ),
-            (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
-            (
-                pdivnr,
-                r"$\frac{P_{\mathrm{div}}}{\langle n \rangle R_{0}}$",
-                r"$\times 10^{-20}$ MW m$^{2}$",
-            ),
-            (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
-            (hstar, "H* (non-rad. corr.)", ""),
-        ]
-        if "i_hcd_secondary" in mfile.data:
-            data.insert(
-                1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
-            )
-            data[0] = ((pinjie - pinjmwfix), "Primary auxiliary power", "MW")
-            data.insert(2, (pinjie, "Total auxillary power", "MW"))
-
-    if iccd:
-        data = [
-            (pinjie, "Steady state auxiliary power", "MW"),
-            ("p_hcd_primary_extra_heat_mw", "Power for heating only", "MW"),
-            ("f_c_plasma_bootstrap", "Bootstrap fraction", ""),
-            ("f_c_plasma_auxiliary", "Auxiliary fraction", ""),
-            ("f_c_plasma_inductive", "Inductive fraction", ""),
-            ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
-            (
-                "eta_cd_norm_hcd_primary",
-                "Normalised current drive efficiency",
-                "(10$^{20}$ A/(Wm$^{2}$))",
-            ),
-            (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
-            (
-                pdivnr,
-                r"$\frac{P_{\mathrm{div}}}{\langle n \rangle R_{0}}$",
-                r"$\times 10^{-20}$ MW m$^{2}$",
-            ),
-            (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
-            (hstar, "H* (non-rad. corr.)", ""),
-        ]
-        if "i_hcd_secondary" in mfile.data:
-            data.insert(
-                1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
-            )
-            data[0] = ((pinjie - pinjmwfix), "Primary auxiliary power", "MW")
-            data.insert(2, (pinjie, "Total auxillary power", "MW"))
+    # Secondary heating logic — common across all cases
+    if mfile.get("i_hcd_secondary", scan=scan) != 0:
+        data.insert(
+            1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
+        )
+        data[0] = ((pinjie - pinjmwfix), "Primary auxiliary power", "MW")
+        data.insert(2, (pinjie, "Total auxillary power", "MW"))
 
     coe = mfile.get("coe", scan=scan)
-    if coe == 0.0:  # noqa: RUF069
-        data.append(("", "", ""))
-        data.append(("#Costs", "", ""))
-        data.append(("", "Cost output not selected", ""))
-    else:
-        data.append(("", "", ""))
-        data.append(("#Costs", "", ""))
-        data.append((coe, "Cost of electricity", r"\$/MWh"))
+    data.extend((
+        ("", "", ""),
+        ("#Costs", "", ""),
+        ("", "Cost output not selected", "")
+        if coe == 0.0  # noqa: RUF069
+        else (coe, "Cost of electricity", r"\$/MWh"),
+    ))
 
     plot_info(axis, data, mfile, scan)
 
@@ -9104,43 +8567,28 @@ def plot_bootstrap_comparison(axis: plt.Axes, mfile: MFile, scan: int):
     scan :
         scan number to use
     """
-    boot_ipdg = mfile.get("f_c_plasma_bootstrap_iter89", scan=scan)
-    boot_sauter = mfile.get("f_c_plasma_bootstrap_sauter", scan=scan)
-    boot_nenins = mfile.get("f_c_plasma_bootstrap_nevins", scan=scan)
-    boot_wilson = mfile.get("f_c_plasma_bootstrap_wilson", scan=scan)
-    boot_sakai = mfile.get("f_c_plasma_bootstrap_sakai", scan=scan)
-    boot_aries = mfile.get("f_c_plasma_bootstrap_aries", scan=scan)
-    boot_andrade = mfile.get("f_c_plasma_bootstrap_andrade", scan=scan)
-    boot_hoang = mfile.get("f_c_plasma_bootstrap_hoang", scan=scan)
-    boot_wong = mfile.get("f_c_plasma_bootstrap_wong", scan=scan)
-    boot_gi_I = mfile.get("bscf_gi_i", scan=scan)  # noqa: N806
-    boot_gi_II = mfile.get("bscf_gi_ii", scan=scan)  # noqa: N806
-    boot_sugiyama_l = mfile.get("f_c_plasma_bootstrap_sugiyama_l", scan=scan)
-    boot_sugiyama_h = mfile.get("f_c_plasma_bootstrap_sugiyama_h", scan=scan)
-
     # Data for the box plot
     data = {
-        "IPDG": boot_ipdg,
-        "Sauter": boot_sauter,
-        "Nevins": boot_nenins,
-        "Wilson": boot_wilson,
-        "Sakai": boot_sakai,
-        "ARIES": boot_aries,
-        "Andrade": boot_andrade,
-        "Hoang": boot_hoang,
-        "Wong": boot_wong,
-        "Gi-I": boot_gi_I,
-        "Gi-II": boot_gi_II,
-        "Sugiyama (L-mode)": boot_sugiyama_l,
-        "Sugiyama (H-mode)": boot_sugiyama_h,
+        "IPDG": mfile.get("f_c_plasma_bootstrap_iter89", scan=scan),
+        "Sauter": mfile.get("f_c_plasma_bootstrap_sauter", scan=scan),
+        "Nevins": mfile.get("f_c_plasma_bootstrap_nevins", scan=scan),
+        "Wilson": mfile.get("f_c_plasma_bootstrap_wilson", scan=scan),
+        "Sakai": mfile.get("f_c_plasma_bootstrap_sakai", scan=scan),
+        "ARIES": mfile.get("f_c_plasma_bootstrap_aries", scan=scan),
+        "Andrade": mfile.get("f_c_plasma_bootstrap_andrade", scan=scan),
+        "Hoang": mfile.get("f_c_plasma_bootstrap_hoang", scan=scan),
+        "Wong": mfile.get("f_c_plasma_bootstrap_wong", scan=scan),
+        "Gi-I": mfile.get("bscf_gi_i", scan=scan),
+        "Gi-II": mfile.get("bscf_gi_ii", scan=scan),
+        "Sugiyama (L-mode)": mfile.get("f_c_plasma_bootstrap_sugiyama_l", scan=scan),
+        "Sugiyama (H-mode)": mfile.get("f_c_plasma_bootstrap_sugiyama_h", scan=scan),
     }
     # Create the violin plot
-    axis.violinplot(data.values(), showextrema=False)
+    data_values = list(data.values())
+    axis.violinplot(data_values, showextrema=False)
 
     # Create the box plot
-    axis.boxplot(
-        data.values(), showfliers=True, showmeans=True, meanline=True, widths=0.3
-    )
+    axis.boxplot(data_values, showfliers=True, showmeans=True, meanline=True, widths=0.3)
 
     # Scatter plot for each data point
     colors = plt.cm.plasma(np.linspace(0, 1, len(data.values())))
@@ -9149,7 +8597,6 @@ def plot_bootstrap_comparison(axis: plt.Axes, mfile: MFile, scan: int):
     axis.legend(loc="upper left", bbox_to_anchor=(1, 1))
 
     # Calculate average, standard deviation, and median
-    data_values = list(data.values())
     avg_bootstrap = np.mean(data_values)
     std_bootstrap = np.std(data_values)
     median_bootstrap = np.median(data_values)
@@ -9175,7 +8622,7 @@ def plot_bootstrap_comparison(axis: plt.Axes, mfile: MFile, scan: int):
 
     axis.set_title("Bootstrap Current Fraction ($f_\\text{BS}$) Comparison")
     axis.set_ylabel("Bootstrap Current Fraction")
-    axis.set_xlim([0.5, 1.5])
+    axis.set_xlim(0.5, 1.5)
     axis.set_xticks([])
     axis.set_xticklabels([])
     axis.set_facecolor("#f0f0f0")
@@ -9216,22 +8663,21 @@ def plot_sol_power_decay_length_comparison(axis: plt.Axes, mfile: MFile, scan: i
         f"{OutbordSOLPowerDecayLengthModel.EICH_2011_JET.description}": len_plasma_sol_eich11_jet_power_decay_mm,
         f"{OutbordSOLPowerDecayLengthModel.EICH_2011_JET_ASDEX.description}": len_plasma_sol_eich11_jet_asdex_power_decay_mm,
     }
+    data_values = list(data.values())
+
     # Create the violin plot
-    axis.violinplot(data.values(), showextrema=False)
+    axis.violinplot(data_values, showextrema=False)
 
     # Create the box plot
-    axis.boxplot(
-        data.values(), showfliers=True, showmeans=True, meanline=True, widths=0.3
-    )
+    axis.boxplot(data_values, showfliers=True, showmeans=True, meanline=True, widths=0.3)
 
     # Scatter plot for each data point
-    colors = plt.cm.plasma(np.linspace(0, 1, len(data.values())))
+    colors = plt.cm.plasma(np.linspace(0, 1, len(data_values)))
     for index, (key, value) in enumerate(data.items()):
         axis.scatter(1, value, color=colors[index], label=key, alpha=1.0)
     axis.legend(loc="upper left", bbox_to_anchor=(1, 1))
 
     # Calculate average, standard deviation, and median
-    data_values = list(data.values())
     avg_decay_length = np.mean(data_values)
     std_decay_length = np.std(data_values)
     median_decay_length = np.median(data_values)
@@ -9261,7 +8707,7 @@ def plot_sol_power_decay_length_comparison(axis: plt.Axes, mfile: MFile, scan: i
 
     axis.set_title("SOL Power Decay Length ($\\lambda_q$) Comparison")
     axis.set_ylabel("Power Decay Length [mm]")
-    axis.set_xlim([0.5, 1.5])
+    axis.set_xlim(0.5, 1.5)
     axis.set_xticks([])
     axis.set_xticklabels([])
     axis.set_facecolor("#f0f0f0")
@@ -9322,11 +8768,11 @@ def plot_brunner_divertor_power_split_comparison_stackplot(
         alpha=0.5,
         label="$\u0394 r_{\\mathrm{sep}}$",
     )
-    axis.set_ylim([0.0, 1.0])
-    axis.set_xlim([
+    axis.set_ylim(0.0, 1.0)
+    axis.set_xlim(
         -5 * len_plasma_sol_outboard_pd,
         5 * len_plasma_sol_outboard_pd,
-    ])
+    )
     axis.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.35)
     axis.set_title("Brunner Divertor Power Split Fractions")
     axis.set_xlabel("$\\Delta r_{\\mathrm{sep}}$ [m]")
@@ -9538,65 +8984,49 @@ def plot_h_threshold_comparison(axis: plt.Axes, mfile: MFile, scan: int, u_seed=
     u_seed :
          (Default value = None)
     """
-    iter_nominal = mfile.get("l_h_threshold_powers(1)", scan=scan)
-    iter_upper = mfile.get("l_h_threshold_powers(2)", scan=scan)
-    iter_lower = mfile.get("l_h_threshold_powers(3)", scan=scan)
-    iter_1997_1 = mfile.get("l_h_threshold_powers(4)", scan=scan)
-    iter_1997_2 = mfile.get("l_h_threshold_powers(5)", scan=scan)
-    martin_nominal = mfile.get("l_h_threshold_powers(6)", scan=scan)
-    martin_upper = mfile.get("l_h_threshold_powers(7)", scan=scan)
-    martin_lower = mfile.get("l_h_threshold_powers(8)", scan=scan)
-    snipes_nominal = mfile.get("l_h_threshold_powers(9)", scan=scan)
-    snipes_upper = mfile.get("l_h_threshold_powers(10)", scan=scan)
-    snipes_lower = mfile.get("l_h_threshold_powers(11)", scan=scan)
-    snipes_closed_nominal = mfile.get("l_h_threshold_powers(12)", scan=scan)
-    snipes_closed_upper = mfile.get("l_h_threshold_powers(13)", scan=scan)
-    snipes_closed_lower = mfile.get("l_h_threshold_powers(14)", scan=scan)
-    hubbard_nominal = mfile.get("l_h_threshold_powers(15)", scan=scan)
-    hubbard_lower = mfile.get("l_h_threshold_powers(16)", scan=scan)
-    hubbard_upper = mfile.get("l_h_threshold_powers(17)", scan=scan)
-    hubbard_2017 = mfile.get("l_h_threshold_powers(18)", scan=scan)
-    martin_aspect_nominal = mfile.get("l_h_threshold_powers(19)", scan=scan)
-    martin_aspect_upper = mfile.get("l_h_threshold_powers(20)", scan=scan)
-    martin_aspect_lower = mfile.get("l_h_threshold_powers(21)", scan=scan)
-
     # Data for the box plot
     data = {
-        "ITER 1996 Nominal": iter_nominal,
-        "ITER 1996 Upper": iter_upper,
-        "ITER 1996 Lower": iter_lower,
-        "ITER 1997 (1)": iter_1997_1,
-        "ITER 1997 (2)": iter_1997_2,
-        "Martin Nominal": martin_nominal,
-        "Martin Upper": martin_upper,
-        "Martin Lower": martin_lower,
-        "Snipes Nominal": snipes_nominal,
-        "Snipes Upper": snipes_upper,
-        "Snipes Lower": snipes_lower,
-        "Snipes Closed Divertor Nominal": snipes_closed_nominal,
-        "Snipes Closed Divertor Upper": snipes_closed_upper,
-        "Snipes Closed Divertor Lower": snipes_closed_lower,
-        "Hubbard Nominal (I-mode)": hubbard_nominal,
-        "Hubbard Lower (I-mode)": hubbard_lower,
-        "Hubbard Upper (I-mode)": hubbard_upper,
-        "Hubbard 2017 (I-mode)": hubbard_2017,
-        "Martin Aspect Corrected Nominal": martin_aspect_nominal,
-        "Martin Aspect Corrected Upper": martin_aspect_upper,
-        "Martin Aspect Corrected Lower": martin_aspect_lower,
+        "ITER 1996 Nominal": mfile.get("l_h_threshold_powers(1)", scan=scan),
+        "ITER 1996 Upper": mfile.get("l_h_threshold_powers(2)", scan=scan),
+        "ITER 1996 Lower": mfile.get("l_h_threshold_powers(3)", scan=scan),
+        "ITER 1997 (1)": mfile.get("l_h_threshold_powers(4)", scan=scan),
+        "ITER 1997 (2)": mfile.get("l_h_threshold_powers(5)", scan=scan),
+        "Martin Nominal": mfile.get("l_h_threshold_powers(6)", scan=scan),
+        "Martin Upper": mfile.get("l_h_threshold_powers(7)", scan=scan),
+        "Martin Lower": mfile.get("l_h_threshold_powers(8)", scan=scan),
+        "Snipes Nominal": mfile.get("l_h_threshold_powers(9)", scan=scan),
+        "Snipes Upper": mfile.get("l_h_threshold_powers(10)", scan=scan),
+        "Snipes Lower": mfile.get("l_h_threshold_powers(11)", scan=scan),
+        "Snipes Closed Divertor Nominal": mfile.get(
+            "l_h_threshold_powers(12)", scan=scan
+        ),
+        "Snipes Closed Divertor Upper": mfile.get("l_h_threshold_powers(13)", scan=scan),
+        "Snipes Closed Divertor Lower": mfile.get("l_h_threshold_powers(14)", scan=scan),
+        "Hubbard Nominal (I-mode)": mfile.get("l_h_threshold_powers(15)", scan=scan),
+        "Hubbard Lower (I-mode)": mfile.get("l_h_threshold_powers(16)", scan=scan),
+        "Hubbard Upper (I-mode)": mfile.get("l_h_threshold_powers(17)", scan=scan),
+        "Hubbard 2017 (I-mode)": mfile.get("l_h_threshold_powers(18)", scan=scan),
+        "Martin Aspect Corrected Nominal": mfile.get(
+            "l_h_threshold_powers(19)", scan=scan
+        ),
+        "Martin Aspect Corrected Upper": mfile.get(
+            "l_h_threshold_powers(20)", scan=scan
+        ),
+        "Martin Aspect Corrected Lower": mfile.get(
+            "l_h_threshold_powers(21)", scan=scan
+        ),
     }
-
+    data_values = list(data.values())
     # Create the violin plot
-    axis.violinplot(data.values(), showextrema=False)
+    axis.violinplot(data_values, showextrema=False)
 
     # Create the box plot
-    axis.boxplot(
-        data.values(), showfliers=True, showmeans=True, meanline=True, widths=0.3
-    )
+    axis.boxplot(data_values, showfliers=True, showmeans=True, meanline=True, widths=0.3)
 
     # Scatter plot for each data point
-    colors = plt.cm.plasma(np.linspace(0, 1, len(data.values())))
+    colors = plt.cm.plasma(np.linspace(0, 1, len(data_values)))
     generator = np.random.default_rng(seed=u_seed)
-    x_values = generator.normal(loc=1, scale=0.01, size=len(data.values()))
+    x_values = generator.normal(loc=1, scale=0.01, size=len(data_values))
     for index, (key, value) in enumerate(data.items()):
         if "ITER 1996" in key:
             color = "blue"
@@ -9620,7 +9050,6 @@ def plot_h_threshold_comparison(axis: plt.Axes, mfile: MFile, scan: int, u_seed=
         axis.legend(loc="upper left", bbox_to_anchor=(-1.1, 1), ncol=2)
 
     # Calculate average, standard deviation, and median
-    data_values = list(data.values())
     avg_threshold = np.mean(data_values)
     std_threshold = np.std(data_values)
     median_threshold = np.median(data_values)
@@ -9650,7 +9079,7 @@ def plot_h_threshold_comparison(axis: plt.Axes, mfile: MFile, scan: int, u_seed=
 
     axis.set_title("L-H Threshold ($P_\\text{LH}$) Comparison")
     axis.set_ylabel("L-H threshold power [MW]")
-    axis.set_xlim([0.5, 1.5])
+    axis.set_xlim(0.5, 1.5)
     axis.set_xticks([])
     axis.set_xticklabels([])
 
@@ -9903,14 +9332,13 @@ def plot_confinement_time_comparison(
         rf"{ConfinementTimeModel.ITPA20.full_name}": itpa20,
         rf"{ConfinementTimeModel.ITPA20_IL.full_name}": itpa20_ilc,
     }
+    data_values = list(data.values())
 
     # Create the violin plot
-    axis.violinplot(data.values(), showextrema=False)
+    axis.violinplot(data_values, showextrema=False)
 
     # Create the box plot
-    axis.boxplot(
-        data.values(), showfliers=True, showmeans=True, meanline=True, widths=0.3
-    )
+    axis.boxplot(data_values, showfliers=True, showmeans=True, meanline=True, widths=0.3)
 
     # Scatter plot for each data point
     # Use a set of distinct colors for better differentiation
@@ -9955,7 +9383,6 @@ def plot_confinement_time_comparison(
     axis.legend(loc="upper left", bbox_to_anchor=(-1.3, 0.75), ncol=2)
 
     # Calculate average, standard deviation, and median
-    data_values = list(data.values())
     avg_threshold = np.mean(data_values)
     std_threshold = np.std(data_values)
     median_threshold = np.median(data_values)
@@ -9992,7 +9419,7 @@ def plot_confinement_time_comparison(
 
     axis.set_title("Confinement time ($\\tau_{\\text{E}}$) Comparison")
     axis.set_ylabel("Confinement time, $\\tau_{\\text{E}}$ [s]")
-    axis.set_xlim([0.5, 1.5])
+    axis.set_xlim(0.5, 1.5)
     axis.set_xticks([])
     axis.set_xticklabels([])
 
@@ -10480,14 +9907,13 @@ def plot_density_limit_comparison(axis: plt.Axes, mfile: MFile, scan: int):
         "Greenwald": greenwald,
         "ASDEX New": asdex_new,
     }
+    data_values = list(data.values())
 
     # Create the violin plot
-    axis.violinplot(data.values(), showextrema=False)
+    axis.violinplot(data_values, showextrema=False)
 
     # Create the box plot
-    axis.boxplot(
-        data.values(), showfliers=True, showmeans=True, meanline=True, widths=0.3
-    )
+    axis.boxplot(data_values, showfliers=True, showmeans=True, meanline=True, widths=0.3)
 
     # Scatter plot for each data point
     colors = plt.cm.plasma(np.linspace(0, 1, len(data.values())))
@@ -10496,7 +9922,6 @@ def plot_density_limit_comparison(axis: plt.Axes, mfile: MFile, scan: int):
     axis.legend(loc="upper left", bbox_to_anchor=(1, 1))
 
     # Calculate average, standard deviation, and median
-    data_values = list(data.values())
     avg_density_limit = np.mean(data_values)
     std_density_limit = np.std(data_values)
     median_density_limit = np.median(data_values)
@@ -10528,7 +9953,7 @@ def plot_density_limit_comparison(axis: plt.Axes, mfile: MFile, scan: int):
     axis.set_title("Density Limit Comparison")
     axis.set_ylabel(r"Density Limit [$10^{20}$ m$^{-3}$]")
     axis.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x * 1e-20:.1f}"))
-    axis.set_xlim([0.5, 1.5])
+    axis.set_xlim(0.5, 1.5)
     axis.set_xticks([])
     axis.set_xticklabels([])
     axis.set_facecolor("#f0f0f0")
@@ -10686,7 +10111,7 @@ def plot_cs_coil_structure(
         )
 
     textstr_cs = (
-        f"$\\mathbf{{Coil \\ parameters:}}$\n \n"
+        f"$\\mathbf{{Coil \\ parameters:}}$\n\n"
         f"CS height vs TF internal height: {mfile.get('f_z_cs_tf_internal', scan=scan):.2f}\n"
         f"CS thickness: {mfile.get('dr_cs', scan=scan):.4f} m\n"
         f"CS radial middle: {mfile.get('r_cs_middle', scan=scan):.4f} m\n"
@@ -10703,21 +10128,7 @@ def plot_cs_coil_structure(
         f"$\\tau_{{\\text{{shear,peak}}}}:$ {mfile.get('stress_shear_cs_peak', scan=scan) / 1e6:.3f} MPa "
     )
 
-    axis.text(
-        0.5,
-        0.6,
-        textstr_cs,
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightyellow",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
-    )
+    axis.text(0.5, 0.6, textstr_cs, **_text_layout(fig), bbox=_box_style("lightyellow"))
 
     # Plot the current filament points as blue dots and label them
 
@@ -10861,16 +10272,8 @@ def plot_cs_turn_structure(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.7,
         0.375,
         textstr_turn,
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightyellow",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **_text_layout(fig),
+        bbox=_box_style("lightyellow"),
     )
 
     axis.set_xlim(-dr_cs_turn * 0.2, dr_cs_turn * 1.2)
@@ -11935,6 +11338,68 @@ def plot_tf_stress(axis: plt.Axes, mfile: MFile):
     plt.tight_layout()
 
 
+def draw_bend(
+    ax: Axes,
+    elbow_radius: float,
+    theta_span: float,
+    radius_pipe: float,
+    title: str = "Bend",
+    alpha: float = 0.8,
+):
+    """
+    Draws a circular pipe bend with centerline and inner/outer boundaries.
+
+    Parameters
+    ----------
+    ax:
+        Target axes for plotting.
+    elbow_radius:
+        Radius of the elbow in meters.
+    theta_span:
+        Array of angles [0, θ] where θ is pi/2 or pi.
+    radius_pipe:
+        Pipe radius in meters (fallback to 0.1m if not provided).
+    title:
+        Plot title string.
+    alpha:
+        fill opacity
+    """
+    # Convert all inputs to mm
+    elbow_radius_mm = elbow_radius * 1000
+    pipe_radius_mm = radius_pipe * 1000
+
+    theta = np.linspace(0, theta_span, 100)
+    x_center = elbow_radius_mm * np.cos(theta)
+    y_center = elbow_radius_mm * np.sin(theta)
+
+    # Outer and inner walls (offset by ± pipe radius in mm)
+    x_outer = (elbow_radius_mm + pipe_radius_mm) * np.cos(theta)
+    y_outer = (elbow_radius_mm + pipe_radius_mm) * np.sin(theta)
+    x_inner = (elbow_radius_mm - pipe_radius_mm) * np.cos(theta)
+    y_inner = (elbow_radius_mm - pipe_radius_mm) * np.sin(theta)
+
+    # Plot
+    ax.plot(x_center, y_center, color="black", linestyle="--", label="Centerline")
+    ax.plot(x_outer, y_outer, color="black")
+    ax.plot(x_inner, y_inner, color="black")
+    ax.fill(
+        np.concatenate([x_outer, x_inner[::-1]]),
+        np.concatenate([y_outer, y_inner[::-1]]),
+        color="lightgrey",
+        alpha=alpha,
+    )
+
+    ax.set_aspect("equal")
+    ax.set_xlabel("X [mm]")
+    ax.set_ylabel("Y [mm]")
+    ax.set_title(title)
+    ax.grid(True, linestyle="--", alpha=0.3)
+
+    # Legend: Centerline + pipe radius info
+    legend_text = f"Centerline\nPipe radius: {pipe_radius_mm:.2f} mm\nElbow radius: {elbow_radius_mm:.2f} mm"
+    ax.legend([legend_text], loc="upper right")
+
+
 def plot_blkt_pipe_bends(fig, m_file, scan: int):
     """Plot the blanket pipe bends on the given axis, with axes in mm.
 
@@ -11950,80 +11415,18 @@ def plot_blkt_pipe_bends(fig, m_file, scan: int):
     ax_90 = fig.add_subplot(341)
     ax_180 = fig.add_subplot(342)
 
-    # Get pipe radius from m_file, fallback to 0.1 m
     r = m_file.get("radius_blkt_channel", scan=scan)
-    elbow_radius_90 = m_file.get("radius_blkt_channel_90_bend", scan=scan)
+    fallback_radius = 0.1  # meters
 
-    # --- 90 degree bend ---
-    theta_90 = np.linspace(0, np.pi / 2, 100)
-    # Convert coordinates from meters to millimeters
-    x_center_90 = elbow_radius_90 * np.cos(theta_90) * 1000
-    y_center_90 = elbow_radius_90 * np.sin(theta_90) * 1000
-    x_outer_90 = (elbow_radius_90 + r) * np.cos(theta_90) * 1000
-    y_outer_90 = (elbow_radius_90 + r) * np.sin(theta_90) * 1000
-    x_inner_90 = (elbow_radius_90 - r) * np.cos(theta_90) * 1000
-    y_inner_90 = (elbow_radius_90 - r) * np.sin(theta_90) * 1000
-
-    ax_90.plot(
-        x_center_90, y_center_90, color="black", linestyle="--", label="Centerline"
+    elbow_radius_90 = (
+        m_file.get("radius_blkt_channel_90_bend", scan=scan) or fallback_radius
     )
-    ax_90.plot(x_outer_90, y_outer_90, color="black")
-    ax_90.plot(x_inner_90, y_inner_90, color="black")
-    ax_90.fill(
-        np.concatenate([x_outer_90, x_inner_90[::-1]]),
-        np.concatenate([y_outer_90, y_inner_90[::-1]]),
-        color="lightgrey",
-        alpha=1.0,
-    )
-    ax_90.set_aspect("equal")
-    ax_90.set_xlabel("X [mm]")
-    ax_90.set_ylabel("Y [mm]")
-    ax_90.set_title("Blanket Pipe 90° Bend")
-    ax_90.grid(True, linestyle="--", alpha=0.3)
-    # Add legend with radius values
-    ax_90.legend(
-        [
-            f"Centerline\nPipe radius: {r * 1000:.2f} mm\nElbow radius: {elbow_radius_90 * 1000:.2f} mm"
-        ],
-        loc="upper right",
+    elbow_radius_180 = (
+        m_file.get("radius_blkt_channel_180_bend", scan=scan) or fallback_radius
     )
 
-    # --- 180 degree bend ---
-
-    elbow_radius_180 = m_file.get("radius_blkt_channel_180_bend", scan=scan)
-
-    theta_180 = np.linspace(0, np.pi, 100)
-    x_center_180 = elbow_radius_180 * np.cos(theta_180) * 1000
-    y_center_180 = elbow_radius_180 * np.sin(theta_180) * 1000
-    x_outer_180 = (elbow_radius_180 + r) * np.cos(theta_180) * 1000
-    y_outer_180 = (elbow_radius_180 + r) * np.sin(theta_180) * 1000
-    x_inner_180 = (elbow_radius_180 - r) * np.cos(theta_180) * 1000
-    y_inner_180 = (elbow_radius_180 - r) * np.sin(theta_180) * 1000
-
-    ax_180.plot(
-        x_center_180, y_center_180, color="black", linestyle="--", label="Centerline"
-    )
-    ax_180.plot(x_outer_180, y_outer_180, color="black")
-    ax_180.plot(x_inner_180, y_inner_180, color="black")
-    ax_180.fill(
-        np.concatenate([x_outer_180, x_inner_180[::-1]]),
-        np.concatenate([y_outer_180, y_inner_180[::-1]]),
-        color="lightgrey",
-        alpha=1.0,
-    )
-
-    ax_180.set_aspect("equal")
-    ax_180.set_xlabel("X [mm]")
-    ax_180.set_ylabel("Y [mm]")
-    ax_180.set_title("Blanket Pipe 180° Bend")
-    ax_180.grid(True, linestyle="--", alpha=0.3)
-    # Add legend with radius values
-    ax_180.legend(
-        [
-            f"Centerline\nPipe radius: {r * 1000:.2f} mm\nElbow radius: {elbow_radius_180 * 1000:.2f} mm"
-        ],
-        loc="upper right",
-    )
+    draw_bend(ax_90, elbow_radius_90, np.pi / 2, r, title="Blanket Pipe 90° Bend")
+    draw_bend(ax_180, elbow_radius_180, np.pi, r, title="Blanket Pipe 180° Bend")
 
 
 def plot_fw_90_deg_pipe_bend(ax, m_file, scan: int):
@@ -12042,45 +11445,13 @@ def plot_fw_90_deg_pipe_bend(ax, m_file, scan: int):
     r = m_file.get("radius_fw_channel", scan=scan)
     elbow_radius = m_file.get("radius_fw_channel_90_bend", scan=scan)
 
-    # --- 90 degree bend ---
-    theta_90 = np.linspace(0, np.pi / 2, 100)
-    # Convert coordinates from meters to millimeters
-    x_center_90 = elbow_radius * np.cos(theta_90) * 1000
-    y_center_90 = elbow_radius * np.sin(theta_90) * 1000
-    x_outer_90 = (elbow_radius + r) * np.cos(theta_90) * 1000
-    y_outer_90 = (elbow_radius + r) * np.sin(theta_90) * 1000
-    x_inner_90 = (elbow_radius - r) * np.cos(theta_90) * 1000
-    y_inner_90 = (elbow_radius - r) * np.sin(theta_90) * 1000
-
-    ax.plot(x_center_90, y_center_90, color="black", linestyle="--", label="Centerline")
-    ax.plot(x_outer_90, y_outer_90, color="black")
-    ax.plot(x_inner_90, y_inner_90, color="black")
-    ax.fill(
-        np.concatenate([x_outer_90, x_inner_90[::-1]]),
-        np.concatenate([y_outer_90, y_inner_90[::-1]]),
-        color="lightgrey",
-        alpha=1.0,
-    )
-    ax.set_aspect("equal")
-    ax.set_xlabel("X [mm]")
-    ax.set_ylabel("Y [mm]")
-    ax.set_title("First Wall Pipe 90° Bend")
-    ax.grid(True, linestyle="--", alpha=0.3)
-    ax.legend(
-        [
-            f"Centerline\nPipe radius: {r * 1000:.2f} mm\nElbow radius: {elbow_radius * 1000:.2f} mm"
-        ],
-        loc="upper right",
+    draw_bend(
+        ax, elbow_radius, np.pi / 2, r, title="First Wall Pipe 90° Bend", alpha=1.0
     )
 
 
 def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
     """Plot the fusion rate density profiles on the given axis"""
-    fusden_plasma_dt_profile = []
-    fusden_plasma_dd_triton_profile = []
-    fusden_plasma_dd_helion_profile = []
-    fusden_plasma_dhe3_profile = []
-
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
     fusden_plasma_dt_profile = [
@@ -12235,9 +11606,9 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
     )
     axis.set_yscale("log")
     axis.grid(True, which="both", linestyle="--", alpha=0.5)
-    axis.set_xlim([0, 1.025])
+    axis.set_xlim(0, 1.025)
     axis.minorticks_on()
-    axis.set_ylim([1e10, 1e23])
+    axis.set_ylim(1e10, 1e23)
     axis.yaxis.set_major_locator(plt.LogLocator(base=10.0, numticks=10))
     axis.yaxis.set_minor_locator(
         plt.LogLocator(base=10.0, subs=np.arange(1, 10) * 0.1, numticks=100)
@@ -12267,23 +11638,15 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.05,
         0.85,
         textstr_general,
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightyellow",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **_text_layout(fig),
+        bbox=_box_style("lightyellow"),
     )
 
     # ============================================================================
 
     textstr_dt = (
         f"Total fusion power: {mfile.get('p_dt_total_mw', scan=scan):,.2f} MW\n"
-        f"Plasma fusion power: {mfile.get('p_plasma_dt_mw', scan=scan):,.2f} MW                     \n"
+        f"Plasma fusion power: {mfile.get('p_plasma_dt_mw', scan=scan):,.2f} MW\n"
         f"Volume-averaged fusion power density: plasma: {mfile.get('pden_plasma_dt_vol_avg_mw', scan=scan):,.3f} MW/m³\n"
         f"Beam fusion power: {mfile.get('p_beam_dt_mw', scan=scan):,.2f} MW\n"
     )
@@ -12292,16 +11655,8 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.05,
         0.75,
         textstr_dt,
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightyellow",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **_text_layout(fig),
+        bbox=_box_style("lightyellow"),
     )
 
     axis.text(
@@ -12318,23 +11673,15 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
     textstr_dd = (
         f"Total fusion power: {mfile.get('p_dd_total_mw', scan=scan):,.2f} MW\n"
         f"Volume-averaged total power density: {mfile.get('pden_dd_total_vol_avg_mw', scan=scan):,.3e} MW/m³\n"
-        f"Tritium branching ratio: {mfile.get('f_dd_branching_trit', scan=scan):.4f}                      \n"
+        f"Tritium branching ratio: {mfile.get('f_dd_branching_trit', scan=scan):.4f}\n"
     )
 
     axis.text(
         0.05,
         0.65,
         textstr_dd,
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightyellow",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **_text_layout(fig),
+        bbox=_box_style("lightyellow"),
     )
 
     axis.text(
@@ -12349,7 +11696,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
     # =================================================
 
     textstr_dhe3 = (
-        f"Total fusion power: {mfile.get('p_dhe3_total_mw', scan=scan):,.2f} MW                                 \n"
+        f"Total fusion power: {mfile.get('p_dhe3_total_mw', scan=scan):,.2f} MW\n\n"
         f"Volume-averaged total power density: {mfile.get('pden_dhe3_total_vol_avg_mw', scan=scan):,.3e} MW/m³\n\n"
     )
 
@@ -12357,16 +11704,8 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.05,
         0.55,
         textstr_dhe3,
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightyellow",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **_text_layout(fig),
+        bbox=_box_style("lightyellow"),
     )
 
     axis.text(
@@ -12396,16 +11735,8 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.05,
         0.25,
         textstr_alpha,
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "red",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **_text_layout(fig),
+        bbox=_box_style("red"),
     )
 
     axis.text(
@@ -12431,16 +11762,8 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.05,
         0.1,
         textstr_neutron,
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "grey",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **_text_layout(fig),
+        bbox=_box_style("grey"),
     )
 
     axis.text(
@@ -12535,12 +11858,7 @@ def plot_cover_page(
         ha="left",
         va="top",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "#e0f7fa",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("#e0f7fa"),
     )
 
     # Box 2: File/Branch Info
@@ -12558,12 +11876,7 @@ def plot_cover_page(
         ha="left",
         va="top",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "#fffde7",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("#fffde7"),
     )
 
     # Box 3: Run Settings
@@ -12587,12 +11900,7 @@ def plot_cover_page(
         ha="left",
         va="top",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "#f3e5f5",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("#f3e5f5"),
     )
 
     axis.text(
@@ -12689,7 +11997,7 @@ def plot_plasma_pressure_profiles(axis: plt.Axes, mfile: MFile, scan: int):
     axis.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
     axis.set_title("Plasma Thermal Pressure Profiles")
     axis.grid(True, linestyle="--", alpha=0.5)
-    axis.set_xlim([0, 1.025])
+    axis.set_xlim(0, 1.025)
     axis.set_ylim(bottom=0)
     axis.legend()
 
@@ -12769,12 +12077,11 @@ def plot_plasma_current_comparison(axis: plt.Axes, mfile: MFile, scan: int):
     }
 
     # Create the violin plot
-    axis.violinplot(data.values(), showextrema=False)
+    data_values = list(data.values())
+    axis.violinplot(data_values, showextrema=False)
 
     # Create the box plot
-    axis.boxplot(
-        data.values(), showfliers=True, showmeans=True, meanline=True, widths=0.3
-    )
+    axis.boxplot(data_values, showfliers=True, showmeans=True, meanline=True, widths=0.3)
 
     # Scatter plot for each data point
     colors = plt.cm.plasma(np.linspace(0, 1, len(data.values())))
@@ -12814,7 +12121,7 @@ def plot_plasma_current_comparison(axis: plt.Axes, mfile: MFile, scan: int):
     axis.set_title("Plasma Current ($I_p$) Comparison")
     axis.set_ylabel(r"Plasma Current [MA]")
     axis.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x * 1e-6:.1f}"))
-    axis.set_xlim([0.5, 1.5])
+    axis.set_xlim(0.5, 1.5)
     axis.set_xticks([])
     axis.set_xticklabels([])
     axis.set_facecolor("#f0f0f0")
@@ -12848,14 +12155,12 @@ def plot_max_normalised_beta_comparison(axis: plt.Axes, mfile: MFile, scan: int)
         f"{BetaNormMaxModel.THOLERUS.full_name}": beta_norm_max_tholerus,
         f"{BetaNormMaxModel.STAMBAUGH.full_name}": beta_norm_max_stambaugh,
     }
-
+    data_values = list(data.values())
     # Create the violin plot
-    axis.violinplot(data.values(), showextrema=False)
+    axis.violinplot(data_values, showextrema=False)
 
     # Create the box plot
-    axis.boxplot(
-        data.values(), showfliers=True, showmeans=True, meanline=True, widths=0.3
-    )
+    axis.boxplot(data_values, showfliers=True, showmeans=True, meanline=True, widths=0.3)
 
     # Scatter plot for each data point
     colors = plt.cm.plasma(np.linspace(0, 1, len(data.values())))
@@ -12894,7 +12199,7 @@ def plot_max_normalised_beta_comparison(axis: plt.Axes, mfile: MFile, scan: int)
 
     axis.set_title("Max Normalised Beta ($\\beta_N$) Comparison")
     axis.set_ylabel("Max Normalised Beta $\\beta_N$ [unitless]")
-    axis.set_xlim([0.5, 1.5])
+    axis.set_xlim(0.5, 1.5)
     axis.set_xticks([])
     axis.set_xticklabels([])
     axis.set_facecolor("#f0f0f0")
@@ -12945,7 +12250,7 @@ def plot_plasma_pressure_gradient_profiles(axis: plt.Axes, mfile: MFile, scan: i
     axis.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
     axis.set_title("Plasma Thermal Pressure Gradient Profiles")
     axis.grid(True, linestyle="--", alpha=0.5)
-    axis.set_xlim([0, 1.025])
+    axis.set_xlim(0, 1.025)
     axis.legend()
 
 
@@ -12991,7 +12296,6 @@ def plot_plasma_poloidal_pressure_contours(axis: plt.Axes, mfile: MFile, scan: i
 
     # Mask points outside the plasma boundary (optional, but grid is inside by construction)
     # Plot filled contour
-    c = axis.contourf(r_grid, z_grid, pressure_grid, levels=50, cmap="plasma")
     c = axis.contourf(r_grid, -z_grid, pressure_grid, levels=50, cmap="plasma")
 
     # Add colorbar for pressure (now in kPa)
@@ -13039,45 +12343,35 @@ def interp1d_profile(profile, mfile: MFile, scan: int):
     )
 
     # Create a grid of (R, Z) points inside the plasma boundary
-    n_rho = 500
-    n_theta = 720
-    rho = np.linspace(0, 1, n_rho)
-    theta = np.linspace(0, 2 * np.pi, n_theta)
+    rho = np.linspace(0, 1, 500)
+    theta = np.linspace(0, 2 * np.pi, 720)
     rho_grid, theta_grid = np.meshgrid(rho, theta)
 
     # Map (rho, theta) to (R, Z) using plasma boundary shape
     # For each theta, get boundary (R, Z), then scale by rho
-    boundary_r = pg.rs
-    boundary_z = pg.zs
+    bdry_r = pg.rs
+    bdry_z = pg.zs
     # Interpolate boundary for all theta
-    boundary_theta = np.arctan2(boundary_z - pg.zs.mean(), boundary_r - pg.rs.mean())
-    # Ensure boundary_theta is monotonic and covers [0, 2pi]
-    boundary_theta = np.unwrap(boundary_theta)
-    # Sort boundary_theta and corresponding r/z for monotonic interpolation
-    sort_idx = np.argsort(boundary_theta)
-    boundary_theta = boundary_theta[sort_idx]
-    boundary_r = boundary_r[sort_idx]
-    boundary_z = boundary_z[sort_idx]
+    bdry_theta = np.arctan2(bdry_z - pg.zs.mean(), bdry_r - pg.rs.mean())
+    # Ensure bdry_theta is monotonic and covers [0, 2pi]
+    bdry_theta = np.unwrap(bdry_theta)
+    # Sort bdry_theta and corresponding r/z for monotonic interpolation
+    sort_idx = np.argsort(bdry_theta)
+    bdry_theta = bdry_theta[sort_idx]
+    bdry_r = bdry_r[sort_idx]
+    bdry_z = bdry_z[sort_idx]
     # Extend boundary to cover full [0, 2pi] if needed
-    if boundary_theta[0] > 0 or boundary_theta[-1] < 2 * np.pi:
-        boundary_theta = np.concatenate(([0], boundary_theta, [2 * np.pi]))
-        boundary_r = np.concatenate(([boundary_r[0]], boundary_r, [boundary_r[-1]]))
-        boundary_z = np.concatenate(([boundary_z[0]], boundary_z, [boundary_z[-1]]))
+    if bdry_theta[0] > 0 or bdry_theta[-1] < 2 * np.pi:
+        bdry_theta = np.concatenate(([0], bdry_theta, [2 * np.pi]))
+        bdry_r = np.concatenate(([bdry_r[0]], bdry_r, [bdry_r[-1]]))
+        bdry_z = np.concatenate(([bdry_z[0]], bdry_z, [bdry_z[-1]]))
     # Map theta to boundary r/z
     f_r = interp1d(
-        boundary_theta,
-        boundary_r,
-        kind="linear",
-        fill_value="extrapolate",
-        assume_sorted=True,
+        bdry_theta, bdry_r, kind="linear", fill_value="extrapolate", assume_sorted=True
     )
     # Map theta to boundary z
     f_z = interp1d(
-        boundary_theta,
-        boundary_z,
-        kind="linear",
-        fill_value="extrapolate",
-        assume_sorted=True,
+        bdry_theta, bdry_z, kind="linear", fill_value="extrapolate", assume_sorted=True
     )
     # For each (theta, rho), get boundary (R, Z), then scale by rho
     # Use the boundary center for scaling, not mean, to avoid vertical offset
@@ -13290,13 +12584,13 @@ def plot_hts_tape_geometry(
 def plot_tf_corc_cable_summary_box(axis, fig, mfile: MFile, scan: int):
     """Plot TF CORC cable summary box"""
     textstr_cable = (
-        f"$\\mathbf{{CroCo \\ Cable:}}$\n \n"
+        f"$\\mathbf{{CroCo \\ Cable:}}$\n\n"
         f"Cable diameter: {mfile.get('dia_tf_turn_croco_cable', scan=scan) * 1e3:,.4f} mm\n"
         f"Copper width: {mfile.get('dx_tf_croco_strand_copper', scan=scan) * 1e3:,.4f} mm\n"
         f"Diameter of solder tape region: {mfile.get('dia_tf_croco_strand_tape_region', scan=scan) * 1e3:,.4f} mm\n"
         f"Height of tape stack: {mfile.get('dx_tf_croco_strand_tape_stack', scan=scan) * 1e3:,.4f} mm\n"
         f"Width of HTS tape / tape stack: {mfile.get('dr_tf_hts_tape', scan=scan) * 1e3:,.4f} mm\n"
-        f"Number of HTS tape layers: {int(mfile.get('n_tf_croco_strand_hts_tapes', scan=scan))}\n \n"
+        f"Number of HTS tape layers: {int(mfile.get('n_tf_croco_strand_hts_tapes', scan=scan))}\n\n"
         f"Total copper area: {mfile.get('a_tf_croco_strand_copper_total', scan=scan) * 1e6:,.4f} mm²\n"
         f"Total hastelloy area: {mfile.get('a_tf_croco_strand_hastelloy', scan=scan) * 1e6:,.4f} mm²\n"
         f"Total solder area: {mfile.get('a_tf_croco_strand_solder', scan=scan) * 1e6:,.4f} mm²\n"
@@ -13312,12 +12606,7 @@ def plot_tf_corc_cable_summary_box(axis, fig, mfile: MFile, scan: int):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "#cccccc",  # grayish color
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("#cccccc"),  # grayish color
     )
 
 
@@ -13349,10 +12638,7 @@ def reaction_plot_grid(
 
     ax.set_xlabel("R [m]")
     ax.set_xlim(rmajor - 1.2 * rminor, rmajor + 1.2 * rminor)
-    ax.set_ylim(
-        -1.2 * rminor * kappa,
-        1.2 * kappa * rminor,
-    )
+    ax.set_ylim(-1.2 * rminor * kappa, 1.2 * kappa * rminor)
     ax.set_ylabel("Z [m]")
     ax.plot(
         rmajor,
@@ -13390,51 +12676,24 @@ def reaction_plot_grid(
         ax.legend(legend_handles, legend_labels, loc="upper right", fontsize=8)
 
 
-def plot_fusion_rate_contours(
-    fig1,
-    fig2,
-    mfile: MFile,
-    scan: int,
-):
+def plot_fusion_rate_contours(fig1, fig2, mfile: MFile, scan: int):
     """Plot fusion rate density contours"""
-    fusden_plasma_dt_profile = []
-    fusden_plasma_dd_triton_profile = []
-    fusden_plasma_dd_helion_profile = []
-    fusden_plasma_dhe3_profile = []
-
     rmajor = mfile.get("rmajor", scan=scan)
     rminor = mfile.get("rminor", scan=scan)
     kappa = mfile.get("kappa", scan=scan)
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
-    fusden_plasma_dt_profile = [
-        mfile.get(f"fusden_plasma_dt_profile{i}", scan=scan)
-        for i in range(n_plasma_profile_elements)
-    ]
+    def fusrat(name):
+        fusrat_dat = [
+            mfile.get(f"fusrat_plasma_{name}_profile{i}", scan=scan)
+            for i in range(n_plasma_profile_elements)
+        ]
+        return interp1d_profile(fusrat_dat, mfile, scan)
 
-    fusden_plasma_dd_triton_profile = [
-        mfile.get(f"fusden_plasma_dd_triton_profile{i}", scan=scan)
-        for i in range(n_plasma_profile_elements)
-    ]
-
-    fusden_plasma_dd_helion_profile = [
-        mfile.get(f"fusden_plasma_dd_helion_profile{i}", scan=scan)
-        for i in range(n_plasma_profile_elements)
-    ]
-    fusden_plasma_dhe3_profile = [
-        mfile.get(f"fusden_plasma_dhe3_profile{i}", scan=scan)
-        for i in range(n_plasma_profile_elements)
-    ]
-
-    dt_grid, _r_grid, _z_grid = interp1d_profile(fusden_plasma_dt_profile, mfile, scan)
-
-    dd_triton_grid, _r_grid, _z_grid = interp1d_profile(
-        fusden_plasma_dd_triton_profile, mfile, scan
-    )
-    dd_helion_grid, _r_grid, _z_grid = interp1d_profile(
-        fusden_plasma_dd_helion_profile, mfile, scan
-    )
-    dhe3_grid, r_grid, z_grid = interp1d_profile(fusden_plasma_dhe3_profile, mfile, scan)
+    dt_grid, _r_grid, _z_grid = fusrat("dt")
+    dd_triton_grid, _r_grid, _z_grid = fusrat(" dd_triton ")
+    dd_helion_grid, _r_grid, _z_grid = fusrat(" dd_helion ")
+    dhe3_grid, r_grid, z_grid = fusrat(" dhe3")
 
     dt_axes = fig1.add_subplot(121, aspect="equal")
     dd_triton_axes = fig1.add_subplot(122, aspect="equal")
@@ -13511,7 +12770,7 @@ def plot_magnetic_fields_in_plasma(axis: plt.Axes, mfile: MFile, scan: int):
         verticalalignment="center",
         horizontalalignment="center",
         transform=axis.transAxes,
-        bbox={"boxstyle": "round", "facecolor": "wheat", "alpha": 1.0, "linewidth": 2},
+        bbox=_box_style("wheat"),
     )
 
     # Text box for outboard toroidal field
@@ -13523,7 +12782,7 @@ def plot_magnetic_fields_in_plasma(axis: plt.Axes, mfile: MFile, scan: int):
         verticalalignment="center",
         horizontalalignment="center",
         transform=axis.transAxes,
-        bbox={"boxstyle": "round", "facecolor": "wheat", "alpha": 1.0, "linewidth": 2},
+        bbox=_box_style("wheat"),
     )
 
     axis.set_xlabel("Radial Position [m]")
@@ -14134,7 +13393,7 @@ def plot_debye_length_profile(axis: plt.Axes, mfile_data: MFile, scan: int):
 
     axis.set_xlabel("$\\rho \\ [r/a]$")
     axis.grid(True, which="both", linestyle="--", alpha=0.5)
-    axis.set_xlim([0, 1.025])
+    axis.set_xlim(0, 1.025)
     axis.minorticks_on()
     axis.legend()
 
@@ -14200,7 +13459,7 @@ def plot_velocity_profile(axis: plt.Axes, mfile_data: MFile, scan: int) -> None:
     axis.set_ylabel("Velocity [m/s]")
     axis.set_xlabel("$\\rho \\ [r/a]$")
     axis.grid(True, which="both", linestyle="--", alpha=0.5)
-    axis.set_xlim([0, 1.025])
+    axis.set_xlim(0, 1.025)
     axis.minorticks_on()
     axis.legend()
 
@@ -14999,20 +14258,14 @@ def plot_blkt_structure(
     r_fw_inboard_out = r_blkt_inboard_in + dr_blkt_inboard + dr_fw_inboard
 
     # Plot a horizontal line at dz_blkt_half (blanket half height)
-    ax.axhline(
-        dz_blkt_half,
-        color="purple",
-        linestyle="--",
-        linewidth=1.5,
-        label="Blanket Half Height",
-    )
-    ax.axhline(
-        -dz_blkt_half,
-        color="purple",
-        linestyle="--",
-        linewidth=1.5,
-        label="Blanket Half Height",
-    )
+    for dz_blkt in (dz_blkt_half, -dz_blkt_half):
+        ax.axhline(
+            dz_blkt,
+            color="purple",
+            linestyle="--",
+            linewidth=1.5,
+            label="Blanket Half Height",
+        )
 
     if DivertorNumberModels(i_single_null) == DivertorNumberModels.DOUBLE_NULL:
         # Plot arrows for the outboard blanket angles
@@ -15076,21 +14329,14 @@ def plot_blkt_structure(
     )
 
     # Plot arrows for the inboard blanket angles
-    ax.annotate(
-        "",
-        xy=(rmajor, 0),
-        xytext=(r_fw_inboard_out, dz_blkt_half),
-        arrowprops={"arrowstyle": "<-", "color": "green"},
-        zorder=5,
-    )
-
-    ax.annotate(
-        "",
-        xy=(rmajor, 0),
-        xytext=(r_fw_inboard_out, -dz_blkt_half),
-        arrowprops={"arrowstyle": "<-", "color": "green"},
-        zorder=5,
-    )
+    for dz_blkt in (dz_blkt_half, -dz_blkt_half):
+        ax.annotate(
+            "",
+            xy=(rmajor, 0),
+            xytext=(r_fw_inboard_out, dz_blkt),
+            arrowprops={"arrowstyle": "<-", "color": "green"},
+            zorder=5,
+        )
 
     # Plot arc showing the angle between the two inboard blanket arrows
     arc_radius = 1.0
@@ -15173,7 +14419,7 @@ def plot_blkt_structure(
     arc_radius = 1.5
     # 3 to 6 o'clock is -90 degrees
     angle_start = -90.0
-    angle_end = -90.0 - deg_div_poloidal_plasma
+    angle_end = angle_start - deg_div_poloidal_plasma
 
     theta = np.linspace(np.deg2rad(angle_start), np.deg2rad(angle_end), 50)
     arc_x = rmajor + arc_radius * np.cos(theta)
@@ -15208,40 +14454,26 @@ def plot_blkt_structure(
     )
 
     # Plot vertical lines at the inner and outer radial boundaries of the blanket
-    ax.axvline(
-        r_blkt_inboard_in, color="black", linestyle="--", linewidth=1.5, zorder=10
-    )
-    ax.axvline(
-        r_blkt_outboard_out, color="black", linestyle="--", linewidth=1.5, zorder=10
-    )
-    ax.axvline(r_fw_inboard_out, color="black", linestyle="--", linewidth=1.5, zorder=10)
-
-    ax.axvline(r_fw_outboard_in, color="black", linestyle="--", linewidth=1.5, zorder=10)
+    linestyle = {"color": "black", "linestyle": "--", "linewidth": 1.5, "zorder": 10}
+    ax.axvline(r_blkt_inboard_in, **linestyle)
+    ax.axvline(r_blkt_outboard_out, **linestyle)
+    ax.axvline(r_fw_inboard_out, **linestyle)
+    ax.axvline(r_fw_outboard_in, **linestyle)
 
     ax.axvline(
-        rmajor,
-        color="black",
-        linestyle="--",
-        linewidth=1.5,
-        label="Major Radius $R_0$",
+        rmajor, color="black", linestyle="--", linewidth=1.5, label="Major Radius $R_0$"
     )
 
     # Plot midplane line (horizontal dashed line at Z=0)
-    ax.axhline(
-        0.0,
-        color="black",
-        linestyle="--",
-        linewidth=1.5,
-        label="Midplane",
-    )
+    ax.axhline(0.0, color="black", linestyle="--", linewidth=1.5, label="Midplane")
 
     textstr_blkt_areas = (
         f"$\\mathbf{{Blanket \\ Areas:}}$\n\n"
-        f"Inboard blanket, with holes and gaps: {m_file.get('a_blkt_inboard_surface', scan=scan):,.3f} $\\text{{m}}^2$ \n"
-        f"Outboard blanket, with holes and gaps: {m_file.get('a_blkt_outboard_surface', scan=scan):,.3f} $\\text{{m}}^2$ \n"
-        f"Total blanket, with holes and gaps: {m_file.get('a_blkt_total_surface', scan=scan):,.3f} $\\text{{m}}^2$ \n\n"
-        f"Inboard blanket, full coverage: {m_file.get('a_blkt_inboard_surface_full_coverage', scan=scan):,.3f} $\\text{{m}}^2$ \n"
-        f"Outboard blanket, full coverage: {m_file.get('a_blkt_outboard_surface_full_coverage', scan=scan):,.3f} $\\text{{m}}^2$ \n"
+        f"Inboard blanket, with holes and gaps: {m_file.get('a_blkt_inboard_surface', scan=scan):,.3f} $\\text{{m}}^2$\n"
+        f"Outboard blanket, with holes and gaps: {m_file.get('a_blkt_outboard_surface', scan=scan):,.3f} $\\text{{m}}^2$\n"
+        f"Total blanket, with holes and gaps: {m_file.get('a_blkt_total_surface', scan=scan):,.3f} $\\text{{m}}^2$\n\n"
+        f"Inboard blanket, full coverage: {m_file.get('a_blkt_inboard_surface_full_coverage', scan=scan):,.3f} $\\text{{m}}^2$\n"
+        f"Outboard blanket, full coverage: {m_file.get('a_blkt_outboard_surface_full_coverage', scan=scan):,.3f} $\\text{{m}}^2$\n"
         f"Total blanket, full coverage: {m_file.get('a_blkt_total_surface_full_coverage', scan=scan):,.3f} $\\text{{m}}^2$ "
     )
 
@@ -15249,25 +14481,17 @@ def plot_blkt_structure(
         0.05,
         0.3,
         textstr_blkt_areas,
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "wheat",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **_text_layout(fig),
+        bbox=_box_style("wheat"),
     )
 
     textstr_blkt_volumes = (
         f"$\\mathbf{{Blanket \\ Volumes:}}$\n\n"
-        f"Inboard blanket, with holes and gaps: {m_file.get('vol_blkt_inboard', scan=scan):,.3f} $\\text{{m}}^3$ \n"
-        f"Outboard blanket, with holes and gaps: {m_file.get('vol_blkt_outboard', scan=scan):,.3f} $\\text{{m}}^3$ \n"
-        f"Total blanket, with holes and gaps: {m_file.get('vol_blkt_total', scan=scan):,.3f} $\\text{{m}}^3$ \n\n"
-        f"Inboard blanket, full coverage: {m_file.get('vol_blkt_inboard_full_coverage', scan=scan):,.3f} $\\text{{m}}^3$ \n"
-        f"Outboard blanket, full coverage: {m_file.get('vol_blkt_outboard_full_coverage', scan=scan):,.3f} $\\text{{m}}^3$ \n"
+        f"Inboard blanket, with holes and gaps: {m_file.get('vol_blkt_inboard', scan=scan):,.3f} $\\text{{m}}^3$\n"
+        f"Outboard blanket, with holes and gaps: {m_file.get('vol_blkt_outboard', scan=scan):,.3f} $\\text{{m}}^3$\n"
+        f"Total blanket, with holes and gaps: {m_file.get('vol_blkt_total', scan=scan):,.3f} $\\text{{m}}^3$\n\n"
+        f"Inboard blanket, full coverage: {m_file.get('vol_blkt_inboard_full_coverage', scan=scan):,.3f} $\\text{{m}}^3$\n"
+        f"Outboard blanket, full coverage: {m_file.get('vol_blkt_outboard_full_coverage', scan=scan):,.3f} $\\text{{m}}^3$\n"
         f"Total blanket, full coverage: {m_file.get('vol_blkt_total_full_coverage', scan=scan):,.3f} $\\text{{m}}^3$ "
     )
 
@@ -15275,16 +14499,8 @@ def plot_blkt_structure(
         0.05,
         0.05,
         textstr_blkt_volumes,
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "wheat",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **_text_layout(fig),
+        bbox=_box_style("wheat"),
     )
 
 
@@ -16017,11 +15233,7 @@ def plot_cs_radial_stress_contour_profile(
         linewidth=2,
     )
 
-    # Use a dedicated colorbar axes when provided so the main axes width is unchanged.
-    if colorbar_axis is None:
-        cbar = axis.figure.colorbar(contour_fill, ax=axis, pad=0.02)
-    else:
-        cbar = axis.figure.colorbar(contour_fill, cax=colorbar_axis)
+    cbar = _colourbar(contour_fill, axis, colorbar_axis)
     cbar.set_label("Radial Stress (MPa)")
 
     axis.set_xlabel("R [m]")
@@ -16111,11 +15323,7 @@ def plot_cs_hoop_stress_contour_profile(
         linewidth=2,
     )
 
-    # Use a dedicated colorbar axes when provided so the main axes width is unchanged.
-    if colorbar_axis is None:
-        cbar = axis.figure.colorbar(contour_fill, ax=axis, pad=0.02)
-    else:
-        cbar = axis.figure.colorbar(contour_fill, cax=colorbar_axis)
+    cbar = _colourbar(contour_fill, axis, colorbar_axis)
     cbar.set_label("Hoop Stress (MPa)")
 
     axis.set_xlabel("R [m]")
@@ -16225,11 +15433,7 @@ def plot_vertical_stress_contour_profile(
         linewidth=2,
     )
 
-    # Use a dedicated colorbar axes when provided so the main axes width is unchanged.
-    if colorbar_axis is None:
-        cbar = axis.figure.colorbar(contour_fill, ax=axis, pad=0.02)
-    else:
-        cbar = axis.figure.colorbar(contour_fill, cax=colorbar_axis)
+    cbar = _colourbar(contour_fill, axis, colorbar_axis)
     cbar.set_label("Vertical Stress (MPa)")
 
     axis.set_xlabel("R [m]")
@@ -16298,7 +15502,6 @@ def plot_cs_tresca_2d_contour(
             )
 
     # Plot filled contour of Tresca stress distribution
-    contour_fill = axis.contourf(r, z, tresca_data, levels=15, cmap="RdYlBu_r")
     contour_lines = axis.contour(
         r,
         z,
@@ -16335,11 +15538,8 @@ def plot_cs_tresca_2d_contour(
         linewidth=2,
     )
 
-    # Use a dedicated colorbar axes when provided so the main axes width is unchanged.
-    if colorbar_axis is None:
-        cbar = axis.figure.colorbar(contour_fill, ax=axis, pad=0.02)
-    else:
-        cbar = axis.figure.colorbar(contour_fill, cax=colorbar_axis)
+    contour_fill = axis.contourf(r, z, tresca_data, levels=15, cmap="RdYlBu_r")
+    cbar = _colourbar(contour_fill, axis, colorbar_axis)
     cbar.set_label("Tresca Stress (MPa)")
 
     axis.set_xlabel("R [m]")
@@ -16412,7 +15612,6 @@ def plot_cs_von_mises_2d_contour(
             )
 
     # Plot filled contour of Von Mises stress distribution
-    contour_fill = axis.contourf(r, z, von_mises_data, levels=15, cmap="RdYlBu_r")
     contour_lines = axis.contour(
         r,
         z,
@@ -16449,11 +15648,8 @@ def plot_cs_von_mises_2d_contour(
         linewidth=2,
     )
 
-    # Use a dedicated colorbar axes when provided so the main axes width is unchanged.
-    if colorbar_axis is None:
-        cbar = axis.figure.colorbar(contour_fill, ax=axis, pad=0.02)
-    else:
-        cbar = axis.figure.colorbar(contour_fill, cax=colorbar_axis)
+    contour_fill = axis.contourf(r, z, von_mises_data, levels=15, cmap="RdYlBu_r")
+    cbar = _colourbar(contour_fill, axis, colorbar_axis)
     cbar.set_label("Von Mises Stress (MPa)")
 
     axis.set_xlabel("R [m]")
@@ -17170,14 +16366,14 @@ def main_plot(
         demo_ranges,
         colour_scheme,
     )
-    ax_full_toroidal.set_ylim([
+    ax_full_toroidal.set_ylim(
         -ax_full_toroidal.get_ylim()[1],
         ax_full_toroidal.get_ylim()[1],
-    ])
-    ax_full_toroidal.set_xlim([
+    )
+    ax_full_toroidal.set_xlim(
         -ax_full_toroidal.get_xlim()[1],
         ax_full_toroidal.get_xlim()[1],
-    ])
+    )
 
     ax18 = _add_page().add_subplot(211)
     ax18.set_position([0.1, 0.33, 0.8, 0.6])
