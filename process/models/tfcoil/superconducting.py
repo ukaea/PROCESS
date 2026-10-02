@@ -4031,8 +4031,11 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         d_sc_tf.temp_tf_superconductor_critical_zero_field_strain = (
             superconductor_critical_properties.tc0m
         )
-        d_sc_tf.cur_tf_turn_croco_strand_critical = d_sc_tf.c_tf_turn_cables_critical = (
+        d_sc_tf.c_tf_turn_cables_critical = (
             superconductor_critical_properties.c_turn_cables_critical
+        )
+        d_sc_tf.cur_tf_turn_croco_strand_critical = (
+            d_sc_tf.c_tf_turn_cables_critical / N_CROCO_STRANDS_TURN
         )
 
         if self.data.tfcoil.i_str_wp == 0:
@@ -4585,7 +4588,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             j_tf_coil_turn=j_tf_coil_turn,
             bc20m=bc20m,
             tc0m=tc0m,
-            c_turn_cables_critical=cur_tf_turn_croco_strand_critical,
+            c_turn_cables_critical=cur_tf_turn_critical,
         )
 
     @staticmethod
