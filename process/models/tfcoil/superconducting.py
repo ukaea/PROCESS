@@ -2308,16 +2308,13 @@ class CICCAveragedTurnGeometry(TFGeneralTurnGeometry):
 
 
 @dataclass(slots=True)
-class CICCIntegerTurnGeometry(TFGeneralTurnGeometry):
+class CICCIntegerTurnGeometry(CICCAveragedTurnGeometry):
     """Integer turn geometry for a CICC conductor with LTS cables."""
 
-    radius_tf_turn_cable_space_corners: float
     dr_tf_turn_conduit_full: float
     dx_tf_turn_conduit_full_toroidal: float
     dr_tf_turn_cable_space: float
     dx_tf_turn_cable_space: float
-    a_tf_turn_cable_space_effective: float
-    f_a_tf_turn_cable_space_cooling: float
 
 
 class CICCSuperconductingTFCoil(SuperconductingTFCoil):
