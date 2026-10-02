@@ -174,12 +174,13 @@ def test_input_float_when_int(tmp_path, data_structure_obj):
 
 def test_input_array(tmp_path, data_structure_obj):
     data_structure_obj.globals.fileprefix = _create_input_file(
-        tmp_path, ("boundl = 0.1, 0.2, 1.0, 0.0, 1.0e2")
+        tmp_path, ("f_nd_impurity_electrons = 0.1, 0.2, 1.0, 0.0, 1.0e2")
     )
 
     init.init_process(data_structure_obj)
     np.testing.assert_array_equal(
-        data_structure_obj.numerics.boundl[:6], [0.1, 0.2, 1.0, 0.0, 1.0e2, 0]
+        data_structure_obj.impurity_radiation.f_nd_impurity_electrons[:6],
+        [0.1, 0.2, 1.0, 0.0, 1.0e2, 0],
     )
 
 

@@ -462,7 +462,6 @@ f_nd_impurity_electrons(9) = 0.0
 f_nd_impurity_electrons(10) = 0.0
 f_nd_impurity_electrons(11) = 0.0
 f_nd_impurity_electrons(12) = 0.0
-f_nd_impurity_electrons(13) = 0.00038
 f_nd_impurity_electrons(14) = 0.000005
 
 * Heat transport *
