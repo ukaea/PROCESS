@@ -5318,6 +5318,16 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
             )
         )
 
+        (
+            d_sc_tf.len_tf_coil_superconductor,
+            d_sc_tf.len_tf_superconductor_total,
+        ) = self.calculate_tf_step_superconductor_length(
+            n_tf_coils=self.data.tfcoil.n_tf_coils,
+            n_tf_coil_turns=self.data.tfcoil.n_tf_coil_turns,
+            len_tf_coil=self.data.tfcoil.len_tf_coil,
+            n_tf_turn_superconducting_strands=d_sc_tf.n_tf_turn_superconducting_strands,
+        )
+
         self.data.tfcoil.f_a_tf_turn_cable_space_extra_void = 0.0
 
         inboard_areas_fractions = self.tf_step_inboard_areas_and_fractions(
@@ -6225,6 +6235,45 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
             whtcp=whtcp,
             whttflgs=whttflgs,
         )
+
+    @staticmethod
+    def calculate_tf_step_superconductor_length(
+        n_tf_coils: int,
+        n_tf_coil_turns: int,
+        len_tf_coil: float,
+        n_tf_turn_superconducting_strands: int,
+    ) -> float:
+        """Calculates the total length of superconducting material required for the
+        TF coils.
+
+        Parameters
+        ----------
+        n_tf_coils: int :
+            n_tf_coils: Number of TF coils.
+        n_tf_coil_turns: int :
+            n_tf_coil_turns: Total number of turns in the TF coil winding pack.
+        len_tf_coil:
+            len_tf_coil: Length of a single TF coil (in meters).
+        n_tf_turn_superconducting_strands: int :
+            n_tf_turn_superconducting_strands: Number of superconducting tapes/strands
+            per turn in the TF coil.
+
+        Returns
+        -------
+        tuple[float, float]
+            Tuple containing:
+            - Length of superconductor in one TF coil (in meters).
+            - Total length of superconductor in all TF coils (in meters).
+        """
+        # Length of superconductor in one TF coil
+        len_tf_coil_superconductor = (
+            n_tf_coil_turns * len_tf_coil * n_tf_turn_superconducting_strands
+        )
+
+        # Total length of superconductor in all TF coils
+        len_tf_superconductor_total = len_tf_coil_superconductor * n_tf_coils
+
+        return len_tf_coil_superconductor, len_tf_superconductor_total
 
     def output_step_turn_info(self) -> None:
         """Output the STEP conductor geometry and properties."""
