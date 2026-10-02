@@ -7,17 +7,9 @@ from typing import TYPE_CHECKING, Literal
 import matplotlib.pyplot as plt
 from matplotlib import patches
 
-from process.core.io.plot.summary.constants import (
-    CSCOMPRESSION_COLOUR,
-    SOLENOID_COLOUR,
-)
-from process.core.io.plot.summary.radial_build import (
-    cumulative_radial_build2,
-)
-from process.core.io.plot.summary.rendering import (
-    draw_annotation,
-    draw_text,
-)
+from process.core.io.plot.summary.constants import CSCOMPRESSION_COLOUR, SOLENOID_COLOUR
+from process.core.io.plot.summary.radial_build import cumulative_radial_build2
+from process.core.io.plot.summary.rendering import draw_annotation, draw_text
 from process.models.geometry.pfcoil import pfcoil_geometry
 
 if TYPE_CHECKING:

@@ -6,9 +6,7 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
-from process.core.io.plot.summary.rendering import (
-    draw_text,
-)
+from process.core.io.plot.summary.rendering import draw_text
 
 if TYPE_CHECKING:
     import matplotlib.pyplot as plt
@@ -30,7 +28,6 @@ def plot_equality_constraint_equations(axis: plt.Axes, m_file_data: MFile, scan:
     """
     y_labels = []
     y_pos = []
-    n_plot = 0
 
     # Build a mapping from itvar index to its name (description)
     con_names = {}
@@ -125,7 +122,6 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: MFile, scan: in
     """
     y_labels = []
     y_pos = []
-    n_plot = 0
 
     # Build a mapping from itvar index to its name (description)
     con_names = {}

@@ -8,19 +8,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from process.core import constants
-from process.core.io.plot.summary.common import (
-    box_style,
-    text_layout,
-)
-from process.core.io.plot.summary.plasma.physics import (
-    reaction_plot_grid,
-)
-from process.core.io.plot.summary.profiles.misc import (
-    interp1d_profile,
-)
-from process.core.io.plot.summary.rendering import (
-    draw_text,
-)
+from process.core.io.plot.summary.common import box_style, text_layout
+from process.core.io.plot.summary.plasma.physics import reaction_plot_grid
+from process.core.io.plot.summary.profiles.misc import interp1d_profile
+from process.core.io.plot.summary.rendering import draw_text
+from process.data_structure.impurity_radiation_variables import ImpurityRadiationData
 from process.models.physics.profiles import PlasmaProfileShapeType
 
 if TYPE_CHECKING:
@@ -173,30 +165,13 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
         linewidth=1.5,
     )
 
-    if imp_frac[2] > 1.0e-30:
-        ax_impurity.plot(rho, imp_frac[2] * ne / 1e16, label=r"$n_{\text{Be}}$")
-    if imp_frac[3] > 1.0e-30:
-        ax_impurity.plot(rho, imp_frac[3] * ne / 1e16, label=r"$n_{\text{C}}$")
-    if imp_frac[4] > 1.0e-30:
-        ax_impurity.plot(rho, imp_frac[4] * ne / 1e16, label=r"$n_{\text{N}}$")
-    if imp_frac[5] > 1.0e-30:
-        ax_impurity.plot(rho, imp_frac[5] * ne / 1e16, label=r"$n_{\text{O}}$")
-    if imp_frac[6] > 1.0e-30:
-        ax_impurity.plot(rho, imp_frac[6] * ne / 1e16, label=r"$n_{\text{Ne}}$")
-    if imp_frac[7] > 1.0e-30:
-        ax_impurity.plot(rho, imp_frac[7] * ne / 1e16, label=r"$n_{\text{Si}}$")
-    if imp_frac[8] > 1.0e-30:
-        ax_impurity.plot(rho, imp_frac[8] * ne / 1e16, label=r"$n_{\text{Ar}}$")
-    if imp_frac[9] > 1.0e-30:
-        ax_impurity.plot(rho, imp_frac[9] * ne / 1e16, label=r"$n_{\text{Fe}}$")
-    if imp_frac[10] > 1.0e-30:
-        ax_impurity.plot(rho, imp_frac[10] * ne / 1e16, label=r"$n_{\text{Ni}}$")
-    if imp_frac[11] > 1.0e-30:
-        ax_impurity.plot(rho, imp_frac[11] * ne / 1e16, label=r"$n_{\text{Kr}}$")
-    if imp_frac[12] > 1.0e-30:
-        ax_impurity.plot(rho, imp_frac[12] * ne / 1e16, label=r"$n_{\text{Xe}}$")
-    if imp_frac[13] > 1.0e-30:
-        ax_impurity.plot(rho, imp_frac[13] * ne / 1e16, label=r"$n_{\text{W}}$")
+    imp_labels = ImpurityRadiationData().imp_label
+    for ind in range(2, imp_frac.shape[0]):
+        lbl = imp_labels[ind].replace("_", "")
+        if imp_frac[ind] > 1.0e-30:
+            ax_impurity.plot(
+                rho, imp_frac[ind] * ne / 1e16, label=rf"$n_{{\text{{{lbl}}}}}$"
+            )
 
     ax_main.legend(loc="best")
     ax_impurity.legend(loc="best")

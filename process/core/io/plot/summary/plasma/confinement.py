@@ -7,17 +7,13 @@ from typing import TYPE_CHECKING
 import matplotlib.pyplot as plt
 import numpy as np
 
-from process.core.io.plot.summary.rendering import (
-    draw_text,
-)
+from process.core.io.plot.summary.rendering import draw_text
 from process.data_structure.physics_variables import (
     ConfinementTimeModel,
     OutbordSOLPowerDecayLengthModel,
 )
 from process.models.physics.confinement_time import PlasmaConfinementTime
-from process.models.physics.exhaust import (
-    calculate_brunner_divertor_power_splits,
-)
+from process.models.physics.exhaust import calculate_brunner_divertor_power_splits
 
 if TYPE_CHECKING:
     from process.core.io.mfile import MFile
@@ -177,10 +173,7 @@ def plot_brunner_divertor_power_split_comparison_stackplot(
         label="$\u0394 r_{\\mathrm{sep}}$",
     )
     axis.set_ylim(0.0, 1.0)
-    axis.set_xlim(
-        -5 * len_plasma_sol_outboard_pd,
-        5 * len_plasma_sol_outboard_pd,
-    )
+    axis.set_xlim(-5 * len_plasma_sol_outboard_pd, 5 * len_plasma_sol_outboard_pd)
     axis.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.35)
     axis.set_title("Brunner Divertor Power Split Fractions")
     axis.set_xlabel("$\\Delta r_{\\mathrm{sep}}$ [m]")

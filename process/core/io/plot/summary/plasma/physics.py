@@ -8,26 +8,14 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 
-from process.core.io.plot.summary.common import (
-    box_style,
-)
-from process.core.io.plot.summary.constants import (
-    PLASMA_COLOUR,
-)
-from process.core.io.plot.summary.rendering import (
-    draw_text,
-)
+from process.core.io.plot.summary.common import box_style
+from process.core.io.plot.summary.constants import PLASMA_COLOUR
+from process.core.io.plot.summary.rendering import draw_text
 from process.models.build import Build
 from process.models.geometry.plasma import plasma_geometry
-from process.models.physics.physics import (
-    BetaNormMaxModel,
-)
-from process.models.physics.plasma_current import (
-    PlasmaCurrentModel,
-)
-from process.models.physics.plasma_geometry import (
-    PlasmaShapeModelType,
-)
+from process.models.physics.physics import BetaNormMaxModel
+from process.models.physics.plasma_current import PlasmaCurrentModel
+from process.models.physics.plasma_geometry import PlasmaShapeModelType
 
 if TYPE_CHECKING:
     from process.core.io.mfile import MFile

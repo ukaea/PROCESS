@@ -21,9 +21,7 @@ from process.core.io.plot.summary.constants import (
     THERMAL_SHIELD_COLOUR,
     VESSEL_COLOUR,
 )
-from process.core.io.plot.summary.rendering import (
-    draw_text,
-)
+from process.core.io.plot.summary.rendering import draw_text
 from process.models.pulse import PulseTimings
 
 if TYPE_CHECKING:
@@ -67,11 +65,11 @@ def box_style(colour: str):
     }
 
 
-def text_layout(fig):
+def text_layout(fig, h_align="left", v_align="bottom"):
     return {
         "fontsize": 9,
-        "verticalalignment": "bottom",
-        "horizontalalignment": "left",
+        "verticalalignment": v_align,
+        "horizontalalignment": h_align,
         "transform": fig.transFigure,
     }
 

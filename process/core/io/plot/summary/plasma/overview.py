@@ -7,30 +7,16 @@ from typing import TYPE_CHECKING, Literal, TypedDict
 
 import matplotlib.pyplot as plt
 
-from process.core.io.plot.summary.common import (
-    box_style,
-    load_plot_image,
-)
-from process.core.io.plot.summary.constants import (
-    white_box,
-)
-from process.core.io.plot.summary.plasma.physics import (
-    plot_plasma,
-)
-from process.core.io.plot.summary.rendering import (
-    draw_annotation,
-    draw_text,
-)
+from process.core.io.plot.summary.common import box_style, load_plot_image, text_layout
+from process.core.io.plot.summary.constants import white_box
+from process.core.io.plot.summary.plasma.physics import plot_plasma
+from process.core.io.plot.summary.rendering import draw_annotation, draw_text
 from process.data_structure.impurity_radiation_variables import ImpurityRadiationData
 from process.models.geometry.plasma import plasma_geometry
-from process.models.physics.bootstrap_current import (
-    BootstrapCurrentFractionModel,
-)
+from process.models.physics.bootstrap_current import BootstrapCurrentFractionModel
 from process.models.physics.current_drive import CurrentDriveModel
 from process.models.physics.density_limit import DensityLimitModel
-from process.models.physics.l_h_transition import (
-    PlasmaConfinementTransitionModel,
-)
+from process.models.physics.l_h_transition import PlasmaConfinementTransitionModel
 from process.models.physics.physics import (
     BetaComponentLimits,
     BetaNormMaxModel,
@@ -40,9 +26,7 @@ from process.models.physics.plasma_current import (
     PlasmaCurrentModel,
     PlasmaDiamagneticCurrentModel,
 )
-from process.models.physics.plasma_geometry import (
-    PlasmaGeometryModelType,
-)
+from process.models.physics.plasma_geometry import PlasmaGeometryModelType
 
 if TYPE_CHECKING:
     from matplotlib.transforms import Transform
@@ -274,10 +258,7 @@ def plot_main_plasma_information(
         0.365,
         0.975,
         textstr_plasma,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig, v_align="top"),
         bbox=box_style("lightyellow"),
     )
 
@@ -959,10 +940,7 @@ def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int
         0.05,
         0.45,
         textstr_debye,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig, v_align="top"),
         bbox=light_yellow_box,
     )
 
@@ -971,10 +949,7 @@ def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int
         0.25,
         0.45,
         textstr_larmor,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig, v_align="top"),
         bbox=light_yellow_box,
     )
 
@@ -983,10 +958,7 @@ def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int
         0.45,
         0.45,
         textstr_velocities,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig, v_align="top"),
         bbox=light_yellow_box,
     )
 
@@ -1002,10 +974,7 @@ def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int
         0.05,
         0.31,
         textstr_frequencies,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig, v_align="top"),
         bbox=light_cyan_box,
     )
 
@@ -1014,10 +983,7 @@ def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int
         0.25,
         0.31,
         textstr_coulomb,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig, v_align="top"),
         bbox=light_cyan_box,
     )
 
@@ -1026,10 +992,7 @@ def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int
         0.45,
         0.31,
         textstr_collision_times,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig, v_align="top"),
         bbox=light_cyan_box,
     )
 
@@ -1045,10 +1008,7 @@ def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int
         0.05,
         0.17,
         textstr_collision_freq,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig, v_align="top"),
         bbox=light_green_box,
     )
 
@@ -1057,10 +1017,7 @@ def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int
         0.25,
         0.17,
         textstr_mfp,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig, v_align="top"),
         bbox=light_green_box,
     )
 
@@ -1069,10 +1026,7 @@ def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int
         0.45,
         0.17,
         textstr_spitzer + "\n" + textstr_resistivity,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig, v_align="top"),
         bbox=light_green_box,
     )
 

@@ -6,20 +6,14 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
-from process.core.io.plot.summary.common import (
-    add_colourbar,
-)
+from process.core.io.plot.summary.common import add_colourbar
 from process.core.io.plot.summary.profiles.misc import (
     interp1d_profile,
     profiles_with_pedestal,
     read_imprad_data,
 )
-from process.core.io.plot.summary.rendering import (
-    draw_text,
-)
-from process.models.engineering.materials import (
-    poisson_steel,
-)
+from process.core.io.plot.summary.rendering import draw_text
+from process.models.engineering.materials import poisson_steel
 from process.models.pfcoil import N_CS_STRESS_PROFILE_POINTS, CSCoil
 
 if TYPE_CHECKING:

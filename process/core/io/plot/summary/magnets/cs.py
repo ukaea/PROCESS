@@ -8,21 +8,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import patches
 
-from process.core.io.plot.summary.common import (
-    box_style,
-    setup_axis,
-    text_layout,
-)
-from process.core.io.plot.summary.constants import (
-    SOLENOID_COLOUR,
-)
-from process.core.io.plot.summary.rendering import (
-    draw_annotation,
-    draw_text,
-)
-from process.core.io.plot.summary.reporting.text import (
-    plot_info,
-)
+from process.core.io.plot.summary.common import box_style, setup_axis, text_layout
+from process.core.io.plot.summary.constants import SOLENOID_COLOUR
+from process.core.io.plot.summary.rendering import draw_annotation, draw_text
+from process.core.io.plot.summary.reporting.text import plot_info
 from process.data_structure.pfcoil_variables import NFIXMX
 from process.models.superconductors import SuperconductorModel
 
