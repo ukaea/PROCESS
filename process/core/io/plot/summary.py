@@ -6650,7 +6650,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
         axis.set_title("Top-down view of inboard TF coil at midplane")
         axis.set_xlabel("Radial distance [m]")
         axis.set_ylabel("Toroidal distance [m]")
-        axis.legend(loc="upper left")
+        axis.legend(loc="lower center", bbox_to_anchor=(0.5, -0.4))
 
 
 def plot_resistive_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):

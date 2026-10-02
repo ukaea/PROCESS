@@ -1530,6 +1530,9 @@ class SuperconductingTFCoil(TFCoil):
                 a[2] = -0.85031e0
                 a[3] = 0.89808e0
             case _:
+                self.data.superconducting_tfcoil.f_b_tf_inboard_peak_ripple_symmetric = (
+                    1.09e0
+                )
                 return 1.09e0 * b_tf_inboard_peak_symmetric
 
         #  Maximum winding pack width before adjacent packs touch
