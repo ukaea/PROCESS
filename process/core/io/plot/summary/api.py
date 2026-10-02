@@ -69,6 +69,7 @@ from process.core.io.plot.summary.plasma.physics import (
     plot_plasma_outboard_toroidal_ripple_map,
 )
 from process.core.io.plot.summary.power_flow import (
+    plot_blanket_coolant_properties,
     plot_main_power_flow,
     plot_power_info,
 )
@@ -143,6 +144,7 @@ from process.core.io.plot.summary.time_profiles import (
     plot_system_power_profiles_over_time,
 )
 from process.models.physics.plasma_geometry import PlasmaShapeModelType
+from process.models.power import PumpingPowerModelTypes
 from process.models.tfcoil.base import TFConductorModel
 from process.models.tfcoil.superconducting import SuperconductingTFTurnType
 
@@ -792,17 +794,16 @@ def main_plot(
     )
     plot_fw_90_deg_pipe_bend(pages["fw_td_cross_section"].add_subplot(337), m_file, scan)
 
-    plot_blkt_pipe_bends(_add_page("blkt_pipe_bends"), m_file, scan)
-    ax_blanket = pages["blkt_pipe_bends"].add_subplot(122, aspect="equal")
+    ax_blanket = _add_page("blkt_structure").add_subplot(122, aspect="equal")
     plot_blkt_structure(
-        ax_blanket,
-        pages["blkt_pipe_bends"],
-        m_file,
-        scan,
-        radial_build,
-        colour_scheme,
+        ax_blanket, pages["blkt_pipe_bends"], m_file, scan, radial_build, colour_scheme
     )
-
+    plot_blkt_pipe_bends(_add_page("blkt_cooling"), m_file, scan)
+    if (
+        m_file.get("i_p_coolant_pumping", scan=scan)
+        == PumpingPowerModelTypes.CALCULATE_PRESSURE_DROP
+    ):
+        plot_blanket_coolant_properties(pages["blkt_cooling"], m_file, scan)
     plot_main_power_flow(
         _add_page("main_power_flow").add_subplot(111, aspect="equal"),
         m_file,
@@ -928,8 +929,6 @@ def plot_summary(
             color="dimgray",
         )
 
-    # create main plot
-    # Increase range when adding new page
     # run main_plot
     mfile_obj = MFile(mfile) if mfile else MFile("MFILE.DAT")
     run_label = (
