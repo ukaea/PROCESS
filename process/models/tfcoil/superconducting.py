@@ -4872,6 +4872,7 @@ class STEPIntegerTurnGeometry:
     a_tf_turn_tape_stack: float
     a_tf_turn_insulation: float
     a_tf_turn_stabiliser: float
+    dia_tf_turn_coolant_channel: float
 
 
 class STEPSuperconductingTFCoil(SuperconductingTFCoil):
@@ -4917,7 +4918,6 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
                     n_tf_wp_pancakes=self.data.tfcoil.n_tf_wp_pancakes,
                     c_tf_coil=self.data.superconducting_tfcoil.c_tf_coil,
                     dx_tf_turn_insulation=self.data.tfcoil.dx_tf_turn_insulation,
-                    dia_tf_turn_coolant_channel=self.data.tfcoil.dia_tf_turn_coolant_channel,
                 )
 
                 d_sc_tf.dr_tf_turn = integer_turn_geometry.dr_tf_turn
@@ -4947,6 +4947,9 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
 
                 d_sc_tf.dr_tf_hts_tape = (
                     self.data.superconducting_tfcoil.dr_tf_turn_tape_stack
+                )
+                self.data.tfcoil.dia_tf_turn_coolant_channel = (
+                    integer_turn_geometry.dia_tf_turn_coolant_channel
                 )
 
             case TFWPIntegerTurnType.NON_INTEGER:
@@ -5309,7 +5312,6 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
         n_tf_wp_pancakes: int,
         c_tf_coil: float,
         dx_tf_turn_insulation: float,
-        dia_tf_turn_coolant_channel: float,
     ) -> STEPIntegerTurnGeometry:
         """
         Calculate the integer-turn geometry for TF coil turns using a vertical
@@ -5333,8 +5335,6 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
             Total TF coil current [A].
         dx_tf_turn_insulation:
             Thickness of the turn (intra-turn) insulation [m].
-        dia_tf_turn_coolant_channel:
-            Diameter of the coolant channel inside the conductor [m].
 
         Returns
         -------
@@ -5394,11 +5394,15 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
         dr_tf_turn_stabiliser = dr_tf_turn - 2.0e0 * dx_tf_turn_insulation
         dx_tf_turn_stabiliser = dx_tf_turn - 2.0e0 * dx_tf_turn_insulation
 
+        dia_tf_turn_coolant_channel = min(
+            0.3 * dx_tf_turn_stabiliser, 0.8 * dr_tf_turn_stabiliser
+        )
+
         # Place coolant channel at bottom of turn with a gap equal to 10% of conductor
         # height
         x_tf_turn_coolant_channel_centre = (
             dx_tf_turn_insulation
-            + (0.1 * dx_tf_turn_stabiliser)
+            + (0.15 * dx_tf_turn_stabiliser)
             + (dia_tf_turn_coolant_channel / 2)
         )
 
@@ -5449,6 +5453,7 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
             a_tf_turn_tape_stack=a_tf_turn_tape_stack,
             a_tf_turn_insulation=a_tf_turn_insulation,
             a_tf_turn_stabiliser=a_tf_turn_stabiliser,
+            dia_tf_turn_coolant_channel=dia_tf_turn_coolant_channel,
         )
 
     def tf_step_superconductor_properties(
