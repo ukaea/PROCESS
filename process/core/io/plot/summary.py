@@ -13312,31 +13312,38 @@ def plot_tf_step_vertical_tape_turn(
         ),
     )
 
-    # Plot the tape stack
+    # Outline of the space available for the tape stack
     axis.add_patch(
         Rectangle(
             [(dr_tf_turn_stabiliser * 0.1 + dx_tf_turn_insulation), (dx_tf_turn * 0.5)],
             (dr_tf_turn_tape_stack),
             (dx_tf_turn_tape_stack),
-            facecolor="royalblue",
+            facecolor="none",
+            edgecolor="black",
+            linewidth=1,
         ),
     )
 
-    # Slice the tape stack into layers
+    # Tapes are packed from the bottom of the stack at the pitch used by the model
+    # to count them. Layer thicknesses are scaled so each tape sums to that pitch.
+    dx_hts_tape_total = mfile.get("dx_tf_hts_tape_total", scan=scan)
+    dx_hts_tape_rebco = mfile.get("dx_tf_hts_tape_rebco", scan=scan)
+    dx_hts_tape_copper = mfile.get("dx_tf_hts_tape_copper", scan=scan)
+    dx_hts_tape_hastelloy = mfile.get("dx_tf_hts_tape_hastelloy", scan=scan)
+    tape_scale = dx_hts_tape_total / (
+        dx_hts_tape_rebco + dx_hts_tape_copper + dx_hts_tape_hastelloy
+    )
+    dr_hts_tape = mfile.get("dr_tf_hts_tape", scan=scan)
+
     for i in range(int(mfile.get("n_tf_turn_superconducting_strands", scan=scan))):
-        y_start = (dx_tf_turn * 0.5) + i * (
-            mfile.get("dx_tf_turn_tape_stack", scan=scan)
-            / mfile.get("n_tf_turn_superconducting_strands", scan=scan)
-        )
         plot_hts_tape_geometry(
             axis=axis,
-            r_left=(mfile.get("dr_tf_turn", scan=scan) / 2)
-            - (mfile.get("dr_tf_hts_tape", scan=scan) / 2),
-            z_bottom=y_start,
-            dr_hts_tape=mfile.get("dr_tf_hts_tape", scan=scan),
-            dx_hts_tape_rebco=mfile.get("dx_tf_hts_tape_rebco", scan=scan),
-            dx_hts_tape_copper=mfile.get("dx_tf_hts_tape_copper", scan=scan),
-            dx_hts_tape_hastelloy=mfile.get("dx_tf_hts_tape_hastelloy", scan=scan),
+            r_left=(dr_tf_turn / 2) - (dr_hts_tape / 2),
+            z_bottom=(dx_tf_turn * 0.5) + i * dx_hts_tape_total,
+            dr_hts_tape=dr_hts_tape,
+            dx_hts_tape_rebco=dx_hts_tape_rebco * tape_scale,
+            dx_hts_tape_copper=dx_hts_tape_copper * tape_scale,
+            dx_hts_tape_hastelloy=dx_hts_tape_hastelloy * tape_scale,
             show_legend=False,
         )
 
