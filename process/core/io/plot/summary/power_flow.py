@@ -1972,4 +1972,66 @@ def plot_power_info(axis: plt.Axes, mfile: MFile, scan: int):
     plot_info(axis, data, mfile, scan)
 
 
-__all__ = ["plot_main_power_flow", "plot_power_info"]
+def plot_blanket_coolant_properties(fig: plt.Figure, m_file: MFile, scan: int):
+    """Combined plot of blanket coolant channel structure and properties."""
+    for side, x_position in (("inboard", 0.1), ("outboard", 0.5)):
+
+        def get(variable: str):
+            return m_file.get(variable, scan=scan)
+
+        text = (
+            f"$\\mathbf{{{side.capitalize()} \\ blanket:}}$\n \n"
+            "Radius of blanket channel: "
+            f"{m_file.get('radius_blkt_channel', scan=scan):.4f} m\n"
+            "Channel roughness ($\\epsilon$): "
+            f"{m_file.get('roughness_fw_channel', scan=scan):.4e} m\n\n"
+            "Radial coolant channel length: "
+            f"{get(f'len_blkt_{side}_coolant_channel_radial'):.4f} m\n"
+            "Poloidal coolant channel length: "
+            f"{get(f'len_blkt_{side}_segment_poloidal'):.4f} m\n"
+            "Number of radial channels: "
+            f"{get(f'n_blkt_{side}_module_coolant_sections_radial')}\n"
+            "Number of poloidal channels: "
+            f"{get(f'n_blkt_{side}_module_coolant_sections_poloidal')}\n"
+            "Total length of coolant channel straight sections: "
+            f"{get(f'len_blkt_{side}_channel_total'):.4f} m\n\n"
+            "Pressure drop for straight sections: "
+            f"{get(f'dpres_blkt_{side}_coolant_channel_straight_total'):,.2f} Pa\n"
+            "Pressure drop for 90° bends: "
+            f"{get(f'dpres_blkt_{side}_coolant_channel_90_bend'):,.2f} Pa\n"
+            "Total pressure drop for 90° bends: "
+            f"{get(f'dpres_blkt_{side}_coolant_channel_90_bends_total'):,.2f} Pa\n"
+            "Pressure drop for 180° bends: "
+            f"{get(f'dpres_blkt_{side}_coolant_channel_180_bend'):,.2f} Pa\n"
+            "Total pressure drop for 180° bends: "
+            f"{get(f'dpres_blkt_{side}_coolant_channel_180_bends_total'):,.2f} Pa\n"
+            "Total pressure drop for all bends: "
+            f"{get(f'dpres_blkt_{side}_bends_total'):,.2f} Pa\n\n"
+            "Reynolds number ($Re$): "
+            f"{get(f'reynolds_blkt_{side}_coolant'):,.4f}\n"
+            "Darcy Friction factor ($f$): "
+            f"{get(f'darcy_frict_blkt_{side}_coolant'):.4f}\n\n"
+            "Friction drop coefficient for straight sections: "
+            f"{get(f'f_straight_blkt_{side}_coolant'):.4f}\n"
+            "Friction drop coefficient for 90° bends: "
+            f"{get(f'f_elbow_blkt_{side}_90_bend'):.4f}\n"
+            "Friction drop coefficient for 180° bends: "
+            f"{get(f'f_elbow_blkt_{side}_180_bend'):.4f}\n\n"
+            "Total coolant mass flow rate: "
+            f"{get(f'mflow_blkt_{side}_coolant'):.4f} kg/s\n"
+            "Coolant mass flow rate in single channel: "
+            f"{get(f'mflow_blkt_{side}_coolant_channel'):.4f} kg/s\n"
+            "Coolant velocity in single channel: "
+            f"{get(f'vel_blkt_{side}_coolant'):.4f} m/s"
+        )
+
+        fig.text(
+            x_position,
+            0.5,
+            text,
+            **text_layout(fig, v_align="top"),
+            bbox=box_style("wheat"),
+        )
+
+
+__all__ = ["plot_blanket_coolant_properties", "plot_main_power_flow", "plot_power_info"]
