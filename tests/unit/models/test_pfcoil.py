@@ -2470,7 +2470,6 @@ class PFCoilParam(NamedTuple):
     itart: Any = None
     beta_poloidal_vol_avg: Any = None
     temp_tf_operating: Any = None
-    dcond: Any = None
     fhts: Any = None
     tcritsc: Any = None
     str_pf_con_res: Any = None
@@ -2543,7 +2542,6 @@ class PFCoilParam(NamedTuple):
             itart=0,
             beta_poloidal_vol_avg=6.313e-1,
             temp_tf_operating=4.750,
-            dcond=np.full(9, 9.0e3),
             fhts=0.5,
             tcritsc=1.6e1,
             str_pf_con_res=-5.0e-3,
@@ -2649,7 +2647,6 @@ def test_pfcoil(monkeypatch, pfcoil, pfcoilparam):
 
     for field in [
         "temp_tf_operating",
-        "dcond",
         "fhts",
         "tcritsc",
         "str_pf_con_res",
@@ -2712,7 +2709,6 @@ class OhCalcParam(NamedTuple):
     z_pf_coil_lower: Any = None
     n_pf_coil_turns: Any = None
     m_pf_coil_structure: Any = None
-    dcond: Any = None
     temp_tf_operating: Any = None
     tcritsc: Any = None
     str_cs_con_res: Any = None
@@ -2765,7 +2761,6 @@ class OhCalcParam(NamedTuple):
             z_pf_coil_lower=np.full(22, 0.0),
             n_pf_coil_turns=np.full(22, 0.0),
             m_pf_coil_structure=np.full(22, 0.0),
-            dcond=np.full(9, 9.0e3),
             temp_tf_operating=4.750,
             tcritsc=1.6e1,
             str_cs_con_res=-5.000e-3,
@@ -2841,7 +2836,6 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, cs_coil, ohcalcparam):
         monkeypatch.setattr(cs_coil.data.pf_coil, field, getattr(ohcalcparam, field))
 
     for field in [
-        "dcond",
         "temp_tf_operating",
         "tcritsc",
         "str_cs_con_res",
