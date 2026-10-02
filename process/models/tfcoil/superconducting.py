@@ -2543,7 +2543,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
         # Calculate TF coil areas and masses
         self.generic_tf_coil_area_and_masses()
-        tf_areas_masses = self.superconducting_tf_coil_areas_and_masses()
+        tf_areas_masses = self.tf_cicc_areas_and_masses()
         self.data.tfcoil.m_tf_coil_wp_insulation = (
             tf_areas_masses.m_tf_coil_wp_insulation
         )
@@ -3714,6 +3714,135 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             f_a_tf_coil_inboard_insulation=f_a_tf_coil_inboard_insulation,
         )
 
+    def tf_cicc_areas_and_masses(self) -> SuperconTFAreasAndMasses:
+        """Calculate areas and masses of superconducting TF coil components."""
+
+        # Mass of ground-wall insulation [kg]
+        # (assumed to be same density/material as turn insulation)
+        d_sc_tf = self.data.superconducting_tfcoil
+
+        m_tf_coil_wp_insulation = (
+            self.data.tfcoil.len_tf_coil
+            * (d_sc_tf.a_tf_wp_with_insulation - d_sc_tf.a_tf_wp_no_insulation)
+            * self.data.tfcoil.den_tf_wp_turn_insulation
+        )
+
+        # The length of the vertical section is that of the first (inboard) segment
+        # = height of TF coil inner edge + (2 * coil thickness)
+        cplen = (2.0e0 * self.data.build.z_tf_inside_half) + (
+            2.0e0 * self.data.build.dr_tf_inboard
+        )
+
+        # The 2.2 factor is used as a scaling factor to fit
+        # to the ITER-FDR value of 450 tonnes; see CCFE note T&M/PKNIGHT/PROCESS/026
+        if self.data.physics.itart == 1:
+            # self.data.tfcoil.len_tf_coil does not include inboard leg
+            # ('centrepost') length in TART
+            m_tf_coil_case = (
+                2.2e0
+                * self.data.tfcoil.den_tf_coil_case
+                * (
+                    cplen * self.data.tfcoil.a_tf_coil_inboard_case
+                    + self.data.tfcoil.len_tf_coil
+                    * self.data.tfcoil.a_tf_coil_outboard_case
+                )
+            )
+        else:
+            m_tf_coil_case = (
+                2.2e0
+                * self.data.tfcoil.den_tf_coil_case
+                * (
+                    cplen * self.data.tfcoil.a_tf_coil_inboard_case
+                    + (self.data.tfcoil.len_tf_coil - cplen)
+                    * self.data.tfcoil.a_tf_coil_outboard_case
+                )
+            )
+
+        # ***
+
+        # Masses of conductor constituents
+        # ---------------------------------
+        # Superconductor mass [kg]
+        # Includes space allowance for central helium channel, area
+        # self.data.tfcoil.a_tf_wp_coolant_channels
+        m_tf_coil_superconductor = (
+            self.data.tfcoil.len_tf_coil
+            * self.data.tfcoil.n_tf_coil_turns
+            * self.data.tfcoil.a_tf_turn_cable_space_no_void
+            * (1.0e0 - self.data.tfcoil.f_a_tf_turn_cable_space_extra_void)
+            * (1.0e0 - self.data.tfcoil.f_a_tf_turn_cable_copper)
+            - self.data.tfcoil.len_tf_coil * self.data.tfcoil.a_tf_wp_coolant_channels
+        ) * self.data.tfcoil.dcond[self.data.tfcoil.i_tf_sc_mat - 1]
+
+        # Copper mass [kg]
+        m_tf_coil_copper = (
+            self.data.tfcoil.len_tf_coil
+            * self.data.tfcoil.n_tf_coil_turns
+            * self.data.tfcoil.a_tf_turn_cable_space_no_void
+            * (1.0e0 - self.data.tfcoil.f_a_tf_turn_cable_space_extra_void)
+            * self.data.tfcoil.f_a_tf_turn_cable_copper
+            - self.data.tfcoil.len_tf_coil * self.data.tfcoil.a_tf_wp_coolant_channels
+        ) * constants.DEN_COPPER
+        m_tf_coil_copper = max(0.0e0, m_tf_coil_copper)
+
+        # Steel conduit (sheath) mass [kg]
+        m_tf_wp_steel_conduit = (
+            self.data.tfcoil.len_tf_coil
+            * self.data.tfcoil.n_tf_coil_turns
+            * self.data.tfcoil.a_tf_turn_steel
+            * self.data.fwbs.den_steel
+        )
+
+        # Conduit insulation mass [kg]
+        # (self.data.tfcoil.a_tf_coil_wp_turn_insulation already contains
+        # self.data.tfcoil.n_tf_coil_turns)
+        m_tf_coil_wp_turn_insulation = (
+            self.data.tfcoil.len_tf_coil
+            * self.data.tfcoil.a_tf_coil_wp_turn_insulation
+            * self.data.tfcoil.den_tf_wp_turn_insulation
+        )
+
+        # Total conductor mass [kg]
+        m_tf_coil_conductor = (
+            m_tf_coil_superconductor
+            + m_tf_coil_copper
+            + m_tf_wp_steel_conduit
+            + m_tf_coil_wp_turn_insulation
+        )
+        # ---------------------------------
+
+        # Total TF coil mass [kg] (all coils)
+        m_tf_coil = m_tf_coil_case + m_tf_coil_conductor + m_tf_coil_wp_insulation
+
+        # Total TF coil mass [kg] (all coils)
+        m_tf_coils_total = m_tf_coil * self.data.tfcoil.n_tf_coils
+
+        # If spherical tokamak, distribute between centrepost and outboard legs
+        # (in this case, total TF coil length = inboard `cplen` +
+        # outboard `len_tf_coil`)
+        if self.data.physics.itart == 1:
+            tfleng_sph = self.data.tfcoil.cplen + self.data.tfcoil.len_tf_coil
+            whtcp = m_tf_coils_total * (self.data.tfcoil.cplen / tfleng_sph)
+            whttflgs = m_tf_coils_total * (self.data.tfcoil.len_tf_coil / tfleng_sph)
+        else:
+            whtcp = 0.0
+            whttflgs = 0.0
+
+        return SuperconTFAreasAndMasses(
+            m_tf_coil_wp_insulation=m_tf_coil_wp_insulation,
+            cplen=cplen,
+            m_tf_coil_case=m_tf_coil_case,
+            m_tf_coil_superconductor=m_tf_coil_superconductor,
+            m_tf_coil_copper=m_tf_coil_copper,
+            m_tf_wp_steel_conduit=m_tf_wp_steel_conduit,
+            m_tf_coil_conductor=m_tf_coil_conductor,
+            m_tf_coil_wp_turn_insulation=m_tf_coil_wp_turn_insulation,
+            m_tf_coil=m_tf_coil,
+            m_tf_coils_total=m_tf_coils_total,
+            whtcp=whtcp,
+            whttflgs=whttflgs,
+        )
+    
     def output_cable_in_conduit_cable_info(self) -> None:
         """
         Outputs the calculated cable in conduit cable space geometry information
@@ -5192,9 +5321,6 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
             tf_areas_masses.m_tf_coil_wp_turn_insulation
         )
         self.data.tfcoil.m_tf_coil_conductor = tf_areas_masses.m_tf_coil_conductor
-        self.data.tfcoil.m_tf_coil_inboard_steel = (
-            tf_areas_masses.m_tf_coil_inboard_steel
-        )
         self.data.tfcoil.m_tf_coil = tf_areas_masses.m_tf_coil
         self.data.tfcoil.m_tf_coils_total = tf_areas_masses.m_tf_coils_total
         self.data.tfcoil.whtcp = tf_areas_masses.whtcp
