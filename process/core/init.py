@@ -1118,7 +1118,8 @@ def check_process(inputs, data):  # noqa: ARG001
 
         if data.numerics.boundl[139] < dr_tf_wp_min:
             raise ProcessValidationError(
-                "The TF coil WP thickness (dr_tf_wp_with_insulation) must be at least",
+                "The TF coil WP thickness (dr_tf_wp_with_insulation) lower bound must "
+                "be at least",
                 dr_tf_wp_min=dr_tf_wp_min,
             )
 
