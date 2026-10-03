@@ -391,6 +391,20 @@ def check_process(inputs, data):  # noqa: ARG001
                 f_plasma_fuel_boron11=data.physics.f_plasma_fuel_boron11,
                 f_plasma_fuel_proton=data.physics.f_plasma_fuel_proton,
             )
+        if (
+            abs(
+                data.physics.f_plasma_fuel_deuterium
+                + data.physics.f_plasma_fuel_tritium
+                + data.physics.f_plasma_fuel_helium3
+            )
+             > 1e-6
+        ):
+            raise ProcessValidationError(
+                "D-T Fuel ion fractions do not sum to 0.0",
+                f_plasma_fuel_deuterium=data.physics.f_plasma_fuel_deuterium,
+                f_plasma_fuel_tritium=data.physics.f_plasma_fuel_tritium,
+                f_plasma_fuel_helium3=data.physics.f_plasma_fuel_helium3,
+            )
     elif (
         abs(
             1.0
@@ -398,13 +412,18 @@ def check_process(inputs, data):  # noqa: ARG001
             - data.physics.f_plasma_fuel_tritium
             - data.physics.f_plasma_fuel_helium3
         )
-        > 1e-6
+        > 1e-6 or abs(
+            data.physics.f_plasma_fuel_boron11
+            + data.physics.f_plasma_fuel_proton
+        ) > 1e-6
     ):
         raise ProcessValidationError(
             "Fuel ion fractions do not sum to 1.0",
             f_plasma_fuel_deuterium=data.physics.f_plasma_fuel_deuterium,
             f_plasma_fuel_tritium=data.physics.f_plasma_fuel_tritium,
             f_plasma_fuel_helium3=data.physics.f_plasma_fuel_helium3,
+            f_plasma_fuel_boron11=data.physics.f_plasma_fuel_boron11,
+            f_plasma_fuel_proton=data.physics.f_plasma_fuel_proton,
         )
 
     if data.physics.f_plasma_fuel_tritium < 1.0e-3:  # tritium fraction is negligible
