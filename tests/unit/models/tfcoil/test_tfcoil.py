@@ -792,6 +792,8 @@ def test_generic_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, 
 
 
 class StressclParam(NamedTuple):
+    expected_data_key: str = ""
+
     dr_tf_inboard: Any = None
 
     r_tf_inboard_mid: Any = None
@@ -975,6 +977,7 @@ class StressclParam(NamedTuple):
     "stressclparam",
     [
         StressclParam(
+            expected_data_key="case_1",
             dr_tf_inboard=1.208,
             i_tf_inside_cs=TFCSRadialConfiguration.TF_OUTSIDE_CS,
             dr_cs_tf_gap=0.01,
@@ -1091,6 +1094,7 @@ class StressclParam(NamedTuple):
             expected_str_wp=0.0015619754370069119,
         ),
         StressclParam(
+            expected_data_key="case_2",
             dr_tf_inboard=1.208,
             i_tf_inside_cs=TFCSRadialConfiguration.TF_OUTSIDE_CS,
             dr_cs_tf_gap=0.01,
@@ -1220,32 +1224,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    (
-        _,
-        _,
-        _,
-        _,
-        _,
-        _,
-        _,
-        _,
-        _,
-        _,
-        _,
-        _,
-        _,
-        _,
-        _,
-        _,
-        _,
-        sig_tf_wp,
-        sig_tf_case,
-        _,
-        str_wp,
-        casestr,
-        insstrain,
-        _,
-    ) = tfcoil.stresscl(
+    result = tfcoil.stresscl(
         n_tf_layer=stressclparam.n_tf_layer,
         n_radial_array=stressclparam.n_radial_array,
         n_tf_wp_stress_layers=stressclparam.n_tf_wp_stress_layers,
@@ -1314,15 +1293,22 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         a_cs_poloidal=stressclparam.a_cs_poloidal,
     )
 
-    assert casestr == pytest.approx(stressclparam.expected_casestr, rel=0.01)
+    with open(Path(__file__).parent / "tf_stresscl_expected_data.json") as data_file:
+        expected_result = json.load(data_file)[stressclparam.expected_data_key]
 
-    assert sig_tf_case == pytest.approx(stressclparam.expected_sig_tf_case, rel=0.01)
+    def assert_matches_expected(actual, expected):
+        if isinstance(actual, np.ndarray):
+            np.testing.assert_allclose(actual, expected, rtol=1e-9, atol=1e-6)
+        elif isinstance(actual, tuple) and hasattr(actual, "_fields"):
+            for name in actual._fields:
+                assert_matches_expected(getattr(actual, name), expected[name])
+        elif isinstance(actual, tuple):
+            for actual_item, expected_item in zip(actual, expected, strict=True):
+                assert_matches_expected(actual_item, expected_item)
+        else:
+            assert actual == pytest.approx(expected, rel=1e-9, abs=1e-6)
 
-    assert sig_tf_wp == pytest.approx(stressclparam.expected_sig_tf_wp, rel=0.01)
-
-    assert insstrain == pytest.approx(stressclparam.expected_insstrain, rel=0.01)
-
-    assert str_wp == pytest.approx(stressclparam.expected_str_wp, rel=0.01)
+    assert_matches_expected(result, expected_result)
 
 
 class PlaneStressParam(NamedTuple):
