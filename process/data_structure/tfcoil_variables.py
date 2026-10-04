@@ -1,6 +1,7 @@
 """Module containing variables for the TF coil models"""
 
 from dataclasses import dataclass, field
+from enum import IntEnum, unique
 
 import numpy as np
 
@@ -8,6 +9,26 @@ N_RADIAL_ARRAY = 50
 """Size of the radial distribution arrays per layers
 used for stress, strain and displacement distribution
 """
+
+
+@unique
+class TFInboardSupportStrategy(IntEnum):
+    """TF inboard support configuration selected by ``i_tf_bucking``."""
+
+    DEFAULT = -1
+    """Backward-compatible default; resolved based on the TF conductor model."""
+
+    NO_INBOARD_SUPPORT = 0
+    """No explicit inboard support layer in the TF stress model."""
+
+    CASE_OR_BUCKING_CYLINDER = 1
+    """TF case for superconducting coils or a bucking cylinder for resistive coils."""
+
+    CS_BUCKED_WEDGED_NO_INTERFACE = 2
+    """Bucked-and-wedged TF/CS model without an explicit TF-CS interface layer."""
+
+    CS_BUCKED_WEDGED_WITH_KAPTON_INTERFACE = 3
+    """Bucked-and-wedged TF/CS model with an explicit Kapton interface layer."""
 
 
 @dataclass(slots=True)
@@ -300,24 +321,12 @@ class TFData:
     """
 
     i_tf_bucking: int = -1
-    """Switch for TF inboard support structure design:
-    Default setting for backward compatibility
-    - if copper resistive TF (i_tf_sup = 0) : Free standing TF without bucking structure
-    - if Superconducting TF  (i_tf_sup = 1) : Free standing TF with a steel casing
-    - if aluminium  TF       (i_tf_sup = 2) : Free standing TF with a bucking structure
-    Rem : the case is a bucking structure
-    - =0 : Free standing TF without case/bucking cylinder (only a conductor layer)
-    - =1 : Free standing TF with a case/bucking cylinder made of
-    - if copper resistive     TF (i_tf_sup = 0) : used defined bucking cylinder
-    - if Superconducting      TF (i_tf_sup = 1) : Steel casing
-    - if aluminium resistive TF (i_tf_sup = 2) : used defined bucking cylinder
-    - =2 : The TF is in contact with the CS : "bucked and wedged design"
-    Fast version : thin TF-CS interface neglected in the stress calculations (3 layers)
-    The CS is frictionally decoupled from the TF, does not carry axial tension
-    - =3 : The TF is in contact with the CS : "bucked and wedged design"
-    Full version : thin TF-CS Kapton interface introduced in the stress calculations (4 layers)
-    The CS and Kapton are frictionally decoupled from the TF, do not carry
-    axial tension
+    """Integer-valued TF inboard support strategy; see `TFInboardSupportStrategy`.
+
+    ``DEFAULT`` is resolved during initialization: copper TF defaults to no explicit
+    inboard support, while superconducting and aluminium TF default to a case/bucking
+    cylinder. Values 2 and 3 select bucked-and-wedged TF/CS stress models, respectively
+    without and with an explicit Kapton interface layer.
     """
 
     n_tf_graded_layers: int = 1

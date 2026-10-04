@@ -33,6 +33,7 @@ from process.data_structure.physics_variables import (
 )
 from process.data_structure.stellarator_variables import StellaratorModel
 from process.data_structure.superconducting_tf_coil_variables import TFWPIntegerTurnType
+from process.data_structure.tfcoil_variables import TFInboardSupportStrategy
 from process.models.pfcoil import PFLocationTypes
 from process.models.physics.profiles import (
     DensityProfilePedestalType,
@@ -933,14 +934,18 @@ def check_process(inputs, data):  # noqa: ARG001
     # - Bucking for aluminium magnets ( i_tf_bucking = 1 )
     if data.tfcoil.i_tf_bucking == -1:
         if data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
-            data.tfcoil.i_tf_bucking = 0
+            data.tfcoil.i_tf_bucking = TFInboardSupportStrategy.NO_INBOARD_SUPPORT
         else:
-            data.tfcoil.i_tf_bucking = 1
+            data.tfcoil.i_tf_bucking = TFInboardSupportStrategy.CASE_OR_BUCKING_CYLINDER
 
     # Ensure that the TF isnt placed against the
     # CS which is now outside it
     if (
-        data.tfcoil.i_tf_bucking >= 2
+        data.tfcoil.i_tf_bucking
+        in {
+            TFInboardSupportStrategy.CS_BUCKED_WEDGED_NO_INTERFACE,
+            TFInboardSupportStrategy.CS_BUCKED_WEDGED_WITH_KAPTON_INTERFACE,
+        }
         and data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS
     ):
         raise ProcessValidationError(
@@ -950,7 +955,11 @@ def check_process(inputs, data):  # noqa: ARG001
     # Ensure that no pre-compression structure
     # is used for bucked and wedged design
     if (
-        data.tfcoil.i_tf_bucking >= 2
+        data.tfcoil.i_tf_bucking
+        in {
+            TFInboardSupportStrategy.CS_BUCKED_WEDGED_NO_INTERFACE,
+            TFInboardSupportStrategy.CS_BUCKED_WEDGED_WITH_KAPTON_INTERFACE,
+        }
         and CSPrecompressionConfiguration(data.build.i_cs_precomp)
         == CSPrecompressionConfiguration.CS_PRECOMPRESSION_STRUCTURE_PRESENT
     ):

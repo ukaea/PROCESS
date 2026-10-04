@@ -16,6 +16,7 @@ from process.data_structure.build_variables import (
     TFCSRadialConfiguration,
 )
 from process.data_structure.physics_variables import DivertorNumberModels
+from process.data_structure.tfcoil_variables import TFInboardSupportStrategy
 from process.models.physics.current_drive import (
     CurrentDriveMethodType,
     CurrentDriveModel,
@@ -1382,7 +1383,11 @@ class Build(Model):
 
         if (
             self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS
-            and self.data.tfcoil.i_tf_bucking >= 2
+            and self.data.tfcoil.i_tf_bucking
+            in {
+                TFInboardSupportStrategy.CS_BUCKED_WEDGED_NO_INTERFACE,
+                TFInboardSupportStrategy.CS_BUCKED_WEDGED_WITH_KAPTON_INTERFACE,
+            }
         ):
             po.ocmmnt(
                 self.outfile,
@@ -1398,7 +1403,11 @@ class Build(Model):
         if bld.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS:
             bore_descr += (
                 "wedge support cylinder"
-                if self.data.tfcoil.i_tf_bucking >= 2
+                if self.data.tfcoil.i_tf_bucking
+                in {
+                    TFInboardSupportStrategy.CS_BUCKED_WEDGED_NO_INTERFACE,
+                    TFInboardSupportStrategy.CS_BUCKED_WEDGED_WITH_KAPTON_INTERFACE,
+                }
                 else "hole"
             )
 

@@ -14,6 +14,7 @@ from process.core.exceptions import ProcessError, ProcessValueError
 from process.data_structure.build_variables import TFCSRadialConfiguration
 from process.data_structure.physics_variables import ConfinementRadiationLossModel
 from process.data_structure.stellarator_variables import StellaratorModel
+from process.data_structure.tfcoil_variables import TFInboardSupportStrategy
 from process.models.physics.density_limit import DensityLimitModel
 from process.models.physics.exhaust import PlasmaExhaust
 from process.models.physics.physics import (
@@ -1579,7 +1580,11 @@ def constraint_equation_72(constraint_registration, data):
     """
     # bucked and wedged desing
     if (
-        data.tfcoil.i_tf_bucking >= 2
+        data.tfcoil.i_tf_bucking
+        in {
+            TFInboardSupportStrategy.CS_BUCKED_WEDGED_NO_INTERFACE,
+            TFInboardSupportStrategy.CS_BUCKED_WEDGED_WITH_KAPTON_INTERFACE,
+        }
         and data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_OUTSIDE_CS
     ):
         return leq(

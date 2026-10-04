@@ -21,6 +21,7 @@ from process.data_structure.build_variables import TFCSRadialConfiguration
 from process.data_structure.pfcoil_variables import PFConductorModel
 from process.data_structure.physics_variables import DivertorNumberModels
 from process.data_structure.superconducting_tf_coil_variables import TFWPIntegerTurnType
+from process.data_structure.tfcoil_variables import TFInboardSupportStrategy
 from process.models.engineering.materials import (
     calculate_tresca_stress,
     calculate_von_mises_stress,
@@ -783,9 +784,9 @@ class TFCoil(Model):
             self.data.tfcoil.i_tf_bucking,
         )
         match self.data.tfcoil.i_tf_bucking:
-            case 0:
+            case TFInboardSupportStrategy.NO_INBOARD_SUPPORT:
                 po.ocmmnt(self.outfile, "  -> No support structure")
-            case 1:
+            case TFInboardSupportStrategy.CASE_OR_BUCKING_CYLINDER:
                 if self.data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
                     po.ocmmnt(self.outfile, "  -> Steel casing")
                 elif (
@@ -796,18 +797,20 @@ class TFCoil(Model):
                 else:
                     po.ocmmnt(self.outfile, "  -> Bucking cylinder")
 
-            case 2 | 3 if (
-                self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS
-            ):
+            case (
+                TFInboardSupportStrategy.CS_BUCKED_WEDGED_NO_INTERFACE
+                | TFInboardSupportStrategy.CS_BUCKED_WEDGED_WITH_KAPTON_INTERFACE
+            ) if self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS:
                 po.ocmmnt(
                     self.outfile,
                     "  -> TF in contact with dr_bore filler support "
                     "(bucked and weged design)",
                 )
 
-            case 2 | 3 if (
-                self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_OUTSIDE_CS
-            ):
+            case (
+                TFInboardSupportStrategy.CS_BUCKED_WEDGED_NO_INTERFACE
+                | TFInboardSupportStrategy.CS_BUCKED_WEDGED_WITH_KAPTON_INTERFACE
+            ) if self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_OUTSIDE_CS:
                 po.ocmmnt(
                     self.outfile, "  -> TF in contact with CS (bucked and wedged design)"
                 )
