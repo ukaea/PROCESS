@@ -5076,6 +5076,32 @@ class CoelcParam(NamedTuple):
 
 
 @pytest.mark.parametrize(
+    ("life_blkt_fpy", "expected_life_blkt"),
+    [
+        # Blanket lifetime shorter than the plant life: converted to calendar years
+        (10.0, 7.5),
+        # Blanket lifetime not shorter than the plant life (e.g. negligible neutron
+        # wall load in a pure-deuterium plasma): kept as is. cdrlife_cal must
+        # still be set, otherwise coelc() divides by zero
+        (40.0, 40.0),
+    ],
+)
+def test_convert_fpy_to_calendar(life_blkt_fpy, expected_life_blkt, monkeypatch, costs):
+    monkeypatch.setattr(costs.data.costs, "life_plant", 40.0)
+    monkeypatch.setattr(costs.data.costs, "f_t_plant_available", 0.75)
+    monkeypatch.setattr(costs.data.costs, "life_div_fpy", 5.0)
+    monkeypatch.setattr(costs.data.costs, "cplife", 5.0)
+    monkeypatch.setattr(costs.data.fwbs, "life_blkt_fpy", life_blkt_fpy)
+    monkeypatch.setattr(costs.data.costs, "cdrlife_cal", 0.0)
+
+    costs.convert_fpy_to_calendar()
+
+    assert costs.data.fwbs.life_blkt == pytest.approx(expected_life_blkt)
+    assert costs.data.costs.cdrlife_cal == pytest.approx(expected_life_blkt)
+    assert costs.data.costs.cdrlife_cal > 0.0
+
+
+@pytest.mark.parametrize(
     "coelcparam",
     [
         CoelcParam(
