@@ -2586,124 +2586,37 @@ class TFCoilStress(Model):
         if i_tf_bucking >= 2:
             # Calculation performed at CS flux swing (no current on CS)
             layer_properties.current_density[0] = 0.0e0
-
-            # Inner radius of the CS
-            if i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS:
-                # CS not used as wedge support i_tf_inside_cs = 1 (TF inside CS)
-                layer_properties.radii[0] = 0.001
-            else:
-                layer_properties.radii[0] = dr_bore
-
-            # Superconducting CS
-            if i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
-                # Getting the turn dimention from scratch
-                # as the TF is called before CS in caller.f90
-                # -#
-
-                # Maximum current in Central Solenoid, at either BOP or EOF [MA-turns]
-                # Absolute value
-                curr_oh_max = (
-                    1.0e-6
-                    * np.maximum(j_cs_flat_top_end, j_cs_pulse_start)
-                    * a_cs_poloidal
-                )
-
-                #  Number of turns
-                n_oh_turns = (
-                    1.0e6
-                    * curr_oh_max
-                    / c_pf_coil_turn_peak_input[sum(n_pf_coils_in_group)]
-                )
-
-                # CS Turn vertical cross-sectionnal area
-                a_cs_turn = a_cs_poloidal / n_oh_turns
-
-                # CS coil turn geometry calculation - stadium shape
-                # Literature: https://doi.org/10.1016/j.fusengdes.2017.04.052
-                dz_cs_turn = (
-                    a_cs_turn / f_dr_dz_cs_turn
-                ) ** 0.5  # width of cs turn conduit
-                dr_cs_turn = f_dr_dz_cs_turn * dz_cs_turn  # length of cs turn conduit
-                # Radius of turn space = radius_cs_turn_cable_space
-                # Radius of curved outer corrner radius_cs_turn_corners = 3mm
-                # from literature
-                # f_dr_dz_cs_turn = 70 / 22 from literature
-                p1 = ((dr_cs_turn - dz_cs_turn) / np.pi) ** 2
-                p2 = (
-                    (dr_cs_turn * dz_cs_turn)
-                    - (4 - np.pi) * (radius_cs_turn_corners**2)
-                    - (a_cs_turn * f_a_cs_turn_steel)
-                ) / np.pi
-                radius_cs_turn_cable_space = -(
-                    (dr_cs_turn - dz_cs_turn) / np.pi
-                ) + np.sqrt(p1 + p2)
-                t_cond_oh = (
-                    dz_cs_turn / 2
-                ) - radius_cs_turn_cable_space  # thickness of steel conduit in cs turn
-
-                # OH/CS conduit thickness calculated assuming square conduit [m]
-                # The CS insulation layer is assumed to the same as the TF one
-
-                # CS turn cable space thickness
-                t_cable_oh = radius_cs_turn_cable_space * 2
-                # -#
-
-                # Smeared elastic properties of the CS
-                # These smearing functions were written assuming transverse-
-                # isotropic materials; that is not true of the CS, where the
-                # stiffest dimension is toroidal and the radial and vertical
-                # dimension are less stiff. Nevertheless this attempts to
-                # hit the mark.
-                # [EDIT: eyoung_cond is for the TF coil, not the CS coil]
-
-                # Get transverse properties
-                (
-                    layer_properties.youngs_transverse[0],
-                    a_working,
-                    layer_properties.poisson_transverse[0],
-                ) = eyoung_parallel(
-                    eyoung_steel,
-                    f_a_cs_turn_steel,
-                    poisson_steel,
-                    eyoung_cond_axial,
-                    1e0 - f_a_cs_turn_steel,
-                    poisson_cond_axial,
-                )
-
-                # Get vertical properties
-                # Split up into "members", concentric squares in cross section
-                # (described in Figure 10 of the TF coil documentation)
-                # Conductor
-                youngmod_member_array[0] = eyoung_cond_trans
-                f_poisson_member_array[0] = poisson_cond_trans
-                l_member_array[0] = t_cable_oh
-                # Steel conduit
-                youngmod_member_array[1] = eyoung_steel
-                f_poisson_member_array[1] = poisson_steel
-                l_member_array[1] = 2 * t_cond_oh
-                # Insulation
-                youngmod_member_array[2] = eyoung_ins
-                f_poisson_member_array[2] = poisson_ins
-                l_member_array[2] = 2 * dx_tf_turn_insulation
-                # [EDIT: Add central cooling channel? Would be new member #1]
-
-                # Compute the composited (smeared) properties
-                (
-                    layer_properties.youngs_axial[0],
-                    a_working,
-                    layer_properties.poisson_axial[0],
-                    eyoung_cs_stiffest_leg,
-                ) = eyoung_t_nested_squares(
-                    3, youngmod_member_array, l_member_array, f_poisson_member_array
-                )
-
-            # resistive CS (copper)
-            else:
-                # Here is a rough approximation
-                layer_properties.youngs_transverse[0] = eyoung_copper
-                layer_properties.youngs_axial[0] = eyoung_copper
-                layer_properties.poisson_transverse[0] = poisson_copper
-                layer_properties.poisson_axial[0] = poisson_copper
+            (
+                layer_properties.radii[0],
+                layer_properties.youngs_transverse[0],
+                layer_properties.poisson_transverse[0],
+                layer_properties.youngs_axial[0],
+                layer_properties.poisson_axial[0],
+                eyoung_cs_stiffest_leg,
+            ) = _build_cs_layer(
+                dr_bore,
+                i_tf_inside_cs,
+                i_pf_conductor,
+                j_cs_flat_top_end,
+                j_cs_pulse_start,
+                a_cs_poloidal,
+                c_pf_coil_turn_peak_input,
+                n_pf_coils_in_group,
+                f_dr_dz_cs_turn,
+                radius_cs_turn_corners,
+                f_a_cs_turn_steel,
+                eyoung_steel,
+                poisson_steel,
+                eyoung_cond_axial,
+                poisson_cond_axial,
+                eyoung_cond_trans,
+                poisson_cond_trans,
+                eyoung_ins,
+                poisson_ins,
+                dx_tf_turn_insulation,
+                eyoung_copper,
+                poisson_copper,
+            )
 
         # ---
 
@@ -4706,3 +4619,126 @@ def eyoung_series(eyoung_j_1, l_1, poisson_j_perp_1, eyoung_j_2, l_2, poisson_j_
     poisson_j_perp_3 = np.array(poisson_j_perp_3)
 
     return eyoung_j_3, l_3, poisson_j_perp_3
+
+
+@numba.njit(cache=True)
+def _build_cs_layer(
+    dr_bore,
+    i_tf_inside_cs,
+    i_pf_conductor,
+    j_cs_flat_top_end,
+    j_cs_pulse_start,
+    a_cs_poloidal,
+    c_pf_coil_turn_peak_input,
+    n_pf_coils_in_group,
+    f_dr_dz_cs_turn,
+    radius_cs_turn_corners,
+    f_a_cs_turn_steel,
+    eyoung_steel,
+    poisson_steel,
+    eyoung_cond_axial,
+    poisson_cond_axial,
+    eyoung_cond_trans,
+    poisson_cond_trans,
+    eyoung_ins,
+    poisson_ins,
+    dx_tf_turn_insulation,
+    eyoung_copper,
+    poisson_copper,
+):
+    """Inner radius and smeared elastic properties of the CS stress layer.
+
+    Used for bucked and wedged designs. The CS carries no current in this layer
+    (calculation is at CS flux swing).
+
+    Returns
+    -------
+    tuple
+        Inner radius [m], transverse Young's modulus [Pa], transverse Poisson's
+        ratio, axial Young's modulus [Pa], axial Poisson's ratio and the stiffest
+        leg Young's modulus [Pa] (0 for a resistive CS).
+    """
+    if i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS:
+        # CS not used as wedge support (TF inside CS)
+        r_inner = 0.001
+    else:
+        r_inner = dr_bore
+
+    # Resistive CS (copper): rough approximation
+    if i_pf_conductor != PFConductorModel.SUPERCONDUCTING:
+        return (
+            r_inner,
+            eyoung_copper,
+            poisson_copper,
+            eyoung_copper,
+            poisson_copper,
+            0.0,
+        )
+
+    # Getting the turn dimension from scratch as the TF is called before CS
+    # Maximum current in Central Solenoid, at either BOP or EOF [MA-turns]
+    curr_oh_max = (
+        1.0e-6 * np.maximum(j_cs_flat_top_end, j_cs_pulse_start) * a_cs_poloidal
+    )
+    n_oh_turns = (
+        1.0e6 * curr_oh_max / c_pf_coil_turn_peak_input[sum(n_pf_coils_in_group)]
+    )
+    a_cs_turn = a_cs_poloidal / n_oh_turns
+
+    # CS coil turn geometry calculation - stadium shape
+    # Literature: https://doi.org/10.1016/j.fusengdes.2017.04.052
+    dz_cs_turn = (a_cs_turn / f_dr_dz_cs_turn) ** 0.5  # width of cs turn conduit
+    dr_cs_turn = f_dr_dz_cs_turn * dz_cs_turn  # length of cs turn conduit
+    p1 = ((dr_cs_turn - dz_cs_turn) / np.pi) ** 2
+    p2 = (
+        (dr_cs_turn * dz_cs_turn)
+        - (4 - np.pi) * (radius_cs_turn_corners**2)
+        - (a_cs_turn * f_a_cs_turn_steel)
+    ) / np.pi
+    radius_cs_turn_cable_space = -((dr_cs_turn - dz_cs_turn) / np.pi) + np.sqrt(p1 + p2)
+    # Thickness of steel conduit in cs turn; the CS insulation is assumed to be
+    # the same as the TF one
+    t_cond_oh = (dz_cs_turn / 2) - radius_cs_turn_cable_space
+    t_cable_oh = radius_cs_turn_cable_space * 2
+
+    # The smearing functions assume transverse-isotropic materials, which is not
+    # true of the CS; this is an approximation.
+    (eyoung_trans, _, poisson_trans) = eyoung_parallel(
+        eyoung_steel,
+        f_a_cs_turn_steel,
+        poisson_steel,
+        eyoung_cond_axial,
+        1e0 - f_a_cs_turn_steel,
+        poisson_cond_axial,
+    )
+
+    # Vertical properties: concentric square "members"
+    # (Figure 10 of the TF coil documentation)
+    youngmod_member_array = np.zeros(3)
+    f_poisson_member_array = np.zeros(3)
+    l_member_array = np.zeros(3)
+    # Conductor
+    youngmod_member_array[0] = eyoung_cond_trans
+    f_poisson_member_array[0] = poisson_cond_trans
+    l_member_array[0] = t_cable_oh
+    # Steel conduit
+    youngmod_member_array[1] = eyoung_steel
+    f_poisson_member_array[1] = poisson_steel
+    l_member_array[1] = 2 * t_cond_oh
+    # Insulation
+    youngmod_member_array[2] = eyoung_ins
+    f_poisson_member_array[2] = poisson_ins
+    l_member_array[2] = 2 * dx_tf_turn_insulation
+
+    (eyoung_axial, _, poisson_axial, eyoung_stiffest_leg) = eyoung_t_nested_squares(
+        3, youngmod_member_array, l_member_array, f_poisson_member_array
+    )
+
+    return (
+        r_inner,
+        eyoung_trans,
+        poisson_trans,
+        eyoung_axial,
+        poisson_axial,
+        eyoung_stiffest_leg,
+    )
