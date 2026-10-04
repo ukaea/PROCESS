@@ -152,9 +152,10 @@ class TFCoil(Model):
     power plant
     """
 
-    def __init__(self):
+    def __init__(self, tf_stress: TFCoilStress):
         """Initialise Fortran module variables."""
         self.outfile = constants.NOUT  # output file unit
+        self.tf_stress = tf_stress
 
     def run(self):
         """Run main tfcoil subroutine."""
@@ -2273,6 +2274,16 @@ class TFCoil(Model):
             * 0.5e0
             * (self.data.build.r_tf_inboard_mid + self.data.build.r_tf_outboard_mid)
         )
+
+
+class TFCoilStress(Model):
+    """Class to handle TF coil stress calculations."""
+
+    def run(self):
+        """Run the TF coil stress calculations."""
+
+    def output(self):
+        """Output the TF coil stress results."""
 
     @staticmethod
     @numba.njit(cache=True)

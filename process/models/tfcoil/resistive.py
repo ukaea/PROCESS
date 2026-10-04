@@ -7,7 +7,7 @@ import numpy as np
 
 from process.core import constants
 from process.core import process_output as po
-from process.models.tfcoil.base import TFCoil, TFConductorModel
+from process.models.tfcoil.base import TFCoil, TFCoilStress, TFConductorModel
 
 logger = logging.getLogger(__name__)
 
@@ -17,8 +17,8 @@ EPS = np.finfo(1.0).eps
 class ResistiveTFCoil(TFCoil):
     """Class for resistive TF coil calculations."""
 
-    def __init__(self):
-        self.outfile = constants.NOUT
+    def __init__(self, tf_stress: TFCoilStress):
+        super().__init__(tf_stress=tf_stress)
 
     def output(self):
         """Run main tfcoil subroutine with outputting."""

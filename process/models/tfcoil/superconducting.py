@@ -22,7 +22,7 @@ from process.models.superconductors import (
     calculate_croco_cable_geometry,
 )
 from process.models.tfcoil import quench
-from process.models.tfcoil.base import TFCoil, TFPlasmaCaseType
+from process.models.tfcoil.base import TFCoil, TFCoilStress, TFPlasmaCaseType
 
 logger = logging.getLogger(__name__)
 
@@ -149,8 +149,8 @@ class SuperconductingTFCoil(TFCoil):
     class.
     """
 
-    def __init__(self):
-        self.outfile = constants.NOUT
+    def __init__(self, tf_stress: TFCoilStress):
+        super().__init__(tf_stress=tf_stress)
 
     def output(self):
         """Output routine for superconducting TF coil model."""
@@ -2142,7 +2142,7 @@ class SuperconductingTFCoil(TFCoil):
                 casestr,
                 insstrain,
                 sig_tf_wp_av_z,
-            ) = self.stresscl(
+            ) = self.tf_stress.stresscl(
                 n_tf_layer=int(self.data.tfcoil.n_tf_stress_layers),
                 n_radial_array=int(self.data.tfcoil.n_rad_per_layer),
                 n_tf_wp_stress_layers=int(self.data.tfcoil.n_tf_wp_stress_layers),
@@ -2580,7 +2580,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
                 casestr,
                 insstrain,
                 sig_tf_wp_av_z,
-            ) = self.stresscl(
+            ) = self.tf_stress.stresscl(
                 n_tf_layer=int(self.data.tfcoil.n_tf_stress_layers),
                 n_radial_array=int(self.data.tfcoil.n_rad_per_layer),
                 n_tf_wp_stress_layers=int(self.data.tfcoil.n_tf_wp_stress_layers),
@@ -4116,7 +4116,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                 casestr,
                 insstrain,
                 sig_tf_wp_av_z,
-            ) = self.stresscl(
+            ) = self.tf_stress.stresscl(
                 n_tf_layer=int(self.data.tfcoil.n_tf_stress_layers),
                 n_radial_array=int(self.data.tfcoil.n_rad_per_layer),
                 n_tf_wp_stress_layers=int(self.data.tfcoil.n_tf_wp_stress_layers),

@@ -1224,7 +1224,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    result = tfcoil.stresscl(
+    result = tfcoil.tf_stress.stresscl(
         n_tf_layer=stressclparam.n_tf_layer,
         n_radial_array=stressclparam.n_radial_array,
         n_tf_wp_stress_layers=stressclparam.n_tf_wp_stress_layers,

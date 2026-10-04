@@ -115,7 +115,7 @@ from process.models.shield import Shield
 from process.models.stellarator.neoclassics import Neoclassics
 from process.models.stellarator.stellarator import Stellarator
 from process.models.structure import Structure
-from process.models.tfcoil.base import TFCoil, TFConductorModel
+from process.models.tfcoil.base import TFCoil, TFCoilStress, TFConductorModel
 from process.models.tfcoil.resistive import (
     AluminiumTFCoil,
     CopperTFCoil,
@@ -654,13 +654,14 @@ class Models:
         self.power = Power()
         self.cryostat = Cryostat()
         self.build = Build()
-        self.sctfcoil = SuperconductingTFCoil()
-        self.cicc_sctfcoil = CICCSuperconductingTFCoil()
-        self.croco_sctfcoil = CROCOSuperconductingTFCoil()
-        self.tfcoil = TFCoil()
-        self.resistive_tf_coil = ResistiveTFCoil()
-        self.copper_tf_coil = CopperTFCoil()
-        self.aluminium_tf_coil = AluminiumTFCoil()
+        self.tf_stress = TFCoilStress()
+        self.sctfcoil = SuperconductingTFCoil(tf_stress=self.tf_stress)
+        self.cicc_sctfcoil = CICCSuperconductingTFCoil(tf_stress=self.tf_stress)
+        self.croco_sctfcoil = CROCOSuperconductingTFCoil(tf_stress=self.tf_stress)
+        self.tfcoil = TFCoil(tf_stress=self.tf_stress)
+        self.resistive_tf_coil = ResistiveTFCoil(tf_stress=self.tf_stress)
+        self.copper_tf_coil = CopperTFCoil(tf_stress=self.tf_stress)
+        self.aluminium_tf_coil = AluminiumTFCoil(tf_stress=self.tf_stress)
         self.divertor = Divertor()
         self.structure = Structure()
         self.plasma_geom = PlasmaGeom()
