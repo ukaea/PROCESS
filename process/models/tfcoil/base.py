@@ -136,6 +136,17 @@ class YoungsModulusComponents(NamedTuple):
     """Transverse component of Young's modulus [Pa]"""
 
 
+class StressLayerProperties(NamedTuple):
+    """Radial layer inputs for the TF inboard-leg stress solvers."""
+
+    current_density: numba.float64[:]
+    radii: numba.float64[:]
+    youngs_transverse: numba.float64[:]
+    poisson_transverse: numba.float64[:]
+    youngs_axial: numba.float64[:]
+    poisson_axial: numba.float64[:]
+
+
 class TFCoil(Model):
     """Calculates the parameters of a resistive TF coil system for a fusion
     power plant
@@ -2480,46 +2491,27 @@ class TFCoil(Model):
             If r_tf_inboard_in is approximately zero and i_tf_stress_model is not 2
 
         """
-        jeff = np.zeros((n_tf_layer,))
-        # Effective current density [A/m2]
-
-        radtf = np.zeros((n_tf_layer + 1,))
-        # Radii used to define the layers used in the stress models [m]
-        # Layers are labelled from inboard to outbard
-
-        eyoung_trans = np.zeros((n_tf_layer,))
-        # Young's moduli (one per layer) of the TF coil in the
-        # transverse (radial/toroidal) direction. Used in the stress
-        # models [Pa]
-
-        poisson_trans = np.zeros(
-            (n_tf_layer,),
+        layer_properties = StressLayerProperties(
+            current_density=np.zeros((n_tf_layer,)),
+            radii=np.zeros((n_tf_layer + 1,)),
+            youngs_transverse=np.zeros((n_tf_layer,)),
+            poisson_transverse=np.zeros((n_tf_layer,)),
+            youngs_axial=np.zeros((n_tf_layer,)),
+            poisson_axial=np.zeros((n_tf_layer,)),
         )
-        # Poisson's ratios (one per layer) of the TF coil between the
-        # two transverse directions (radial and toroidal). Used in the
-        # stress models.
+        # `radii` holds boundaries; all other fields hold one value per layer.
 
-        eyoung_member_array = np.zeros((n_tf_wp_stress_layers,))
+        youngmod_member_array = np.zeros((n_tf_wp_stress_layers,))
         # Array to store the Young's moduli of the members to composite into smeared
         # properties [Pa]
 
-        poisson_member_array = np.zeros((n_tf_wp_stress_layers,))
+        f_poisson_member_array = np.zeros((n_tf_wp_stress_layers,))
         # Array to store the Poisson's ratios of the members to composite into smeared
         # properti
 
         l_member_array = np.zeros((n_tf_wp_stress_layers,))
         # Array to store the linear dimension (thickness) of the members to composite
         # into smeared properties [m]
-
-        eyoung_axial = np.zeros((n_tf_layer,))
-        # Young's moduli (one per layer) of the TF coil in the vertical
-        # direction used in the stress models [Pa]
-
-        poisson_axial = np.zeros((n_tf_layer,))
-        # Poisson's ratios (one per layer) of the TF coil between the
-        # vertical and transverse directions (in that order). Used in the
-        # stress models. d(transverse strain)/d(vertical strain) with
-        # only vertical stress.
 
         sig_tf_wp_av_z = np.zeros(((n_tf_layer - i_tf_bucking) * n_radial_array,))
         # TF Inboard leg WP smeared vertical stress r distribution at mid-plane [Pa]
@@ -2541,7 +2533,7 @@ class TFCoil(Model):
         # Maximum shear stress, for the Tresca yield criterion of each layer [Pa]
         # If the CEA correction is addopted, the CEA corrected value is used
 
-        sig_tf_z = np.zeros((n_tf_layer * n_radial_array,))
+        stress_z_tf_midplane = np.zeros((n_tf_layer * n_radial_array,))
         # TF Inboard leg vertical tensile stress at mid-plane [Pa]
 
         sig_tf_smeared_r = np.zeros((n_tf_layer * n_radial_array,))
@@ -2582,14 +2574,14 @@ class TFCoil(Model):
         # ---
         if i_tf_bucking >= 2:
             # Calculation performed at CS flux swing (no current on CS)
-            jeff[0] = 0.0e0
+            layer_properties.current_density[0] = 0.0e0
 
             # Inner radius of the CS
             if i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS:
                 # CS not used as wedge support i_tf_inside_cs = 1 (TF inside CS)
-                radtf[0] = 0.001
+                layer_properties.radii[0] = 0.001
             else:
-                radtf[0] = dr_bore
+                layer_properties.radii[0] = dr_bore
 
             # Superconducting CS
             if i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
@@ -2654,7 +2646,11 @@ class TFCoil(Model):
                 # [EDIT: eyoung_cond is for the TF coil, not the CS coil]
 
                 # Get transverse properties
-                (eyoung_trans[0], a_working, poisson_trans[0]) = eyoung_parallel(
+                (
+                    layer_properties.youngs_transverse[0],
+                    a_working,
+                    layer_properties.poisson_transverse[0],
+                ) = eyoung_parallel(
                     eyoung_steel,
                     f_a_cs_turn_steel,
                     poisson_steel,
@@ -2667,36 +2663,36 @@ class TFCoil(Model):
                 # Split up into "members", concentric squares in cross section
                 # (described in Figure 10 of the TF coil documentation)
                 # Conductor
-                eyoung_member_array[0] = eyoung_cond_trans
-                poisson_member_array[0] = poisson_cond_trans
+                youngmod_member_array[0] = eyoung_cond_trans
+                f_poisson_member_array[0] = poisson_cond_trans
                 l_member_array[0] = t_cable_oh
                 # Steel conduit
-                eyoung_member_array[1] = eyoung_steel
-                poisson_member_array[1] = poisson_steel
+                youngmod_member_array[1] = eyoung_steel
+                f_poisson_member_array[1] = poisson_steel
                 l_member_array[1] = 2 * t_cond_oh
                 # Insulation
-                eyoung_member_array[2] = eyoung_ins
-                poisson_member_array[2] = poisson_ins
+                youngmod_member_array[2] = eyoung_ins
+                f_poisson_member_array[2] = poisson_ins
                 l_member_array[2] = 2 * dx_tf_turn_insulation
                 # [EDIT: Add central cooling channel? Would be new member #1]
 
                 # Compute the composited (smeared) properties
                 (
-                    eyoung_axial[0],
+                    layer_properties.youngs_axial[0],
                     a_working,
-                    poisson_axial[0],
+                    layer_properties.poisson_axial[0],
                     eyoung_cs_stiffest_leg,
                 ) = eyoung_t_nested_squares(
-                    3, eyoung_member_array, l_member_array, poisson_member_array
+                    3, youngmod_member_array, l_member_array, f_poisson_member_array
                 )
 
             # resistive CS (copper)
             else:
                 # Here is a rough approximation
-                eyoung_trans[0] = eyoung_copper
-                eyoung_axial[0] = eyoung_copper
-                poisson_trans[0] = poisson_copper
-                poisson_axial[0] = poisson_copper
+                layer_properties.youngs_transverse[0] = eyoung_copper
+                layer_properties.youngs_axial[0] = eyoung_copper
+                layer_properties.poisson_transverse[0] = poisson_copper
+                layer_properties.poisson_axial[0] = poisson_copper
 
         # ---
 
@@ -2704,20 +2700,20 @@ class TFCoil(Model):
         # ---
         if i_tf_bucking == 3:
             # No current in this layer
-            jeff[1] = 0.0e0
+            layer_properties.current_density[1] = 0.0e0
 
             # Outer radius of the CS
             if i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS:
-                radtf[1] = dr_bore - dr_tf_inboard - dr_cs_tf_gap
+                layer_properties.radii[1] = dr_bore - dr_tf_inboard - dr_cs_tf_gap
             else:
-                radtf[1] = dr_bore + dr_cs
+                layer_properties.radii[1] = dr_bore + dr_cs
 
             # Assumed to be Kapton for the moment
             # Ref : https://www.dupont.com/content/dam/dupont/products-and-services/membranes-and-films/polyimde-films/documents/DEC-Kapton-summary-of-properties.pdf
-            eyoung_trans[1] = 2.5e9
-            eyoung_axial[1] = 2.5e9
-            poisson_trans[1] = 0.34e0  # Default value for young modulus
-            poisson_axial[1] = 0.34e0  # Default value for young modulus
+            layer_properties.youngs_transverse[1] = 2.5e9
+            layer_properties.youngs_axial[1] = 2.5e9
+            layer_properties.poisson_transverse[1] = 0.34e0
+            layer_properties.poisson_axial[1] = 0.34e0
 
         # ---
 
@@ -2725,23 +2721,25 @@ class TFCoil(Model):
         # ---
         if i_tf_bucking >= 1:
             # No current in bucking cylinder/casing
-            jeff[n_tf_bucking - 1] = 0.0e0
+            layer_properties.current_density[n_tf_bucking - 1] = 0.0e0
 
             if i_tf_sup == 1:
-                eyoung_trans[n_tf_bucking - 1] = eyoung_steel
-                eyoung_axial[n_tf_bucking - 1] = eyoung_steel
-                poisson_trans[n_tf_bucking - 1] = poisson_steel
-                poisson_axial[n_tf_bucking - 1] = poisson_steel
+                layer_properties.youngs_transverse[n_tf_bucking - 1] = eyoung_steel
+                layer_properties.youngs_axial[n_tf_bucking - 1] = eyoung_steel
+                layer_properties.poisson_transverse[n_tf_bucking - 1] = poisson_steel
+                layer_properties.poisson_axial[n_tf_bucking - 1] = poisson_steel
 
             # Bucking cylinder properties
             else:
-                eyoung_trans[n_tf_bucking - 1] = eyoung_res_tf_buck
-                eyoung_axial[n_tf_bucking - 1] = eyoung_res_tf_buck
-                poisson_trans[n_tf_bucking - 1] = poisson_steel  # Seek better value #
-                poisson_axial[n_tf_bucking - 1] = poisson_steel  # Seek better value #
+                layer_properties.youngs_transverse[n_tf_bucking - 1] = eyoung_res_tf_buck
+                layer_properties.youngs_axial[n_tf_bucking - 1] = eyoung_res_tf_buck
+                layer_properties.poisson_transverse[n_tf_bucking - 1] = (
+                    poisson_steel  # Seek better value #
+                )
+                layer_properties.poisson_axial[n_tf_bucking - 1] = poisson_steel
 
             # Innernost TF casing radius
-            radtf[n_tf_bucking - 1] = r_tf_inboard_in
+            layer_properties.radii[n_tf_bucking - 1] = r_tf_inboard_in
 
         # ---
 
@@ -2797,14 +2795,14 @@ class TFCoil(Model):
             # Split up into "members", concentric squares in cross section
             # (described in Figure 10 of the TF coil documentation)
             # Helium
-            eyoung_member_array[0] = 0e0
-            poisson_member_array[0] = poisson_steel
+            youngmod_member_array[0] = 0e0
+            f_poisson_member_array[0] = poisson_steel
             l_member_array[0] = dia_tf_turn_coolant_channel
             # Conductor and co-wound copper
             (
-                eyoung_member_array[1],
+                youngmod_member_array[1],
                 l_member_array[1],
-                poisson_member_array[1],
+                f_poisson_member_array[1],
             ) = eyoung_series(
                 np.double(eyoung_cond_trans),
                 (t_cable_eyng - dia_tf_turn_coolant_channel)
@@ -2815,12 +2813,12 @@ class TFCoil(Model):
                 np.double(poisson_copper),
             )
             # Steel conduit
-            eyoung_member_array[2] = eyoung_steel
-            poisson_member_array[2] = poisson_steel
+            youngmod_member_array[2] = eyoung_steel
+            f_poisson_member_array[2] = poisson_steel
             l_member_array[2] = 2 * dx_tf_turn_steel
             # Insulation
-            eyoung_member_array[3] = eyoung_ins
-            poisson_member_array[3] = poisson_ins
+            youngmod_member_array[3] = eyoung_ins
+            f_poisson_member_array[3] = poisson_ins
             l_member_array[3] = 2 * t_ins_eff
 
             # Compute the composited (smeared) properties
@@ -2831,9 +2829,9 @@ class TFCoil(Model):
                 eyoung_wp_stiffest_leg,
             ) = eyoung_t_nested_squares(
                 4,
-                eyoung_member_array,
+                youngmod_member_array,
                 l_member_array,
-                poisson_member_array,
+                f_poisson_member_array,
             )
 
             # Lateral casing correction (series-composition)
@@ -2852,24 +2850,24 @@ class TFCoil(Model):
             # Split up into "members", concentric squares in cross section
             # (described in Figure 10 of the TF coil documentation)
             # Steel conduit
-            eyoung_member_array[0] = eyoung_steel
-            poisson_member_array[0] = poisson_steel
+            youngmod_member_array[0] = eyoung_steel
+            f_poisson_member_array[0] = poisson_steel
             l_member_array[0] = a_tf_wp_steel
             # Insulation
-            eyoung_member_array[1] = eyoung_ins
-            poisson_member_array[1] = poisson_ins
+            youngmod_member_array[1] = eyoung_ins
+            f_poisson_member_array[1] = poisson_ins
             l_member_array[1] = a_tf_coil_inboard_insulation
             # Copper
-            eyoung_member_array[2] = eyoung_copper
-            poisson_member_array[2] = poisson_copper
+            youngmod_member_array[2] = eyoung_copper
+            f_poisson_member_array[2] = poisson_copper
             l_member_array[2] = a_tf_wp_conductor * f_a_tf_turn_cable_copper
             # Conductor
-            eyoung_member_array[3] = eyoung_cond_axial
-            poisson_member_array[3] = poisson_cond_axial
+            youngmod_member_array[3] = eyoung_cond_axial
+            f_poisson_member_array[3] = poisson_cond_axial
             l_member_array[3] = a_tf_wp_conductor * (1.0e0 - f_a_tf_turn_cable_copper)
             # Helium and void
-            eyoung_member_array[4] = 0e0
-            poisson_member_array[4] = poisson_steel
+            youngmod_member_array[4] = 0e0
+            f_poisson_member_array[4] = poisson_steel
             l_member_array[4] = (
                 a_tf_wp_with_insulation
                 - a_tf_wp_conductor
@@ -2879,9 +2877,9 @@ class TFCoil(Model):
             # Compute the composite / smeared properties:
             (eyoung_wp_axial, a_working, poisson_wp_axial) = eyoung_parallel_array(
                 5,
-                eyoung_member_array,
+                youngmod_member_array,
                 l_member_array,
-                poisson_member_array,
+                f_poisson_member_array,
             )
 
             # Average WP Young's modulus in the vertical direction, now including the
@@ -2956,45 +2954,48 @@ class TFCoil(Model):
 
         for ii in range(np.intc(n_tf_graded_layers)):
             # Homogeneous current in (super)conductor
-            jeff[n_tf_bucking + ii] = c_tf_total / (
+            layer_properties.current_density[n_tf_bucking + ii] = c_tf_total / (
                 np.pi * (r_wp_outer_eff**2 - r_wp_inner_eff**2)
             )
 
             # Same thickness for all WP layers in stress calculation
-            radtf[n_tf_bucking + ii] = r_wp_inner_eff + ii * dr_wp_layer
+            layer_properties.radii[n_tf_bucking + ii] = r_wp_inner_eff + ii * dr_wp_layer
 
             # Young modulus
-            eyoung_trans[n_tf_bucking + ii] = eyoung_wp_trans_eff
-            eyoung_axial[n_tf_bucking + ii] = eyoung_wp_axial_eff
+            layer_properties.youngs_transverse[n_tf_bucking + ii] = eyoung_wp_trans_eff
+            layer_properties.youngs_axial[n_tf_bucking + ii] = eyoung_wp_axial_eff
 
             # Poisson's ratio
-            poisson_trans[n_tf_bucking + ii] = poisson_wp_trans_eff
-            poisson_axial[n_tf_bucking + ii] = poisson_wp_axial_eff
+            layer_properties.poisson_transverse[n_tf_bucking + ii] = poisson_wp_trans_eff
+            layer_properties.poisson_axial[n_tf_bucking + ii] = poisson_wp_axial_eff
 
         # Steel case on the plasma side of the inboard TF coil
         # As per Issue #1509
-        jeff[n_tf_layer - 1] = 0.0e0
-        radtf[n_tf_layer - 1] = r_wp_outer_eff
-        eyoung_trans[n_tf_layer - 1] = eyoung_steel
-        eyoung_axial[n_tf_layer - 1] = eyoung_steel
-        poisson_trans[n_tf_layer - 1] = poisson_steel
-        poisson_axial[n_tf_layer - 1] = poisson_steel
+        layer_properties.current_density[n_tf_layer - 1] = 0.0e0
+        layer_properties.radii[n_tf_layer - 1] = r_wp_outer_eff
+        layer_properties.youngs_transverse[n_tf_layer - 1] = eyoung_steel
+        layer_properties.youngs_axial[n_tf_layer - 1] = eyoung_steel
+        layer_properties.poisson_transverse[n_tf_layer - 1] = poisson_steel
+        layer_properties.poisson_axial[n_tf_layer - 1] = poisson_steel
 
         # last layer radius
-        radtf[n_tf_layer] = r_wp_outer_eff + dr_tf_plasma_case
+        layer_properties.radii[n_tf_layer] = r_wp_outer_eff + dr_tf_plasma_case
 
         # The ratio between the true cross sectional area of the
         # front case, and that considered by the plane strain solver
         f_tf_stress_front_case = (
             a_tf_plasma_case
             / rad_tf_coil_inboard_toroidal_half
-            / (radtf[n_tf_layer] ** 2 - radtf[n_tf_layer - 1] ** 2)
+            / (
+                layer_properties.radii[n_tf_layer] ** 2
+                - layer_properties.radii[n_tf_layer - 1] ** 2
+            )
         )
 
         # Correct for the missing axial stiffness from the missing
         # outer case steel as per the updated description of
         # Issue #1509
-        eyoung_axial[n_tf_layer - 1] *= f_tf_stress_front_case
+        layer_properties.youngs_axial[n_tf_layer - 1] *= f_tf_stress_front_case
 
         # ---
         # ------------------------
@@ -3007,8 +3008,12 @@ class TFCoil(Model):
         #                  to allow stress calculations
         # Rem SK : Can be easily ameneded playing around the boundary conditions
         # New extended plane strain model can handle it
-        if abs(radtf[0]) < np.finfo(float(radtf[0])).eps and i_tf_stress_model != 2:
-            radtf[0] = 1.0e-9
+        if (
+            abs(layer_properties.radii[0])
+            < np.finfo(float(layer_properties.radii[0])).eps
+            and i_tf_stress_model != 2
+        ):
+            layer_properties.radii[0] = 1.0e-9
         # ---
 
         # Old generalized plane stress model
@@ -3017,24 +3022,24 @@ class TFCoil(Model):
             # Plane stress calculation (SC) [Pa]
 
             (sig_tf_r, sig_tf_t, deflect, radial_array) = plane_stress(
-                nu=poisson_trans,
-                rad=radtf,
-                ey=eyoung_trans,
-                j=jeff,
+                nu=layer_properties.poisson_transverse,
+                rad=layer_properties.radii,
+                ey=layer_properties.youngs_transverse,
+                j=layer_properties.current_density,
                 nlayers=int(n_tf_layer),
                 n_radial_array=int(n_radial_array),
             )
 
             # Vertical stress [Pa]
-            sig_tf_z[:] = vforce / (
+            stress_z_tf_midplane[:] = vforce / (
                 a_tf_coil_inboard_case + a_tf_turn_steel * n_tf_coil_turns
             )  # Array equation [EDIT: Are you sure? It doesn't look like one to me]
 
             # Strain in vertical direction on WP
-            str_wp = sig_tf_z[n_tf_bucking] / eyoung_wp_axial_eff
+            str_wp = stress_z_tf_midplane[n_tf_bucking] / eyoung_wp_axial_eff
 
             # Case strain
-            casestr = sig_tf_z[n_tf_bucking - 1] / eyoung_steel
+            casestr = stress_z_tf_midplane[n_tf_bucking - 1] / eyoung_steel
 
             # Radial strain in insulator
             insstrain = (
@@ -3059,18 +3064,18 @@ class TFCoil(Model):
                 radial_array,
                 sig_tf_r,
                 sig_tf_t,
-                sig_tf_z,
+                stress_z_tf_midplane,
                 str_tf_r,
                 str_tf_t,
                 str_tf_z,
                 deflect,
             ) = extended_plane_strain(
-                poisson_trans,
-                poisson_axial,
-                eyoung_trans,
-                eyoung_axial,
-                radtf,
-                jeff,
+                layer_properties.poisson_transverse,
+                layer_properties.poisson_axial,
+                layer_properties.youngs_transverse,
+                layer_properties.youngs_axial,
+                layer_properties.radii,
+                layer_properties.current_density,
                 vforce_inboard_tot,
                 int(n_tf_layer),
                 int(n_radial_array),
@@ -3086,7 +3091,7 @@ class TFCoil(Model):
 
         sig_tf_smeared_r[:] = sig_tf_r  # Array equation
         sig_tf_smeared_t[:] = sig_tf_t  # Array equation
-        sig_tf_smeared_z[:] = sig_tf_z  # Array equation
+        sig_tf_smeared_z[:] = stress_z_tf_midplane  # Array equation
 
         # ------------------------------
 
@@ -3097,9 +3102,19 @@ class TFCoil(Model):
         if i_tf_bucking >= 2 and i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
             # Central Solenoid (OH) steel conduit stress unsmearing factors
             for ii in range(n_radial_array):
-                sig_tf_r[ii] = sig_tf_r[ii] * eyoung_cs_stiffest_leg / eyoung_axial[0]
-                sig_tf_t[ii] = sig_tf_t[ii] * eyoung_steel / eyoung_trans[0]
-                sig_tf_z[ii] = sig_tf_z[ii] * eyoung_cs_stiffest_leg / eyoung_axial[0]
+                sig_tf_r[ii] = (
+                    sig_tf_r[ii]
+                    * eyoung_cs_stiffest_leg
+                    / layer_properties.youngs_axial[0]
+                )
+                sig_tf_t[ii] = (
+                    sig_tf_t[ii] * eyoung_steel / layer_properties.youngs_transverse[0]
+                )
+                stress_z_tf_midplane[ii] = (
+                    stress_z_tf_midplane[ii]
+                    * eyoung_cs_stiffest_leg
+                    / layer_properties.youngs_axial[0]
+                )
 
         # ---
 
@@ -3109,7 +3124,7 @@ class TFCoil(Model):
         # as the generalized plane strain calculates the vertical stress properly
         if i_tf_bucking >= 2 and i_tf_stress_model == 1:
             for ii in range((n_tf_bucking - 1) * n_radial_array):
-                sig_tf_z[ii] = 0.0e0
+                stress_z_tf_midplane[ii] = 0.0e0
 
         # ---
 
@@ -3159,11 +3174,11 @@ class TFCoil(Model):
             ((n_tf_bucking + n_tf_graded_layers) * n_radial_array),
         ):
             sig_tf_wp_av_z[ii - n_tf_bucking * n_radial_array] = (
-                sig_tf_z[ii] * fac_sig_z_wp_av
+                stress_z_tf_midplane[ii] * fac_sig_z_wp_av
             )
             sig_tf_r[ii] *= fac_sig_r
             sig_tf_t[ii] *= fac_sig_t
-            sig_tf_z[ii] *= fac_sig_z
+            stress_z_tf_midplane[ii] *= fac_sig_z
 
         # For each point within the front case,
         # remove the correction for the missing axial
@@ -3173,7 +3188,7 @@ class TFCoil(Model):
             (n_tf_bucking + n_tf_graded_layers) * n_radial_array,
             (n_tf_layer * n_radial_array),
         ):
-            sig_tf_z[ii] /= f_tf_stress_front_case
+            stress_z_tf_midplane[ii] /= f_tf_stress_front_case
         # ---
 
         # Tresca / Von Mises yield criteria calculations
@@ -3181,7 +3196,7 @@ class TFCoil(Model):
         # Array equation
 
         s_shear_tf = calculate_tresca_stress(
-            stress_x=sig_tf_r, stress_y=sig_tf_t, stress_z=sig_tf_z
+            stress_x=sig_tf_r, stress_y=sig_tf_t, stress_z=stress_z_tf_midplane
         )
 
         # Array equation
@@ -3189,7 +3204,7 @@ class TFCoil(Model):
         sig_tf_vmises = calculate_von_mises_stress(
             stress_x=sig_tf_r,
             stress_y=sig_tf_t,
-            stress_z=sig_tf_z,
+            stress_z=stress_z_tf_midplane,
             stress_shear_xy=0.0,
             stress_shear_yz=0.0,
             stress_shear_zx=0.0,
@@ -3211,7 +3226,7 @@ class TFCoil(Model):
                 svmxz = calculate_von_mises_stress(
                     stress_x=0.0e0,
                     stress_y=sig_tf_t[ii],
-                    stress_z=sig_tf_z[ii],
+                    stress_z=stress_z_tf_midplane[ii],
                     stress_shear_xy=0.0e0,
                     stress_shear_yz=0.0e0,
                     stress_shear_zx=0.0e0,
@@ -3220,7 +3235,7 @@ class TFCoil(Model):
                 svmyz = calculate_von_mises_stress(
                     stress_x=sig_tf_r[ii],
                     stress_y=0.0e0,
-                    stress_z=sig_tf_z[ii],
+                    stress_z=stress_z_tf_midplane[ii],
                     stress_shear_xy=0.0e0,
                     stress_shear_yz=0.0e0,
                     stress_shear_zx=0.0e0,
@@ -3230,7 +3245,7 @@ class TFCoil(Model):
                 # Maximum shear stress for the Tresca yield criterion using CEA
                 # calculation [Pa]
                 s_shear_cea_tf_cond[ii] = (
-                    1.02e0 * abs(sig_tf_r[ii]) + 1.6e0 * sig_tf_z[ii]
+                    1.02e0 * abs(sig_tf_r[ii]) + 1.6e0 * stress_z_tf_midplane[ii]
                 )
 
         # ---
@@ -3259,7 +3274,7 @@ class TFCoil(Model):
 
             sig_tf_r_max[ii] = sig_tf_r[ii_max]
             sig_tf_t_max[ii] = sig_tf_t[ii_max]
-            sig_tf_z_max[ii] = sig_tf_z[ii_max]
+            sig_tf_z_max[ii] = stress_z_tf_midplane[ii_max]
             sig_tf_vmises_max[ii] = sig_tf_vmises[ii_max]
 
             # Maximum shear stress for the Tresca yield criterion
@@ -3286,13 +3301,16 @@ class TFCoil(Model):
             sig_tf_vmises_max,
             s_shear_tf_peak,
             deflect,
-            YoungsModulusComponents(axial=eyoung_axial, trans=eyoung_trans),
+            YoungsModulusComponents(
+                axial=layer_properties.youngs_axial,
+                trans=layer_properties.youngs_transverse,
+            ),
             YoungsModulusComponents(axial=eyoung_wp_axial, trans=eyoung_wp_trans),
             poisson_wp_trans,
             radial_array,
             s_shear_cea_tf_cond,
             poisson_wp_axial,
-            RTZPoint(r=sig_tf_r, t=sig_tf_t, z=sig_tf_z),
+            RTZPoint(r=sig_tf_r, t=sig_tf_t, z=stress_z_tf_midplane),
             RTZPoint(r=sig_tf_smeared_r, t=sig_tf_smeared_t, z=sig_tf_smeared_z),
             s_shear_tf,
             sig_tf_vmises,
