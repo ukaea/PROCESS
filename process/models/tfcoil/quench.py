@@ -5,6 +5,8 @@ from typing import Final
 
 import numpy as np
 
+from process.core import constants
+
 # TODO: Use of CoolProp prevents nb.jit at present...
 from process.core.coolprop_interface import FluidProperties
 
@@ -12,11 +14,6 @@ __all__ = ["calculate_quench_protection_current_density"]
 
 
 logger = logging.getLogger(__name__)
-
-# Material property parameterisations
-
-COPPER_DENSITY = 8960.0  # [kg/m³]
-NB3SN_DENSITY = 8040.0  # [kg/m³]
 
 
 def _copper_specific_heat_capacity(temperature: float) -> float:
@@ -332,8 +329,12 @@ def _quench_integrand_at_temperature(
     he_properties = FluidProperties.of("He", temperature=temperature, pressure=pressure)
 
     ihe_integrand = he_properties.specific_heat_const_p * he_properties.density / nu_cu
-    icu_integrand = _copper_specific_heat_capacity(temperature) * COPPER_DENSITY / nu_cu
-    isc_integrand = _nb3sn_specific_heat_capacity(temperature) * NB3SN_DENSITY / nu_cu
+    icu_integrand = (
+        _copper_specific_heat_capacity(temperature) * constants.COPPER_DENSITY / nu_cu
+    )
+    isc_integrand = (
+        _nb3sn_specific_heat_capacity(temperature) * constants.NB3SN_DENSITY / nu_cu
+    )
 
     return ihe_integrand, icu_integrand, isc_integrand
 
