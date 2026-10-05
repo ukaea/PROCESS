@@ -4846,7 +4846,7 @@ def plot_line_brem_power_profile(
 
     # Ranges
     # ---
-    axis.set_xlim([0, 1.0])
+    axis.set_xlim([0, 1.01])
     axis.legend(loc="upper left", bbox_to_anchor=(1.0, 1.0), ncol=1)
     axis.set_yscale("log")
     axis.yaxis.grid(True, which="both", alpha=0.2)
@@ -12453,8 +12453,23 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, fig, mfile: MFile, scan: i
     )
 
 
-def plot_fusion_rate_profiles(axis: plt.Axes, mfile: MFile, scan: int):
-    """Plot the fusion rate profiles on the given axis"""
+def plot_fusion_rate_profiles(
+    axis: plt.Axes, mfile: MFile, scan: int, zoom_axis: plt.Axes | None = None
+):
+    """Plot the fusion rate profiles on the given axis
+
+    Parameters
+    ----------
+    axis : plt.Axes
+        The axis for the full (log scale) fusion rate profiles.
+    mfile : MFile
+        The MFILE data object.
+    scan : int
+        The scan number to use for extracting data.
+    zoom_axis : plt.Axes | None
+        If given, an axis on which only the cumulative total fusion rate is plotted
+        on a linear scale.
+    """
     fusden_plasma_dt_profile = []
     fusden_plasma_dd_triton_profile = []
     fusden_plasma_dd_helion_profile = []
@@ -12496,11 +12511,11 @@ def plot_fusion_rate_profiles(axis: plt.Axes, mfile: MFile, scan: int):
     # Convert each reaction-rate density into shell contributions, then integrate
     # cumulatively to obtain the fusion-rate profile for that reaction.
     reaction_profiles = {
-        r"D-T": fusden_plasma_dt_profile,
-        r"D-D Triton": fusden_plasma_dd_triton_profile,
-        r"D-D Helion": fusden_plasma_dd_helion_profile,
-        r"D-$^3$He": fusden_plasma_dhe3_profile,
-        "Total": fusden_plasma_total_profile,
+        "$\\Gamma_{D-T}$": fusden_plasma_dt_profile,
+        "$\\Gamma_{\\mathrm{D-D\\ Triton}}$": fusden_plasma_dd_triton_profile,
+        "$\\Gamma_{\\mathrm{D-D\\ Helion}}$": fusden_plasma_dd_helion_profile,
+        "$\\Gamma_{\\mathrm{D-}^3\\mathrm{He}}$": fusden_plasma_dhe3_profile,
+        "$\\Gamma_{\\mathrm{Total}}$": fusden_plasma_total_profile,
     }
     cum_fusrat_profiles = {
         label: calculate_profile_shell_contributions(
@@ -12511,39 +12526,39 @@ def plot_fusion_rate_profiles(axis: plt.Axes, mfile: MFile, scan: int):
         )
         for label, profile in reaction_profiles.items()
     }
-    cum_fusrat_profiles["Total cumulative"] = np.cumsum(cum_fusrat_profiles["Total"])
-    axis.spines["left"].set_color("red")
-    axis.yaxis.label.set_color("black")
-    axis.tick_params(axis="y", colors="red")
+    cum_fusrat_profiles["$\\Sigma\\ \\Gamma_{\\mathrm{Total}}$"] = np.cumsum(
+        cum_fusrat_profiles["$\\Gamma_{\\mathrm{Total}}$"]
+    )
 
     line_colors = {
-        "D-T": "red",
-        "D-D Triton": "tab:blue",
-        "D-D Helion": "tab:green",
-        "D-$^3$He": "tab:orange",
-        "Total": "tab:purple",
-        "Total cumulative": "black",
+        "$\\Gamma_{D-T}$": "red",
+        "$\\Gamma_{\\mathrm{D-D\\ Triton}}$": "tab:blue",
+        "$\\Gamma_{\\mathrm{D-D\\ Helion}}$": "tab:green",
+        "$\\Gamma_{\\mathrm{D-}^3\\mathrm{He}}$": "tab:orange",
+        "$\\Gamma_{\\mathrm{Total}}$": "tab:purple",
+        "$\\Sigma\\ \\Gamma_{\\mathrm{Total}}$": "black",
     }
     for label, cum_fusrat in cum_fusrat_profiles.items():
         axis.plot(
             rho,
             cum_fusrat,
             color=line_colors[label],
-            linestyle="-",
+            linestyle=(":" if label == "$\\Gamma_{\\mathrm{Total}}$" else "-"),
             label=label,
+            linewidth=2 if label == "$\\Gamma_{\\mathrm{Total}}$" else 1,
         )
 
     axis.axhline(
         y=fusrat_total,
         color="tab:brown",
-        linestyle="-",
+        linestyle=":",
         label="Total Fusion Rate",
     )
 
     half_total_rate = fusrat_total / 2
     half_total_rate_position = np.interp(
         half_total_rate,
-        cum_fusrat_profiles["Total cumulative"],
+        cum_fusrat_profiles["$\\Sigma\\ \\Gamma_{\\mathrm{Total}}$"],
         rho,
     )
 
@@ -12551,7 +12566,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, mfile: MFile, scan: int):
         x=half_total_rate_position,
         color="tab:pink",
         linestyle="-",
-        label="Half Total Fusion Rate Position",
+        label="50% Total Fusion Rate",
     )
 
     # =================================================
@@ -12572,6 +12587,36 @@ def plot_fusion_rate_profiles(axis: plt.Axes, mfile: MFile, scan: int):
     axis.set_ylim(bottom=1e12)
     axis.yaxis.minorticks_on()
     axis.minorticks_on()
+    axis.set_title("Thermal Fusion Rate Profiles (log scale)")
+
+    if zoom_axis is not None:
+        zoom_axis.plot(
+            rho,
+            cum_fusrat_profiles["$\\Gamma_{\\mathrm{Total}}$"],
+            color="tab:purple",
+            linestyle=":",
+            label="$\\Gamma_{\\mathrm{Total}}$",
+        )
+        zoom_axis.axvline(
+            x=half_total_rate_position,
+            color="tab:pink",
+            linestyle="-",
+            label="50% Total Fusion Rate",
+        )
+        zoom_axis.set_xlabel("$\\rho \\ [r/a]$")
+        zoom_axis.set_ylabel("Fusion Rate [reactions/second]")
+        zoom_axis.set_title("Thermal Fusion Rate Profiles (linear scale)")
+        zoom_axis.set_xlim([0, 1.01])
+        zoom_axis.set_ylim(bottom=0.0)
+        zoom_axis.legend(
+            loc="lower right",
+            edgecolor="black",
+            facecolor="white",
+            framealpha=1.0,
+            frameon=True,
+        )
+        zoom_axis.grid(True, which="both", linestyle="--", alpha=0.5)
+        zoom_axis.minorticks_on()
 
 
 def plot_cover_page(
@@ -17113,7 +17158,13 @@ def main_plot(
         scan,
     )
 
-    plot_fusion_rate_profiles(_add_page("fusion_rate").add_subplot(121), m_file, scan)
+    fusion_rate_page = _add_page("fusion_rate")
+    plot_fusion_rate_profiles(
+        fusion_rate_page.add_subplot(121),
+        m_file,
+        scan,
+        zoom_axis=fusion_rate_page.add_subplot(122),
+    )
 
     _add_page("rx_1_2"), _add_page("rx_3_4")
     if m_file.get("i_plasma_shape", scan=scan) == PlasmaShapeModelType.SAUTER:
