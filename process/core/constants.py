@@ -327,5 +327,5 @@ YEAR_SECONDS = DAY_SECONDS * DAYS_IN_YEAR
 COPPER_DENSITY = 8960.0  # [kg/m³]
 NB3SN_DENSITY = 8040.0  # [kg/m³]
 
-poisson_steel: float = 0.3
+POISSON_STEEL: float = 0.3
 """Steel Poisson's ratio, Source : https://www.engineeringtoolbox.com/metals-poissons-ratio-d_1268.html"""
