@@ -6,7 +6,6 @@ import logging
 from typing import TYPE_CHECKING
 
 import numpy as np
-from scipy.optimize import fixed_point
 from tabulate import tabulate
 
 from process.core import constants
@@ -19,7 +18,6 @@ from process.core.solver.objectives import objective_function
 from process.data_structure.blanket_variables import BlktModelTypes
 from process.data_structure.numerics import PROCESSRunMode
 from process.data_structure.stellarator_variables import StellaratorModel
-from process.models.physics.physics import PlasmaBeta
 from process.models.tfcoil.base import TFConductorModel
 from process.models.tfcoil.superconducting import SuperconductingTFTurnType
 
@@ -73,56 +71,67 @@ class Caller:
             return np.allclose(previous, current, rtol=1.0e-6, equal_nan=True)
         return False
 
-    def _calculate_beta(self, beta: float, xc: np.ndarray) -> float:
-        """Return the total plasma beta implied by a model evaluation at ``beta``."""
-        self._call_models_once(xc, beta_override=beta)
-
-        beta_thermal = PlasmaBeta.calculate_plasma_beta(
-            pres_plasma=(
-                constants.KILOELECTRON_VOLT
-                * (
-                    self.data.physics.nd_plasma_electrons_vol_avg
-                    * self.data.physics.temp_plasma_electron_density_weighted_kev
-                    + self.data.physics.nd_plasma_ions_total_vol_avg
-                    * self.data.physics.temp_plasma_ion_density_weighted_kev
-                )
-            ),
-            b_field=self.data.physics.b_plasma_total,
-        )
-
-        return (
-            self.data.physics.beta_fast_alpha
-            + self.data.physics.beta_beam
-            + beta_thermal
-        )
-
-    def _solve_beta_fixed_point(self, xc: np.ndarray) -> None:
-        """Solve the internally coupled plasma beta fixed-point problem."""
-        beta_0 = self.data.physics.beta_total_vol_avg
-
-        try:
-            beta_solution = fixed_point(
-                lambda beta: self._calculate_beta(beta, xc),
-                beta_0,
-                maxiter=20,
-            )
-        except RuntimeError:
-            logger.warning("Plasma beta fixed-point solve did not converge; continuing.")
-            return
-
-        # Re-evaluate at the returned fixed point so all model state corresponds
-        # to the solved beta.
-        self._calculate_beta(beta_solution, xc)
-        self.data.physics.beta_total_vol_avg = beta_solution
-
     def call_models(self, xc: np.ndarray, m: int) -> tuple[float, np.ndarray]:
-        """Evaluate models with plasma beta solved as a fixed-point problem."""
-        self._solve_beta_fixed_point(xc)
+        """Evaluate models until results are idempotent.
 
-        objf = objective_function(self.data.numerics.i_figure_merit, self.data)
-        conf, _, _, _, _ = constraints.constraint_eqns(m, -1, self.data)
+        Ensure objective function and constraints are idempotent before returning.
 
-        return objf, conf
+        Parameters
+        ----------
+        xc : np.ndarray
+            optimisation parameters
+        m : int
+            number of constraints
+
+        Returns
+        -------
+        Tuple[float, np.ndarray]
+            objective function and constraints
+
+        Raises
+        ------
+        RuntimeError
+            if values are non-idempotent after successive
+            evaluations
+        """
+        objf_prev = None
+        conf_prev = None
+
+        # Evaluate models up to 10 times; any more implies non-converging values
+        for _ in range(10):
+            self._call_models_once(xc)
+            # Evaluate objective function and constraints
+            objf = objective_function(self.data.numerics.i_figure_merit, self.data)
+            conf, _, _, _, _ = constraints.constraint_eqns(m, -1, self.data)
+
+            if objf_prev is None and conf_prev is None:
+                # First run: run again to check idempotence
+                logger.debug("New optimisation parameter vector being evaluated")
+                objf_prev = objf
+                conf_prev = conf
+                continue
+
+            # Check for idempotence
+            if self.check_agreement(objf_prev, objf) and self.check_agreement(
+                conf_prev, conf
+            ):
+                # Idempotent: no longer changing, so return
+                logger.debug(
+                    "Model evaluations idempotent, returning objective "
+                    "function and constraints"
+                )
+                return objf, conf
+
+            # Not idempotent: still changing, so evaluate models again
+            logger.debug("Model evaluations not idempotent: evaluating again")
+            objf_prev = objf
+            conf_prev = conf
+
+        raise RuntimeError(
+            "After 10 model evaluations at the current optimisation parameter "
+            "vector, values for the objective function and constraints haven't "
+            "converged (don't produce idempotent values)."
+        )
 
     def call_models_and_write_output(self, xc: np.ndarray, ifail: int):
         """Evaluate models until results are idempotent, then write output files.
@@ -155,7 +164,7 @@ class Caller:
                 # Divert OUT.DAT and MFILE.DAT output to scratch files for
                 # idempotence checking
                 OutputFileManager.open_idempotence_files(self.data.globals.output_prefix)
-                self._solve_beta_fixed_point(xc)
+                self._call_models_once(xc)
                 # Write mfile
                 finalise(self.models, self.data, ifail)
 
@@ -238,9 +247,7 @@ class Caller:
                 non_idempotent_msg=non_idempotent_warning + "\n" + non_idempotent_table,
             )
 
-    def _call_models_once(
-        self, xc: np.ndarray, beta_override: float | None = None
-    ) -> None:
+    def _call_models_once(self, xc: np.ndarray):
         """Call the physics and engineering models.
 
         This method is the principal caller of all the physics and
@@ -260,11 +267,6 @@ class Caller:
 
         # Convert variables
         set_scaled_iteration_variable(xc, nvars, self.data)
-
-        # The beta fixed-point solve must override any beta value supplied as an
-        # iteration variable in xc.
-        if beta_override is not None:
-            self.data.physics.beta_total_vol_avg = beta_override
 
         # Perform the various function calls
         # Stellarator caller
