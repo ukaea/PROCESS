@@ -1701,14 +1701,14 @@ class CustomOptimizationRecord():
                 this_flux.extend(
                     parent.groupwise_neutron_flux_in_layer(n, num_layer, xi)
                 )
-            animated_line, = ax.plot(flat_base_x, np.array(this_flux))
+            animated_line, = ax.plot(flat_base_x, np.array(this_flux), label=f"Evolution of group {self.n} flux")
             ax.legend()
             for iteration in range(self.num_opt_steps):
                 animated_line.set_data(
                     flat_base_x, rollback_parent_to_get_flux(iteration)
                 )
                 ax.set_ylim(ylims)
-                plt.pause(0.1)
+                plt.pause(0.8)
             plt.show()
         else:
             cmap = mpl.colors.LinearSegmentedColormap.from_list(
