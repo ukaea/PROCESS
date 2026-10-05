@@ -5422,6 +5422,40 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
             data=self.data,
         )
 
+        # Do current density protection calculation
+        # Only setup for Nb3Sn at present.
+        if (
+            SuperconductorModel(self.data.tfcoil.i_tf_sc_mat).material
+            != SuperconductorMaterial.NB3SN
+        ):
+            logger.warning(
+                "Calculating current density protection limit for Nb3Sn TF coil "
+                "(LTS windings only)"
+            )
+            # Find the current density limited by the protection limit
+            # At present only valid for LTS windings (Nb3Sn properties assumed)
+        self.data.tfcoil.j_tf_wp_quench_heat_max, v_tf_coil_dump_quench = (
+            self.quench_heat_protection_current_density(
+                c_tf_turn=self.data.tfcoil.c_tf_turn,
+                e_tf_coil_magnetic_stored=self.data.tfcoil.e_tf_coil_magnetic_stored,
+                a_tf_turn_cable_space=self.data.tfcoil.a_tf_turn_cable_space_no_void,
+                a_tf_turn=self.data.tfcoil.a_tf_turn,
+                t_tf_quench_dump=self.data.tfcoil.t_tf_superconductor_quench,
+                f_a_tf_turn_cable_copper=self.data.tfcoil.f_a_tf_turn_cable_copper,
+                f_a_tf_turn_cable_space_cooling=d_sc_tf.f_a_tf_turn_cable_space_cooling,
+                temp_tf_coolant_peak_field=self.data.tfcoil.tftmp,
+                temp_tf_conductor_quench_max=self.data.tfcoil.temp_tf_conductor_quench_max,
+                b_tf_inboard_peak=self.data.tfcoil.b_tf_inboard_peak_with_ripple,
+                cu_rrr=self.data.tfcoil.rrr_tf_cu,
+                t_tf_quench_detection=self.data.tfcoil.t_tf_quench_detection,
+                flu_tf_neutron_fast_max=self.data.constraints.flu_tf_neutron_fast_max,
+            )
+        )
+
+        self.data.tfcoil.v_tf_coil_dump_quench_kv = (
+            v_tf_coil_dump_quench / 1.0e3
+        )  # TFC Quench voltage in kV
+
         # TFC Quench voltage in kV
 
         # Negative areas or fractions error reporting
