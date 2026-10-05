@@ -3714,6 +3714,10 @@ def eyoung_parallel(
     poisson_j_perp_2 :
 
     """
+    # Both members have zero area (e.g. no steel conduit): nothing to composite
+    if a_1 + a_2 == 0:
+        return 0.0, 0.0, 0.0
+
     poisson_j_perp_3 = (poisson_j_perp_1 * a_1 + poisson_j_perp_2 * a_2) / (a_1 + a_2)
     eyoung_j_3 = (eyoung_j_1 * a_1 + eyoung_j_2 * a_2) / (a_1 + a_2)
     a_3 = a_1 + a_2
