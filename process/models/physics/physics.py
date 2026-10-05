@@ -430,12 +430,6 @@ class Physics(Model):
 
         # ============================================
 
-        # -----------------------------------------------------
-        # Beta Components
-        # -----------------------------------------------------
-
-        self.beta.run()
-
         # Stored thermal energies in the plasma
 
         (
@@ -693,6 +687,9 @@ class Physics(Model):
             i_beta_fast_alpha=self.data.physics.i_beta_fast_alpha,
             f_plasma_fuel_deuterium=self.data.physics.f_plasma_fuel_deuterium,
         )
+
+        # Calculate beta after the fast-particle contributions have been updated.
+        self.beta.run()
 
         # Calculate ion/electron equilibration power
 
@@ -3506,6 +3503,27 @@ class PlasmaBeta(Model):
              If an illegal value of i_beta_norm_max is provided.
 
         """
+        # Thermal beta is derived directly from the current plasma state.
+        self.data.physics.beta_thermal_vol_avg = self.calculate_plasma_beta(
+            pres_plasma=(
+                constants.KILOELECTRON_VOLT
+                * (
+                    self.data.physics.nd_plasma_electrons_vol_avg
+                    * self.data.physics.temp_plasma_electron_density_weighted_kev
+                    + self.data.physics.nd_plasma_ions_total_vol_avg
+                    * self.data.physics.temp_plasma_ion_density_weighted_kev
+                )
+            ),
+            b_field=self.data.physics.b_plasma_total,
+        )
+
+        # Total beta is derived from the thermal and fast-particle components.
+        self.data.physics.beta_total_vol_avg = (
+            self.data.physics.beta_thermal_vol_avg
+            + self.data.physics.beta_fast_alpha
+            + self.data.physics.beta_beam
+        )
+
         # -----------------------------------------------------
         # Normalised Beta Limit
         # -----------------------------------------------------
@@ -3581,12 +3599,6 @@ class PlasmaBeta(Model):
             b_plasma_total=self.data.physics.b_plasma_total,
             b_plasma_poloidal_average=self.data.physics.b_plasma_surface_poloidal_average,
             beta=self.data.physics.beta_total_vol_avg,
-        )
-
-        self.data.physics.beta_thermal_vol_avg = (
-            self.data.physics.beta_total_vol_avg
-            - self.data.physics.beta_fast_alpha
-            - self.data.physics.beta_beam
         )
 
         self.data.physics.beta_poloidal_eps = (
