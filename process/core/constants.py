@@ -322,8 +322,6 @@ DAYS_IN_YEAR = 365.25
 YEAR_SECONDS = DAY_SECONDS * DAYS_IN_YEAR
 # Number of seconds in a year [s]
 
-# Material property parameterisations
-
 COPPER_DENSITY = 8960.0 
 """Density of copper [kg/m³]"""
 
