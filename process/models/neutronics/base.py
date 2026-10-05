@@ -30,10 +30,11 @@ import warnings
 from collections.abc import Callable, Iterable
 from tabulate import tabulate
 from dataclasses import asdict, dataclass
-from itertools import pairwise
+from itertools import pairwise, cycle
 
 import numpy as np
 from matplotlib import pyplot as plt
+import matplotlib as mpl
 from numpy import typing as npt
 from scipy import optimize
 
@@ -644,6 +645,7 @@ class NeutronFluxProfile:
             )
         
         init_coefs = self.coefficients[:, n, n].flatten()
+        _rms_residual, _residual_n, _vector_n = [], [], []
 
         def _set_coefficients(
             input_vector: Iterable[float | np.double | np.longdouble]
@@ -656,22 +658,38 @@ class NeutronFluxProfile:
                 input_vector, dtype=np.longdouble
             ).reshape(self.n_layers, 2)
             self._update_off_diag_coefs_of_column_n(n)
+        scipy_method, scipy_method_accepts_jac = "hybr", True
 
-        def objective(coefficients_vector) -> tuple[npt.NDArray[float], npt.NDArray]:
-            _set_coefficients(coefficients_vector)
-            cond, jac = self._groupwise_fitness(n)
-            return (
-                np.asarray(cond, dtype=float),
-                np.asarray(jac, dtype=float),
+        def objective(coefficients_vector: npt.NDArray[float | np.longdouble]) -> tuple[npt.NDArray[float], npt.NDArray]:
+            precise_coefficients = np.asarray(
+                coefficients_vector, dtype=np.longdouble
             )
+            _set_coefficients(precise_coefficients)
+            cond, jac = self._groupwise_fitness(n)
+            _vector_n.append(precise_coefficients)
+            _residual_n.append(cond)
+            _rms_residual.append(np.sqrt((cond**2).mean()))
+            if scipy_method_accepts_jac:
+                return (
+                    np.asarray(cond, dtype=float),
+                    np.asarray(jac, dtype=float),
+                )
+            return np.asarray(cond, dtype=float)
 
         _set_coefficients(init_coefs)
-        results = optimize.root(
-            objective, x0=np.asarray(init_coefs, dtype=float), jac=True
+        opt_result = optimize.root(
+            objective,
+            x0=np.asarray(init_coefs, dtype=float),
+            jac=scipy_method_accepts_jac,
+            method="hybr",
         )
-        _set_coefficients(results.x)
+        _set_coefficients(opt_result.x)
         conditions = self._groupwise_fitness(n, jac=False)
-        self._optimization_record[n].append((init_coefs, results))
+        self._optimization_record[n].append(
+            CustomOptimizationRecord(
+                self, n, _vector_n, _rms_residual, _residual_n, opt_result
+            )
+        )
 
 
         if self.fluxes[n]:
@@ -1378,6 +1396,7 @@ class NeutronFluxProfile:
         ax: plt.Axes | None = None,
         *,
         plot_groups: bool = True,
+        log_y: bool = True,  # TODO: Clean up this function, and enforce symmetric=False, log_y = True by default, use groupwise_neutron_flux_in_layer
         symmetric: bool = True,
         extend_plot_beyond_boundary: bool = True,
         n_points: int = 100,
@@ -1487,6 +1506,7 @@ def _get_sign_of(x_values):
 
 
 def _plot_vertical_dotted_line(ax, x, ylims, *, symmetric: bool = True):
+    """Plot a black vertical dotted line"""
     if symmetric:
         ax.plot([-x, -x], ylims, color="black", ls="--", zorder=-1)
     ax.plot([x, x], ylims, color="black", ls="--", zorder=-1)
@@ -1551,6 +1571,164 @@ def _generate_x_range(
         if symmetric:
             yield -layer_x_range[::-1]
         yield layer_x_range
+
+class CustomOptimizationRecord():
+    """
+    A class used to store a custom collection of information about the
+    optimization process, and replicate the neutron flux profile that would've
+    been generated during the optimization.
+
+    Attributes
+    ----------
+    num_opt_steps:
+        Number of steps taken by the optimizer.
+    """
+    def __init__(
+        self, parent: NeutronFluxProfile, n: int,
+        solution_vectors: Iterable[npt.NDArray[float | np.longdouble]],
+        rms_residuals: Iterable[np.longdouble],
+        residuals: Iterable[npt.NDArray[np.longdouble]],
+        result: optimize.OptimizeResult,
+    ):
+        """
+        Parameters
+        ----------
+        parent:
+            A reference (weakref) to the parent NeutronFluxProfile object, to
+            allow for plotting to happen.
+        n:
+            Neutron group number n that this optimizer is trying to solve the
+            groupwise neutron flux for.
+        solution_vectors:
+            A list of the solution vectors that was tested by the optimizer,
+            with shape [num_opt_steps, 2 * parent.n_layers]
+        rms_residuals:
+            A list of scalar values, each stating the individual. Shape: [
+            num_opt_steps].
+        residuals:
+            A list of all of the residuals, before they were root-mean-squared.
+            Shape: [num_opt_steps, 2 * parent.n_layers]
+        results:
+            The scipy.optimize.OptimizeResult object produced by the optimizer
+            directly.
+        """
+        self.parent = parent
+        self.n = n
+        self.solution_vectors = np.asarray(solution_vectors, dtype=np.longdouble)
+        self.rms_residuals = np.asarray(rms_residuals, dtype=np.longdouble)
+        self.residuals = np.asarray(residuals, dtype=np.longdouble)
+        self.num_opt_steps = len(self.solution_vectors)
+        self.result = result
+
+    def plot_rms_residuals(self, ax: plt.Axes | None = None):
+        ax = ax or plt.axes()
+        ax.set_title(f"Trajectory of Group {self.n}\nneutron flux optimization")
+        ax.set_xlabel("iterations")
+        ax.set_ylabel(f"Root-mean-squares of residuals")
+        ax.plot(self.rms_residuals, marker="+")
+        if (self.rms_residuals>0).all():
+            ax.set_yscale("log")
+        return ax
+
+    def plot_groupwise_profile_evolution(
+        self, ax: plt.Axes | None=None,
+        plot_preceeding_groups: bool=True, animate: bool=False
+    ) -> plt.Axes:
+        """ Plot the each of the neutron flux profile found during the gradient
+        descend.
+
+        Parameters
+        ----------
+        ax:
+            plt.Axes object to plot the descend path onto. Optional.
+        plot_preceeding_groups:
+            Plot all neutron groups with higher energy than the current one.
+            This is useful in a down-scatter-only system, where neutron groups
+            with smaller n should've been solved first before the current group
+            is solved.
+
+        Returns
+        -------
+        ax:
+            plt.Axes object the function plotted on.
+        """
+        n = self.n
+        parent = self.parent
+        base_x = np.array([
+            np.linspace(*parent.interface_x[num_layer:num_layer+2])
+            for num_layer in range(parent.n_layers)
+        ])
+        flat_base_x = base_x.flatten()
+
+        ax = ax or plt.axes()
+        ax.set_title(
+            f"The evolution of group {n} neutron flux\n"
+            "during the optimization process"
+        )
+        ax.set_xlabel("Distance from the plasma-fw interface [m]")
+        ax.set_ylabel(f"Flux ({UNIT_LOOKUP['flux']})")
+        for _n in range(0 if plot_preceeding_groups else n, n + 1):
+            this_flux = []
+            for num_layer, xi in enumerate(base_x):
+                this_flux.extend(
+                    parent.groupwise_neutron_flux_in_layer(_n, num_layer, xi)
+                )
+            ax.plot(flat_base_x, this_flux, label=f"Final group {_n} neutron flux")
+        ax.set_yscale("log")
+        ylims = ax.get_ylim()
+        for interface in parent.interface_x:
+            _plot_vertical_dotted_line(ax, interface, ylims, symmetric=False)
+
+        def rollback_parent_to_get_flux(iteration: int):
+            """Rollback to a certain value of coefficient, and then """
+            saved_coefficients = parent.coefficients[:, n, n]
+            parent.coefficients[:, n, n] = self.solution_vectors[
+                iteration
+            ].reshape(parent.n_layers, 2)
+            parent._update_off_diag_coefs_of_column_n(n)
+            this_flux = []
+            for num_layer, xi in enumerate(base_x):
+                this_flux.extend(
+                    parent.groupwise_neutron_flux_in_layer(n, num_layer, xi)
+                )
+            this_flux = np.array(this_flux)
+            parent.coefficients[:, n, n] = saved_coefficients
+            return this_flux
+
+        if animate:
+            this_flux = []
+            for num_layer, xi in enumerate(base_x):
+                this_flux.extend(
+                    parent.groupwise_neutron_flux_in_layer(n, num_layer, xi)
+                )
+            animated_line, = ax.plot(flat_base_x, np.array(this_flux))
+            ax.legend()
+            for iteration in range(self.num_opt_steps):
+                animated_line.set_data(
+                    flat_base_x, rollback_parent_to_get_flux(iteration)
+                )
+                ax.set_ylim(ylims)
+                plt.pause(0.1)
+            plt.show()
+        else:
+            cmap = mpl.colors.LinearSegmentedColormap.from_list(
+                "iterations", [(1, 0, 0, 0.5), (0, 0, 1, 0.5)]
+            )
+            norm = mpl.colors.Normalize(vmin=0, vmax=self.num_opt_steps - 1)
+            sm = mpl.cm.ScalarMappable(norm=norm, cmap=cmap)
+            cbar = plt.colorbar(sm, ax=ax)
+            linestyle_cycle = cycle(["-", ":", "--", "-."])
+            cbar.set_label("Iteration steps taken by the optimizer")
+
+            for iteration in range(self.num_opt_steps):
+                ax.plot(
+                    flat_base_x, rollback_parent_to_get_flux(iteration),
+                    color=cmap(norm(iteration)),
+                    ls=next(linestyle_cycle),
+                )
+            ax.set_ylim(ylims)
+            ax.legend()
+        return ax
 
 
 def multiply_2_2_matrices(*matrices):
