@@ -91,8 +91,8 @@ from process.models.physics.profiles import (
     PlasmaProfileShapeType,
     calculate_profile_shell_contributions,
 )
-from process.models.power import PumpingPowerModelTypes
 from process.models.physics.scrape_off_layer import ScrapeOffLayer
+from process.models.power import PumpingPowerModelTypes
 from process.models.pulse import PulseTimings
 from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil.base import (
