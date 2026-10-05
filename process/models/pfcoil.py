@@ -5062,8 +5062,6 @@ def calculate_cs_peak_to_bore_self_field_ratio(alpha: float, beta: float) -> flo
     - 1.003 <= alpha <= 2.0
     - 1.002 <= beta <= 5.0
 
-    The inner radius of the solenoid has no effect.
-
     Mean abs error  : 7.086400e-05
     RMSE            : 1.031859e-04
     Max abs error   : 5.657357e-04
@@ -5071,7 +5069,9 @@ def calculate_cs_peak_to_bore_self_field_ratio(alpha: float, beta: float) -> flo
     95% rel error   : 0.01912%
     Max rel error   : 0.05122%
 
-    Values are kludged >= 1.0
+    The inner radius of the solenoid has no effect.
+
+    Values are kludged >= 1.0.
     """
     b2 = beta * beta
     b4 = b2 * b2
