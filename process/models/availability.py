@@ -1165,7 +1165,7 @@ class Availability(Model):
         # safety assessment tasks", Cadwallader (1994)
 
         # probability of pump failure per operational period
-        cryo_failure_rate = 2.0e-6 * constants.constants.DAYS_IN_YEAR * 24.0e0 * t_op_bt
+        cryo_failure_rate = 2.0e-6 * constants.DAYS_IN_YEAR * 24.0e0 * t_op_bt
 
         # probability of no pump failure per operational period
         cryo_nfailure_rate = 1.0e0 - cryo_failure_rate
