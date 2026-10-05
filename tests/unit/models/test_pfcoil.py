@@ -2723,6 +2723,8 @@ class OhCalcParam(NamedTuple):
     rmajor: Any = None
     plasma_current: Any = None
     poisson_steel: Any = None
+    a_cs_poloidal: float = None
+    a_cs_toroidal: float = None
     exp_b_pf_coil_peak: Any = None
     exp_j_cs_critical_flat_top_end: Any = None
 
@@ -2774,6 +2776,8 @@ class OhCalcParam(NamedTuple):
             rmajor=8.938,
             plasma_current=1.8254e7,
             poisson_steel=3.0e-1,
+            a_cs_poloidal=10.3868352,
+            a_cs_toroidal=12.2710609,
             exp_b_pf_coil_peak=13.073958753751993,
             exp_j_cs_critical_flat_top_end=54101481.7685945,
         )
@@ -2830,6 +2834,8 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, cs_coil, ohcalcparam):
         "c_pf_cs_coil_pulse_start_ma",
         "c_pf_cs_coil_flat_top_ma",
         "c_pf_cs_coil_pulse_end_ma",
+        "a_cs_toroidal",
+        "a_cs_poloidal",
     ]:
         monkeypatch.setattr(cs_coil.data.pf_coil, field, getattr(ohcalcparam, field))
 
