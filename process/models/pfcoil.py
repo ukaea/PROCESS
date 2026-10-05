@@ -5068,28 +5068,43 @@ def calculate_cs_peak_to_bore_self_field_ratio(alpha: float, beta: float) -> flo
     - 1.003 <= alpha <= 2.0
     - 1.002 <= beta <= 5.0
 
-    Mean abs error  : 7.086400e-05
-    RMSE            : 1.031859e-04
-    Max abs error   : 5.657357e-04
-    Mean rel error  : 0.00675%
-    95% rel error   : 0.01912%
-    Max rel error   : 0.05122%
+    Mean abs error  : 1.477160e-05
+    RMSE            : 3.339339e-05
+    Max abs error   : 5.057283e-04
+    Mean rel error  : 0.00137%
+    95% rel error   : 0.00551%
+    Max rel error   : 0.04351%
 
     The inner radius of the solenoid has no effect.
 
     Values are kludged >= 1.0.
     """
-    b2 = beta * beta
-    b4 = b2 * b2
-    b12 = b4 * b4 * b4
+    x = np.log(alpha)
+    y = np.log(beta)
 
-    den = alpha + 1.127857
-    den2 = den * den
+    x2 = x * x
+    xy = x * y
+    y2 = y * y
 
-    num = alpha - b2 - 0.04822759 / b12 - 0.5034004 / alpha
-    plus = 0.17171782 * den2 / (b2 * den2 + num * num)
+    numerator = (
+        -1.8215253355640215
+        + 0.8172065397313144 * x
+        - 1.8719840795517062 * y
+        - 0.5424659742753115 * x2
+        + 1.307057139143707 * xy
+        - 0.2306157233611135 * y2
+    )
 
-    return 1.0 + max(0.0, plus)
+    denominator = (
+        1.0
+        - 0.2785300863750654 * x
+        - 0.20588086220909704 * y
+        + 0.056237528552774516 * x2
+        - 0.02478308475047297 * xy
+        + 0.04818225222124836 * y2
+    )
+
+    return 1.0 + max(0.0, np.exp(numerator / denominator))
 
 
 @numba.njit(cache=True)
