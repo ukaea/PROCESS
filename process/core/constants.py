@@ -314,13 +314,13 @@ ACCELERATION_GRAVITY = 9.81
 """Acceleration due to gravity [m/s2]"""
 
 DAY_SECONDS = 60 * 60 * 24
-# Number of seconds in a day [s]
+"""Number of seconds in a day [s]"""
 
 DAYS_IN_YEAR = 365.25
-# Number of days in a year
+"""Number of days in a year"""
 
 YEAR_SECONDS = DAY_SECONDS * DAYS_IN_YEAR
-# Number of seconds in a year [s]
+"""Number of seconds in a year [s]"""
 
 COPPER_DENSITY = 8960.0 
 """Density of copper [kg/m³]"""
