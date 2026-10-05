@@ -37,6 +37,7 @@ N_FW_PIPE_90_DEG_BENDS = 2
 N_FW_PIPE_180_DEG_BENDS = 0
 "Number of 180 degree bends in first wall coolant channels."
 
+
 @dataclass(slots=True)
 class InVesselSolidAngleFractions:
     f_ster_fw_inboard_ring_source: float = 0.0
@@ -938,7 +939,8 @@ class FirstWall(Model):
         Returns
         -------
         tuple
-            Toroidal angle subtended by the inboard first wall (radians) and the fraction of total toroidal angle.
+            Toroidal angle subtended by the inboard first wall (radians) and the
+            fraction of total toroidal angle.
 
         Notes
         -----
@@ -1174,19 +1176,22 @@ class FirstWall(Model):
 
         po.ovarre(
             self.outfile,
-            "Toroidal angle subtended by inboard first wall from centre of the plasma [radians]",
+            "Toroidal angle subtended by inboard first wall from centre of the plasma "
+            "[radians]",
             "(rad_fw_inboard_plasma_centre_toroidal)",
             self.data.fwbs.rad_fw_inboard_plasma_centre_toroidal,
         )
         po.ovarre(
             self.outfile,
-            "Toroidal angle subtended by inboard first wall from centre of the plasma [degrees]",
+            "Toroidal angle subtended by inboard first wall from centre of the plasma "
+            "[degrees]",
             "(deg_fw_inboard_plasma_centre_toroidal)",
             self.data.fwbs.deg_fw_inboard_plasma_centre_toroidal,
         )
         po.ovarre(
             self.outfile,
-            "Fraction of total toroidal angle subtended by inboard first wall from centre of the plasma",
+            "Fraction of total toroidal angle subtended by inboard first wall from "
+            "centre of the plasma",
             "(f_rad_fw_inboard_plasma_centre_toroidal)",
             self.data.fwbs.f_rad_fw_inboard_plasma_centre_toroidal,
         )

@@ -2435,8 +2435,8 @@ class BlanketLibrary(Model):
             calculate_required_mass_flow_rate(
                 p_heat_total=1.0e6
                 * (
-                self.data.blanket.p_fw_inboard_nuclear_heat_mw
-                + self.data.fwbs.p_fw_inboard_surface_heat_mw
+                    self.data.blanket.p_fw_inboard_nuclear_heat_mw
+                    + self.data.fwbs.p_fw_inboard_surface_heat_mw
                 ),
                 heatcap_coolant=self.data.fwbs.heatcap_pres_fw_coolant_average,
                 temp_in_coolant=self.data.fwbs.temp_fw_coolant_in,
@@ -2449,8 +2449,8 @@ class BlanketLibrary(Model):
             calculate_required_mass_flow_rate(
                 p_heat_total=1.0e6
                 * (
-                self.data.blanket.p_fw_outboard_nuclear_heat_mw
-                + self.data.fwbs.p_fw_outboard_surface_heat_mw
+                    self.data.blanket.p_fw_outboard_nuclear_heat_mw
+                    + self.data.fwbs.p_fw_outboard_surface_heat_mw
                 ),
                 heatcap_coolant=self.data.fwbs.heatcap_pres_fw_coolant_average,
                 temp_in_coolant=self.data.fwbs.temp_fw_coolant_in,

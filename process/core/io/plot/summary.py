@@ -18041,7 +18041,12 @@ def main_plot(
 
     ax_blanket = _add_page("vessel_cross_section").add_subplot(122, aspect="equal")
     plot_blkt_structure(
-        ax_blanket, pages["blkt_structure"], m_file, scan, radial_build, colour_scheme
+        ax_blanket,
+        pages["vessel_cross_section"],
+        m_file,
+        scan,
+        radial_build,
+        colour_scheme,
     )
 
     plot_blkt_pipe_bends(_add_page("blkt_cooling"), m_file, scan)
@@ -18051,17 +18056,6 @@ def main_plot(
     ):
         plot_blanket_coolant_properties(pages["blkt_cooling"], m_file, scan)
 
-
-    ax_blanket = figs[34].add_subplot(122, aspect="equal")
-    plot_blkt_structure(ax_blanket, figs[34], m_file, scan, radial_build, colour_scheme)
-    plot_fw_inboard_toroidal_angle_load(
-        axis=pages["vessel_cross_section"].add_subplot(121, aspect="equal"),
-        mfile=m_file,
-        scan=scan,
-        demo_ranges=demo_ranges,
-        colour_scheme=colour_scheme,
-    )
-
     plot_ring_source_poloidal_view(
         axis=_add_page("ring_source_solid_angles").add_subplot(122),
         fig=pages["ring_source_solid_angles"],
@@ -18069,11 +18063,16 @@ def main_plot(
         scan=scan,
     )
 
+    plot_fw_inboard_toroidal_angle_load(
+        axis=pages["ring_source_solid_angles"].add_subplot(121, aspect="equal"),
+        mfile=m_file,
+        scan=scan,
+        demo_ranges=demo_ranges,
+        colour_scheme=colour_scheme,
+    )
 
-    ax_blanket_bends = _add_page("vessel_power_distribution")
-    plot_blkt_pipe_bends(pages["vessel_power_distribution"], m_file, scan)
     plot_poloidal_power_distribution(
-        ax=pages["vessel_power_distribution"].add_subplot(111, aspect="equal"),
+        ax=_add_page("vessel_power_distribution").add_subplot(111, aspect="equal"),
         m_file=m_file,
         scan=scan,
         radial_build=radial_build,
