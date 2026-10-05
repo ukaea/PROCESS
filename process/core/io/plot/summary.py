@@ -91,6 +91,7 @@ from process.models.physics.profiles import (
     PlasmaProfileShapeType,
     calculate_profile_shell_contributions,
 )
+from process.models.power import PumpingPowerModelTypes
 from process.models.pulse import PulseTimings
 from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil.base import (
@@ -16813,6 +16814,55 @@ def plot_cumulative_plasma_thermal_energy_profiles(axis, m_file: MFile, scan: in
     )
 
 
+def plot_blanket_coolant_properties(fig: plt.Figure, m_file: MFile, scan: int):
+    """Combined plot of blanket coolant channel structure and properties."""
+    for side, x_position in (("inboard", 0.1), ("outboard", 0.5)):
+
+        def get(variable: str):
+            return m_file.get(variable, scan=scan)
+
+        text = (
+            f"$\\mathbf{{{side.capitalize()} \\ blanket:}}$\n \n"
+            f"Radius of blanket channel: {m_file.get('radius_blkt_channel', scan=scan):.4f} m\n"
+            f"Channel roughness ($\\epsilon$): {m_file.get('roughness_fw_channel', scan=scan):.4e} m\n\n"
+            f"Radial coolant channel length: {get(f'len_blkt_{side}_coolant_channel_radial'):.4f} m\n"
+            f"Poloidal coolant channel length: {get(f'len_blkt_{side}_segment_poloidal'):.4f} m\n"
+            f"Number of radial channels: {get(f'n_blkt_{side}_module_coolant_sections_radial')}\n"
+            f"Number of poloidal channels: {get(f'n_blkt_{side}_module_coolant_sections_poloidal')}\n"
+            f"Total length of coolant channel straight sections: {get(f'len_blkt_{side}_channel_total'):.4f} m\n\n"
+            f"Pressure drop for straight sections: {get(f'dpres_blkt_{side}_coolant_channel_straight_total'):,.2f} Pa\n"
+            f"Pressure drop for 90° bends: {get(f'dpres_blkt_{side}_coolant_channel_90_bend'):,.2f} Pa\n"
+            f"Total pressure drop for 90° bends: {get(f'dpres_blkt_{side}_coolant_channel_90_bends_total'):,.2f} Pa\n"
+            f"Pressure drop for 180° bends: {get(f'dpres_blkt_{side}_coolant_channel_180_bend'):,.2f} Pa\n"
+            f"Total pressure drop for 180° bends: {get(f'dpres_blkt_{side}_coolant_channel_180_bends_total'):,.2f} Pa\n"
+            f"Total pressure drop for all bends: {get(f'dpres_blkt_{side}_bends_total'):,.2f} Pa\n\n"
+            f"Reynolds number ($Re$): {get(f'reynolds_blkt_{side}_coolant'):,.4f}\n"
+            f"Darcy Friction factor ($f$): {get(f'darcy_frict_blkt_{side}_coolant'):.4f}\n\n"
+            f"Friction drop coefficient for straight sections: {get(f'f_straight_blkt_{side}_coolant'):.4f}\n"
+            f"Friction drop coefficient for 90° bends: {get(f'f_elbow_blkt_{side}_90_bend'):.4f}\n"
+            f"Friction drop coefficient for 180° bends: {get(f'f_elbow_blkt_{side}_180_bend'):.4f}\n\n"
+            f"Total coolant mass flow rate: {get(f'mflow_blkt_{side}_coolant'):.4f} kg/s\n"
+            f"Coolant mass flow rate in single channel: {get(f'mflow_blkt_{side}_coolant_channel'):.4f} kg/s\n"
+            f"Coolant velocity in single channel: {get(f'vel_blkt_{side}_coolant'):.4f} m/s"
+        )
+
+        fig.text(
+            x_position,
+            0.5,
+            text,
+            fontsize=9,
+            verticalalignment="top",
+            horizontalalignment="left",
+            transform=fig.transFigure,
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "wheat",
+                "alpha": 1.0,
+                "linewidth": 2,
+            },
+        )
+
+
 def main_plot(
     m_file: MFile,
     scan: int,
@@ -17449,16 +17499,17 @@ def main_plot(
     )
     plot_fw_90_deg_pipe_bend(pages["fw_td_cross_section"].add_subplot(337), m_file, scan)
 
-    plot_blkt_pipe_bends(_add_page("blkt_pipe_bends"), m_file, scan)
-    ax_blanket = pages["blkt_pipe_bends"].add_subplot(122, aspect="equal")
+    ax_blanket = _add_page("blkt_structure").add_subplot(122, aspect="equal")
     plot_blkt_structure(
-        ax_blanket,
-        pages["blkt_pipe_bends"],
-        m_file,
-        scan,
-        radial_build,
-        colour_scheme,
+        ax_blanket, pages["blkt_structure"], m_file, scan, radial_build, colour_scheme
     )
+
+    plot_blkt_pipe_bends(_add_page("blkt_cooling"), m_file, scan)
+    if (
+        m_file.get("i_p_coolant_pumping", scan=scan)
+        == PumpingPowerModelTypes.CALCULATE_PRESSURE_DROP
+    ):
+        plot_blanket_coolant_properties(pages["blkt_cooling"], m_file, scan)
 
     plot_main_power_flow(
         _add_page("main_power_flow").add_subplot(111, aspect="equal"),
@@ -17578,8 +17629,6 @@ def plot_summary(
             color="dimgray",
         )
 
-    # create main plot
-    # Increase range when adding new page
     # run main_plot
     mfile_obj = MFile(mfile) if mfile else MFile("MFILE.DAT")
     run_label = f"{mfile_obj.get('fileprefix', scan=-1)} | scan {scan or -1} | {mfile_obj.get('date', scan=-1)} {mfile_obj.get('time', scan=-1)} | {mfile_obj.get('tagno', scan=-1)} | Branch: {mfile_obj.get('branch_name', scan=-1)}  "
