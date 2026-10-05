@@ -51,16 +51,6 @@ class AvailabilityModel(IntEnum):
         return self._full_name_
 
 
-DAY_SECONDS = 60 * 60 * 24
-# Number of seconds in a day [s]
-
-DAYS_IN_YEAR = 365.25
-# Number of days in a year
-
-YEAR_SECONDS = DAY_SECONDS * DAYS_IN_YEAR
-# Number of seconds in a year [s]
-
-
 class Availability(Model):
     """Module containing plant availability routines
 
@@ -212,7 +202,7 @@ class Availability(Model):
         # Plant Availability (i_plant_availability=0,1)
 
         # Calculate the number of fusion cycles for a given blanket lifetime
-        pulse_fpy = self.data.times.t_plant_pulse_total / YEAR_SECONDS
+        pulse_fpy = self.data.times.t_plant_pulse_total / constants.YEAR_SECONDS
         self.data.costs.bktcycles = (self.data.fwbs.life_blkt_fpy / pulse_fpy) + 1
 
         # if i_plant_availability = 0 use input value for f_t_plant_available
@@ -847,19 +837,19 @@ class Availability(Model):
         # Number of cycles between planned blanket replacements, N
         n = (
             self.data.costs.life_div_fpy
-            * YEAR_SECONDS
+            * constants.YEAR_SECONDS
             / self.data.times.t_plant_pulse_total
         )
 
         # The probability of failure in one pulse cycle (before the reference cycle life)
         pf = (
-            self.data.costs.div_prob_fail / DAY_SECONDS
+            self.data.costs.div_prob_fail / constants.DAY_SECONDS
         ) * self.data.times.t_plant_pulse_total
         a0 = (
             1.0e0
             - pf
             * self.data.costs.div_umain_time
-            * YEAR_SECONDS
+            * constants.YEAR_SECONDS
             / self.data.times.t_plant_pulse_total
         )
 
@@ -961,20 +951,20 @@ class Availability(Model):
         # Number of cycles between planned blanket replacements, N
         n = (
             self.data.fwbs.life_blkt_fpy
-            * YEAR_SECONDS
+            * constants.YEAR_SECONDS
             / self.data.times.t_plant_pulse_total
         )
 
         # The probability of failure in one pulse cycle
         # (before the reference cycle life)
         pf = (
-            self.data.costs.fwbs_prob_fail / DAY_SECONDS
+            self.data.costs.fwbs_prob_fail / constants.DAY_SECONDS
         ) * self.data.times.t_plant_pulse_total
         a0 = (
             1.0e0
             - pf
             * self.data.costs.fwbs_umain_time
-            * YEAR_SECONDS
+            * constants.YEAR_SECONDS
             / self.data.times.t_plant_pulse_total
         )
 
@@ -1074,14 +1064,14 @@ class Availability(Model):
         # Number of balance of plant failures in plant operational lifetime
         bop_num_failures = math.ceil(
             bop_fail_rate
-            * DAYS_IN_YEAR
+            * constants.DAYS_IN_YEAR
             * 24.0e0
             * self.data.costs.t_plant_operational_total_yrs
         )
 
         # Balance of plant mean time to repair (years)
         # ENEA study WP13-DTM02-T01
-        bop_mttr = 96.0e0 / (24.0e0 * DAYS_IN_YEAR)
+        bop_mttr = 96.0e0 / (24.0e0 * constants.DAYS_IN_YEAR)
 
         # Unplanned downtime balance of plant
         u_unplanned_bop = (bop_mttr * bop_num_failures) / (
@@ -1175,7 +1165,7 @@ class Availability(Model):
         # safety assessment tasks", Cadwallader (1994)
 
         # probability of pump failure per operational period
-        cryo_failure_rate = 2.0e-6 * DAYS_IN_YEAR * 24.0e0 * t_op_bt
+        cryo_failure_rate = 2.0e-6 * constants.constants.DAYS_IN_YEAR * 24.0e0 * t_op_bt
 
         # probability of no pump failure per operational period
         cryo_nfailure_rate = 1.0e0 - cryo_failure_rate
@@ -1570,7 +1560,7 @@ class Availability(Model):
                 else min(
                     (
                         self.data.constraints.flu_tf_neutron_fast_max
-                        / (self.data.fwbs.neut_flux_cp * YEAR_SECONDS)
+                        / (self.data.fwbs.neut_flux_cp * constants.YEAR_SECONDS)
                     ),
                     self.data.costs.life_plant,
                 )
