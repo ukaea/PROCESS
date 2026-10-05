@@ -324,8 +324,11 @@ YEAR_SECONDS = DAY_SECONDS * DAYS_IN_YEAR
 
 # Material property parameterisations
 
-COPPER_DENSITY = 8960.0  # [kg/m³]
-NB3SN_DENSITY = 8040.0  # [kg/m³]
+COPPER_DENSITY = 8960.0 
+"""Density of copper [kg/m³]"""
+
+NB3SN_DENSITY = 8040.0  
+"""Density of Nb3Sn [kg/m³]"""
 
 POISSON_STEEL: float = 0.3
 """Steel Poisson's ratio, Source : https://www.engineeringtoolbox.com/metals-poissons-ratio-d_1268.html"""
