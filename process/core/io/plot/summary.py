@@ -4684,7 +4684,7 @@ def plot_line_brem_power_density_profile(
     # Ranges
     # ---
     axis.legend(loc="upper left", bbox_to_anchor=(-0.1, -0.1), ncol=4)
-    axis.set_xlim([0, 1.0])
+    axis.set_xlim([0, 1.01])
     axis.set_yscale("log")
     axis.yaxis.grid(True, which="both", alpha=0.2)
     # DEMO : Fixed ranges for comparison
@@ -12259,8 +12259,8 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, fig, mfile: MFile, scan: i
     # Add plasma volume, areas and shaping information
     textstr_general = (
         f"Total fusion rate: {mfile.get('fusrat_total', scan=scan):.4e} reactions/s\n"
-        f"Total volume averaged fusion rate density: {mfile.get('fusden_total_vol_avg', scan=scan):.4e} reactions/m3/s\n"
-        f"Plasma volume averaged fusion rate density: {mfile.get('fusden_plasma_vol_avg', scan=scan):.4e} reactions/m3/s\n"
+        f"Total volume averaged fusion rate density: {mfile.get('fusden_total_vol_avg', scan=scan):.4e} reactions/m³/s\n"
+        f"Plasma volume averaged fusion rate density: {mfile.get('fusden_plasma_vol_avg', scan=scan):.4e} reactions/m³/s"
     )
 
     axis.text(
@@ -12284,8 +12284,8 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, fig, mfile: MFile, scan: i
     textstr_dt = (
         f"Total fusion power: {mfile.get('p_dt_total_mw', scan=scan):,.2f} MW\n"
         f"Plasma fusion power: {mfile.get('p_plasma_dt_mw', scan=scan):,.2f} MW                     \n"
-        f"Volume-averaged fusion power density: plasma: {mfile.get('pden_plasma_dt_vol_avg_mw', scan=scan):,.3f} MW/m³\n"
-        f"Beam fusion power: {mfile.get('p_beam_dt_mw', scan=scan):,.2f} MW\n"
+        f"Volume-averaged fusion power density: plasma: {mfile.get('pden_plasma_dt_vol_avg_mw', scan=scan):,.3f} MW/m³                      \n"
+        f"Beam fusion power: {mfile.get('p_beam_dt_mw', scan=scan):,.2f} MW"
     )
 
     axis.text(
@@ -12305,8 +12305,8 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, fig, mfile: MFile, scan: i
     )
 
     axis.text(
-        0.24,
-        0.8,
+        0.39,
+        0.79,
         "$\\text{D - T}$",
         fontsize=20,
         verticalalignment="top",
@@ -12317,8 +12317,8 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, fig, mfile: MFile, scan: i
 
     textstr_dd = (
         f"Total fusion power: {mfile.get('p_dd_total_mw', scan=scan):,.2f} MW\n"
-        f"Volume-averaged total power density: {mfile.get('pden_dd_total_vol_avg_mw', scan=scan):,.3e} MW/m³\n"
-        f"Tritium branching ratio: {mfile.get('f_dd_branching_trit', scan=scan):.4f}                      \n"
+        f"Volume-averaged total power density: {mfile.get('pden_dd_total_vol_avg_mw', scan=scan):,.3e} MW/m³                        \n"
+        f"Tritium branching ratio: {mfile.get('f_dd_branching_trit', scan=scan):.4f}                      "
     )
 
     axis.text(
@@ -12338,7 +12338,7 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, fig, mfile: MFile, scan: i
     )
 
     axis.text(
-        0.22,
+        0.36,
         0.685,
         "$\\text{D - D}$",
         fontsize=20,
@@ -12350,7 +12350,7 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, fig, mfile: MFile, scan: i
 
     textstr_dhe3 = (
         f"Total fusion power: {mfile.get('p_dhe3_total_mw', scan=scan):,.2f} MW                                 \n"
-        f"Volume-averaged total power density: {mfile.get('pden_dhe3_total_vol_avg_mw', scan=scan):,.3e} MW/m³\n\n"
+        f"Volume-averaged total power density: {mfile.get('pden_dhe3_total_vol_avg_mw', scan=scan):,.3e} MW/m³                              \n"
     )
 
     axis.text(
@@ -12370,7 +12370,7 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, fig, mfile: MFile, scan: i
     )
 
     axis.text(
-        0.21,
+        0.36,
         0.59,
         "$\\text{D - 3He}$",
         fontsize=20,
@@ -12384,12 +12384,12 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, fig, mfile: MFile, scan: i
         f"Total power: {mfile.get('p_alpha_total_mw', scan=scan):.2f} MW\n"
         f"Plasma power: {mfile.get('p_plasma_alpha_mw', scan=scan):.2f} MW\n"
         f"Beam power: {mfile.get('p_beam_alpha_mw', scan=scan):.2f} MW\n\n"
-        f"Volume-averaged rate density total: {mfile.get('fusden_alpha_total_vol_avg', scan=scan):.4e} particles/m3/sec\n"
-        f"Volume-averaged rate density, plasma: {mfile.get('fusden_plasma_alpha_vol_avg', scan=scan):.4e} particles/m3/sec\n\n"
-        f"Volume-averaged total power density: {mfile.get('pden_alpha_total_vol_avg_mw', scan=scan):.4e} MW/m3\n"
-        f"Volume-averaged plasma power density: {mfile.get('pden_plasma_alpha_vol_avg_mw', scan=scan):.4e} MW/m3\n\n"
-        f"Power per unit volume transferred to electrons: {mfile.get('f_pden_alpha_electron_mw', scan=scan):.4e} MW/m3\n"
-        f"Power per unit volume transferred to ions: {mfile.get('f_pden_alpha_ions_mw', scan=scan):.4e} MW/m3\n\n"
+        f"Volume-averaged rate density total: {mfile.get('fusden_alpha_total_vol_avg', scan=scan):.4e} particles/m³/sec\n"
+        f"Volume-averaged rate density, plasma: {mfile.get('fusden_plasma_alpha_vol_avg', scan=scan):.4e} particles/m³/sec\n\n"
+        f"Volume-averaged total power density: {mfile.get('pden_alpha_total_vol_avg_mw', scan=scan):.4e} MW/m³\n"
+        f"Volume-averaged plasma power density: {mfile.get('pden_plasma_alpha_vol_avg_mw', scan=scan):.4e} MW/m³\n\n"
+        f"Power per unit volume transferred to electrons: {mfile.get('f_pden_alpha_electron_mw', scan=scan):.4e} MW/m³\n"
+        f"Power per unit volume transferred to ions: {mfile.get('f_pden_alpha_ions_mw', scan=scan):.4e} MW/m³"
     )
 
     axis.text(
@@ -12410,7 +12410,7 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, fig, mfile: MFile, scan: i
 
     axis.text(
         0.35,
-        0.45,
+        0.425,
         "$\\alpha$",
         fontsize=22,
         verticalalignment="top",
@@ -12423,8 +12423,8 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, fig, mfile: MFile, scan: i
         f"Total power: {mfile.get('p_neutron_total_mw', scan=scan):,.2f} MW\n"
         f"Plasma power: {mfile.get('p_plasma_neutron_mw', scan=scan):,.2f} MW\n"
         f"Beam power: {mfile.get('p_beam_neutron_mw', scan=scan):,.2f} MW\n\n"
-        f"Volume-averaged total power density: {mfile.get('pden_neutron_total_vol_avg_mw', scan=scan):,.4e} MW/m3\n"
-        f"Volume-averaged plasma power density: {mfile.get('pden_plasma_neutron_vol_avg_mw', scan=scan):,.4e} MW/m3\n"
+        f"Volume-averaged total power density: {mfile.get('pden_neutron_total_vol_avg_mw', scan=scan):,.4e} MW/m³\n"
+        f"Volume-averaged plasma power density: {mfile.get('pden_plasma_neutron_vol_avg_mw', scan=scan):,.4e} MW/m³"
     )
 
     axis.text(
@@ -12444,8 +12444,8 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, fig, mfile: MFile, scan: i
     )
 
     axis.text(
-        0.25,
-        0.2,
+        0.3,
+        0.175,
         "$n$",
         fontsize=20,
         verticalalignment="top",
