@@ -54,7 +54,7 @@ class ConstraintData:
     (`constraint equation 68`)
     """
 
-    pflux_fw_rad_max: float = 1.0
+    pflux_fw_rad_max_mw: float = 1.0
     """Maximum permitted radiation wall load (MW/m^2) (`constraint equation 67`)"""
 
     mvalim: float = 40.0

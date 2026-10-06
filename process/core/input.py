@@ -609,7 +609,7 @@ INPUT_VARIABLES = {
     ),
     "max_vv_stress": InputVariable("tfcoil", float, range=(100000.0, 500000000.0)),
     "maxpoloidalpower": InputVariable("pf_power", float, range=(0.0, 2000.0)),
-    "pflux_fw_rad_max": InputVariable("constraints", float, range=(0.1, 10.0)),
+    "pflux_fw_rad_max_mw": InputVariable("constraints", float, range=(0.1, 10.0)),
     "mbvfac": InputVariable("buildings", float, range=(0.9, 3.0)),
     "mcdriv": InputVariable("ife", float, range=(0.1, 10.0)),
     "mvalim": InputVariable("constraints", float, range=(0.0, 1000.0)),

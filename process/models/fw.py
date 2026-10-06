@@ -1285,8 +1285,8 @@ class FirstWall(Model):
         po.ovarre(
             self.outfile,
             "Maximum permitted radiation first-wall load [MW/m²]",
-            "(pflux_fw_rad_max)",
-            self.data.constraints.pflux_fw_rad_max,
+            "(pflux_fw_rad_max_mw)",
+            self.data.constraints.pflux_fw_rad_max_mw,
             "IP ",
         )
         po.ovarre(

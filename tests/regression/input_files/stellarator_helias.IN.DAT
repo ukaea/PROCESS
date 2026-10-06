@@ -36,7 +36,7 @@ pflux_div_heat_load_max_mw = 10 * Divertor Heat Load Limit (MW/M2)
 
 * Simple Radiation Wall load limit (itv 116, 4,6)
 icc = 67 * icc_radiationload
-pflux_fw_rad_max = 1.2  * Max Permitted Radiation Wall Load (MW/M^2) (`Constraint Equation 67`)
+pflux_fw_rad_max_mw = 1.2  * Max Permitted Radiation Wall Load (MW/M^2) (`Constraint Equation 67`)
 
 * toroidalgap > tftort constraint (itv 171 ftoroidalgap)
 icc = 82 * icc_toroidalbuild
