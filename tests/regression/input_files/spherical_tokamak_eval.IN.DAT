@@ -3,10 +3,9 @@ i_process_run_mode = -2
 
 *---------------Constraint Equations---------------*
 * Define number of equality constraints
-n_equality_constraints = 3
+n_equality_constraints = 2
 
 * Equalities
-icc = 1 * Beta
 icc = 2 * Global power balance
 icc = 11 * Radial build
 
