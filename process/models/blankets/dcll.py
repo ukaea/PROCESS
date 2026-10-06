@@ -225,15 +225,6 @@ class DCLL(InboardBlanket, OutboardBlanket):
             * covf
         )
 
-        # HCD Apparatus
-
-        # No nuclear heating of the H & CD
-        self.data.fwbs.p_fw_hcd_nuclear_heat_mw = 0
-        # Radiation power incident on HCD apparatus (MW)
-        self.data.fwbs.p_fw_hcd_rad_total_mw = (
-            self.data.physics.p_plasma_rad_mw * self.data.fwbs.f_a_fw_outboard_hcd
-        )
-
         # FW
 
         if output:

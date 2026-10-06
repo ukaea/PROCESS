@@ -776,11 +776,6 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         output:
 
         """
-        # Radiation power incident on HCD apparatus (MW)
-        self.data.fwbs.p_fw_hcd_rad_total_mw = (
-            self.data.physics.p_plasma_rad_mw * self.data.fwbs.f_a_fw_outboard_hcd
-        )
-
         # If we have chosen pressurised water as the blanket coolant, set the
         # coolant outlet temperature as 20 deg C below the boiling point
         if self.data.fwbs.i_blkt_coolant_type == CoolantType.WATER:
