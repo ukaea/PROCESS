@@ -18,7 +18,6 @@ from process.models.physics.density_limit import DensityLimitModel
 from process.models.physics.exhaust import PlasmaExhaust
 from process.models.physics.physics import (
     BetaComponentLimits,
-    PlasmaBeta,
     PlasmaIgnitionModel,
 )
 from process.models.tfcoil.base import TFConductorModel
@@ -213,43 +212,6 @@ def eq(value: float, bound: float, registration: ConstraintRegistration):
         constraint_bound=bound,
         normalised_residual=normalised_residual,
         residual=residual,
-    )
-
-
-@ConstraintManager.register_constraint(1, "", "=")
-def constraint_equation_1(constraint_registration, data):
-    """Relationship between beta, temperature (keV) and density
-
-    beta_total_vol_avg: total plasma beta
-    beta_{ft}: fast alpha beta component
-    beta_{NBI}: neutral beam beta component
-    n_e: electron density [/m3]
-    n_i: total ion density [/m3]
-    T_e: density weighted average electron temperature [keV]
-    T_i: density weighted average ion temperature [keV]
-    B_{tot}: total toroidal + poloidal field [T]
-    """
-    # Density weighted temperature is used here as 〈nT〉 != 〈n〉_V * 〈T〉_V
-    beta_thermal_total_vol_avg = PlasmaBeta.calculate_plasma_beta(
-        pres_plasma=(
-            constants.KILOELECTRON_VOLT
-            * (
-                data.physics.nd_plasma_electrons_vol_avg
-                * data.physics.temp_plasma_electron_density_weighted_kev
-                + data.physics.nd_plasma_ions_total_vol_avg
-                * data.physics.temp_plasma_ion_density_weighted_kev
-            )
-        ),
-        b_field=data.physics.b_plasma_total,
-    )
-    return eq(
-        (
-            data.physics.beta_fast_alpha
-            + data.physics.beta_beam
-            + beta_thermal_total_vol_avg
-        ),
-        data.physics.beta_total_vol_avg,
-        constraint_registration,
     )
 
 
