@@ -15333,7 +15333,7 @@ def plot_poloidal_power_distribution(
 
     ax.set_xlabel("Radial position [m]")
     ax.set_ylabel("Vertical position [m]")
-    ax.set_title("Blanket and First Wall Poloidal Cross-Section")
+    ax.set_title("Power Distributions to Components")
     ax.minorticks_on()
     ax.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
 
@@ -15362,7 +15362,7 @@ def plot_poloidal_power_distribution(
         label="Blanket Half Height",
     )
 
-    if i_single_null == 0:
+    if DivertorNumberModels(i_single_null) == DivertorNumberModels.DOUBLE_NULL:
         # Plot arrows for the outboard blanket angles
         ax.annotate(
             "",
@@ -15385,9 +15385,9 @@ def plot_poloidal_power_distribution(
 
     # 3 to 6 o'clock position is -90 degrees,
     angle_start = -90.0
-    if i_single_null == 1:
+    if DivertorNumberModels(i_single_null) == DivertorNumberModels.SINGLE_NULL:
         angle_end = 90.0 + deg_div_poloidal_plasma
-    elif i_single_null == 0:
+    elif DivertorNumberModels(i_single_null) == DivertorNumberModels.DOUBLE_NULL:
         # 3 to 12 o'clock position is +90 degrees
         angle_end = 90.0
 
@@ -15399,7 +15399,7 @@ def plot_poloidal_power_distribution(
 
     # Plot the info box for the outboard blanket
     ax.text(
-        rmajor * 1.75,
+        r_blkt_outboard_out * 1.75,
         0.0,
         f"$P_{{\\gamma}}$={m_file.get('p_fw_outboard_rad_mw', scan=scan):.3f} MW\n"
         f"$\\Gamma_{{\\gamma}}$={m_file.get('pflux_fw_outboard_rad_surface_average_mw', scan=scan):.3f} MW/m²\n\n"
@@ -15487,7 +15487,7 @@ def plot_poloidal_power_distribution(
 
     # Plot the info box for the inboard blanket/FW
     ax.text(
-        rmajor / 3,
+        r_blkt_inboard_in / 4,
         0.0,
         f"$P_{{\\gamma}}$={m_file.get('p_fw_inboard_rad_mw', scan=scan):.3f} MW\n"
         f"$\\Gamma_{{\\gamma}}$={m_file.get('pflux_fw_inboard_rad_surface_average_mw', scan=scan):.3f} MW/m²\n\n"
@@ -15520,7 +15520,7 @@ def plot_poloidal_power_distribution(
 
     # Plot arrows for the divertor angles
     # If double null then plot the upper also
-    if i_single_null == 0:
+    if DivertorNumberModels(i_single_null) == DivertorNumberModels.DOUBLE_NULL:
         # Plot arc showing the angle between the two arrows (divertor angle)
         arc_radius = 1.5
         # 3 to 12 o'clock position is +90 degrees,
@@ -15536,14 +15536,14 @@ def plot_poloidal_power_distribution(
         # Add angle label at the arc
         mid_angle = np.deg2rad((angle_start + angle_end) / 2)
         label_radius = arc_radius * 1.8
-        label_x = rmajor + label_radius * np.cos(mid_angle)
-        label_y = label_radius * np.sin(mid_angle)
 
         ax.text(
-            label_x,
-            label_y,
-            f"{deg_div_poloidal_plasma:.1f}°\n({f_ster_div_single * 100:.1f}%)",
-            fontsize=7,
+            rmajor - (triang * rminor),
+            (rminor * kappa),
+            f"$\\frac{{\\Omega}}{{4\\pi}}={m_file.get('f_ster_div_upper_ring_source', scan=scan):.3f}$\n"
+            f"$P_{{\\gamma}}$={m_file.get('p_div_upper_rad_mw', scan=scan):.3f} MW\n\n"
+            f"$P_n$={m_file.get('p_div_upper_nuclear_heat_mw', scan=scan):.3f} MW",
+            fontsize=8,
             color="black",
             ha="center",
             va="center",
@@ -15580,9 +15580,10 @@ def plot_poloidal_power_distribution(
     ax.text(
         rmajor - (triang * rminor),
         -(rminor * kappa),
-        f"$P_{{\\gamma}}$={m_file.get('p_div_rad_total_mw', scan=scan):.3f} MW\n\n"
-        f"$P_n$={m_file.get('p_div_nuclear_heat_total_mw', scan=scan):.3f} MW\n",
-        fontsize=7,
+        f"$\\frac{{\\Omega}}{{4\\pi}}={m_file.get('f_ster_div_lower_ring_source', scan=scan):.3f}$\n"
+        f"$P_{{\\gamma}}$={m_file.get('p_div_lower_rad_mw', scan=scan):.3f} MW\n\n"
+        f"$P_n$={m_file.get('p_div_lower_nuclear_heat_mw', scan=scan):.3f} MW",
+        fontsize=8,
         color="black",
         ha="center",
         va="center",
@@ -15594,7 +15595,7 @@ def plot_poloidal_power_distribution(
             "edgecolor": "black",
             "linewidth": 1.5,
         },
-        zorder=5,
+        zorder=100,
     )
 
     # Plot vertical lines at the inner and outer radial boundaries of the blanket
@@ -15625,7 +15626,7 @@ def plot_poloidal_power_distribution(
         label="Midplane",
     )
 
-    ax.set_xlim(-rmajor / 4, 2 * rmajor)
+    ax.set_xlim(-rmajor / 2, 3 * rmajor)
 
 
 def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int):
@@ -17260,12 +17261,10 @@ def plot_fw_inboard_toroidal_angle_load(
     # Add angle label at the arc
     mid_angle = np.deg2rad((angle_start + angle_end) / 2)
     label_radius = 0.5 * rmajor
-    label_x = rmajor - label_radius * np.cos(mid_angle)
-    label_y = label_radius * np.sin(mid_angle)
 
     axis.text(
-        label_x,
-        label_y,
+        rmajor + rminor,
+        0.0,
         f"$\\varphi_{{max}}$={deg_fw_inboard_plasma_centre_toroidal:.2f}°\n "
         f"$\\frac{{\\varphi_{{max}}}}{{360}}=${f_rad_fw_inboard_plasma_centre_toroidal * 100:.2f}%\n"
         f"$\\frac{{\\Omega}}{{4\\pi}}=${f_ster_fw_inboard_ring_source * 100:.2f}%",

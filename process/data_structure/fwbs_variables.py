@@ -103,7 +103,13 @@ class FWBSData:
     """TF neutronic nuclear heating in the ST centrepost [MW]"""
 
     p_div_nuclear_heat_total_mw: float = 0.0
-    """nuclear heating in the divertor [MW]"""
+    """Total nuclear heating in the divertor(s) [MW]"""
+
+    p_div_lower_nuclear_heat_mw: float = 0.0
+    """Nuclear heating in the lower divertor [MW]"""
+
+    p_div_upper_nuclear_heat_mw: float = 0.0
+    """Nuclear heating in the upper divertor [MW]"""
 
     p_fw_nuclear_heat_total_mw: float = 0.0
     """nuclear heating in the first wall [MW]"""
@@ -396,6 +402,12 @@ class FWBSData:
 
     p_div_rad_total_mw: float = 0.0
     """Total radiation power incident on the divertor(s) (MW)"""
+
+    p_div_lower_rad_mw: float = 0.0
+    """Radiation power incident on the lower divertor [MW]"""
+
+    p_div_upper_rad_mw: float = 0.0
+    """Radiation power incident on the upper divertor [MW]"""
 
     p_fw_rad_total_mw: float = 0.0
     """Radiation power incident on the first wall (MW)"""

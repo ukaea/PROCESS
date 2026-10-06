@@ -1276,10 +1276,36 @@ class Power(Model):
         )
         po.ovarre(
             self.outfile,
-            "Radiation heat deposited in divertor [MW]",
+            "Neutronic nuclear heat deposited in lower divertor [MW]",
+            "(p_div_lower_nuclear_heat_mw)",
+            self.data.fwbs.p_div_lower_nuclear_heat_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Neutronic nuclear heat deposited in upper divertor [MW]",
+            "(p_div_upper_nuclear_heat_mw)",
+            self.data.fwbs.p_div_upper_nuclear_heat_mw,
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Total radiation heat deposited in divertor(s) [MW]",
             "(p_div_rad_total_mw)",
             self.data.fwbs.p_div_rad_total_mw,
         )
+        po.ovarre(
+            self.outfile,
+            "Radiation heat deposited in lower divertor [MW]",
+            "(p_div_lower_rad_mw)",
+            self.data.fwbs.p_div_lower_rad_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Radiation heat deposited in upper divertor [MW]",
+            "(p_div_upper_rad_mw)",
+            self.data.fwbs.p_div_upper_rad_mw,
+        )
+        po.oblnkl(self.outfile)
 
         po.ovarre(
             self.outfile,
