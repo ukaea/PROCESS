@@ -160,49 +160,32 @@ This is Equation 3.13 from "Case Studies in Superconducting Magnets"[^2].
 
 ### Self peak on coil magnetic field | `calculate_cs_self_peak_magnetic_field()`
 
-The peak field at the bore of the central solenoid will not be the same as that felt by the 
-conductors inside the structures. So we cannot use the bore value directly calculated by 
-[`calculate_cs_bore_magnetic_field()`](#self-peak-bore-magnetic-field--calculate_cs_bore_magnetic_field). 
-We need to know the peak field on the conductor if we are to design a superconducting 
-central solenoid that has enough margin. Fits to data[^1] for different ranges of $\beta$ 
-have been calculated as follows to scale the bore field value by:
+The peak self-field in a solenoid occurs at the inner radius and midplane of the coil. We need to know
+the peak self-field on the conductor if we are to design a superconducting central solenoid that has enough
+margin. This is calculated as a peaking factor on the bore self-field [`calculate_cs_bore_magnetic_field()`](#self-peak-bore-magnetic-field--calculate_cs_bore_magnetic_field). 
+A fit to data generated in BLUEMIRA using a semi-analytical 
+formula for the field due to a circular coil of rectangular cross-section and uniform current density
+is used as a surrogate model to rapidly calculate the peak self-field of a finite, single-turn solenoid for  $1.003 \leq \alpha \leq 2.0$ and $1.002 \leq \beta \leq 5.0$:
 
-- $\beta > 3.0$
+$$
+\begin{aligned}
+B_{conductor,peak} &= kB_{0} \\
 
-    $$
-    B_{\text{conductor,peak}} = B_0 \times \left(\frac{3}{\beta}\right)^2 \times (1.007 + (\alpha -1.0)\times 0.005) \\
-    +\left(1.0- \left(\frac{3}{\beta}\right)^2\right) \times  (J_{\text{CS}}dr_{\text{CS}})
-    $$
-
-- $2.0 < \beta \le 3.0$
-
-    $$
-    B_{\text{conductor,peak}} = B_0 \times \left(1.025-(\beta-2.0)\times 0.018\right) + (\alpha -1.0) \\
-     \times (0.01-(\beta-2.0)\times 0.0045)
-    $$
-
-
-- $1.0 < \beta \le 2.0$
-
-    $$
-    B_{\text{conductor,peak}} = B_0 \times \left(1.117-(\beta-1.0)\times 0.092\right) + (\alpha -1.0) \\
-     \times ((\beta-1.0)\times 0.01)
-    $$
-
-
-- $0.75 < \beta \le 1.0$
-
-    $$
-    B_{\text{conductor,peak}} = B_0 \times \left(1.3-0.732(\beta-0.75)\right) + (\alpha -1.0) \\
-     \times 0.2((\beta-0.75)-0.05)
-    $$
-
-- $\beta \le 0.75$
-
-    $$
-    B_{\text{conductor,peak}} = B_0 \times \left(1.65-1.4(\beta-0.5)\right) + (\alpha -1.0) \\
-     \times 0.6((\beta-0.5)-0.2)
-    $$
+k(\alpha,\beta)&=1+\exp\left(\frac{-1.821
++0.817\,\ln(\alpha)
+-1.872\,\ln(\beta)
+-0.542\,\ln(\alpha^2)
++1.307\,\ln(\alpha)\ln(\beta)
+-0.231\,\ln(\beta^2)
+}{1-0.278\,\ln(\alpha)
+-0.206\,\ln(\beta)
++0.0562\,\ln(\alpha^2)
+-0.0248\,\ln(\alpha)\ln(\beta)
++0.0482\,\ln(\beta^2)
+}
+\right)
+\end{aligned}
+$$
 
 
 
