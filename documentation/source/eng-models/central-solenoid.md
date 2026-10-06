@@ -169,9 +169,9 @@ is used as a surrogate model to rapidly calculate the peak self-field of a finit
 
 $$
 \begin{aligned}
-B_{conductor,peak} &= kB_{0} \\
+B_{\text{conductor,peak}} &= kB_{0} \\
 
-k(\alpha,\beta)&=1+\exp\left(\frac{
+k(\alpha,\beta)&\approx1+\exp\left(\frac{
     -1.821
     +0.817\,\ln(\alpha)
     -1.872\,\ln(\beta)
