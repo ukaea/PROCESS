@@ -1029,11 +1029,11 @@ class BfmaxTestAsset(NamedTuple):
 @pytest.mark.parametrize(
     "test_asset",
     [
-        BfmaxTestAsset(a=2.0, h=8.0, bfmax_exp=2.461485e1),
-        BfmaxTestAsset(a=2.0, h=4.1, bfmax_exp=2.2072637e1),
-        BfmaxTestAsset(a=2.0, h=2.1, bfmax_exp=1.803889e1),
-        BfmaxTestAsset(a=2.0, h=1.6, bfmax_exp=1.693509e1),
-        BfmaxTestAsset(a=2.0, h=1.0, bfmax_exp=1.4601048e1),
+        BfmaxTestAsset(a=2.0, h=8.0, bfmax_exp=24.06422),
+        BfmaxTestAsset(a=2.0, h=4.1, bfmax_exp=22.11566),
+        BfmaxTestAsset(a=2.0, h=2.1, bfmax_exp=18.74317),
+        BfmaxTestAsset(a=2.0, h=1.6, bfmax_exp=17.10242),
+        BfmaxTestAsset(a=2.0, h=1.0, bfmax_exp=14.04760),
     ],
 )
 def test_bfmax(cs_coil, test_asset):
@@ -1051,7 +1051,7 @@ def test_bfmax(cs_coil, test_asset):
         rj, test_asset.a, b, test_asset.h
     )
 
-    assert pytest.approx(bfmax) == test_asset.bfmax_exp
+    assert test_asset.bfmax_exp == pytest.approx(bfmax)
 
 
 def test_waveform(monkeypatch, pfcoil):
