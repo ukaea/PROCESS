@@ -1883,11 +1883,11 @@ class TfCoilAreaAndMassesParam(NamedTuple):
         ),
     ],
 )
-def test_superconducting_tf_coil_area_and_masses(
-    tfcoilareaandmassesparam, monkeypatch, sctfcoil
+def test_tf_cicc_area_and_masses(
+    tfcoilareaandmassesparam, monkeypatch, sctfcoil, cicc_sctfcoil
 ):
     """
-    Automatically generated Unit Test for tf_coil_area_and_masses.
+    Automatically generated Unit Test for `tf_cicc_areas_and_masses()`
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -1981,39 +1981,37 @@ def test_superconducting_tf_coil_area_and_masses(
     ):
         monkeypatch.setattr(sctfcoil.data.superconducting_tfcoil, name, val)
 
-    sctfcoil.superconducting_tf_coil_areas_and_masses()
+    result = cicc_sctfcoil.tf_cicc_areas_and_masses()
 
-    assert sctfcoil.data.tfcoil.m_tf_wp_steel_conduit == pytest.approx(
+    assert result.m_tf_wp_steel_conduit == pytest.approx(
         tfcoilareaandmassesparam.expected_m_tf_wp_steel_conduit
     )
 
-    assert sctfcoil.data.tfcoil.m_tf_coil_case == pytest.approx(
+    assert result.m_tf_coil_case == pytest.approx(
         tfcoilareaandmassesparam.expected_m_tf_coil_case
     )
 
-    assert sctfcoil.data.tfcoil.m_tf_coil_wp_insulation == pytest.approx(
+    assert result.m_tf_coil_wp_insulation == pytest.approx(
         tfcoilareaandmassesparam.expected_m_tf_coil_wp_insulation
     )
 
-    assert sctfcoil.data.tfcoil.m_tf_coil_superconductor == pytest.approx(
+    assert result.m_tf_coil_superconductor == pytest.approx(
         tfcoilareaandmassesparam.expected_m_tf_coil_superconductor
     )
 
-    assert sctfcoil.data.tfcoil.m_tf_coil_copper == pytest.approx(
+    assert result.m_tf_coil_copper == pytest.approx(
         tfcoilareaandmassesparam.expected_m_tf_coil_copper
     )
 
-    assert sctfcoil.data.tfcoil.m_tf_coil_conductor == pytest.approx(
+    assert result.m_tf_coil_conductor == pytest.approx(
         tfcoilareaandmassesparam.expected_whtcon
     )
 
-    assert sctfcoil.data.tfcoil.m_tf_coil_wp_turn_insulation == pytest.approx(
+    assert result.m_tf_coil_wp_turn_insulation == pytest.approx(
         tfcoilareaandmassesparam.expected_m_tf_coil_wp_turn_insulation
     )
 
-    assert sctfcoil.data.tfcoil.cplen == pytest.approx(
-        tfcoilareaandmassesparam.expected_cplen
-    )
+    assert result.cplen == pytest.approx(tfcoilareaandmassesparam.expected_cplen)
 
 
 @pytest.mark.parametrize(
