@@ -162,10 +162,11 @@ This is Equation 3.13 from "Case Studies in Superconducting Magnets"[^2].
 
 The peak self-field in a solenoid occurs at the inner radius and midplane of the coil. We need to know
 the peak self-field on the conductor if we are to design a superconducting central solenoid that has enough
-margin. This is calculated as a peaking factor on the bore self-field [`calculate_cs_bore_magnetic_field()`](#self-peak-bore-magnetic-field--calculate_cs_bore_magnetic_field). 
-A fit to data generated in BLUEMIRA using a semi-analytical 
-formula for the field due to a circular coil of rectangular cross-section and uniform current density
-is used as a surrogate model to rapidly calculate the peak self-field of a finite, single-turn solenoid for  $1.003 \leq \alpha \leq 2.0$ and $1.002 \leq \beta \leq 5.0$:
+margin. This is calculated as a peaking factor on the bore self-field [`calculate_cs_bore_magnetic_field()`](#self-peak-bore-magnetic-field--calculate_cs_bore_magnetic_field).
+
+A fit to data generated in BLUEMIRA using a semi-analytical formula for the field due to a circular coil of 
+rectangular cross-section and uniform current density is used as a surrogate model to rapidly calculate the 
+peak self-field of a finite, single-turn solenoid for  $1.003 \leq \alpha \leq 2.0$ and $1.002 \leq \beta \leq 5.0$:
 
 $$
 \begin{aligned}
