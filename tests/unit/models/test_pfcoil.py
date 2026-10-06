@@ -2783,7 +2783,7 @@ class OhCalcParam(NamedTuple):
             plasma_current=1.8254e7,
             poisson_steel=3.0e-1,
             exp_b_pf_coil_peak=13.069711729713154,
-            exp_j_cs_critical_flat_top_end=54101481.7685945,
+            exp_j_cs_critical_flat_top_end=54154076.702704564,
         )
     ],
 )
