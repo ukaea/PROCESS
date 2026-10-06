@@ -171,23 +171,24 @@ $$
 \begin{aligned}
 B_{conductor,peak} &= kB_{0} \\
 
-k(\alpha,\beta)&=1+\exp\left(\frac{-1.821
-+0.817\,\ln(\alpha)
--1.872\,\ln(\beta)
--0.542\,\ln(\alpha^2)
-+1.307\,\ln(\alpha)\ln(\beta)
--0.231\,\ln(\beta^2)
-}{1-0.278\,\ln(\alpha)
--0.206\,\ln(\beta)
-+0.0562\,\ln(\alpha^2)
--0.0248\,\ln(\alpha)\ln(\beta)
-+0.0482\,\ln(\beta^2)
+k(\alpha,\beta)&=1+\exp\left(\frac{
+    -1.821
+    +0.817\,\ln(\alpha)
+    -1.872\,\ln(\beta)
+    -0.542\,\ln^2(\alpha)
+    +1.307\,\ln(\alpha)\ln(\beta)
+    -0.231\,\ln^2(\beta)
+}{
+    1
+    -0.278\,\ln(\alpha)
+    -0.206\,\ln(\beta)
+    +0.0562\,\ln^2(\alpha)
+    -0.0248\,\ln(\alpha)\ln(\beta)
+    +0.0482\,\ln^2(\beta)
 }
 \right)
 \end{aligned}
 $$
-
-
 
 -----------
 
