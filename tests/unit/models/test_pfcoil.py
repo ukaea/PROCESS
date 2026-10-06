@@ -1043,6 +1043,10 @@ def test_bfmax(cs_coil, test_asset):
     :type cs_coil: process.pfcoil.CSCoil
     :param test_asset: arguments and expected return value for single test case
     :type test_asset: BfmaxTestAsset
+
+    Notes
+    -----
+    This is just a regression test; the values are calculated using PROCESS.
     """
     rj = 2.0e7
     b = 3.0
