@@ -143,6 +143,16 @@ class FirstWall(Model):
             b_bz_liq=self.data.fwbs.b_bz_liq,
         )
 
+        if self.data.physics.i_pflux_fw_neutron == 1:
+            self.data.physics.pflux_fw_neutron_mw = (
+                self.data.physics.ffwal
+                * self.data.physics.pflux_plasma_surface_neutron_avg_mw
+            )
+        else:
+            self.data.physics.pflux_fw_neutron_mw = (
+                self.data.physics.p_neutron_total_mw / self.data.first_wall.a_fw_total
+            )
+
         (
             self.data.fwbs.rad_fw_inboard_plasma_centre_toroidal,
             self.data.fwbs.f_rad_fw_inboard_plasma_centre_toroidal,
