@@ -546,7 +546,10 @@ def constraint_equation_8(constraint_registration, data):
     pflux_fw_neutron_mw: average neutron wall load (MW/m²)
     """
     return leq(
-        data.physics.pflux_fw_neutron_mw,
+        max(
+            data.fwbs.pflux_fw_inboard_neutron_surface_average_mw,
+            data.fwbs.pflux_fw_outboard_neutron_surface_average_mw,
+        ),
         data.constraints.pflux_fw_neutron_max_mw,
         constraint_registration,
     )

@@ -143,16 +143,6 @@ class FirstWall(Model):
             b_bz_liq=self.data.fwbs.b_bz_liq,
         )
 
-        if self.data.physics.i_pflux_fw_neutron == 1:
-            self.data.physics.pflux_fw_neutron_mw = (
-                self.data.physics.ffwal
-                * self.data.physics.pflux_plasma_surface_neutron_avg_mw
-            )
-        else:
-            self.data.physics.pflux_fw_neutron_mw = (
-                self.data.physics.p_neutron_total_mw / self.data.first_wall.a_fw_total
-            )
-
         (
             self.data.fwbs.rad_fw_inboard_plasma_centre_toroidal,
             self.data.fwbs.f_rad_fw_inboard_plasma_centre_toroidal,
@@ -1277,6 +1267,7 @@ class FirstWall(Model):
         """Outputs the first wall surface load details to the output file."""
         po.oheadr(self.outfile, "First wall surface loads")
 
+        po.osubhd(self.outfile, "Radiation loads:")
         po.ovarre(
             self.outfile,
             "Nominal mean radiation load on vessel first-wall [MW/m²]",
@@ -1305,64 +1296,66 @@ class FirstWall(Model):
             self.data.constraints.pflux_fw_rad_max_mw,
             "OP ",
         )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Radiation heat flux on inboard first wall [MW]",
+            "Radiation power on inboard first wall (Pᵧ,FW) [MW]",
             "(p_fw_inboard_rad_mw)",
             self.data.fwbs.p_fw_inboard_rad_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Radiation surface heat flux on inboard first wall [MW/m²]",
+            "Surface average radiation heat flux on inboard first wall (⟨qᵧ⟩) [MW/m²]",
             "(pflux_fw_inboard_rad_surface_average_mw)",
             self.data.fwbs.pflux_fw_inboard_rad_surface_average_mw,
             "OP ",
         )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Radiation heat flux on outboard first wall [MW]",
+            "Radiation power on outboard first wall (Pᵧ,FW) [MW]",
             "(p_fw_outboard_rad_mw)",
             self.data.fwbs.p_fw_outboard_rad_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Radiation surface heat flux on outboard first wall [MW/m²]",
+            "Surface average radiation heat flux on outboard first wall (⟨qᵧ⟩) [MW/m²]",
             "(pflux_fw_outboard_rad_surface_average_mw)",
             self.data.fwbs.pflux_fw_outboard_rad_surface_average_mw,
             "OP ",
         )
         po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.osubhd(self.outfile, "Alpha particle loads:")
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Alpha particle heat flux on inboard first wall [MW]",
+            "Alpha particle power on inboard first wall [MW]",
             "(p_fw_inboard_alpha_surface_mw)",
             self.data.fwbs.p_fw_inboard_alpha_surface_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Alpha particle heat flux on outboard first wall [MW]",
+            "Alpha particle power on outboard first wall [MW]",
             "(p_fw_outboard_alpha_surface_mw)",
             self.data.fwbs.p_fw_outboard_alpha_surface_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Fast alpha particle power incident on the first-wall [MW]",
+            "Total alpha particle power incident on all first-walls [MW]",
             "(p_fw_alpha_surface_total_mw)",
             self.data.physics.p_fw_alpha_surface_total_mw,
             "OP ",
         )
         po.oblnkl(self.outfile)
-        po.ovarre(
-            self.outfile,
-            "Nominal mean neutron load on vessel first-wall [MW/m²]",
-            "(pflux_fw_neutron_mw)",
-            self.data.physics.pflux_fw_neutron_mw,
-            "OP ",
-        )
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.osubhd(self.outfile, "Neutron loads:")
+        po.oblnkl(self.outfile)
+
         po.ovarre(
             self.outfile,
             "Neutron heat flux on inboard first wall [MW]",
@@ -1377,6 +1370,7 @@ class FirstWall(Model):
             self.data.fwbs.pflux_fw_inboard_neutron_surface_average_mw,
             "OP ",
         )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "Neutron heat flux on outboard first wall [MW]",
