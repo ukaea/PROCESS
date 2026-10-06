@@ -2248,7 +2248,7 @@ class Stellarator(Model):
                 / self.data.first_wall.a_fw_total
             )
 
-        self.data.constraints.pflux_fw_rad_max_mw = (
+        self.data.constraints.pflux_fw_rad_peak_mw = (
             self.data.physics.pflux_fw_rad_mw * self.data.constraints.f_fw_rad_max
         )
 

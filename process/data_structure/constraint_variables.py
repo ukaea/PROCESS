@@ -76,7 +76,7 @@ class ConstraintData:
     f_fw_rad_max: float = 3.33
     """peaking factor for radiation wall load (`constraint equation 67`)"""
 
-    pflux_fw_rad_max_mw: float = 0.0
+    pflux_fw_rad_peak_mw: float = 0.0
     """Peak radiation wall load (MW/m^2) (`constraint equation 67`)"""
 
     p_plant_electric_net_required_mw: float = 1.0e3

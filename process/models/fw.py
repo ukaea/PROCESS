@@ -236,7 +236,7 @@ class FirstWall(Model):
                 self.data.physics.p_plasma_rad_mw / self.data.first_wall.a_fw_total
             )
 
-        self.data.constraints.pflux_fw_rad_max_mw = (
+        self.data.constraints.pflux_fw_rad_peak_mw = (
             self.data.physics.pflux_fw_rad_mw * self.data.constraints.f_fw_rad_max
         )
 
@@ -1292,8 +1292,8 @@ class FirstWall(Model):
         po.ovarre(
             self.outfile,
             "Peak radiation wall load [MW/m²]",
-            "(pflux_fw_rad_max_mw)",
-            self.data.constraints.pflux_fw_rad_max_mw,
+            "(pflux_fw_rad_peak_mw)",
+            self.data.constraints.pflux_fw_rad_peak_mw,
             "OP ",
         )
         po.oblnkl(self.outfile)

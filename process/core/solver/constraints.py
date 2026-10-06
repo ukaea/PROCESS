@@ -1505,10 +1505,10 @@ def constraint_equation_67(constraint_registration, data):
     """Simple upper limit on radiation wall load
 
     pflux_fw_rad_max: Maximum permitted radiation wall load (MW/m²)
-    pflux_fw_rad_max_mw: Peak radiation wall load (MW/m²)
+    pflux_fw_rad_peak_mw: Peak radiation wall load (MW/m²)
     """
     return leq(
-        data.constraints.pflux_fw_rad_max_mw,
+        data.constraints.pflux_fw_rad_peak_mw,
         data.constraints.pflux_fw_rad_max,
         constraint_registration,
     )
