@@ -32,14 +32,10 @@ N_FW_PIPE_180_DEG_BENDS = 0
 "Number of 180 degree bends in first wall coolant channels."
 
 
-N_FW_PIPE_90_DEG_BENDS = 2
-"Number of 90 degree bends in first wall coolant channels."
-N_FW_PIPE_180_DEG_BENDS = 0
-"Number of 180 degree bends in first wall coolant channels."
-
-
 @dataclass(slots=True)
 class InVesselSolidAngleFractions:
+    """Solid angle fractions of in-vessel components assuming a ring source."""
+
     f_ster_fw_inboard_ring_source: float = 0.0
     """Solid angle fraction of inboard FW assuming a ring source"""
 
@@ -178,11 +174,6 @@ class FirstWall(Model):
             - self.data.physics.rminor
             - self.data.build.dr_fw_plasma_gap_inboard
         )
-        r_fw_outboard = (
-            self.data.physics.rmajor
-            + self.data.physics.rminor
-            + self.data.build.dr_fw_plasma_gap_outboard
-        )
 
         in_vessel_solid_angle_fractions = (
             self.calculate_component_solid_angle_components(
@@ -292,7 +283,7 @@ class FirstWall(Model):
         # and shine through.
         # Some power is lost to HCD and ports on the outboard wall, so this is
         # taken into account with a coverage factor.
-        self.data.fwbs.p_fw_outboard_surface_heat_mw = self.calculate_fw_outboard_surface_loads(
+        self.data.fwbs.p_fw_outboard_surface_heat_mw = self.calculate_fw_outboard_surface_loads(  # noqa: E501
             p_fw_outboard_rad_mw=self.data.fwbs.p_fw_outboard_rad_mw,
             p_beam_orbit_loss_mw=self.data.current_drive.p_beam_orbit_loss_mw,
             p_fw_outboard_alpha_surface_mw=self.data.fwbs.p_fw_outboard_alpha_surface_mw,
@@ -307,6 +298,7 @@ class FirstWall(Model):
         (
             self.data.fwbs.p_fw_inboard_neutron_incident_mw,
             self.data.fwbs.pflux_fw_inboard_neutron_surface_average_mw,
+            _,
         ) = self.calculate_fw_surface_load(
             p_plasma_source_mw=self.data.physics.p_neutron_total_mw,
             f_deg_blkt_poloidal_plasma=self.data.fwbs.f_ster_fw_inboard_ring_source,

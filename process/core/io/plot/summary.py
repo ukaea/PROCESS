@@ -15309,20 +15309,12 @@ def plot_poloidal_power_distribution(
     dr_blkt_outboard = m_file.get("dr_blkt_outboard", scan=scan)
     dr_blkt_inboard = m_file.get("dr_blkt_inboard", scan=scan)
     dz_blkt_half = m_file.get("dz_blkt_half", scan=scan)
-    deg_blkt_outboard_poloidal_plasma = m_file.get(
-        "deg_blkt_outboard_poloidal_plasma", scan=scan
-    )
+
     deg_blkt_inboard_poloidal_plasma = m_file.get(
         "deg_blkt_inboard_poloidal_plasma", scan=scan
     )
-    f_deg_blkt_outboard_poloidal_plasma = m_file.get(
-        "f_deg_blkt_outboard_poloidal_plasma", scan=scan
-    )
-    f_deg_blkt_inboard_poloidal_plasma = m_file.get(
-        "f_deg_blkt_inboard_poloidal_plasma", scan=scan
-    )
+
     deg_div_poloidal_plasma = m_file.get("deg_div_poloidal_plasma", scan=scan)
-    f_ster_div_single = m_file.get("f_ster_div_single", scan=scan)
     i_single_null = m_file.get("i_single_null", scan=scan)
 
     # ======================
@@ -15401,11 +15393,13 @@ def plot_poloidal_power_distribution(
     ax.text(
         r_blkt_outboard_out * 1.75,
         0.0,
+        f"Outboard FW:\n"
+        f"$\\frac{{\\Omega}}{{4\\pi}}={m_file.get('f_ster_fw_outboard_ring_source', scan=scan) * 100:.2f}\\%$\n"
         f"$P_{{\\gamma}}$={m_file.get('p_fw_outboard_rad_mw', scan=scan):.3f} MW\n"
-        f"$\\Gamma_{{\\gamma}}$={m_file.get('pflux_fw_outboard_rad_surface_average_mw', scan=scan):.3f} MW/m²\n\n"
+        f"$\\langle \\Gamma_{{\\gamma}} \\rangle$={m_file.get('pflux_fw_outboard_rad_surface_average_mw', scan=scan):.3f} MW/m²\n\n"
         f"$P_{{\\alpha}}$={m_file.get('p_fw_outboard_alpha_surface_mw', scan=scan):.3f} MW\n\n"
         f"$P_n$={m_file.get('p_fw_outboard_neutron_incident_mw', scan=scan):.3f} MW\n"
-        f"$\\Gamma_{{n}}$={m_file.get('pflux_fw_outboard_neutron_surface_average_mw', scan=scan):.3f} MW/m²\n",
+        f"$\\langle \\Gamma_{{n}} \\rangle$={m_file.get('pflux_fw_outboard_neutron_surface_average_mw', scan=scan):.3f} MW/m²",
         fontsize=7,
         color="purple",
         ha="center",
@@ -15479,21 +15473,17 @@ def plot_poloidal_power_distribution(
 
     ax.plot(arc_x, arc_y, color="green", linewidth=2)
 
-    # Add angle label at the arc
-    mid_angle = np.deg2rad((angle_start + angle_end) / 2)
-    label_radius = arc_radius * 1.8
-    label_x = rmajor - label_radius * np.cos(mid_angle)
-    label_y = label_radius * np.sin(mid_angle)
-
     # Plot the info box for the inboard blanket/FW
     ax.text(
         r_blkt_inboard_in / 4,
         0.0,
+        f"Inboard FW:\n"
+        f"$\\frac{{\\Omega}}{{4\\pi}}={m_file.get('f_ster_fw_inboard_ring_source', scan=scan) * 100:.2f}\\%$\n"
         f"$P_{{\\gamma}}$={m_file.get('p_fw_inboard_rad_mw', scan=scan):.3f} MW\n"
-        f"$\\Gamma_{{\\gamma}}$={m_file.get('pflux_fw_inboard_rad_surface_average_mw', scan=scan):.3f} MW/m²\n\n"
+        f"$\\langle\\Gamma_{{\\gamma}}\\rangle$={m_file.get('pflux_fw_inboard_rad_surface_average_mw', scan=scan):.3f} MW/m²\n\n"
         f"$P_{{\\alpha}}$={m_file.get('p_fw_inboard_alpha_surface_mw', scan=scan):.3f} MW\n\n"
         f"$P_n$={m_file.get('p_fw_inboard_neutron_incident_mw', scan=scan):.3f} MW\n"
-        f"$\\Gamma_{{n}}$={m_file.get('pflux_fw_inboard_neutron_surface_average_mw', scan=scan):.3f} MW/m²\n\n",
+        f"$\\langle\\Gamma_{{n}}\\rangle$={m_file.get('pflux_fw_inboard_neutron_surface_average_mw', scan=scan):.3f} MW/m²",
         fontsize=7,
         color="green",
         ha="center",
@@ -15533,14 +15523,10 @@ def plot_poloidal_power_distribution(
 
         ax.plot(arc_x, arc_y, color="black", linewidth=2)
 
-        # Add angle label at the arc
-        mid_angle = np.deg2rad((angle_start + angle_end) / 2)
-        label_radius = arc_radius * 1.8
-
         ax.text(
             rmajor - (triang * rminor),
             (rminor * kappa),
-            f"$\\frac{{\\Omega}}{{4\\pi}}={m_file.get('f_ster_div_upper_ring_source', scan=scan):.3f}$\n"
+            f"$\\frac{{\\Omega}}{{4\\pi}}={m_file.get('f_ster_div_upper_ring_source', scan=scan) * 100:.2f}\\%$\n"
             f"$P_{{\\gamma}}$={m_file.get('p_div_upper_rad_mw', scan=scan):.3f} MW\n\n"
             f"$P_n$={m_file.get('p_div_upper_nuclear_heat_mw', scan=scan):.3f} MW",
             fontsize=8,
@@ -15570,17 +15556,11 @@ def plot_poloidal_power_distribution(
 
     ax.plot(arc_x, arc_y, color="black", linewidth=2)
 
-    # Add angle label at the arc
-    mid_angle = np.deg2rad((angle_start + angle_end) / 2)
-    label_radius = arc_radius * 1.8
-    label_x = rmajor + label_radius * np.cos(mid_angle)
-    label_y = label_radius * np.sin(mid_angle)
-
     # Plot the info box for the lower divertor angle
     ax.text(
         rmajor - (triang * rminor),
         -(rminor * kappa),
-        f"$\\frac{{\\Omega}}{{4\\pi}}={m_file.get('f_ster_div_lower_ring_source', scan=scan):.3f}$\n"
+        f"$\\frac{{\\Omega}}{{4\\pi}}={m_file.get('f_ster_div_lower_ring_source', scan=scan) * 100:.2f}\\%$\n"
         f"$P_{{\\gamma}}$={m_file.get('p_div_lower_rad_mw', scan=scan):.3f} MW\n\n"
         f"$P_n$={m_file.get('p_div_lower_nuclear_heat_mw', scan=scan):.3f} MW",
         fontsize=8,
@@ -17210,7 +17190,7 @@ def plot_fw_inboard_toroidal_angle_load(
     demo_ranges: bool,
     colour_scheme: Literal[1, 2],
 ):
-
+    """Plot the toroidal angle load for the inboard first wall."""
     rad_fw_inboard_plasma_centre_toroidal = mfile.get(
         "rad_fw_inboard_plasma_centre_toroidal", scan=scan
     )
@@ -17259,11 +17239,9 @@ def plot_fw_inboard_toroidal_angle_load(
     axis.plot(arc_x, arc_y, color="red", linewidth=2)
 
     # Add angle label at the arc
-    mid_angle = np.deg2rad((angle_start + angle_end) / 2)
-    label_radius = 0.5 * rmajor
 
     axis.text(
-        rmajor + rminor,
+        rmajor + 1.5 * rminor,
         0.0,
         f"$\\varphi_{{max}}$={deg_fw_inboard_plasma_centre_toroidal:.2f}°\n "
         f"$\\frac{{\\varphi_{{max}}}}{{360}}=${f_rad_fw_inboard_plasma_centre_toroidal * 100:.2f}%\n"
@@ -17283,123 +17261,6 @@ def plot_fw_inboard_toroidal_angle_load(
     )
     axis.set_title("Ring Source Toroidal View")
     axis.set_ylim([-axis.get_ylim()[1], axis.get_ylim()[1]])
-
-
-def plot_ring_source_poloidal_view(
-    axis: plt.Axes,
-    fig: plt.Figure,
-    mfile: MFile,
-    scan: int,
-):
-    """Idealised poloidal (R-Z) diagram of the coaxial cylinder / annular disk
-    geometry used to compute the ring source solid angle fractions, with the
-    resulting fractions for each component annotated.
-    """
-    rmajor = mfile.get("rmajor", scan=scan)
-    rminor = mfile.get("rminor", scan=scan)
-    dr_fw_plasma_gap_inboard = mfile.get("dr_fw_plasma_gap_inboard", scan=scan)
-    dr_fw_plasma_gap_outboard = mfile.get("dr_fw_plasma_gap_outboard", scan=scan)
-    dz_fw_half = mfile.get("dz_fw_half", scan=scan)
-    i_single_null = mfile.get("i_single_null", scan=scan)
-
-    f_ster_fw_inboard_ring_source = mfile.get("f_ster_fw_inboard_ring_source", scan=scan)
-    f_ster_fw_outboard_ring_source = mfile.get(
-        "f_ster_fw_outboard_ring_source", scan=scan
-    )
-    f_ster_div_lower_ring_source = mfile.get("f_ster_div_lower_ring_source", scan=scan)
-    f_ster_div_upper_ring_source = mfile.get("f_ster_div_upper_ring_source", scan=scan)
-
-    r_fw_inboard = rmajor - rminor - dr_fw_plasma_gap_inboard
-    r_fw_outboard = rmajor + rminor + dr_fw_plasma_gap_outboard
-
-    # Idealised coaxial cylinder (inboard/outboard) + annular disk (divertor)
-    axis.plot(
-        [r_fw_inboard, r_fw_inboard],
-        [-dz_fw_half, dz_fw_half],
-        color="green",
-        linewidth=3,
-        label="Inboard wall (cylinder)",
-    )
-    axis.plot(
-        [r_fw_outboard, r_fw_outboard],
-        [-dz_fw_half, dz_fw_half],
-        color="purple",
-        linewidth=3,
-        label="Outboard wall (cylinder)",
-    )
-    axis.plot(
-        [r_fw_inboard, r_fw_outboard],
-        [-dz_fw_half, -dz_fw_half],
-        color="black",
-        linewidth=3,
-        label="Divertor (disk)",
-    )
-    if i_single_null == 0:
-        axis.plot(
-            [r_fw_inboard, r_fw_outboard],
-            [dz_fw_half, dz_fw_half],
-            color="black",
-            linewidth=3,
-        )
-
-    # Ring source point and sight-lines to the corners of the idealised geometry
-    axis.plot(rmajor, 0.0, marker="o", color="red", markersize=8, zorder=100)
-    for corner in (
-        (r_fw_inboard, dz_fw_half),
-        (r_fw_inboard, -dz_fw_half),
-        (r_fw_outboard, -dz_fw_half),
-    ):
-        axis.plot(
-            [rmajor, corner[0]],
-            [0.0, corner[1]],
-            color="grey",
-            linestyle="--",
-            linewidth=1,
-            zorder=50,
-        )
-    if i_single_null == 0:
-        axis.plot(
-            [rmajor, r_fw_outboard],
-            [0.0, dz_fw_half],
-            color="grey",
-            linestyle="--",
-            linewidth=1,
-            zorder=50,
-        )
-
-    axis.axhline(0.0, color="black", linestyle=":", linewidth=1)
-    axis.set_xlabel("Radial position, R [m]")
-    axis.set_ylabel("Vertical position, Z [m]")
-    axis.set_title("Ring Source Solid Angle Geometry (idealised)")
-    axis.legend(loc="upper right", fontsize=7)
-    axis.set_aspect("equal")
-
-    textstr = (
-        "$\\mathbf{Solid\\ angle\\ fractions:}$\n\n"
-        "$f_{in}=\\Omega_{cyl}/4\\pi ="
-        f"{f_ster_fw_inboard_ring_source * 100:.1f}\\%$\n"
-        "$f_{div,lower}=\\Omega_{disk}/4\\pi="
-        f"{f_ster_div_lower_ring_source * 100:.1f}\\%$\n"
-        "$f_{div,upper}="
-        f"{f_ster_div_upper_ring_source * 100:.1f}\\%$\n"
-        "$f_{out}=1-f_{in}-f_{div,lower}-f_{div,upper}="
-        f"{f_ster_fw_outboard_ring_source * 100:.1f}\\%$"
-    )
-    axis.text(
-        0.02,
-        0.02,
-        textstr,
-        fontsize=8,
-        transform=axis.transAxes,
-        va="bottom",
-        ha="left",
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "wheat",
-            "alpha": 1.0,
-            "linewidth": 1.5,
-        },
-    )
 
 
 def main_plot(
@@ -18055,15 +17916,8 @@ def main_plot(
     ):
         plot_blanket_coolant_properties(pages["blkt_cooling"], m_file, scan)
 
-    plot_ring_source_poloidal_view(
-        axis=_add_page("ring_source_solid_angles").add_subplot(122),
-        fig=pages["ring_source_solid_angles"],
-        mfile=m_file,
-        scan=scan,
-    )
-
     plot_fw_inboard_toroidal_angle_load(
-        axis=pages["ring_source_solid_angles"].add_subplot(121, aspect="equal"),
+        axis=_add_page("ring_source_solid_angles").add_subplot(121, aspect="equal"),
         mfile=m_file,
         scan=scan,
         demo_ranges=demo_ranges,
