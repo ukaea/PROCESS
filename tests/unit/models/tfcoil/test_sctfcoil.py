@@ -38,6 +38,16 @@ def croco_sctfcoil(process_models):
     return process_models.croco_sctfcoil
 
 
+@pytest.fixture
+def step_sctfcoil(process_models):
+    """Provides STEPSuperconductingTFCoil object for testing.
+
+    :returns: initialised STEPSuperconductingTFCoil object
+    :rtype: process.sctfcoil.STEPSuperconductingTFCoil
+    """
+    return process_models.step_sctfcoil
+
+
 class ProtectParam(NamedTuple):
     aio: Any = None
 
@@ -2129,3 +2139,237 @@ def test_calculate_superconductor_temperature_margin(
     # The expected_margin values are illustrative;
     # in real tests, use values from reference calculations.
     assert margin == pytest.approx(expected_margin)
+
+
+def test_tf_croco_inboard_areas_and_fractions(croco_sctfcoil):
+    """Test CroCo winding pack areas and fractions."""
+    n_strands = sctf.N_CROCO_STRANDS_TURN
+    a_cable = 1.0e-3
+    n_turns = 100
+    f_void = 0.3
+    a_ins = 5.0e-4
+    a_steel = 1.5e-3
+    a_case = 1.0
+    n_coils = 16
+    a_total = 25.0
+    a_gr_ins = 0.03
+    a_strand = 2.0e-4
+
+    res = croco_sctfcoil.tf_croco_inboard_areas_and_fractions(
+        a_tf_turn_cable_space_no_void=a_cable,
+        n_tf_coil_turns=n_turns,
+        f_a_tf_turn_cable_space_extra_void=f_void,
+        a_tf_turn_insulation=a_ins,
+        a_tf_turn_steel=a_steel,
+        a_tf_coil_inboard_case=a_case,
+        n_tf_coils=n_coils,
+        a_tf_inboard_total=a_total,
+        a_tf_wp_ground_insulation=a_gr_ins,
+        a_tf_croco_strand=a_strand,
+    )
+
+    exp_steel_wp = n_turns * a_steel
+    exp_steel = a_case + exp_steel_wp
+    exp_ins = n_turns * a_ins + a_gr_ins
+
+    assert res.a_tf_wp_coolant_channels == pytest.approx(0.0)
+    assert res.a_tf_wp_conductor == pytest.approx(n_turns * a_strand * n_strands)
+    assert res.a_tf_wp_extra_void == pytest.approx(a_cable * n_turns * f_void)
+    assert res.a_tf_coil_wp_turn_insulation == pytest.approx(n_turns * a_ins)
+    assert res.a_tf_wp_steel == pytest.approx(exp_steel_wp)
+    assert res.a_tf_coil_inboard_steel == pytest.approx(exp_steel)
+    assert res.f_a_tf_coil_inboard_steel == pytest.approx(n_coils * exp_steel / a_total)
+    assert res.a_tf_coil_inboard_insulation == pytest.approx(exp_ins)
+    assert res.f_a_tf_coil_inboard_insulation == pytest.approx(
+        n_coils * exp_ins / a_total
+    )
+
+
+@pytest.mark.parametrize("itart", [0, 1])
+def test_tf_croco_areas_and_masses(itart, monkeypatch, croco_sctfcoil):
+    """Test CroCo TF coil areas and masses."""
+    data = croco_sctfcoil.data
+    tf = data.tfcoil
+    sc = data.superconducting_tfcoil
+    n_strands = sctf.N_CROCO_STRANDS_TURN
+
+    monkeypatch.setattr(data.physics, "itart", itart)
+    monkeypatch.setattr(data.build, "z_tf_inside_half", 9.0)
+    monkeypatch.setattr(data.build, "dr_tf_inboard", 1.2)
+    monkeypatch.setattr(data.fwbs, "den_steel", 7800.0)
+    monkeypatch.setattr(tf, "len_tf_coil", 50.0)
+    monkeypatch.setattr(tf, "den_tf_wp_turn_insulation", 1800.0)
+    monkeypatch.setattr(tf, "den_tf_coil_case", 8000.0)
+    monkeypatch.setattr(tf, "a_tf_coil_inboard_case", 1.0)
+    monkeypatch.setattr(tf, "a_tf_coil_outboard_case", 1.2)
+    monkeypatch.setattr(tf, "n_tf_coil_turns", 100)
+    monkeypatch.setattr(tf, "n_tf_coils", 16)
+    monkeypatch.setattr(tf, "a_tf_turn_steel", 1.5e-3)
+    monkeypatch.setattr(tf, "a_tf_coil_wp_turn_insulation", 0.05)
+    monkeypatch.setattr(tf, "i_tf_sc_mat", 1)
+    monkeypatch.setattr(tf, "dcond", [6000.0] * 9)
+    monkeypatch.setattr(tf, "cplen", 20.0)
+    monkeypatch.setattr(sc, "a_tf_wp_with_insulation", 0.7)
+    monkeypatch.setattr(sc, "a_tf_wp_no_insulation", 0.64)
+    monkeypatch.setattr(sc, "a_tf_croco_strand_rebco", 1.0e-5)
+    monkeypatch.setattr(sc, "a_tf_croco_strand_copper_total", 5.0e-5)
+    monkeypatch.setattr(sc, "a_tf_croco_strand", 2.0e-4)
+
+    res = croco_sctfcoil.tf_croco_areas_and_masses()
+
+    exp_cplen = 2.0 * 9.0 + 2.0 * 1.2
+    exp_ins = 50.0 * (0.7 - 0.64) * 1800.0
+    if itart == 1:
+        exp_case = 2.2 * 8000.0 * (exp_cplen * 1.0 + 50.0 * 1.2)
+    else:
+        exp_case = 2.2 * 8000.0 * (exp_cplen * 1.0 + (50.0 - exp_cplen) * 1.2)
+    exp_sc = 50.0 * 100 * 1.0e-5 * n_strands * 6000.0
+    exp_cu = 50.0 * 100 * (5.0e-5 * n_strands + 2.0e-4) * sctf.constants.DEN_COPPER
+    exp_steel = 50.0 * 100 * 1.5e-3 * 7800.0
+    exp_turn_ins = 50.0 * 0.05 * 1800.0
+    exp_cond = exp_sc + exp_cu + exp_steel + exp_turn_ins
+    exp_coil = exp_case + exp_cond + exp_ins
+    exp_total = exp_coil * 16
+
+    assert res.cplen == pytest.approx(exp_cplen)
+    assert res.m_tf_coil_wp_insulation == pytest.approx(exp_ins)
+    assert res.m_tf_coil_case == pytest.approx(exp_case)
+    assert res.m_tf_coil_superconductor == pytest.approx(exp_sc)
+    assert res.m_tf_coil_copper == pytest.approx(exp_cu)
+    assert res.m_tf_wp_steel_conduit == pytest.approx(exp_steel)
+    assert res.m_tf_coil_wp_turn_insulation == pytest.approx(exp_turn_ins)
+    assert res.m_tf_coil_conductor == pytest.approx(exp_cond)
+    assert res.m_tf_coil == pytest.approx(exp_coil)
+    assert res.m_tf_coils_total == pytest.approx(exp_total)
+    if itart == 1:
+        assert res.whtcp == pytest.approx(exp_total * 20.0 / 70.0)
+        assert res.whttflgs == pytest.approx(exp_total * 50.0 / 70.0)
+    else:
+        assert res.whtcp == pytest.approx(0.0)
+        assert res.whttflgs == pytest.approx(0.0)
+
+
+def test_tf_step_vertical_tape_integer_turn_geometry(step_sctfcoil):
+    """Test STEP vertical-tape integer-turn geometry calculations."""
+    geometry = step_sctfcoil.tf_step_vertical_tape_integer_turn_geometry(
+        dr_tf_wp_with_insulation=0.6,
+        dx_tf_wp_insulation=0.01,
+        dx_tf_wp_insertion_gap=0.005,
+        n_tf_wp_layers=4,
+        dx_tf_wp_toroidal_min=0.8,
+        n_tf_wp_pancakes=5,
+        c_tf_coil=2.0e6,
+        dx_tf_turn_insulation=0.002,
+    )
+
+    assert geometry.dr_tf_turn == pytest.approx(0.1425)
+    assert geometry.dx_tf_turn == pytest.approx(0.154)
+    assert geometry.c_tf_turn == pytest.approx(1.0e5)
+    assert geometry.n_tf_coil_turns == pytest.approx(20)
+    assert geometry.dr_tf_turn_stabiliser == pytest.approx(0.1385)
+    assert geometry.dx_tf_turn_stabiliser == pytest.approx(0.15)
+    assert geometry.dia_tf_turn_coolant_channel == pytest.approx(0.045)
+    assert geometry.x_tf_turn_coolant_channel_centre == pytest.approx(0.047)
+    assert geometry.dr_tf_turn_tape_stack == pytest.approx(0.1108)
+    assert geometry.dx_tf_turn_tape_stack == pytest.approx(0.06)
+    assert geometry.a_tf_turn_tape_stack == pytest.approx(0.006648)
+    assert geometry.a_tf_turn_cable_space_no_void == pytest.approx(0.006648)
+    assert geometry.a_tf_turn_insulation == pytest.approx(0.00117)
+    assert geometry.a_tf_turn_stabiliser == pytest.approx(
+        0.1385 * 0.15 - 0.006648 - np.pi / 4 * 0.045**2
+    )
+    assert geometry.a_tf_turn_steel == pytest.approx(0.0)
+    assert geometry.dx_tf_turn_cable_space_average == pytest.approx(0.06)
+    assert geometry.dx_tf_turn_conduit_full_average == pytest.approx(0.15)
+    assert geometry.dx_tf_turn_general == pytest.approx(0.154)
+    assert geometry.dr_tf_turn_conduit_full == pytest.approx(0.1385)
+    assert geometry.dx_tf_turn_conduit_full_toroidal == pytest.approx(0.15)
+
+
+@pytest.mark.parametrize("itart", [0, 1])
+def test_tf_step_areas_and_masses(itart, monkeypatch, step_sctfcoil):
+    """Test STEP TF coil areas and masses."""
+    data = step_sctfcoil.data
+    tf = data.tfcoil
+    sc = data.superconducting_tfcoil
+
+    monkeypatch.setattr(data.physics, "itart", itart)
+    monkeypatch.setattr(data.build, "z_tf_inside_half", 9.0)
+    monkeypatch.setattr(data.build, "dr_tf_inboard", 1.2)
+    monkeypatch.setattr(tf, "len_tf_coil", 50.0)
+    monkeypatch.setattr(tf, "den_tf_wp_turn_insulation", 1800.0)
+    monkeypatch.setattr(tf, "den_tf_coil_case", 8000.0)
+    monkeypatch.setattr(tf, "a_tf_coil_inboard_case", 1.0)
+    monkeypatch.setattr(tf, "a_tf_coil_outboard_case", 1.2)
+    monkeypatch.setattr(tf, "n_tf_coil_turns", 100)
+    monkeypatch.setattr(tf, "n_tf_coils", 16)
+    monkeypatch.setattr(tf, "a_tf_coil_wp_turn_insulation", 0.05)
+    monkeypatch.setattr(tf, "i_tf_sc_mat", 1)
+    monkeypatch.setattr(tf, "dcond", [6000.0] * 9)
+    monkeypatch.setattr(tf, "cplen", 20.0)
+    monkeypatch.setattr(sc, "a_tf_wp_with_insulation", 0.7)
+    monkeypatch.setattr(sc, "a_tf_wp_no_insulation", 0.64)
+    monkeypatch.setattr(sc, "dx_tf_hts_tape_rebco", 1.0e-6)
+    monkeypatch.setattr(sc, "dr_tf_hts_tape", 4.0e-3)
+    monkeypatch.setattr(sc, "dx_tf_hts_tape_copper", 2.0e-5)
+    monkeypatch.setattr(sc, "n_tf_turn_superconducting_strands", 50)
+    monkeypatch.setattr(sc, "a_tf_turn_stabiliser", 0.01)
+
+    res = step_sctfcoil.tf_step_areas_and_masses()
+
+    exp_cplen = 2.0 * 9.0 + 2.0 * 1.2
+    exp_ins = 50.0 * (0.7 - 0.64) * 1800.0
+    if itart == 1:
+        exp_case = 2.2 * 8000.0 * (exp_cplen * 1.0 + 50.0 * 1.2)
+    else:
+        exp_case = 2.2 * 8000.0 * (exp_cplen * 1.0 + (50.0 - exp_cplen) * 1.2)
+    exp_sc = 50.0 * 100 * 1.0e-6 * 4.0e-3 * 50 * 6000.0
+    exp_cu = 50.0 * 100 * (0.01 + 2.0e-5 * 4.0e-3 * 50) * sctf.constants.DEN_COPPER
+    exp_turn_ins = 50.0 * 0.05 * 1800.0
+    exp_cond = exp_sc + exp_cu + exp_turn_ins
+    exp_coil = exp_case + exp_cond + exp_ins
+    exp_total = exp_coil * 16
+
+    assert res.cplen == pytest.approx(exp_cplen)
+    assert res.m_tf_coil_wp_insulation == pytest.approx(exp_ins)
+    assert res.m_tf_coil_case == pytest.approx(exp_case)
+    assert res.m_tf_coil_superconductor == pytest.approx(exp_sc)
+    assert res.m_tf_coil_copper == pytest.approx(exp_cu)
+    assert res.m_tf_wp_steel_conduit == pytest.approx(0.0)
+    assert res.m_tf_coil_wp_turn_insulation == pytest.approx(exp_turn_ins)
+    assert res.m_tf_coil_conductor == pytest.approx(exp_cond)
+    assert res.m_tf_coil == pytest.approx(exp_coil)
+    assert res.m_tf_coils_total == pytest.approx(exp_total)
+    if itart == 1:
+        assert res.whtcp == pytest.approx(exp_total * 20.0 / 70.0)
+        assert res.whttflgs == pytest.approx(exp_total * 50.0 / 70.0)
+    else:
+        assert res.whtcp == pytest.approx(0.0)
+        assert res.whttflgs == pytest.approx(0.0)
+
+
+def test_tf_step_inboard_areas_and_fractions(step_sctfcoil):
+    """Test STEP inboard winding-pack areas and component fractions."""
+    result = step_sctfcoil.tf_step_inboard_areas_and_fractions(
+        dia_tf_turn_coolant_channel=0.045,
+        n_tf_coil_turns=20,
+        a_tf_turn_tape_stack=0.006648,
+        a_tf_turn_insulation=0.00117,
+        a_tf_turn_steel=0.5,
+        a_tf_coil_inboard_case=2.0,
+        n_tf_coils=16,
+        a_tf_inboard_total=30.0,
+        a_tf_wp_ground_insulation=0.2,
+    )
+
+    assert result.a_tf_wp_coolant_channels == pytest.approx(0.25 * 20 * np.pi * 0.045**2)
+    assert result.a_tf_wp_conductor == pytest.approx(20 * 0.006648)
+    assert result.a_tf_wp_extra_void == pytest.approx(0.0)
+    assert result.a_tf_coil_wp_turn_insulation == pytest.approx(20 * 0.00117)
+    assert result.a_tf_wp_steel == pytest.approx(0.0)
+    assert result.a_tf_coil_inboard_steel == pytest.approx(2.0)
+    assert result.f_a_tf_coil_inboard_steel == pytest.approx(16 * 2.0 / 30.0)
+    assert result.a_tf_coil_inboard_insulation == pytest.approx(20 * 0.00117 + 0.2)
+    assert result.f_a_tf_coil_inboard_insulation == pytest.approx(
+        16 * (20 * 0.00117 + 0.2) / 30.0
+    )
