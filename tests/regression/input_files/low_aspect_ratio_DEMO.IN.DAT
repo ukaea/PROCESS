@@ -33,15 +33,12 @@ i_figure_merit   = -14 * Switch for figure-of-merit (see lablmm for descriptions
 * DESCRIPTION:   Switch for Figure-of-Merit (1: Minimise major radius)
 * JUSTIFICATION: Aim to minimise major radius
 
-n_equality_constraints = 5
+n_equality_constraints = 3
 * DESCRIPTION:   No of equality constraints
 * JUSTIFICATION: 
 
 *--------------------------Constraint Equations-------------------------*
 
-icc = 1 
-* DESCRIPTION:   Beta Consistency
-* JUSTIFICATION: Consistency equations should always be on
 
 icc = 2 
 * DESCRIPTION:   Global Power Balance Consistency
@@ -177,7 +174,6 @@ boundu(4) = 150.0
 * DESCRIPTION:   Volume averaged electron temperature (keV)
 * JUSTIFICATION: Iterate temperature to get solution
 
-ixc = 5 
 beta_total_vol_avg = 3.71965626913446160e-02
 * DESCRIPTION:   Total Plasma Beta
 * JUSTIFICATION: Beta is limited by dnbeta
