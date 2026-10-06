@@ -1036,7 +1036,7 @@ class BfmaxTestAsset(NamedTuple):
         BfmaxTestAsset(a=2.0, h=1.0, bfmax_exp=14.04760),
     ],
 )
-def test_bfmax(cs_coil, test_asset):
+def test_calculate_cs_self_peak_magnetic_field(cs_coil, test_asset):
     """Test calculate_cs_self_peak_magnetic_field() function.
 
     :param cs_coil: CSCoil object

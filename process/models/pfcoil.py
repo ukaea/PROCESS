@@ -3898,7 +3898,7 @@ class CSCoil(Model):
         if not 1.003 <= alpha <= 2.0 or not 1.002 <= beta <= 5.0:
             logger.warning(
                 "CS peak self-field surrogate is outside the range of validity: "
-                f"1.003 <= alpha={alpha} <= 2.0, 1.002 <= beta={beta} <= 5.0"
+                f"1.003 <= {alpha=} <= 2.0, 1.002 <= {beta=} <= 5.0"
             )
 
         peak_ratio = calculate_cs_peak_to_bore_self_field_ratio(alpha=alpha, beta=beta)
