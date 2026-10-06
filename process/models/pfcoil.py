@@ -5077,7 +5077,7 @@ def calculate_cs_peak_to_bore_self_field_ratio(alpha: float, beta: float) -> flo
 
     The inner radius of the solenoid has no effect.
 
-    Values are kludged >= 1.0.
+    Returned values >= 1.0
     """
     x = np.log(alpha)
     y = np.log(beta)
@@ -5104,7 +5104,9 @@ def calculate_cs_peak_to_bore_self_field_ratio(alpha: float, beta: float) -> flo
         + 0.04818225222124836 * y2
     )
 
-    return 1.0 + max(0.0, np.exp(numerator / denominator))
+    fraction = numerator / denominator
+
+    return 1.0 + np.exp(fraction)
 
 
 @numba.njit(cache=True)
