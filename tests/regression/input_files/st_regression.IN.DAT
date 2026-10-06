@@ -55,7 +55,7 @@ i_figure_merit = -5
 * DESCRIPTION:   Switch for Figure-of-Merit 
 * JUSTIFICATION: Selected optimisation
 
-n_equality_constraints = 4
+n_equality_constraints = 3
 * DESCRIPTION:   Number of equality constraints (the first n_equality_constraints icc = ... statements are considered equality)
 * JUSTIFICATION: 3 equality (consistency) equations
 
@@ -70,10 +70,6 @@ itart = 1
 *_______________________________________________________________________________________*
 *------------------------------- *Consistency Equations* -------------------------------*
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*
-icc = 1
-* DESCRIPTION:   Beta Consistency
-* JUSTIFICATION: Consistency equations should always be on
-* VARIABLES:     Calculated in-situ, no iteration variables
 
 icc = 2
 * DESCRIPTION:   Global Power Balance Consistency
@@ -306,13 +302,6 @@ icc = 24
 *beta_vol_avg_max
 * DESCRIPTION:   Plasma beta upper limit
 * JUSTIFICATION: Turned off, not in use. icc=24. Allow to be calculated in-situ
-
-ixc = 5
-beta_total_vol_avg = 0.2
-boundl(5) = 0.01
-boundu(5) = 1.0
-* DESCRIPTION:   Total Plasma Beta, 
-* JUSTIFICATION: Beta is limited by beta_norm_max
 
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
