@@ -137,7 +137,9 @@ class TFSuperconductorLimits:
     j_tf_coil_turn: float
     """Current density in the TF coil turn at operating conditions (A/m²)."""
     bc20m: float
-    """Critical magnetic field at 20 K and zero strain (T)."""
+    """Effective upper critical field at zero temperature
+    and intrinsic strain B*_c2 (0,0) (T).
+    """
     tc0m: float
     """Critical temperature at zero magnetic field and zero strain (K)."""
     c_turn_cables_critical: float
