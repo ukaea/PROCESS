@@ -676,7 +676,6 @@ class NeutronFluxProfile:
                 )
             return np.asarray(cond, dtype=float)
 
-        _set_coefficients(init_coefs)
         opt_result = optimize.root(
             objective,
             x0=np.asarray(init_coefs, dtype=float),
@@ -1701,14 +1700,19 @@ class CustomOptimizationRecord():
                 this_flux.extend(
                     parent.groupwise_neutron_flux_in_layer(n, num_layer, xi)
                 )
-            animated_line, = ax.plot(flat_base_x, np.array(this_flux), label=f"Evolution of group {self.n} flux")
+            animated_line, = ax.plot(flat_base_x, np.array(this_flux))
             ax.legend()
             for iteration in range(self.num_opt_steps):
                 animated_line.set_data(
-                    flat_base_x, rollback_parent_to_get_flux(iteration)
+                    flat_base_x, rollback_parent_to_get_flux(iteration),
                 )
+                animated_line.set_label(
+                    f"Step {iteration} of group {self.n} flux"
+                )
+                ax.legend()
                 ax.set_ylim(ylims)
                 plt.pause(0.8)
+            print("Animation complete.")
             plt.show()
         else:
             cmap = mpl.colors.LinearSegmentedColormap.from_list(
@@ -1717,14 +1721,15 @@ class CustomOptimizationRecord():
             norm = mpl.colors.Normalize(vmin=0, vmax=self.num_opt_steps - 1)
             sm = mpl.cm.ScalarMappable(norm=norm, cmap=cmap)
             cbar = plt.colorbar(sm, ax=ax)
-            linestyle_cycle = cycle(["-", ":", "--", "-."])
+            # linestyle_cycle = cycle(["-", ":", "--", "-."])
             cbar.set_label("Iteration steps taken by the optimizer")
 
             for iteration in range(self.num_opt_steps):
                 ax.plot(
                     flat_base_x, rollback_parent_to_get_flux(iteration),
                     color=cmap(norm(iteration)),
-                    ls=next(linestyle_cycle),
+                    # ls=next(linestyle_cycle),
+                    label=f"Evolution of group {self.n} flux" if iteration==(self.num_opt_steps-1) else None
                 )
             ax.set_ylim(ylims)
             ax.legend()
