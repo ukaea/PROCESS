@@ -1456,7 +1456,7 @@ class PhysicsData:
     """Plasma safety factor at 95% flux surface (q₉₅) (`iteration variable 18`)
     """
 
-    molflow_plasma_fuelling: float = 0.0
+    molflow_plasma_fuelling: float = 5.0e21
     """plasma fuelling rate (nucleus-pairs/s)"""
 
     molflow_plasma_fuelling_equilibrium: float = 0.0
