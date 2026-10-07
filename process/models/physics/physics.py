@@ -3588,6 +3588,10 @@ class PlasmaBeta(Model):
             rminor=self.data.physics.rminor,
         )
 
+        # -----------------------------------------------------
+        # Derived beta components
+        # -----------------------------------------------------
+
         self.data.physics.beta_toroidal_vol_avg = (
             self.data.physics.beta_total_vol_avg
             * self.data.physics.b_plasma_total**2
@@ -3613,6 +3617,7 @@ class PlasmaBeta(Model):
             )
             ** 2
         )
+
         self.data.physics.beta_thermal_toroidal_vol_avg = (
             self.data.physics.beta_thermal_vol_avg
             * (
@@ -3655,6 +3660,7 @@ class PlasmaBeta(Model):
             )
             ** 2
         )
+
         self.data.physics.beta_norm_poloidal = (
             self.data.physics.beta_norm_total
             * (
