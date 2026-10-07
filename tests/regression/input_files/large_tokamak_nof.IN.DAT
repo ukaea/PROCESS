@@ -43,7 +43,8 @@ icc = 11
 
 * Constraint Equations - Limit Equations *
 ******************************************
-
+icc = 93
+molflow_plasma_fuelling = 3.31699503191603387e+21
 
 
 * Injection power upper limit *
