@@ -540,13 +540,16 @@ def constraint_equation_7(constraint_registration, data):
 
 @ConstraintManager.register_constraint(8, "MW/m²", "<=")
 def constraint_equation_8(constraint_registration, data):
-    """Equation for neutron wall load upper limit
+    """Simple constraint for surface averaged neutron wall load upper limit (<⟨qₙ⟩)
 
     pflux_fw_neutron_max_mw: allowable wall-load (MW/m²)
     pflux_fw_neutron_mw: average neutron wall load (MW/m²)
     """
     return leq(
-        data.physics.pflux_fw_neutron_mw,
+        max(
+            data.fwbs.pflux_fw_inboard_neutron_surface_average_mw,
+            data.fwbs.pflux_fw_outboard_neutron_surface_average_mw,
+        ),
         data.constraints.pflux_fw_neutron_max_mw,
         constraint_registration,
     )
@@ -1499,14 +1502,17 @@ def constrain_equation_66(constraint_registration, data):
 
 @ConstraintManager.register_constraint(67, "MW/m²", "<=")
 def constraint_equation_67(constraint_registration, data):
-    """Simple upper limit on radiation wall load
+    """Simple upper limit on the surface averaged radiation wall load (<⟨qᵧ⟩)
 
-    pflux_fw_rad_max: Maximum permitted radiation wall load (MW/m²)
-    pflux_fw_rad_max_mw: Peak radiation wall load (MW/m²)
+    pflux_fw_rad_max_mw: Maximum permitted radiation wall load (MW/m²)
+    pflux_fw_rad_peak_mw: Peak radiation wall load (MW/m²)
     """
     return leq(
+        max(
+            data.fwbs.pflux_fw_inboard_rad_surface_average_mw,
+            data.fwbs.pflux_fw_outboard_rad_surface_average_mw,
+        ),
         data.constraints.pflux_fw_rad_max_mw,
-        data.constraints.pflux_fw_rad_max,
         constraint_registration,
     )
 

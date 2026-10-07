@@ -1966,7 +1966,7 @@ class Physics(Model):
         p_loss_mw = (
             self.data.current_drive.f_p_beam_orbit_loss
             + self.data.current_drive.p_beam_shine_through_mw
-            + self.data.physics.p_fw_alpha_mw
+            + self.data.physics.p_fw_alpha_surface_total_mw
         )
         p_plasma_out = (
             self.data.physics.p_electron_transport_loss_mw

@@ -2333,35 +2333,35 @@ class BlanketLibrary(Model):
             if self.data.fwbs.i_blkt_dual_coolant == 2:
                 f_nuc_fwi = (
                     self.data.blanket.p_fw_inboard_nuclear_heat_mw
-                    + self.data.fwbs.psurffwi
+                    + self.data.fwbs.p_fw_inboard_surface_heat_mw
                 ) / (
                     self.data.blanket.p_fw_inboard_nuclear_heat_mw
-                    + self.data.fwbs.psurffwi
+                    + self.data.fwbs.p_fw_inboard_surface_heat_mw
                     + pnucblkti_struct
                 )
                 f_nuc_fwo = (
                     self.data.blanket.p_fw_outboard_nuclear_heat_mw
-                    + self.data.fwbs.psurffwo
+                    + self.data.fwbs.p_fw_outboard_surface_heat_mw
                 ) / (
                     self.data.blanket.p_fw_outboard_nuclear_heat_mw
-                    + self.data.fwbs.psurffwo
+                    + self.data.fwbs.p_fw_outboard_surface_heat_mw
                     + pnucblkto_struct
                 )
             else:
                 f_nuc_fwi = (
                     self.data.blanket.p_fw_inboard_nuclear_heat_mw
-                    + self.data.fwbs.psurffwi
+                    + self.data.fwbs.p_fw_inboard_surface_heat_mw
                 ) / (
                     self.data.blanket.p_fw_inboard_nuclear_heat_mw
-                    + self.data.fwbs.psurffwi
+                    + self.data.fwbs.p_fw_inboard_surface_heat_mw
                     + self.data.blanket.p_blkt_nuclear_heat_inboard_mw
                 )
                 f_nuc_fwo = (
                     self.data.blanket.p_fw_outboard_nuclear_heat_mw
-                    + self.data.fwbs.psurffwo
+                    + self.data.fwbs.p_fw_outboard_surface_heat_mw
                 ) / (
                     self.data.blanket.p_fw_outboard_nuclear_heat_mw
-                    + self.data.fwbs.psurffwo
+                    + self.data.fwbs.p_fw_outboard_surface_heat_mw
                     + self.data.blanket.p_blkt_nuclear_heat_outboard_mw
                 )
 
@@ -2405,7 +2405,7 @@ class BlanketLibrary(Model):
             self.data.fwbs.radius_fw_channel,
             self.data.build.dr_fw_inboard,
             self.data.first_wall.a_fw_inboard,
-            self.data.fwbs.psurffwi,
+            self.data.fwbs.p_fw_inboard_surface_heat_mw,
             self.data.blanket.p_fw_inboard_nuclear_heat_mw,
             "Inboard first wall",
         )
@@ -2419,7 +2419,7 @@ class BlanketLibrary(Model):
             self.data.fwbs.radius_fw_channel,
             self.data.build.dr_fw_outboard,
             self.data.first_wall.a_fw_outboard,
-            self.data.fwbs.psurffwo,
+            self.data.fwbs.p_fw_outboard_surface_heat_mw,
             self.data.blanket.p_fw_outboard_nuclear_heat_mw,
             "Outboard first wall",
         )
@@ -2436,7 +2436,7 @@ class BlanketLibrary(Model):
                 p_heat_total=1.0e6
                 * (
                     self.data.blanket.p_fw_inboard_nuclear_heat_mw
-                    + self.data.fwbs.psurffwi
+                    + self.data.fwbs.p_fw_inboard_surface_heat_mw
                 ),
                 heatcap_coolant=self.data.fwbs.heatcap_pres_fw_coolant_average,
                 temp_in_coolant=self.data.fwbs.temp_fw_coolant_in,
@@ -2450,7 +2450,7 @@ class BlanketLibrary(Model):
                 p_heat_total=1.0e6
                 * (
                     self.data.blanket.p_fw_outboard_nuclear_heat_mw
-                    + self.data.fwbs.psurffwo
+                    + self.data.fwbs.p_fw_outboard_surface_heat_mw
                 ),
                 heatcap_coolant=self.data.fwbs.heatcap_pres_fw_coolant_average,
                 temp_in_coolant=self.data.fwbs.temp_fw_coolant_in,

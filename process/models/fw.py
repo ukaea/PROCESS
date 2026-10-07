@@ -1,6 +1,7 @@
 """Module containing first wall routines"""
 
 import logging
+from dataclasses import dataclass
 
 import numpy as np
 
@@ -9,6 +10,7 @@ from process.core import process_output as po
 from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
+from process.data_structure.physics_variables import DivertorNumberModels
 from process.models.build import FwBlktVVShape
 from process.models.engineering.ivc_functions import (
     calculate_pipe_bend_radius,
@@ -28,6 +30,23 @@ N_FW_PIPE_90_DEG_BENDS = 2
 "Number of 90 degree bends in first wall coolant channels."
 N_FW_PIPE_180_DEG_BENDS = 0
 "Number of 180 degree bends in first wall coolant channels."
+
+
+@dataclass(slots=True)
+class InVesselSolidAngleFractions:
+    """Solid angle fractions of in-vessel components assuming a ring source."""
+
+    f_ster_fw_inboard_ring_source: float = 0.0
+    """Solid angle fraction of inboard FW assuming a ring source"""
+
+    f_ster_fw_outboard_ring_source: float = 0.0
+    """Solid angle fraction of outboard FW assuming a ring source"""
+
+    f_ster_div_lower_ring_source: float = 0.0
+    """Solid angle fraction of lower divertor assuming a ring source"""
+
+    f_ster_div_upper_ring_source: float = 0.0
+    """Solid angle fraction of upper divertor assuming a ring source"""
 
 
 class FirstWall(Model):
@@ -134,6 +153,88 @@ class FirstWall(Model):
                 self.data.physics.p_neutron_total_mw / self.data.first_wall.a_fw_total
             )
 
+        (
+            self.data.fwbs.rad_fw_inboard_plasma_centre_toroidal,
+            self.data.fwbs.f_rad_fw_inboard_plasma_centre_toroidal,
+        ) = self.calculate_fw_inboard_load_toroidal_angle(
+            rmajor=self.data.physics.rmajor,
+            dr_fw_inboard_plasma=(
+                self.data.build.dr_fw_plasma_gap_inboard + self.data.physics.rminor
+            ),
+        )
+
+        self.data.fwbs.deg_fw_inboard_plasma_centre_toroidal = np.degrees(
+            self.data.fwbs.rad_fw_inboard_plasma_centre_toroidal
+        )
+
+        # Idealised coaxial cylinder (inboard/outboard) + annular disk (divertor)
+        # geometry used to evaluate the ring-source view factors below.
+        r_fw_inboard = (
+            self.data.physics.rmajor
+            - self.data.physics.rminor
+            - self.data.build.dr_fw_plasma_gap_inboard
+        )
+
+        in_vessel_solid_angle_fractions = (
+            self.calculate_component_solid_angle_components(
+                rmajor=self.data.physics.rmajor,
+                r_fw_inboard=r_fw_inboard,
+                z_fw_half=self.data.fwbs.dz_fw_half,
+                r_div_inner=r_fw_inboard,
+                r_div_outer=self.data.physics.rmajor,
+                z_div=self.data.fwbs.dz_fw_half,
+                i_single_null=self.data.physics.i_single_null,
+            )
+        )
+
+        self.data.fwbs.f_ster_fw_inboard_ring_source = (
+            in_vessel_solid_angle_fractions.f_ster_fw_inboard_ring_source
+        )
+        self.data.fwbs.f_ster_fw_outboard_ring_source = (
+            in_vessel_solid_angle_fractions.f_ster_fw_outboard_ring_source
+        )
+        self.data.divertor.f_ster_div_lower_ring_source = (
+            in_vessel_solid_angle_fractions.f_ster_div_lower_ring_source
+        )
+        self.data.divertor.f_ster_div_upper_ring_source = (
+            in_vessel_solid_angle_fractions.f_ster_div_upper_ring_source
+        )
+
+        # Radiation surface heat flux on first wall (MW/m²)
+        # The full area is used as the radiation is assumed to be uniformly distributed
+        # across the first wall, so the coverage factors are not applied here.
+        (
+            self.data.fwbs.p_fw_inboard_rad_mw,
+            self.data.fwbs.pflux_fw_inboard_rad_surface_average_mw,
+            _,
+        ) = self.calculate_fw_surface_load(
+            p_plasma_source_mw=self.data.physics.p_plasma_rad_mw,
+            f_deg_blkt_poloidal_plasma=self.data.fwbs.f_ster_fw_inboard_ring_source,
+            a_fw_full_coverage=self.data.first_wall.a_fw_inboard_full_coverage,
+            f_a_fw_hcd_ports=0.0,  # Inboard is toroidally continous with no ports or
+            # HCD, so no coverage factor applied
+        )
+
+        (
+            self.data.fwbs.p_fw_outboard_rad_mw,
+            self.data.fwbs.pflux_fw_outboard_rad_surface_average_mw,
+            self.data.fwbs.p_fw_hcd_rad_total_mw,
+        ) = self.calculate_fw_surface_load(
+            p_plasma_source_mw=self.data.physics.p_plasma_rad_mw,
+            f_deg_blkt_poloidal_plasma=self.data.fwbs.f_ster_fw_outboard_ring_source,
+            a_fw_full_coverage=self.data.first_wall.a_fw_outboard_full_coverage,
+            f_a_fw_hcd_ports=self.data.fwbs.f_a_fw_outboard_hcd,  # Coverage factor
+            # applied to outboard wall to account for HCD and ports
+        )
+
+        # Radiation power incident on first wall (MW)
+        # Set based on the total radiation power and the angular fractions taken up by
+        # the inboard and outboard first wall, which are calculated based on the
+        # geometry of the first wall and the plasma.
+        self.data.fwbs.p_fw_rad_total_mw = (
+            self.data.fwbs.p_fw_inboard_rad_mw + self.data.fwbs.p_fw_outboard_rad_mw
+        )
+
         if self.data.physics.i_pflux_fw_neutron == 1:
             self.data.physics.pflux_fw_rad_mw = (
                 self.data.physics.ffwal
@@ -145,13 +246,77 @@ class FirstWall(Model):
                 self.data.physics.p_plasma_rad_mw / self.data.first_wall.a_fw_total
             )
 
-        self.data.constraints.pflux_fw_rad_max_mw = (
+        self.data.constraints.pflux_fw_rad_peak_mw = (
             self.data.physics.pflux_fw_rad_mw * self.data.constraints.f_fw_rad_max
         )
 
         # Power transported to the first wall by escaped alpha particles
-        self.data.physics.p_fw_alpha_mw = self.data.physics.p_alpha_total_mw * (
-            1.0e0 - self.data.physics.f_p_alpha_plasma_deposited
+        # Some is lost to HCD and ports on the outboard wall, so this is taken into
+        # account with a coverage factor.
+
+        (
+            self.data.fwbs.p_fw_outboard_alpha_surface_mw,
+            _,
+            _,
+        ) = self.calculate_fw_surface_load(
+            p_plasma_source_mw=(
+                self.data.physics.p_alpha_total_mw
+                * (1.0e0 - self.data.physics.f_p_alpha_plasma_deposited)
+            ),
+            f_deg_blkt_poloidal_plasma=1.0,
+            a_fw_full_coverage=self.data.first_wall.a_fw_outboard_full_coverage,
+            f_a_fw_hcd_ports=self.data.fwbs.f_a_fw_outboard_hcd,  # Coverage factor
+            # applied to outboard wall to account for HCD and ports
+        )
+
+        # Will assume that all alpha power reaching the first wall is deposited on the
+        # outboard side.
+        self.data.fwbs.p_fw_inboard_alpha_surface_mw = 0.0
+
+        self.data.physics.p_fw_alpha_surface_total_mw = (
+            self.data.fwbs.p_fw_outboard_alpha_surface_mw
+            + self.data.fwbs.p_fw_inboard_alpha_surface_mw
+        )
+
+        # Surface heat flux on first wall (MW)
+        # All of the fast particle losses go to the outer wall, as do all beam losses
+        # and shine through.
+        # Some power is lost to HCD and ports on the outboard wall, so this is
+        # taken into account with a coverage factor.
+        self.data.fwbs.p_fw_outboard_surface_heat_mw = self.calculate_fw_outboard_surface_loads(  # noqa: E501
+            p_fw_outboard_rad_mw=self.data.fwbs.p_fw_outboard_rad_mw,
+            p_beam_orbit_loss_mw=self.data.current_drive.p_beam_orbit_loss_mw,
+            p_fw_outboard_alpha_surface_mw=self.data.fwbs.p_fw_outboard_alpha_surface_mw,
+            p_beam_shine_through_mw=self.data.current_drive.p_beam_shine_through_mw,
+        )
+
+        self.data.fwbs.p_fw_inboard_surface_heat_mw = (
+            self.data.fwbs.p_fw_inboard_rad_mw
+            + self.data.fwbs.p_fw_inboard_alpha_surface_mw
+        )
+
+        (
+            self.data.fwbs.p_fw_inboard_neutron_incident_mw,
+            self.data.fwbs.pflux_fw_inboard_neutron_surface_average_mw,
+            _,
+        ) = self.calculate_fw_surface_load(
+            p_plasma_source_mw=self.data.physics.p_neutron_total_mw,
+            f_deg_blkt_poloidal_plasma=self.data.fwbs.f_ster_fw_inboard_ring_source,
+            a_fw_full_coverage=self.data.first_wall.a_fw_inboard_full_coverage,
+            f_a_fw_hcd_ports=0.0,  # Inboard is toroidally continous with no ports
+            # or HCD, so no coverage factor applied
+        )
+
+        (
+            self.data.fwbs.p_fw_outboard_neutron_incident_mw,
+            self.data.fwbs.pflux_fw_outboard_neutron_surface_average_mw,
+            self.data.fwbs.p_fw_hcd_nuclear_heat_mw,
+        ) = self.calculate_fw_surface_load(
+            p_plasma_source_mw=self.data.physics.p_neutron_total_mw,
+            f_deg_blkt_poloidal_plasma=self.data.fwbs.f_ster_fw_outboard_ring_source,
+            a_fw_full_coverage=self.data.first_wall.a_fw_outboard_full_coverage,
+            f_a_fw_hcd_ports=self.data.fwbs.f_a_fw_outboard_hcd,  # Coverage factor
+            # applied to outboard wall to account for HCD and ports
         )
 
     @staticmethod
@@ -683,6 +848,51 @@ class FirstWall(Model):
         )
 
     @staticmethod
+    def calculate_fw_surface_load(
+        p_plasma_source_mw: float,
+        f_deg_blkt_poloidal_plasma: float,
+        a_fw_full_coverage: float,
+        f_a_fw_hcd_ports: float = 0.0,
+    ) -> tuple[float, float, float]:
+        """Calculate the surface load on the first wall due to some incident power
+
+        Parameters
+        ----------
+        p_plasma_source_mw:
+            Total plasma power source, can be neutrons or other forms of energy etc [MW]
+        f_deg_blkt_poloidal_plasma:
+            Fraction of the plasma poloidal circumference covered by the first wall.
+        a_fw_full_coverage:
+            Area of the first wall with full coverage [m²].
+        f_a_fw_hcd_ports:
+            Fraction of the first wall area occupied by HCD and ports.
+            This is a loss term that reduces the effective area for power deposition on
+            the first wall. Default is 0.0 (no loss).
+
+        Returns
+        -------
+        tuple
+            Power incident on the first wall [MW], the surface heat flux on the
+            first wall [MW/m²], and the power lost due to HCD and ports [MW].
+
+        Notes
+        -----
+        We use the full coverage area here as the surface is toroidally continous and
+        the radiation is assumed to be uniformly distributed across the first wall,
+        so the coverage factors are not applied here.
+        """
+        p_fw_incident_mw = (
+            p_plasma_source_mw * f_deg_blkt_poloidal_plasma * (1.0 - f_a_fw_hcd_ports)
+        )
+        pflux_fw_inboard_surface_average_mw = p_fw_incident_mw / a_fw_full_coverage
+
+        p_fw_loss_mw = (
+            p_plasma_source_mw * f_deg_blkt_poloidal_plasma * (f_a_fw_hcd_ports)
+        )
+
+        return p_fw_incident_mw, pflux_fw_inboard_surface_average_mw, p_fw_loss_mw
+
+    @staticmethod
     def calculate_total_fw_channels(
         a_fw_inboard: float,
         a_fw_outboard: float,
@@ -711,6 +921,184 @@ class FirstWall(Model):
         n_fw_inboard_channels = a_fw_inboard / (len_fw_channel * dx_fw_module)
         n_fw_outboard_channels = a_fw_outboard / (len_fw_channel * dx_fw_module)
         return int(n_fw_inboard_channels), int(n_fw_outboard_channels)
+
+    @staticmethod
+    def calculate_fw_inboard_load_toroidal_angle(
+        rmajor, dr_fw_inboard_plasma
+    ) -> tuple[float, float]:
+        """Calculate the toroidal angle subtended by the inboard first wall.
+
+        Parameters
+        ----------
+        rmajor : float
+            Plasma major radius of the tokamak (m).
+        dr_fw_inboard_plasma : float
+            Radial distance between centre of plasma and inboard first wall surface (m).
+
+
+        Returns
+        -------
+        tuple
+            Toroidal angle subtended by the inboard first wall (radians) and the
+            fraction of total toroidal angle.
+
+        Notes
+        -----
+        This formula is used assuming an isotropic ring source at `rmajor` and finds the
+        toroidal angle of particles that will hit the inboard first wall as if the
+        emission was from a flat sheet at the midplane
+
+
+        """
+        rad_fw_inboard_toroidal = 2 * np.arcsin(
+            (rmajor - dr_fw_inboard_plasma) / (rmajor)
+        )
+        f_rad_fw_inboard_toroidal = (rad_fw_inboard_toroidal) / (2 * np.pi)
+        return rad_fw_inboard_toroidal, f_rad_fw_inboard_toroidal
+
+    @staticmethod
+    def solid_angle_fraction_coaxial_cylinder(
+        rmajor: float, r_cyl: float, z_half_height: float, n_integral: int = 100
+    ) -> float:
+        """Solid angle fraction (of 4π) subtended by a coaxial cylindrical band,
+        of half-height `z_half_height` and radius `r_cyl` (< rmajor), as seen from
+        a point on the ring source at (rmajor, 0).
+
+        Notes
+        -----
+        This reuses the integral of Guest (1960), also used in
+        `Hcpb.st_cp_angle_fraction` for the centrepost solid angle, here applied to
+        the (non-flared) inboard first wall.
+        """
+        rho = rmajor / r_cyl
+        phi_max = np.arcsin(1.0 / rho)
+        d_phi = phi_max / n_integral
+
+        def integrand(phi):
+            clipped = max(1.0 - rho**2 * np.sin(phi) ** 2, 0.0)
+            return 1.0 / np.sqrt(
+                z_half_height**2 + (rho * np.cos(phi) - np.sqrt(clipped)) ** 2
+            )
+
+        phi = 0.0
+        total = 0.0
+        for _ in range(n_integral):
+            f1 = integrand(phi)
+            phi += d_phi
+            f2 = integrand(phi)
+            total += d_phi * 0.5 * (f1 + f2)
+
+        solid_angle = total * 4.0 * z_half_height
+        return solid_angle / (4.0 * np.pi)
+
+    @staticmethod
+    def solid_angle_fraction_annular_disk(
+        rmajor: float,
+        r_inner: float,
+        r_outer: float,
+        z_height: float,
+        n_rho: int = 50,
+        n_phi: int = 100,
+    ) -> float:
+        """Solid angle fraction (of 4π) subtended by a flat annular disk at
+        height `z_height` above/below the source plane, spanning radius
+        [r_inner, r_outer], as seen from a point on the ring source at
+        (rmajor, 0).
+
+        Notes
+        -----
+        Represents a divertor plate. The point is off-axis relative to the disk,
+        so the point-to-surface solid angle integral dOmega = z_height * dA / d^3
+        is evaluated numerically over the disk.
+        """
+        rho_edges = np.linspace(r_inner, r_outer, n_rho + 1)
+        phi_edges = np.linspace(0.0, 2.0 * np.pi, n_phi + 1)
+        total = 0.0
+        for i in range(n_rho):
+            rho_mid = 0.5 * (rho_edges[i] + rho_edges[i + 1])
+            d_rho = rho_edges[i + 1] - rho_edges[i]
+            for j in range(n_phi):
+                phi_mid = 0.5 * (phi_edges[j] + phi_edges[j + 1])
+                d_phi = phi_edges[j + 1] - phi_edges[j]
+                d2 = (
+                    rho_mid**2
+                    - 2.0 * rho_mid * rmajor * np.cos(phi_mid)
+                    + rmajor**2
+                    + z_height**2
+                )
+                total += z_height * rho_mid / d2**1.5 * d_rho * d_phi
+        return total / (4.0 * np.pi)
+
+    @classmethod
+    def calculate_component_solid_angle_components(
+        cls,
+        rmajor: float,
+        r_fw_inboard: float,
+        z_fw_half: float,
+        r_div_inner: float,
+        r_div_outer: float,
+        z_div: float,
+        i_single_null: int,
+    ) -> InVesselSolidAngleFractions:
+        """Calculate the solid angle subtended by the inboard and outboard first
+        wall and the divertor(s), using a ring source at `rmajor`.
+
+        Parameters
+        ----------
+        rmajor : float
+            Plasma major radius [m].
+        r_fw_inboard : float
+            Radius of the inboard first wall [m].
+        z_fw_half : float
+            Half-height of the inboard/outboard first wall [m].
+        r_div_inner, r_div_outer : float
+            Inner and outer radial extent of the divertor plate(s) [m].
+        z_div : float
+            Height above (and, for double null, below) the midplane of the
+            divertor plate(s) [m].
+        i_single_null : int
+            Flag indicating whether the configuration is single null (1) or
+            double null (0).
+
+        Returns
+        -------
+        InVesselSolidAngleFractions
+
+        Notes
+        -----
+        The inboard first wall and divertor(s) are idealised as, respectively, a
+        coaxial cylindrical band and flat annular disk(s), and their solid angle
+        fractions are computed directly (view factors) rather than approximated
+        from independent poloidal/toroidal angle ratios. The outboard first wall
+        fraction is obtained from the summation rule (the fractions seen from a
+        point inside a closed surface must sum to 1) rather than its own integral,
+        since it corresponds to the harder inside-looking-out geometry.
+        """
+        f_ster_fw_inboard_ring_source = cls.solid_angle_fraction_coaxial_cylinder(
+            rmajor, r_fw_inboard, z_fw_half
+        )
+        f_ster_div_lower_ring_source = cls.solid_angle_fraction_annular_disk(
+            rmajor, r_div_inner, r_div_outer, z_div
+        )
+
+        if i_single_null == DivertorNumberModels.DOUBLE_NULL:
+            f_ster_div_upper_ring_source = f_ster_div_lower_ring_source
+        else:
+            f_ster_div_upper_ring_source = 0.0
+
+        f_ster_fw_outboard_ring_source = (
+            1.0
+            - f_ster_fw_inboard_ring_source
+            - f_ster_div_lower_ring_source
+            - f_ster_div_upper_ring_source
+        )
+
+        return InVesselSolidAngleFractions(
+            f_ster_fw_inboard_ring_source=f_ster_fw_inboard_ring_source,
+            f_ster_fw_outboard_ring_source=f_ster_fw_outboard_ring_source,
+            f_ster_div_lower_ring_source=f_ster_div_lower_ring_source,
+            f_ster_div_upper_ring_source=f_ster_div_upper_ring_source,
+        )
 
     def output_fw_geometry(self):
         """Outputs the first wall geometry details to the output file."""
@@ -784,6 +1172,61 @@ class FirstWall(Model):
             self.data.blanket.n_fw_outboard_channels,
             "OP ",
         )
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Toroidal angle subtended by inboard first wall from centre of the plasma "
+            "[radians]",
+            "(rad_fw_inboard_plasma_centre_toroidal)",
+            self.data.fwbs.rad_fw_inboard_plasma_centre_toroidal,
+        )
+        po.ovarre(
+            self.outfile,
+            "Toroidal angle subtended by inboard first wall from centre of the plasma "
+            "[degrees]",
+            "(deg_fw_inboard_plasma_centre_toroidal)",
+            self.data.fwbs.deg_fw_inboard_plasma_centre_toroidal,
+        )
+        po.ovarre(
+            self.outfile,
+            "Fraction of total toroidal angle subtended by inboard first wall from "
+            "centre of the plasma",
+            "(f_rad_fw_inboard_plasma_centre_toroidal)",
+            self.data.fwbs.f_rad_fw_inboard_plasma_centre_toroidal,
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Half-height of first wall used in ring source solid angle calculation (m)",
+            "(dz_fw_half)",
+            self.data.fwbs.dz_fw_half,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "",
+            "(f_ster_fw_inboard_ring_source)",
+            self.data.fwbs.f_ster_fw_inboard_ring_source,
+        )
+        po.ovarre(
+            self.outfile,
+            "",
+            "(f_ster_fw_outboard_ring_source)",
+            self.data.fwbs.f_ster_fw_outboard_ring_source,
+        )
+        po.ovarre(
+            self.outfile,
+            "",
+            "(f_ster_div_lower_ring_source)",
+            self.data.divertor.f_ster_div_lower_ring_source,
+        )
+        po.ovarre(
+            self.outfile,
+            "",
+            "(f_ster_div_upper_ring_source)",
+            self.data.divertor.f_ster_div_upper_ring_source,
+        )
 
     def output_fw_pumping(self):
         """Outputs the first wall pumping details to the output file."""
@@ -834,9 +1277,10 @@ class FirstWall(Model):
         """Outputs the first wall surface load details to the output file."""
         po.oheadr(self.outfile, "First wall surface loads")
 
+        po.osubhd(self.outfile, "Radiation loads:")
         po.ovarre(
             self.outfile,
-            "Nominal mean radiation load on vessel first-wall (MW/m^2)",
+            "Nominal mean radiation load on vessel first-wall [MW/m²]",
             "(pflux_fw_rad_mw)",
             self.data.physics.pflux_fw_rad_mw,
             "OP ",
@@ -850,29 +1294,142 @@ class FirstWall(Model):
         )
         po.ovarre(
             self.outfile,
-            "Maximum permitted radiation first-wall load (MW/m^2)",
-            "(pflux_fw_rad_max)",
-            self.data.constraints.pflux_fw_rad_max,
+            "Maximum permitted radiation first-wall load [MW/m²]",
+            "(pflux_fw_rad_max_mw)",
+            self.data.constraints.pflux_fw_rad_max_mw,
             "IP ",
         )
         po.ovarre(
             self.outfile,
-            "Peak radiation wall load (MW/m^2)",
-            "(pflux_fw_rad_max_mw)",
-            self.data.constraints.pflux_fw_rad_max_mw,
+            "Peak radiation wall load [MW/m²]",
+            "(pflux_fw_rad_peak_mw)",
+            self.data.constraints.pflux_fw_rad_peak_mw,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Radiation power on inboard first wall (Pᵧ,FW) [MW]",
+            "(p_fw_inboard_rad_mw)",
+            self.data.fwbs.p_fw_inboard_rad_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Fast alpha particle power incident on the first-wall (MW)",
-            "(p_fw_alpha_mw)",
-            self.data.physics.p_fw_alpha_mw,
+            "Surface average radiation heat flux on inboard first wall (⟨qᵧ⟩) [MW/m²]",
+            "(pflux_fw_inboard_rad_surface_average_mw)",
+            self.data.fwbs.pflux_fw_inboard_rad_surface_average_mw,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Radiation power on outboard first wall (Pᵧ,FW) [MW]",
+            "(p_fw_outboard_rad_mw)",
+            self.data.fwbs.p_fw_outboard_rad_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Nominal mean neutron load on vessel first-wall (MW/m^2)",
-            "(pflux_fw_neutron_mw)",
-            self.data.physics.pflux_fw_neutron_mw,
+            "Surface average radiation heat flux on outboard first wall (⟨qᵧ⟩) [MW/m²]",
+            "(pflux_fw_outboard_rad_surface_average_mw)",
+            self.data.fwbs.pflux_fw_outboard_rad_surface_average_mw,
             "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.osubhd(self.outfile, "Alpha particle loads:")
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Alpha particle power on inboard first wall [MW]",
+            "(p_fw_inboard_alpha_surface_mw)",
+            self.data.fwbs.p_fw_inboard_alpha_surface_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Alpha particle power on outboard first wall [MW]",
+            "(p_fw_outboard_alpha_surface_mw)",
+            self.data.fwbs.p_fw_outboard_alpha_surface_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total alpha particle power incident on all first-walls [MW]",
+            "(p_fw_alpha_surface_total_mw)",
+            self.data.physics.p_fw_alpha_surface_total_mw,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.osubhd(self.outfile, "Neutron loads:")
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Neutron heat flux on inboard first wall [MW]",
+            "(p_fw_inboard_neutron_incident_mw)",
+            self.data.fwbs.p_fw_inboard_neutron_incident_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Nominal mean neutron load on inboard first-wall [MW/m²]",
+            "(pflux_fw_inboard_neutron_surface_average_mw)",
+            self.data.fwbs.pflux_fw_inboard_neutron_surface_average_mw,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Neutron heat flux on outboard first wall [MW]",
+            "(p_fw_outboard_neutron_incident_mw)",
+            self.data.fwbs.p_fw_outboard_neutron_incident_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Nominal mean neutron load on outboard first-wall [MW/m²]",
+            "(pflux_fw_outboard_neutron_surface_average_mw)",
+            self.data.fwbs.pflux_fw_outboard_neutron_surface_average_mw,
+            "OP ",
+        )
+
+    @staticmethod
+    def calculate_fw_outboard_surface_loads(
+        p_fw_outboard_rad_mw: float,
+        p_beam_orbit_loss_mw: float,
+        p_fw_outboard_alpha_surface_mw: float,
+        p_beam_shine_through_mw: float,
+    ) -> float:
+        """Calculate the surface loads on the first wall.
+
+        Parameters
+        ----------
+        p_fw_outboard_rad_mw:
+            Radiation heat flux on outboard first wall [MW].
+        p_beam_orbit_loss_mw:
+            Beam orbit loss power [MW].
+        p_fw_outboard_alpha_surface_mw:
+            Alpha particle heat flux on outboard first wall [MW].
+        p_beam_shine_through_mw:
+            Beam shine through power [MW].
+
+        Returns
+        -------
+        p_fw_outboard_surface_heat_mw:
+            Total surface heat flux on the outboard first wall [MW].
+
+        """
+        # Surface heat flux on first wall (MW)
+        # All of the fast particle losses go to the outer wall, as do all beam losses
+        # and shine through.
+        # Some power is lost to HCD and ports on the outboard wall, so this is
+        # taken into account with a coverage factor.
+        return (
+            p_fw_outboard_rad_mw
+            + p_beam_orbit_loss_mw
+            + p_fw_outboard_alpha_surface_mw
+            + p_beam_shine_through_mw
         )

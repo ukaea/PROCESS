@@ -103,7 +103,13 @@ class FWBSData:
     """TF neutronic nuclear heating in the ST centrepost [MW]"""
 
     p_div_nuclear_heat_total_mw: float = 0.0
-    """nuclear heating in the divertor [MW]"""
+    """Total nuclear heating in the divertor(s) [MW]"""
+
+    p_div_lower_nuclear_heat_mw: float = 0.0
+    """Nuclear heating in the lower divertor [MW]"""
+
+    p_div_upper_nuclear_heat_mw: float = 0.0
+    """Nuclear heating in the upper divertor [MW]"""
 
     p_fw_nuclear_heat_total_mw: float = 0.0
     """nuclear heating in the first wall [MW]"""
@@ -167,11 +173,35 @@ class FWBSData:
     f_a_fw_coolant_outboard: float = 0.0
     """Outboard FW coolant cross-sectional area void fraction"""
 
-    psurffwi: float = 0.0
-    """Surface heat flux on first wall [MW] (sum = p_fw_rad_total_mw)"""
+    p_fw_inboard_surface_heat_mw: float = 0.0
+    """Surface heat flux on inboard first wall [MW] """
 
-    psurffwo: float = 0.0
-    """Surface heat flux on first wall [MW] (sum = p_fw_rad_total_mw)"""
+    p_fw_outboard_surface_heat_mw: float = 0.0
+    """Surface heat flux on outboard first wall [MW]"""
+
+    p_fw_inboard_alpha_surface_mw: float = 0.0
+    """Alpha particle heat flux on inboard first wall [MW]"""
+
+    p_fw_outboard_alpha_surface_mw: float = 0.0
+    """Alpha particle heat flux on outboard first wall [MW]"""
+
+    p_fw_inboard_neutron_incident_mw: float = 0.0
+    """Neutron heat flux incident on inboard first wall [MW]"""
+
+    p_fw_outboard_neutron_incident_mw: float = 0.0
+    """Neutron heat flux incident on outboard first wall [MW]"""
+
+    pflux_fw_inboard_neutron_surface_average_mw: float = 0.0
+    """Average neutron flux on inboard first wall surface [MW/m²]"""
+
+    pflux_fw_outboard_neutron_surface_average_mw: float = 0.0
+    """Average neutron flux on outboard first wall surface [MW/m²]"""
+
+    pflux_fw_inboard_rad_surface_average_mw: float = 0.0
+    """Average radiation flux on inboard first wall surface [MW/m²]"""
+
+    pflux_fw_outboard_rad_surface_average_mw: float = 0.0
+    """Average radiation flux on outboard first wall surface [MW/m²]"""
 
     vol_fw_total: float = 0.0
     """First wall volume [m3]"""
@@ -373,8 +403,20 @@ class FWBSData:
     p_div_rad_total_mw: float = 0.0
     """Total radiation power incident on the divertor(s) (MW)"""
 
+    p_div_lower_rad_mw: float = 0.0
+    """Radiation power incident on the lower divertor [MW]"""
+
+    p_div_upper_rad_mw: float = 0.0
+    """Radiation power incident on the upper divertor [MW]"""
+
     p_fw_rad_total_mw: float = 0.0
     """Radiation power incident on the first wall (MW)"""
+
+    p_fw_inboard_rad_mw: float = 0.0
+    """Radiation power incident on the inboard first wall [MW]"""
+
+    p_fw_outboard_rad_mw: float = 0.0
+    """Radiation power incident on the outboard first wall [MW]"""
 
     p_fw_hcd_rad_total_mw: float = 0.0
     """Radiation power incident on the heating and current drive systems on the first wall (MW)"""
@@ -716,6 +758,21 @@ class FWBSData:
 
     dz_fw_half: float = 0.0
     """Half-height of first wall structure [m]"""
+
+    rad_fw_inboard_plasma_centre_toroidal: float = 0.0
+    """Toroidal angle taken up by the inboard first wall as seen from the toroidal centre of the plasma [rad]"""
+
+    deg_fw_inboard_plasma_centre_toroidal: float = 0.0
+    """Toroidal angle taken up by the inboard first wall as seen from the toroidal centre of the plasma [deg]"""
+
+    f_rad_fw_inboard_plasma_centre_toroidal: float = 0.0
+    """Fraction of total toroidal angle taken up by the inboard first wall as seen from the toroidal centre of the plasma"""
+
+    f_ster_fw_inboard_ring_source: float = 0.0
+    """Solid angle fraction of inboard FW assuming a ring source"""
+
+    f_ster_fw_outboard_ring_source: float = 0.0
+    """Solid angle fraction of outboard FW assuming a ring source"""
 
 
 CREATE_DICTS_FROM_DATACLASS = FWBSData

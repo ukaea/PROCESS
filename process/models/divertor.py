@@ -40,7 +40,7 @@ class Divertor(Model):
         """
         self.data.divertor.deg_div_poloidal_plasma = self.single_divertor_angle
         self.data.fwbs.f_ster_div_single = (
-            self.data.divertor.deg_div_poloidal_plasma / 360.0
+            self.data.divertor.f_ster_div_lower_ring_source
         )
 
         self.data.fwbs.p_div_nuclear_heat_total_mw = self.incident_neutron_power(
@@ -49,10 +49,32 @@ class Divertor(Model):
             n_divertors=self.data.divertor.n_divertors,
         )
 
+        self.data.fwbs.p_div_lower_nuclear_heat_mw = self.incident_neutron_power(
+            p_plasma_neutron_mw=self.data.physics.p_plasma_neutron_mw,
+            f_ster_div_single=self.data.fwbs.f_ster_div_single,
+            n_divertors=1,
+        )
+        self.data.fwbs.p_div_upper_nuclear_heat_mw = self.incident_neutron_power(
+            p_plasma_neutron_mw=self.data.physics.p_plasma_neutron_mw,
+            f_ster_div_single=self.data.fwbs.f_ster_div_single,
+            n_divertors=1,
+        )
+
         self.data.fwbs.p_div_rad_total_mw = self.incident_radiation_power(
             p_plasma_rad_mw=self.data.physics.p_plasma_rad_mw,
             f_ster_div_single=self.data.fwbs.f_ster_div_single,
             n_divertors=self.data.divertor.n_divertors,
+        )
+
+        self.data.fwbs.p_div_lower_rad_mw = self.incident_radiation_power(
+            p_plasma_rad_mw=self.data.physics.p_plasma_rad_mw,
+            f_ster_div_single=self.data.fwbs.f_ster_div_single,
+            n_divertors=1,
+        )
+        self.data.fwbs.p_div_upper_rad_mw = self.incident_radiation_power(
+            p_plasma_rad_mw=self.data.physics.p_plasma_rad_mw,
+            f_ster_div_single=self.data.fwbs.f_ster_div_single,
+            n_divertors=1,
         )
 
         if (
