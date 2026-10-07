@@ -200,7 +200,7 @@ class NumericsData:
 
     lablcc: list[str] = field(
         default_factory=lambda: [
-            "NOT USED",
+            "⟨β⟩ consistency                   ",
             "Global power balance consistency ",
             "Ion power balance                ",
             "Electron power balance           ",
@@ -295,7 +295,7 @@ class NumericsData:
         ]
     )
     """Labels describing constraint equations (corresponding itvs)<UL>
-    * ( 1) NOT USED
+    * ( 1) Beta consistency equation
     * ( 2) Global power balance (consistency equation) (itv 10,1,2,3,4,6,11)
     * ( 3) Ion power balance DEPRECATED (itv 10,1,2,3,4,6,11)
     * ( 4) Electron power balance DEPRECATED (itv 10,1,2,3,4,6,11)
