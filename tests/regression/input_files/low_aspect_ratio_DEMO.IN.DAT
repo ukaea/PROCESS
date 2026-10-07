@@ -33,7 +33,7 @@ i_figure_merit   = -14 * Switch for figure-of-merit (see lablmm for descriptions
 * DESCRIPTION:   Switch for Figure-of-Merit (1: Minimise major radius)
 * JUSTIFICATION: Aim to minimise major radius
 
-n_equality_constraints = 4
+n_equality_constraints = 5
 * DESCRIPTION:   No of equality constraints
 * JUSTIFICATION: 
 
@@ -49,6 +49,10 @@ icc = 2
 
 icc = 11 * Radial build
 * DESCRIPTION:   Radial Build Consistency
+* JUSTIFICATION: Consistency equations should always be on
+
+icc = 93
+* DESCRIPTION:   Plasma fuel-ion equillibrium
 * JUSTIFICATION: Consistency equations should always be on
 
 icc = 30 
@@ -299,6 +303,11 @@ ixc = 135
 f_nd_impurity_electrons(13) = 1.5e-04
 * DESCRIPTION:   Xenon Impurity Concentration
 * JUSTIFICATION: Xenon impurity used based on DEMO-2018
+
+ixc = 178
+molflow_plasma_fuelling = 4.45548408068305741e+21
+* DESCRIPTION:   Plasma fuelling rate
+* JUSTIFICATION: Use to find fuel-ion equillibrium.
 
 *scan_dim = 1
 
