@@ -9,13 +9,14 @@
 
 *---------------Constraint Equations---------------*
 
-n_equality_constraints = 3               *number of equalities
+n_equality_constraints = 4               *number of equalities
 
 
 *--------------- equalities
 icc = 2                 *Global power balance (consistency equation)
 icc = 11                *Radial build (consistency equation)
 icc = 16                *Net electric power lower limit
+icc = 93
 
 
 *-------------- inequalities
@@ -39,6 +40,10 @@ ixc = 10                *hfact
 hfact = 1.2187          *H-factor on energy confinement times
 boundu(10) = 2.0
 
+ixc = 178
+molflow_plasma_fuelling = 5.62857153975722023e+21
+
+
 
 *----------------Physics Variables-----------------*
 
@@ -54,7 +59,6 @@ rmajor   = 22.0         *Plasma major radius (m)
 f_sync_reflect    = 0.6          *Synchrotron wall reflectivity factor
 temp_plasma_electron_vol_avg_kev       = 7.0          *Volume averaged electron temperature (keV)
 f_temp_plasma_ion_electron   = 0.95         *Ion temperature / electron temperature
-
 
 *--------------Stellarator Variables---------------*
 
