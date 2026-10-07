@@ -17640,7 +17640,7 @@ def plot_summary(
     )
 
     if output_format == "pdf":
-        with bpdf.PdfPages(mfile.with_name(mfile.name + "SUMMARY.pdf")) as pdf:
+        with bpdf.PdfPages(mfile.with_name(mfile.name + ".SUMMARY.pdf")) as pdf:
             for page_number, p in enumerate(pages_of_plots, start=1):
                 add_page_footer(p, page_number, len(pages_of_plots), run_label)
                 pdf.savefig(p)
