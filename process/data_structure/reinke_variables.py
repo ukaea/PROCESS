@@ -2,23 +2,25 @@
 
 from dataclasses import dataclass
 
+from process.core.data_structure.parameter import Parameter, PROCESSModelData
+
 
 @dataclass(slots=True)
-class ReinkeData:
+class ReinkeData(PROCESSModelData):
     """Dataclass holding Reinke variables"""
 
     impvardiv: int = 9
     """Index of impurity to be iterated for Reinke divertor detachment criterion"""
 
-    lhat: float = 4.33
+    lhat: Parameter[float] = 4.33
     """Connection length factor L|| = lhat qstar R for Reinke criterion, default value from
     Post et al. 1995 J. Nucl. Mat.  220-2 1014
     """
 
-    fzmin: float = 0.0
+    fzmin: Parameter[float] = 0.0
     """Minimum impurity fraction necessary for detachment. This is the impurity at the SOL/Div."""
 
-    fzactual: float = 0.001
+    fzactual: Parameter[float] = 0.001
     """Actual impurity fraction of divertor impurity (impvardiv) in the SoL (taking
     impurity_enrichment into account) (`iteration variable 148`)
     """

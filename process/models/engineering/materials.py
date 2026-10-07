@@ -5,6 +5,8 @@ import logging
 import numba
 import numpy as np
 
+from process.core.data_structure.parameter import unwrap_parameter
+
 logger = logging.getLogger(__name__)
 
 poisson_steel: float = 0.3
@@ -49,12 +51,12 @@ def eurofer97_thermal_conductivity(temp: float, fw_th_conductivity: float) -> fl
     )
 
 
-@numba.njit(cache=True)
+@unwrap_parameter
 def calculate_tresca_stress(
     stress_x: float | np.ndarray,
     stress_y: float | np.ndarray,
     stress_z: float | np.ndarray,
-) -> float | np.ndarray:
+):
     """Calculates the Tresca (maximum shear stress) criterion from three principal
     stress components.
 
@@ -73,6 +75,19 @@ def calculate_tresca_stress(
         Tresca stress (maximum shear stress criterion) in Pa, defined as the
         maximum of |stress_x - stress_y|, |stress_y - stress_z|, |stress_x - stress_z|.
     """
+    return calculate_tresca_stress_numba(stress_x, stress_y, stress_z)
+
+
+@numba.njit(cache=True)
+def calculate_tresca_stress_numba(
+    stress_x: float | np.ndarray,
+    stress_y: float | np.ndarray,
+    stress_z: float | np.ndarray,
+) -> float | np.ndarray:
+    """Calculates the Tresca stress.
+
+    See docstring for calculate_tresca_stress.
+    """
     return np.maximum(
         np.maximum(
             np.abs(stress_x - stress_y),
@@ -82,7 +97,7 @@ def calculate_tresca_stress(
     )
 
 
-@numba.njit(cache=True)
+@unwrap_parameter
 def calculate_von_mises_stress(
     stress_x: float | np.ndarray,
     stress_y: float | np.ndarray,
@@ -90,7 +105,7 @@ def calculate_von_mises_stress(
     stress_shear_xy: float | np.ndarray,
     stress_shear_yz: float | np.ndarray,
     stress_shear_zx: float | np.ndarray,
-) -> float | np.ndarray:
+):
     """Calculates the von Mises stress criterion from three principal stress components.
 
     Parameters
@@ -117,6 +132,24 @@ def calculate_von_mises_stress(
     References
     ----------
     [1] https://en.wikipedia.org/wiki/Von_Mises_yield_criterion
+    """
+    return calculate_von_mises_stress_numba(
+        stress_x, stress_y, stress_z, stress_shear_xy, stress_shear_yz, stress_shear_zx
+    )
+
+
+@numba.njit(cache=True)
+def calculate_von_mises_stress_numba(
+    stress_x: float | np.ndarray,
+    stress_y: float | np.ndarray,
+    stress_z: float | np.ndarray,
+    stress_shear_xy: float | np.ndarray,
+    stress_shear_yz: float | np.ndarray,
+    stress_shear_zx: float | np.ndarray,
+) -> float | np.ndarray:
+    """Calculates the von Mises stress.
+
+    See docstring for calculate_von_mises_stress.
     """
     return np.sqrt(
         0.5

@@ -90,7 +90,7 @@ def test_cooling_towers(coolingtowersparam, monkeypatch, water_use):
             water_use.data.water_use, field, getattr(coolingtowersparam, field)
         )
 
-    water_use.cooling_towers(wastetherm=coolingtowersparam.wastetherm, output=False)
+    water_use.cooling_towers(wastetherm=coolingtowersparam.wastetherm)
 
     assert water_use.data.water_use.volheat == pytest.approx(
         coolingtowersparam.expected_volheat
@@ -199,9 +199,7 @@ def test_cooling_water_body(coolingwaterbodyparam, monkeypatch, water_use):
             getattr(coolingwaterbodyparam, field),
         )
 
-    water_use.cooling_water_body(
-        wastetherm=coolingwaterbodyparam.wastetherm, output=False
-    )
+    water_use.cooling_water_body(wastetherm=coolingwaterbodyparam.wastetherm)
 
     assert water_use.data.water_use.evapratio == pytest.approx(
         coolingwaterbodyparam.expected_evapratio

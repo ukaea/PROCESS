@@ -13,6 +13,8 @@ Notes
 import sys
 from re import sub
 
+import numpy as np
+
 from process.core.data_structure.dicts import get_dicts
 from process.core.exceptions import ProcessValidationError
 from process.core.solver.constraints import ConstraintManager
@@ -995,11 +997,15 @@ class INVariable:
         """Determine if variables are equal"""
         # intentionally missing .comment,
         # this is not necessary for the variables to be equal
-        return (
-            self.name == value.name
-            and self.value == value.value
-            and self.v_type == value.v_type
-        )
+        values_equal = self.value == value.value
+
+        try:
+            iter(values_equal)
+            values_equal = np.all(values_equal)
+        except TypeError:
+            pass
+
+        return self.name == value.name and values_equal and self.v_type == value.v_type
 
     def __hash__(self):
         """INVariable hash representation"""
