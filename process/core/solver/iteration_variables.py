@@ -109,7 +109,7 @@ ITERATION_VARIABLES = {
         "impurity_radiation",
         1e-8,
         0.01,
-        target_name="f_nd_impurity_electron_array",
+        target_name="f_nd_impurity_electrons",
         array_index=2,
     ),
     126: IterationVariable(
@@ -117,7 +117,7 @@ ITERATION_VARIABLES = {
         "impurity_radiation",
         1e-8,
         0.01,
-        target_name="f_nd_impurity_electron_array",
+        target_name="f_nd_impurity_electrons",
         array_index=3,
     ),
     127: IterationVariable(
@@ -125,7 +125,7 @@ ITERATION_VARIABLES = {
         "impurity_radiation",
         1e-8,
         0.01,
-        target_name="f_nd_impurity_electron_array",
+        target_name="f_nd_impurity_electrons",
         array_index=4,
     ),
     128: IterationVariable(
@@ -133,7 +133,7 @@ ITERATION_VARIABLES = {
         "impurity_radiation",
         1e-8,
         0.01,
-        target_name="f_nd_impurity_electron_array",
+        target_name="f_nd_impurity_electrons",
         array_index=5,
     ),
     129: IterationVariable(
@@ -141,7 +141,7 @@ ITERATION_VARIABLES = {
         "impurity_radiation",
         1e-8,
         0.01,
-        target_name="f_nd_impurity_electron_array",
+        target_name="f_nd_impurity_electrons",
         array_index=6,
     ),
     130: IterationVariable(
@@ -149,7 +149,7 @@ ITERATION_VARIABLES = {
         "impurity_radiation",
         1e-8,
         0.01,
-        target_name="f_nd_impurity_electron_array",
+        target_name="f_nd_impurity_electrons",
         array_index=7,
     ),
     131: IterationVariable(
@@ -157,7 +157,7 @@ ITERATION_VARIABLES = {
         "impurity_radiation",
         1e-8,
         0.01,
-        target_name="f_nd_impurity_electron_array",
+        target_name="f_nd_impurity_electrons",
         array_index=8,
     ),
     132: IterationVariable(
@@ -165,7 +165,7 @@ ITERATION_VARIABLES = {
         "impurity_radiation",
         1e-8,
         0.01,
-        target_name="f_nd_impurity_electron_array",
+        target_name="f_nd_impurity_electrons",
         array_index=9,
     ),
     133: IterationVariable(
@@ -173,7 +173,7 @@ ITERATION_VARIABLES = {
         "impurity_radiation",
         1e-8,
         0.01,
-        target_name="f_nd_impurity_electron_array",
+        target_name="f_nd_impurity_electrons",
         array_index=10,
     ),
     134: IterationVariable(
@@ -181,7 +181,7 @@ ITERATION_VARIABLES = {
         "impurity_radiation",
         1e-8,
         0.01,
-        target_name="f_nd_impurity_electron_array",
+        target_name="f_nd_impurity_electrons",
         array_index=11,
     ),
     135: IterationVariable(
@@ -189,7 +189,7 @@ ITERATION_VARIABLES = {
         "impurity_radiation",
         1e-8,
         0.01,
-        target_name="f_nd_impurity_electron_array",
+        target_name="f_nd_impurity_electrons",
         array_index=12,
     ),
     136: IterationVariable(
@@ -197,7 +197,7 @@ ITERATION_VARIABLES = {
         "impurity_radiation",
         1e-8,
         0.01,
-        target_name="f_nd_impurity_electron_array",
+        target_name="f_nd_impurity_electrons",
         array_index=13,
     ),
     138: IterationVariable(
