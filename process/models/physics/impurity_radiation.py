@@ -725,9 +725,8 @@ class ImpurityRadiation:
             self.pden_impurity_core_rad_profile, pden_impurity_core_rad_total
         )
 
-    def integrate_radiation_loss_profiles(self) -> None:
-        """Integrate the radiation loss profiles using the Simpson rule.
-        Store the total values for each aspect of impurity radiation loss.
+    def calculate_vol_avg_radiation_loss_profiles(self) -> None:
+        """Calculate the plasma volume averaged power density for the impurity profiles
         """
         # 1e-6 converts from W/m³ to MW/m³
 
@@ -752,4 +751,4 @@ class ImpurityRadiation:
         """
         self.map_imprad_profile()
         self.calculate_radiation_loss_profiles()
-        self.integrate_radiation_loss_profiles()
+        self.calculate_vol_avg_radiation_loss_profiles()
