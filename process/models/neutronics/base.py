@@ -335,7 +335,7 @@ class NeutronFluxProfile:
         return tables
 
     def _groupwise_cs_values_in_layer(
-        self, n: int, num_layer: int, abs_x: float | npt.NDArray
+        self, n: int, num_layer: int, abs_x: float
     ) -> npt.NDArray:
         """
         Calculate the num_layer-th layer n-th basis function at the specified
@@ -349,7 +349,7 @@ class NeutronFluxProfile:
         return np.array([np.cos(abs_x / l), np.sin(abs_x / l)])
 
     def _groupwise_cs_differential_in_layer(
-        self, n: int, num_layer: int, abs_x: float | npt.NDArray
+        self, n: int, num_layer: int, abs_x: float
     ) -> npt.NDArray:
         """
         Differentiate the num_layer-th layer n-th basis function, and evaluate
@@ -363,7 +363,7 @@ class NeutronFluxProfile:
         return np.array([-np.sin(abs_x / l) / l, np.cos(abs_x / l) / l])
 
     def _groupwise_cs_definite_integral_in_layer(
-        self, n: int, num_layer: int, x_lower: float | npt.NDArray, x_upper
+        self, n: int, num_layer: int, x_lower: float, x_upper
     ) -> npt.NDArray:
         """
         Integrate the num_layer-th layer n-th basis function
@@ -383,8 +383,8 @@ class NeutronFluxProfile:
         ])
 
     def _groupwise_flux_curvature_in_layer(
-        self, n: int, num_layer: int, abs_x: float | npt.NDArray
-    ) -> float | npt.NDArray:
+        self, n: int, num_layer: int, abs_x: float
+    ) -> float:
         """Second derivative of the group n flux in num_layer at location x."""
         abs_x = np.longdouble(abs_x)
         trig_funcs = []
@@ -1230,9 +1230,7 @@ class NeutronFluxProfile:
             return np.nan
         integrals = []
         # set integration limits
-        x_start = self.layer_x[num_layer - 1]
-        if num_layer == 0:
-            x_start = 0.0
+        x_start = self.interface_x[num_layer]
         x_end = self.layer_x[num_layer]
 
         max_groups = self.n_groups if self.contains_upscatter else n + 1
