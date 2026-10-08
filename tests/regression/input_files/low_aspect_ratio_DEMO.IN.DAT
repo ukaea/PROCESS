@@ -174,10 +174,6 @@ boundu(4) = 150.0
 * DESCRIPTION:   Volume averaged electron temperature (keV)
 * JUSTIFICATION: Iterate temperature to get solution
 
-beta_total_vol_avg = 3.71965626913446160e-02
-* DESCRIPTION:   Total Plasma Beta
-* JUSTIFICATION: Beta is limited by dnbeta
-
 ixc = 6
 nd_plasma_electrons_vol_avg = 6.88360041658364314e+19
 * DESCRIPTION:   Electron density (/m3)
