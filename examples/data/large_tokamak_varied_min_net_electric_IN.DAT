@@ -22,11 +22,6 @@ n_equality_constraints = 3
 * Constraint Equations - Consistency Equations *
 ************************************************
 
-* Beta consistency *
-*------------------*
-icc = 1
-ixc = 5 * beta_total_vol_avg
-beta_total_vol_avg = 0.03
 
 * Global power balance *
 *----------------------*
@@ -35,6 +30,10 @@ icc = 2
 * Radial build consistency *
 *--------------------------*
 icc = 11
+
+* Fuel-ion equilibrium *
+*----------------------*
+icc = 93
 
 * Constraint Equations - Limit Equations *
 ******************************************
