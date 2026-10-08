@@ -170,7 +170,7 @@ class PlasmaConfinementTime(Model):
             match model:
                 case ConfinementRadiationLossModel.FULL_RADIATION:
                     p_plasma_loss_mw -= self.data.physics.pden_plasma_rad_mw * vol_plasma
-                case ConfinementRadiationLossModel.CORE_ONLY:
+                case ConfinementRadiationLossModel.REDUCED_CORE_ONLY:
                     p_plasma_loss_mw -= (
                         pden_plasma_core_rad_reduced_vol_avg_mw * vol_plasma
                     )
@@ -982,7 +982,7 @@ class PlasmaConfinementTime(Model):
         # Calculate H* non-radiation corrected H factor
         # Note: we will assume the IPB-98y2 scaling.
         match ConfinementRadiationLossModel(self.data.physics.i_rad_loss):
-            case ConfinementRadiationLossModel.CORE_ONLY:
+            case ConfinementRadiationLossModel.REDUCED_CORE_ONLY:
                 hstar = (
                     hfact
                     * (
@@ -1170,7 +1170,7 @@ class PlasmaConfinementTime(Model):
             match ConfinementRadiationLossModel(self.data.physics.i_rad_loss):
                 case ConfinementRadiationLossModel.FULL_RADIATION:
                     fhz_value += self.data.physics.pden_plasma_rad_mw
-                case ConfinementRadiationLossModel.CORE_ONLY:
+                case ConfinementRadiationLossModel.REDUCED_CORE_ONLY:
                     fhz_value += (
                         self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw
                     )
@@ -1294,7 +1294,7 @@ class PlasmaConfinementTime(Model):
                 self.data.physics.p_plasma_rad_mw,
                 "OP ",
             )
-        elif model == ConfinementRadiationLossModel.CORE_ONLY:
+        elif model == ConfinementRadiationLossModel.REDUCED_CORE_ONLY:
             po.ovarre(
                 self.outfile,
                 "Radiation power subtracted from plasma heating power balance (MW)",
