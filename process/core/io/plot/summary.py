@@ -4516,7 +4516,7 @@ def plot_line_brem_power_profile(
 
     # Ranges
     # ---
-    axis.set_xlim([0, 1.0])
+    axis.set_xlim(0, 1.0)
     axis.legend(loc="upper left", bbox_to_anchor=(1.0, 1.0), ncol=1)
     axis.set_yscale("log")
     axis.yaxis.grid(True, which="both", alpha=0.2)
@@ -8098,13 +8098,8 @@ def plot_geometry_info(axis: plt.Axes, mfile: MFile, scan: int):
     scan :
         scan number to use
     """
-    xmin = 0
-    xmax = 1
-    ymin = -16
-    ymax = 1
-
     axis.text(-0.05, 1, "Geometry:", ha="left", va="center")
-    _setup_axis(axis, xmin, xmax, ymin, ymax)
+    _setup_axis(axis, xmin=0, xmax=1, ymin=-16, ymax=1)
 
     in_blanket_thk = mfile.get("dr_shld_inboard", scan=scan) + mfile.get(
         "dr_blkt_inboard", scan=scan
@@ -8143,13 +8138,8 @@ def plot_physics_info(axis: plt.Axes, mfile: MFile, scan: int):
     scan :
         scan number to use
     """
-    xmin = 0
-    xmax = 1
-    ymin = -16
-    ymax = 1
-
     axis.text(-0.05, 1, "Physics:", ha="left", va="center")
-    _setup_axis(axis, xmin, xmax, ymin, ymax)
+    _setup_axis(axis, xmin=0, xmax=1, ymin=-16, ymax=1)
 
     nong = mfile.get("nd_plasma_electron_line", scan=scan) / mfile.get(
         "nd_plasma_electron_max_array(7)", scan=scan
@@ -11355,11 +11345,11 @@ def draw_bend(
     ax:
         Target axes for plotting.
     elbow_radius:
-        Radius of the elbow in meters.
+        Radius of the elbow [m].
     theta_span:
-        Array of angles [0, θ] where θ is pi/2 or pi.
+        Array of angles [0, θ] where θ is pi/2 or pi [rad]
     radius_pipe:
-        Pipe radius in meters (fallback to 0.1m if not provided).
+        Pipe radius (fallback to 0.1m if not provided) [m]
     title:
         Plot title string.
     alpha:

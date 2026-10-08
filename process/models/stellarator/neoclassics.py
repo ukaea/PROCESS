@@ -31,11 +31,6 @@ class Neoclassics(Model):
     """Module containing neoclassics routines"""
 
     @property
-    def no_roots(self):
-        """Obtain number of Gauss Laguerre roots"""
-        return self.data.neoclassics.roots.shape[0]
-
-    @property
     def mass(self):
         """Component mass array for electron, deuterium, tritium and Helium"""
         return np.array([
@@ -177,13 +172,13 @@ class Neoclassics(Model):
         Returns
         -------
         dens:
-            density of electron, deuterium, tritum and alpha
+            density of electron, deuterium, tritum and alpha [1/m3]
         temp:
-            temperature of electron, deuterium, tritum and alpha
+            temperature of electron, deuterium, tritum and alpha [J]
         dr_dens:
-            derivative density of electron, deuterium, tritum and alpha
+            derivative density of electron, deuterium, tritum and alpha [1/m3]
         dr_temp:
-            derivative temperature of electron, deuterium, tritum and alpha
+            derivative temperature of electron, deuterium, tritum and alpha [J]
         """
         t_suffix = (1 - rho**2) ** self.data.physics.alphat * KEV
 
@@ -223,12 +218,10 @@ class Neoclassics(Model):
             * self.data.physics.alphat
             * KEV
         )
-        return (
-            (density_array * dens_suffix),
-            (temperature_array * t_suffix),
-            dr_dens,
-            dr_temp,
-        )
+
+        dens = density_array * dens_suffix
+        temp = temperature_array * t_suffix
+        return dens, temp, dr_dens, dr_temp
 
     def calc_neoclassics(self):
         """Calculate neoclassics parameters"""
@@ -279,33 +272,6 @@ class Neoclassics(Model):
         )
 
         chi_PROCESS_e = self.st_calc_eff_chi()
-
-        # Unused calculations
-        # q_neo_sum = 1e-6 * sum(self.data.neoclassics.q_flux)
-        # gamma_neo = 1e-6 * sum(
-        #     self.data.neoclassics.gamma_flux * self.data.neoclassics.temperatures
-        # )
-
-        # total_q_neo = 1e-6 * sum(
-        #     self.data.neoclassics.q_flux
-        #     + self.data.neoclassics.gamma_flux * self.data.neoclassics.temperatures
-        # )
-
-        # dndt_neo_D = self.data.neoclassics.gamma_flux[1]
-        # dndt_neo_a = self.data.neoclassics.gamma_flux[3]
-        # dndt_neo_T = self.data.neoclassics.gamma_flux[2]
-
-        # dndt_neo_fuel = (
-        #     (dndt_neo_D + dndt_neo_T)
-        #     * self.data.physics.a_plasma_surface
-        #     * self.data.impurity_radiation.radius_plasma_core_norm
-        # )
-        # dmdt_neo_fuel = (
-        #     dndt_neo_fuel
-        #     * self.data.physics.m_fuel_amu
-        #     * constants.PROTON_MASS
-        #     * 1.0e6
-        # )  # mg
         return (
             q_PROCESS,
             q_PROCESS_r1,
@@ -333,7 +299,7 @@ class Neoclassics(Model):
         ) * self.data.neoclassics.temperatures[:, None]
 
     @staticmethod
-    def _nu_erfn(xk, expxk):
+    def _nu_erf(xk, expxk):
         """Error function"""
         # Rational approximation for erf
         # t term
@@ -372,7 +338,7 @@ class Neoclassics(Model):
 
         expxk = np.exp(-xk)
 
-        erfn = self._nu_erfn(xk, expxk)
+        erfn = self._nu_erf(xk, expxk)
 
         phixmgx = (1.0 - 0.5 * 1 / xk) * erfn + expxk / np.sqrt(np.pi * xk)
 
@@ -451,7 +417,7 @@ class Neoclassics(Model):
         expxk = np.zeros_like(xk)
         expxk[mask_xk_lt_200] = np.exp(-xk[mask_xk_lt_200])
 
-        erfn = self._nu_erfn(xk, expxk)
+        erfn = self._nu_erf(xk, expxk)
 
         phixmgx = (1.0 - 0.5 * 1 / xk) * erfn + expxk / np.sqrt(np.pi * xk)
 
