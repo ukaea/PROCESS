@@ -758,6 +758,13 @@ class ImpurityRadiation:
     def calculate_vol_avg_radiation_loss_profiles(self) -> None:
         """Calculate the plasma volume averaged power density for the impurity
         profiles
+
+        Raises
+        ------
+        ValueError
+            If the sum of core and edge impurity radiation does not match the total
+            volume averaged radiation.
+
         """
         # 1e-6 converts from W/m³ to MW/m³
 
