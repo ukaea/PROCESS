@@ -2157,7 +2157,9 @@ class Stellarator(Model):
         self.data.physics.pden_plasma_edge_rad_vol_avg_mw = (
             radpwr_data.pden_plasma_edge_rad_vol_avg_mw
         )
-        self.data.physics.pden_plasma_rad_mw = radpwr_data.pden_plasma_rad_mw
+        self.data.physics.pden_plasma_rad_vol_avg_mw = (
+            radpwr_data.pden_plasma_rad_vol_avg_mw
+        )
 
         self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw = max(
             self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw, 0.0e0
@@ -2176,7 +2178,7 @@ class Stellarator(Model):
         )
 
         self.data.physics.p_plasma_rad_mw = (
-            self.data.physics.pden_plasma_rad_mw * self.data.physics.vol_plasma
+            self.data.physics.pden_plasma_rad_vol_avg_mw * self.data.physics.vol_plasma
         )
 
         # Heating power to plasma (= Psol in divertor model)
@@ -2188,7 +2190,7 @@ class Stellarator(Model):
             * self.data.physics.p_alpha_total_mw
             + self.data.physics.p_non_alpha_charged_mw
             + self.data.physics.p_plasma_ohmic_mw
-            - self.data.physics.pden_plasma_rad_mw * self.data.physics.vol_plasma
+            - self.data.physics.pden_plasma_rad_vol_avg_mw * self.data.physics.vol_plasma
         )
         powht = max(
             0.00001e0, powht

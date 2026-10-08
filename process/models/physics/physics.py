@@ -736,7 +736,9 @@ class Physics(Model):
         self.data.physics.pden_plasma_edge_rad_vol_avg_mw = (
             radpwrdata.pden_plasma_edge_rad_vol_avg_mw
         )
-        self.data.physics.pden_plasma_rad_vol_avg_mw = radpwrdata.pden_plasma_rad_vol_avg_mw
+        self.data.physics.pden_plasma_rad_vol_avg_mw = (
+            radpwrdata.pden_plasma_rad_vol_avg_mw
+        )
 
         self.data.physics.p_plasma_sync_mw = (
             self.data.physics.pden_plasma_sync_vol_avg_mw * self.data.physics.vol_plasma
@@ -755,7 +757,7 @@ class Physics(Model):
             * self.data.physics.vol_plasma
         )
         self.data.physics.p_plasma_rad_mw = (
-            self.data.physics.pden_plasma_rad_mw * self.data.physics.vol_plasma
+            self.data.physics.pden_plasma_rad_vol_avg_mw * self.data.physics.vol_plasma
         )
 
         # Calculate ohmic power
@@ -1971,6 +1973,14 @@ class Physics(Model):
             "Separatrix radiation fraction (fᵧ)",
             "(f_p_plasma_separatrix_rad)",
             self.data.physics.f_p_plasma_separatrix_rad,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Volume-averaged total core radiation power per volume [MW/m³]",
+            "(pden_plasma_core_rad_vol_avg_mw)",
+            self.data.physics.pden_plasma_rad_vol_avg_mw,
             "OP ",
         )
 

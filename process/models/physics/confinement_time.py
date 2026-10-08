@@ -169,7 +169,9 @@ class PlasmaConfinementTime(Model):
 
             match model:
                 case ConfinementRadiationLossModel.FULL_RADIATION:
-                    p_plasma_loss_mw -= self.data.physics.pden_plasma_rad_mw * vol_plasma
+                    p_plasma_loss_mw -= (
+                        self.data.physics.pden_plasma_rad_vol_avg_mw * vol_plasma
+                    )
                 case ConfinementRadiationLossModel.REDUCED_CORE_ONLY:
                     p_plasma_loss_mw -= (
                         pden_plasma_core_rad_reduced_vol_avg_mw * vol_plasma
@@ -1002,7 +1004,7 @@ class PlasmaConfinementTime(Model):
                         p_plasma_loss_mw
                         / (
                             p_plasma_loss_mw
-                            + self.data.physics.pden_plasma_rad_mw * vol_plasma
+                            + self.data.physics.pden_plasma_rad_vol_avg_mw * vol_plasma
                         )
                     )
                     ** 0.31
@@ -1169,7 +1171,7 @@ class PlasmaConfinementTime(Model):
             # Include the radiation power if requested
             match ConfinementRadiationLossModel(self.data.physics.i_rad_loss):
                 case ConfinementRadiationLossModel.FULL_RADIATION:
-                    fhz_value += self.data.physics.pden_plasma_rad_mw
+                    fhz_value += self.data.physics.pden_plasma_rad_vol_avg_mw
                 case ConfinementRadiationLossModel.REDUCED_CORE_ONLY:
                     fhz_value += (
                         self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw
