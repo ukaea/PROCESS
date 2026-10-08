@@ -439,7 +439,7 @@ class PlasmaCurrent(Model):
                     triang=triang,
                     triang95=triang95,
                 )
-            except ProcessValueError:  # noqa: PERF203
+            except ProcessValueError:
                 # Since this method is only used for output reporting, if a
                 # Ip model cannot run (e.g. most models don't support negative triang)
                 # then assign it NaN.

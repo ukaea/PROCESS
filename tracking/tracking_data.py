@@ -403,7 +403,7 @@ class TrackedData:
         data_time_str = f"{date_str.strip()} - {time_str.strip()}"
         date_time = datetime.datetime.strptime(
             data_time_str, "%d/%m/%Y - %H:%M"
-        ).replace(tzinfo=datetime.timezone.utc)
+        ).replace(tzinfo=datetime.UTC)
 
         tracking_data = json_file_data.get(
             "tracking", []
