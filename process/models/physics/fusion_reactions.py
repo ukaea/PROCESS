@@ -4,11 +4,10 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Self
 
 import numpy as np
 from scipy import integrate
-from typing_extensions import Self
 
 from process.core import constants
 from process.core import process_output as po
