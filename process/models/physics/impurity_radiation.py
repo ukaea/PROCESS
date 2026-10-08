@@ -664,9 +664,6 @@ class ImpurityRadiation:
         self.pden_impurity_radiation_profile = np.zeros(
             self.data.physics.n_plasma_profile_elements
         )
-        self.pden_impurity_rad_profile = np.zeros(
-            self.data.physics.n_plasma_profile_elements
-        )
         self.pden_impurity_core_rad_profile = np.zeros(
             self.data.physics.n_plasma_profile_elements
         )
@@ -715,7 +712,7 @@ class ImpurityRadiation:
         radiation  (pden_impurity_rad_total_mw). Update the stored arrays with the
         values.
         """
-        pden_impurity_rad_total = self.pden_impurity_radiation_profile
+        
         pden_impurity_core_rad_total = self.pden_impurity_radiation_profile * (
             create_f_rad_core_profile(
                 rho=self.plasma_profile.neprofile.profile_x,
@@ -724,9 +721,6 @@ class ImpurityRadiation:
             )
         )
 
-        self.pden_impurity_rad_profile = np.add(
-            self.pden_impurity_rad_profile, pden_impurity_rad_total
-        )
         self.pden_impurity_core_rad_profile = np.add(
             self.pden_impurity_core_rad_profile, pden_impurity_core_rad_total
         )
@@ -739,7 +733,7 @@ class ImpurityRadiation:
 
         self.pden_impurity_rad_total_mw = 1.0e-6 * calculate_vol_avg_of_profile(
             profile_x=self.plasma_profile.neprofile.profile_x,
-            profile_y=self.pden_impurity_rad_profile,
+            profile_y=self.pden_impurity_radiation_profile,
             profile_dx=self.plasma_profile.neprofile.profile_dx,
         )
 
