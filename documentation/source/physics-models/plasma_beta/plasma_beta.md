@@ -390,7 +390,7 @@ $$
 
 ### Beta consistency
 
-beta_total_vol_avg is calculated directly from the current plasma state and is no longer an iteration variable. Constraint 1 may be activated as an optional global consistency check or safeguard against potential non-idempotent behaviour by stating icc = 1 in the input file.
+`beta_total_vol_avg` is calculated directly from the current plasma state and is no longer an iteration variable. Constraint 1 may be activated as an optional global consistency check or safeguard against potential non-idempotent behaviour by stating `icc = 1` in the input file.
 
 Ensures the relationship between $\beta$, density, temperature and total magnetic field is withheld by checking the fixed input or iteration variable $\texttt{beta}$ is consistent in value with the rest of the physics parameters
 
