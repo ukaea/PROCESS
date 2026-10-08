@@ -706,11 +706,8 @@ class ImpurityRadiation:
             self.pden_impurity_radiation_profile, pden_impurity_radiation_profile
         )
 
-    def calculate_radiation_loss_profiles(self) -> None:
-        """Calculate the Bremsstrahlung (radb), line radiation (radl), total impurity
-        radiation from the core (pden_impurity_core_rad_total_mw) and total impurity
-        radiation  (pden_impurity_rad_total_mw). Update the stored arrays with the
-        values.
+    def calculate_radiation_core_edge_profiles(self) -> None:
+        """Calculate the impurity radiation specified core and edge profiles
         """
         
         pden_impurity_core_rad_total = self.pden_impurity_radiation_profile * (
@@ -750,5 +747,5 @@ class ImpurityRadiation:
         find the total values for radiation loss.
         """
         self.map_imprad_profile()
-        self.calculate_radiation_loss_profiles()
+        self.calculate_radiation_core_edge_profiles()
         self.calculate_vol_avg_radiation_loss_profiles()
