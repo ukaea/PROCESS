@@ -481,7 +481,7 @@ class ConfinementRadiationLossModel(IntEnum):
     """Confinement radiation loss model types"""
 
     FULL_RADIATION = (0, "All radiation included in loss power term")
-    CORE_ONLY = (1, "Only core radiation included in loss power term")
+    REDUCED_CORE_ONLY = (1, "Only reduced core radiation included in loss power term")
     NO_RADIATION = (2, "No radiation included in loss power term")
 
     def __new__(cls, value: int, description: str):
@@ -1263,7 +1263,7 @@ class PhysicsData:
 
     p_plasma_core_rad_reduced_mw: float = 0.0
     """Plasma reduced core radiation power [MW]"""
-    
+
     p_plasma_core_rad_mw: float = 0.0
     """Plasma total core radiation power [MW]"""
 

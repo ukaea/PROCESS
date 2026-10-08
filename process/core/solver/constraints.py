@@ -269,7 +269,7 @@ def constraint_equation_2(constraint_registration, data):
     match ConfinementRadiationLossModel(data.physics.i_rad_loss):
         case ConfinementRadiationLossModel.FULL_RADIATION:
             p_plasma_loss += data.physics.p_plasma_rad_mw
-        case ConfinementRadiationLossModel.CORE_ONLY:
+        case ConfinementRadiationLossModel.REDUCED_CORE_ONLY:
             p_plasma_loss += data.physics.p_plasma_core_rad_reduced_mw
         case ConfinementRadiationLossModel.NO_RADIATION:
             p_plasma_loss += 0
