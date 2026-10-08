@@ -1981,6 +1981,20 @@ def constraint_equation_92(constraint_registration, data):
     )
 
 
+@ConstraintManager.register_constraint(93, "", "=")
+def constraint_equation_93(constraint_registration, data):
+    """Fuel-ion equilibrium constraint.
+
+    Requires the plasma fuelling rate to equal the fuelling rate required
+    for fuel-ion equilibrium.
+    """
+    return eq(
+        data.physics.molflow_plasma_fuelling,
+        data.physics.molflow_plasma_fuelling_equilibrium,
+        constraint_registration,
+    )
+
+
 def constraint_eqns(m: int, ieqn: int, data: DataStructure):
     """Evaluates the constraints given the current state of PROCESS.
 

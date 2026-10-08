@@ -55,7 +55,7 @@ i_figure_merit = -5
 * DESCRIPTION:   Switch for Figure-of-Merit 
 * JUSTIFICATION: Selected optimisation
 
-n_equality_constraints = 3
+n_equality_constraints = 4
 * DESCRIPTION:   Number of equality constraints (the first n_equality_constraints icc = ... statements are considered equality)
 * JUSTIFICATION: 3 equality (consistency) equations
 
@@ -85,13 +85,18 @@ icc = 11
 * JUSTIFICATION: Consistency equations should always be on
 * VARIABLES:     rmajor, Rest calculated in-situ
 
-*________________________________________________________________________*
+icc = 93
+* DESCRIPTION:   Plasma fuel-ion equillibrium
+* JUSTIFICATION: Consistency equations should always be on
+* VARIABLES:     molflow_plasma_fuelling, Rest calculated in-situ
+
 *------------------------------- *Plasma* -------------------------------*
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*
 *icc = 4
 * DESCRIPTION:   Global power balance for electrons
 * JUSTIFICATION: Not recommended for use 
 * VARIABLES:     i_rad_loss,i_plasma_ignited,p_hcd_injected_electrons_mw, Rest calculated in-situ
+
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Performance ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
@@ -146,6 +151,13 @@ p_plant_electric_net_required_mw = 100.0
 * DESCRIPTION:   Minimum fusion gain Q 
 * JUSTIFICATION: Turned off, don't care about lower Q value
 
+*-----------------------*
+* Fuel-ion equillibrium *
+*-----------------------*
+ixc = 178
+molflow_plasma_fuelling = 4.45548408068305741e+21
+* DESCRIPTION: Plasma fuelling rate
+* JUSTIFICATION: Use to find fuel-ion equillibrium.
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Shaping ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*

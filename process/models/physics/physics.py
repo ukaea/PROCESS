@@ -946,7 +946,7 @@ class Physics(Model):
             self.data.physics.burnup,
             self.data.physics.figmer,
             self.data.physics.fusrat,
-            self.data.physics.molflow_plasma_fuelling_required,
+            self.data.physics.molflow_plasma_fuelling_equilibrium,
             self.data.physics.rndfuel,
             self.data.physics.t_alpha_confinement,
             self.data.physics.f_t_alpha_energy_confinement,
@@ -1484,58 +1484,55 @@ class Physics(Model):
         vol_plasma: float,
         burnup_in: float,
         tauratio: float,
-    ) -> tuple[float, float, float, float, float, float, float, float]:
-        """Auxiliary physics quantities
+    ) -> tuple[float, float, float, float, float, float, float]:
+        """Calculate auxiliary plasma physics quantities.
 
         Parameters
         ----------
         aspect : float
             Plasma aspect ratio.
         nd_plasma_fuel_ions_vol_avg : float
-            Fuel ion density (/m3).
+            Volume-averaged fuel ion density (/m3).
         fusden_total_vol_avg : float
-            Fusion reaction rate from plasma and beams (/m3/s).
+            Volume-averaged fusion reaction rate density from plasma and beams (/m3/s).
         fusden_alpha_total_vol_avg : float
-            Alpha particle production rate (/m3/s).
+            Volume-averaged alpha particle production rate density (/m3/s).
         plasma_current : float
             Plasma current (A).
         sbar : float
             Exponent for aspect ratio (normally 1).
         nd_plasma_alphas_thermal_vol_avg : float
-            Alpha ash density (/m3).
+            Volume-averaged thermal alpha ash density (/m3).
         t_energy_confinement : float
             Global energy confinement time (s).
         vol_plasma : float
             Plasma volume (m3).
-        burnup_in: float
-            fractional plasma burnup user input
-        tauratio: float
-            ratio of He and pellet particle confinement times
+        burnup_in : float
+            Fractional plasma burnup user input.
+        tauratio : float
+            Ratio of helium ash to fuel particle confinement times.
 
         Returns
         -------
         tuple
             A tuple containing:
-            - burnup (float): Fractional plasma burnup.
-            - figmer (float): Physics figure of merit.
-            - fusrat (float): Number of fusion reactions per second.
-            - molflow_plasma_fuelling_required (float): Fuelling rate for D-T
-              (nucleus-pairs/sec).
-            - rndfuel (float): Fuel burnup rate (reactions/s).
-            - t_alpha_confinement (float): Alpha particle confinement time (s).
-            - f_t_alpha_energy_confinement (float): Fraction of alpha energy confinement.
-            This subroutine calculates extra physics related items needed by other
-            parts of the code.
 
+            - burnup: fractional plasma burnup.
+            - figmer: physics figure of merit.
+            - fusrat: total number of fusion reactions per second.
+            - molflow_plasma_fuelling_equilibrium: plasma fuelling rate required
+            for fuel-ion equilibrium (nucleus-pairs/s).
+            - rndfuel: fuel burnup rate (reactions/s).
+            - t_alpha_confinement: alpha particle confinement time (s).
+            - f_t_alpha_energy_confinement: fraction of alpha energy confinement.
         """
-        figmer = 1e-6 * plasma_current * aspect**sbar
+        figmer = 1.0e-6 * plasma_current * aspect**sbar
 
         # Fusion reactions per second
         fusrat = fusden_total_vol_avg * vol_plasma
 
         # Alpha particle confinement time (s)
         # Number of alphas / alpha production rate
-        # only likely if DD is only active fusion reaction
         t_alpha_confinement = (
             0.0
             if fusden_alpha_total_vol_avg == 0.0  # noqa: RUF069
@@ -1545,15 +1542,8 @@ class Physics(Model):
         # Fractional burnup
         # (Consider detailed model in: G. L. Jackson, V. S. Chan, R. D. Stambaugh,
         # Fusion Science and Technology, vol.64, no.1, July 2013, pp.8-12)
-        # The ratio of ash to fuel particle confinement times is given by
-        # tauratio
-        # Possible logic...
-        # burnup = fuel ion-pairs burned/m3 / initial fuel ion-pairs/m3;
-        # fuel ion-pairs burned/m3 = alpha particles/m3 (for both D-T and
-        # D-He3 reactions)
-        # initial fuel ion-pairs/m3 = burnt fuel ion-pairs/m3 + unburnt fuel-ion
-        # pairs/m3
-        # Remember that unburnt fuel-ion pairs/m3 = 0.5 * unburnt fuel-ions/m3
+        #
+        # burnup = fuel ion-pairs burned / initial fuel ion-pairs
         if burnup_in <= 1.0e-9:
             burnup = (
                 nd_plasma_alphas_thermal_vol_avg
@@ -1563,11 +1553,11 @@ class Physics(Model):
         else:
             burnup = burnup_in
 
-        # Fuel burnup rate (reactions/second) (previously Amps)
+        # Fuel burnup rate (reactions/s)
         rndfuel = fusrat
 
-        # Required fuelling rate (fuel ion pairs/second) (previously Amps)
-        molflow_plasma_fuelling_required = rndfuel / burnup
+        # Plasma fuelling rate required to satisfy fuel-ion equilibrium
+        molflow_plasma_fuelling_equilibrium = rndfuel / burnup
 
         f_t_alpha_energy_confinement = t_alpha_confinement / t_energy_confinement
 
@@ -1575,7 +1565,7 @@ class Physics(Model):
             burnup,
             figmer,
             fusrat,
-            molflow_plasma_fuelling_required,
+            molflow_plasma_fuelling_equilibrium,
             rndfuel,
             t_alpha_confinement,
             f_t_alpha_energy_confinement,
@@ -2435,8 +2425,15 @@ class Physics(Model):
         po.ovarre(
             self.outfile,
             "Fuelling rate (nucleus-pairs/s)",
-            "(molflow_plasma_fuelling_required)",
-            self.data.physics.molflow_plasma_fuelling_required,
+            "(molflow_plasma_fuelling)",
+            self.data.physics.molflow_plasma_fuelling,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Fuelling rate required for equilibrium (nucleus-pairs/s)",
+            "(molflow_plasma_fuelling_equilibrium)",
+            self.data.physics.molflow_plasma_fuelling_equilibrium,
             "OP ",
         )
         po.ovarre(
