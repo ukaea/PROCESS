@@ -27,10 +27,6 @@ maxcal = 100
 * Constraint Equations - Consistency Equations *
 ************************************************
 
-* Beta consistency *
-*------------------*
-beta_total_vol_avg = 0.03
-
 * Global power balance *
 *----------------------*
 icc = 2
