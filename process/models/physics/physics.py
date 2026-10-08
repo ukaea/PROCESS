@@ -730,8 +730,8 @@ class Physics(Model):
         self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw = (
             radpwrdata.pden_plasma_core_rad_vol_avg_mw
         )
-        self.data.physics.pden_plasma_outer_rad_mw = (
-            radpwrdata.pden_plasma_outer_rad_vol_avg_mw
+        self.data.physics.pden_plasma_edge_rad_vol_avg_mw = (
+            radpwrdata.pden_plasma_edge_rad_vol_avg_mw
         )
         self.data.physics.pden_plasma_rad_mw = radpwrdata.pden_plasma_rad_vol_avg_mw
 
@@ -743,7 +743,8 @@ class Physics(Model):
             * self.data.physics.vol_plasma
         )
         self.data.physics.p_plasma_outer_rad_mw = (
-            self.data.physics.pden_plasma_outer_rad_mw * self.data.physics.vol_plasma
+            self.data.physics.pden_plasma_edge_rad_vol_avg_mw
+            * self.data.physics.vol_plasma
         )
         self.data.physics.p_plasma_rad_mw = (
             self.data.physics.pden_plasma_rad_mw * self.data.physics.vol_plasma

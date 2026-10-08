@@ -1309,8 +1309,8 @@ class PhysicsData:
     p_plasma_outer_rad_mw: float = 0.0
     """radiation power from outer zone (MW)"""
 
-    pden_plasma_outer_rad_mw: float = 0.0
-    """edge radiation power per volume (MW/m3)"""
+    pden_plasma_edge_rad_vol_avg_mw: float = 0.0
+    """Plasma edge volume-averaged radiation power per volume [MW/m³]"""
 
     vs_plasma_internal: float = 0.0
     """internal plasma V-s"""
