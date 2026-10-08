@@ -725,7 +725,7 @@ class Physics(Model):
             self.data,
         )
         self.data.physics.pden_plasma_sync_mw = radpwrdata.pden_plasma_sync_vol_avg_mw
-        self.data.physics.pden_plasma_core_rad_mw = (
+        self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw = (
             radpwrdata.pden_plasma_core_rad_vol_avg_mw
         )
         self.data.physics.pden_plasma_outer_rad_mw = (
@@ -737,7 +737,8 @@ class Physics(Model):
             self.data.physics.pden_plasma_sync_mw * self.data.physics.vol_plasma
         )
         self.data.physics.p_plasma_inner_rad_mw = (
-            self.data.physics.pden_plasma_core_rad_mw * self.data.physics.vol_plasma
+            self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw
+            * self.data.physics.vol_plasma
         )
         self.data.physics.p_plasma_outer_rad_mw = (
             self.data.physics.pden_plasma_outer_rad_mw * self.data.physics.vol_plasma
@@ -878,7 +879,7 @@ class Physics(Model):
             p_non_alpha_charged_mw=self.data.physics.p_non_alpha_charged_mw,
             p_hcd_injected_total_mw=self.data.current_drive.p_hcd_injected_total_mw,
             plasma_current=self.data.physics.plasma_current,
-            pden_plasma_core_rad_mw=self.data.physics.pden_plasma_core_rad_mw,
+            pden_plasma_core_rad_reduced_vol_avg_mw=self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw,
             rmajor=self.data.physics.rmajor,
             rminor=self.data.physics.rminor,
             temp_plasma_electron_density_weighted_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
