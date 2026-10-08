@@ -63,19 +63,19 @@ nearly unchanged.
 To allow for these uncertainties, three options are available, using the switch
 `i_rad_loss`.
 
-- For `i_rad_loss = 0` the total plasma radiation is taken from the loss power.
+- For `i_rad_loss = 0 / ConfinementRadiationLossModel.FULL_RADIATION` the total plasma radiation is taken from the loss power.
 
 $$
 P_{\text{L}} = \underbrace{f_{\alpha}P_{\alpha} + P_{\text{c}} + P_{\text{OH}} + P_{\text{HCD}}}_{\text{Plasma heating}} - P_{\text{rad}}
 $$
 
-- For `i_rad_loss = 1` the plasma radiation only from the "core" region is taken from the loss power.
+- For `i_rad_loss = 1 / ConfinementRadiationLossModel.REDUCED_CORE_ONLY` the reduced plasma radiation only from the "core" region is taken from the loss power.
 
 $$
 P_{\text{L}} = \underbrace{f_{\alpha}P_{\alpha} + P_{\text{c}} + P_{\text{OH}} + P_{\text{HCD}}}_{\text{Plasma heating}} - P_{\text{rad,core}}
 $$
 
-- For `i_rad_loss = 2` the plasma radiation is not taken from the loss power
+- For `i_rad_loss = 2 / ConfinementRadiationLossModel.NO_RADIATION` the plasma radiation is not taken from the loss power
 
 $$
 P_{\text{L}} = \underbrace{f_{\alpha}P_{\alpha} + P_{\text{c}} + P_{\text{OH}} + P_{\text{HCD}}}_{\text{Plasma heating}}
