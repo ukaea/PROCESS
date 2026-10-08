@@ -98,7 +98,7 @@ def calculate_radiation_powers(
 
     pden_plasma_outer_rad_mw = (
         imp_rad.pden_impurity_rad_total_vol_avg_mw
-        - imp_rad.pden_impurity_core_rad_vol_avg_mw
+        - imp_rad.pden_impurity_core_rad_reduced_vol_avg_mw
     )
 
     # Synchrotron radiation power/volume; assumed to be from core only.
@@ -119,7 +119,7 @@ def calculate_radiation_powers(
 
     # Total core radiation power/volume.
     pden_plasma_core_rad_mw = (
-        imp_rad.pden_impurity_core_rad_vol_avg_mw + pden_plasma_sync_mw
+        imp_rad.pden_impurity_core_rad_reduced_vol_avg_mw + pden_plasma_sync_mw
     )
 
     # Total radiation power/volume.
