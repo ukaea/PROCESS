@@ -20,10 +20,16 @@ logger = logging.getLogger(__name__)
 class RadpwrData:
     """DataClass which holds the output of the function radpwr"""
 
-    pden_plasma_sync_mw: float
-    pden_plasma_core_rad_mw: float
-    pden_plasma_outer_rad_mw: float
-    pden_plasma_rad_mw: float
+    pden_plasma_sync_vol_avg_mw: float
+    "Volume-averaged synchrotron radiation power density [MW/m³]"
+    pden_plasma_core_rad_vol_avg_mw: float
+    "Volume-averaged core radiation power density [MW/m³]"
+    pden_plasma_core_rad_reduced_vol_avg_mw: float
+    "Volume-averaged reduced core radiation power density [MW/m³]"
+    pden_plasma_outer_rad_vol_avg_mw: float
+    "Volume-averaged outer radiation power density [MW/m³]"
+    pden_plasma_rad_vol_avg_mw: float
+    "Volume-averaged total radiation power density [MW/m³]"
 
 
 def calculate_radiation_powers(
@@ -96,13 +102,8 @@ def calculate_radiation_powers(
     imp_rad = impurity.ImpurityRadiation(plasma_profile, data_structure)
     imp_rad.calculate_imprad()
 
-    pden_plasma_outer_rad_mw = (
-        imp_rad.pden_impurity_rad_total_vol_avg_mw
-        - imp_rad.pden_impurity_core_rad_reduced_vol_avg_mw
-    )
-
     # Synchrotron radiation power/volume; assumed to be from core only.
-    pden_plasma_sync_mw = psync_albajar_fidone(
+    pden_plasma_sync_vol_avg_mw = psync_albajar_fidone(
         nd_plasma_electron_on_axis=nd_plasma_electron_on_axis,
         rminor=rminor,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
@@ -118,18 +119,21 @@ def calculate_radiation_powers(
     )
 
     # Total core radiation power/volume.
-    pden_plasma_core_rad_mw = (
-        imp_rad.pden_impurity_core_rad_reduced_vol_avg_mw + pden_plasma_sync_mw
+    pden_plasma_core_rad_vol_avg_mw = (
+        imp_rad.pden_impurity_core_rad_reduced_vol_avg_mw + pden_plasma_sync_vol_avg_mw
     )
 
     # Total radiation power/volume.
-    pden_plasma_rad_mw = imp_rad.pden_impurity_rad_total_vol_avg_mw + pden_plasma_sync_mw
+    pden_plasma_rad_vol_avg_mw = (
+        imp_rad.pden_impurity_rad_total_vol_avg_mw + pden_plasma_sync_vol_avg_mw
+    )
 
     return RadpwrData(
-        pden_plasma_sync_mw=pden_plasma_sync_mw,
-        pden_plasma_core_rad_mw=pden_plasma_core_rad_mw,
-        pden_plasma_outer_rad_mw=pden_plasma_outer_rad_mw,
-        pden_plasma_rad_mw=pden_plasma_rad_mw,
+        pden_plasma_sync_vol_avg_mw=pden_plasma_sync_vol_avg_mw,
+        pden_plasma_core_rad_vol_avg_mw=pden_plasma_core_rad_vol_avg_mw,
+        pden_plasma_core_rad_reduced_vol_avg_mw=imp_rad.pden_impurity_core_rad_reduced_vol_avg_mw,
+        pden_plasma_outer_rad_vol_avg_mw=imp_rad.pden_impurity_rad_edge_vol_avg_mw,
+        pden_plasma_rad_vol_avg_mw=pden_plasma_rad_vol_avg_mw,
     )
 
 

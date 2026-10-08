@@ -664,20 +664,28 @@ class ImpurityRadiation:
         self.pden_impurity_radiation_profile = np.zeros(
             self.data.physics.n_plasma_profile_elements
         )
+        "Profile of the total impurity radiation power density [MW/m³]"
         self.pden_impurity_core_rad_profile = np.zeros(
             self.data.physics.n_plasma_profile_elements
         )
+        "Profile of the impurity radiation power density from the core [MW/m³]"
         self.pden_impurity_core_rad_reduced_profile = np.zeros(
             self.data.physics.n_plasma_profile_elements
         )
+        "Profile of the reduced core impurity radiation power density [MW/m³]"
         self.pden_impurity_rad_edge_profile = np.zeros(
             self.data.physics.n_plasma_profile_elements
         )
+        "Profile of the impurity radiation power density from the edge [MW/m³]"
 
         self.pden_impurity_rad_total_vol_avg_mw = 0.0
+        "Volume-averaged total impurity radiation power density [MW/m³]"
         self.pden_impurity_core_rad_reduced_vol_avg_mw = 0.0
+        "Volume-averaged reduced core impurity radiation power density [MW/m³]"
         self.pden_impurity_core_rad_vol_avg_mw = 0.0
+        "Volume-averaged core impurity radiation power density [MW/m³]"
         self.pden_impurity_rad_edge_vol_avg_mw = 0.0
+        "Volume-averaged edge impurity radiation power density [MW/m³]"
 
     def run(self):
         """ImpurityRadiation model isn't run"""
@@ -794,7 +802,8 @@ class ImpurityRadiation:
             atol=1.0e-12,
         ):
             raise ValueError(
-                "The sum of core and edge impurity radiation does not match the total volume averaged radiation."
+                "The sum of core and edge impurity radiation does not match the total "
+                "volume averaged radiation."
             )
 
     def calculate_imprad(self) -> None:

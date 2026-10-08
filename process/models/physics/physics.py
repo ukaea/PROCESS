@@ -724,10 +724,14 @@ class Physics(Model):
             self.data.physics.vol_plasma,
             self.data,
         )
-        self.data.physics.pden_plasma_sync_mw = radpwrdata.pden_plasma_sync_mw
-        self.data.physics.pden_plasma_core_rad_mw = radpwrdata.pden_plasma_core_rad_mw
-        self.data.physics.pden_plasma_outer_rad_mw = radpwrdata.pden_plasma_outer_rad_mw
-        self.data.physics.pden_plasma_rad_mw = radpwrdata.pden_plasma_rad_mw
+        self.data.physics.pden_plasma_sync_mw = radpwrdata.pden_plasma_sync_vol_avg_mw
+        self.data.physics.pden_plasma_core_rad_mw = (
+            radpwrdata.pden_plasma_core_rad_vol_avg_mw
+        )
+        self.data.physics.pden_plasma_outer_rad_mw = (
+            radpwrdata.pden_plasma_outer_rad_vol_avg_mw
+        )
+        self.data.physics.pden_plasma_rad_mw = radpwrdata.pden_plasma_rad_vol_avg_mw
 
         self.data.physics.p_plasma_sync_mw = (
             self.data.physics.pden_plasma_sync_mw * self.data.physics.vol_plasma
