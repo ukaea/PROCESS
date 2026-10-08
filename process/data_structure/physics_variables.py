@@ -1387,8 +1387,8 @@ class PhysicsData:
     p_plasma_rad_mw: float = 0.0
     """total radiation power from inside LCFS (MW)"""
 
-    pden_plasma_rad_mw: float = 0.0
-    """total radiation power per volume (MW/m3)"""
+    pden_plasma_rad_vol_avg_mw: float = 0.0
+    """Plasma total volume-averaged radiation power per unit volume [MW/m³]"""
 
     pradsolmw: float = 0.0
     """radiation power from SoL (MW)"""

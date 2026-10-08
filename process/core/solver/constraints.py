@@ -360,7 +360,7 @@ def constraint_equation_4(constraint_registration, data):
 
     pden_electron_transport_loss_mw:
         electron transport power per volume (MW/m3)
-    pden_plasma_rad_mw:
+    pden_plasma_rad_vol_avg_mw:
         total radiation power per volume (MW/m3)
     pden_plasma_core_rad_reduced_vol_avg_mw:
         total core radiation power per volume (MW/m3)
@@ -379,7 +379,7 @@ def constraint_equation_4(constraint_registration, data):
     pscaling = data.physics.pden_electron_transport_loss_mw
     # Total power lost is scaling power plus radiation:
     if data.physics.i_rad_loss == 0:
-        pnumerator = pscaling + data.physics.pden_plasma_rad_mw
+        pnumerator = pscaling + data.physics.pden_plasma_rad_vol_avg_mw
     elif data.physics.i_rad_loss == 1:
         pnumerator = pscaling + data.physics.pden_plasma_core_rad_reduced_vol_avg_mw
     else:
