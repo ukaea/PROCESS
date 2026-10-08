@@ -158,4 +158,4 @@ ixc = 4 * temp_plasma_electron_vol_avg_kev
 ixc = 6 * nd_plasma_electrons_vol_avg
 ...
 ```
-The plasma power balance equality constraint is recommended to ensure model consistency, and the `temp_plasma_electron_vol_avg_kev` and `nd_plasma_electrons_vol_avg` may be used as iteration variables used to solve them.
+The plasma power balance equality constraint is recommended to ensure model consistency, the user may select one of `temp_plasma_electron_vol_avg_kev` and `nd_plasma_electrons_vol_avg` to solve it.
