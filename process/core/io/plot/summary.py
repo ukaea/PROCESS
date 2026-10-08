@@ -3125,7 +3125,7 @@ def plot_main_plasma_information(
         f"           Separatrix radiation fraction {mfile.get('f_p_plasma_separatrix_rad', scan=scan):.4f}\n"
         f"           Reduced Core radiation power {mfile.get('p_plasma_core_rad_reduced_mw', scan=scan):.4f} MW\n"
         f"              - $f_{{\\text{{core,reduce}}}}$ {mfile.get('f_p_plasma_core_rad_reduction', scan=scan):.4f}\n"
-        f"           Edge radiation power {mfile.get('p_plasma_outer_rad_mw', scan=scan):.4f} MW\n"
+        f"           Edge radiation power {mfile.get('p_plasma_edge_rad_mw', scan=scan):.4f} MW\n"
         f"           Synchrotron radiation power {mfile.get('p_plasma_sync_mw', scan=scan):.4f} MW\n"
         f"           Synchrotron wall reflectivity {mfile.get('f_sync_reflect', scan=scan):.4f}"
     )
