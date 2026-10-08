@@ -42,7 +42,7 @@ from scipy import optimize
 from process.core.exceptions import ProcessValidationError, ProcessValueError
 from process.models.neutronics.data import N_A, MaterialMacroInfo
 
-NONCONVERGENCE_WARNING_ATOL = 1E-15
+CONVERGENCE_ATOL = 1E-15
 
 def mp_func_factory(mp_func, np_func):
     def mp_function(x):
@@ -614,11 +614,11 @@ class NeutronFluxProfile:
         while True:
             extra_precision += 16 # start at 0
             opt_record = list(self._optimization_record[n].values())
-            if opt_record[-1] <= NONCONVERGENCE_WARNING_ATOL:
+            if opt_record[-1] <= CONVERGENCE_ATOL:
                 break
             if len(opt_record) >= 2 and (
                     abs(opt_record[-2] - opt_record[-1])/opt_record[-1]
-                ) < NONCONVERGENCE_WARNING_ATOL:
+                ) < CONVERGENCE_ATOL:
                 break
             with mp.extraprec(extra_precision):
                 # Determine coefficients[0, n, n] by boundary conditions:
@@ -689,7 +689,7 @@ class NeutronFluxProfile:
         else:
             source_current_deviation = conditions[0]
             source_current_dev_text = f"{source_current_deviation} m^-2 s^-1"
-        if not np.isclose(source_current_deviation, 0, atol=NONCONVERGENCE_WARNING_ATOL):
+        if not np.isclose(source_current_deviation, 0, atol=CONVERGENCE_ATOL):
             warnings.warn(
                 f"Group {n} neutron current at x=0 != the predetermined "
                 f"value of {self.fluxes[n]}! Instead current deviated by "
@@ -710,7 +710,7 @@ class NeutronFluxProfile:
             else:
                 flux_deviation = conditions[i + 1]
                 flux_dev_text = f"{flux_deviation} m^-2 s^-1"
-            if not np.isclose(flux_deviation, 0, atol=NONCONVERGENCE_WARNING_ATOL):
+            if not np.isclose(flux_deviation, 0, atol=CONVERGENCE_ATOL):
                 warnings.warn(
                     f"Group {n} neutron flux is not continuous at interface"
                     f"[{num_layer + 1}]! Deviated by {flux_dev_text}.",
@@ -724,7 +724,7 @@ class NeutronFluxProfile:
             else:
                 current_deviation = conditions[i + 2]
                 current_dev_text = f"{current_deviation} m^-2 s^-1"
-            if not np.isclose(current_deviation, 0, atol=NONCONVERGENCE_WARNING_ATOL):
+            if not np.isclose(current_deviation, 0, atol=CONVERGENCE_ATOL):
                 # avoid divide by 0 situation
                 warnings.warn(
                     f"Group {n} neutron current is not continuous at interface"
@@ -737,7 +737,7 @@ class NeutronFluxProfile:
             n, self.n_layers - 1, self.interface_x[self.n_layers - 1]
         )
         final_flux_deviation = conditions[-1] / final_flux if final_flux else conditions[-1]
-        if not np.isclose(final_flux_deviation, 0, atol=NONCONVERGENCE_WARNING_ATOL):
+        if not np.isclose(final_flux_deviation, 0, atol=CONVERGENCE_ATOL):
             warnings.warn(
                 f"Group {n} neutrons has non-zero flux at the extended "
                 f"boundary! Instead flux = {conditions[-1]} m^-2 s^-1.",
@@ -914,7 +914,7 @@ class NeutronFluxProfile:
         # Enforce zero flux at extended boundary
         final_flux = self.groupwise_neutron_flux_in_layer(
             n, self.n_layers - 1, self.interface_x[self.n_layers - 1]
-        ) or NONCONVERGENCE_WARNING_ATOL
+        ) or CONVERGENCE_ATOL
         scaled_conditions[2 * self.n_layers - 1] = self.groupwise_neutron_flux_in_layer(
             n, self.n_layers - 1, self.extended_boundary[n]
         ) / final_flux
