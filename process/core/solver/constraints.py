@@ -278,7 +278,18 @@ def constraint_equation_2(constraint_registration, data):
                 f"Unknown ConfinementRadiationLossModel: {data.physics.i_rad_loss}"
             )
 
-    p_plasma_heating = data.physics.p_plasma_heating_total_mw
+    match PlasmaIgnitionModel(data.physics.i_plasma_ignited):
+        case PlasmaIgnitionModel.NON_IGNITED:
+            p_plasma_heating = data.physics.p_plasma_heating_total_mw
+        case PlasmaIgnitionModel.IGNITED:
+            p_plasma_heating = (
+                data.physics.p_plasma_heating_total_mw
+                - data.current_drive.p_hcd_injected_total_mw
+            )
+        case _:
+            raise ValueError(
+                f"Unknown PlasmaIgnitionModel: {data.physics.i_plasma_ignited}"
+            )
 
     return eq(p_plasma_loss, p_plasma_heating, constraint_registration)
 
