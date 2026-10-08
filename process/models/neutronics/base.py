@@ -31,6 +31,7 @@ from collections.abc import Callable, Iterable
 from tabulate import tabulate
 from dataclasses import asdict, dataclass
 from itertools import pairwise, cycle
+from mpmath import mp
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -43,10 +44,16 @@ from process.models.neutronics.data import N_A, MaterialMacroInfo
 
 NONCONVERGENCE_WARNING_ATOL = 1E-15
 
-def negexp(x):
-    """Shorthand for a function that exponentiates -x rather than x."""
-    return np.exp(-x)
+mp.prec = 69
 
+def mp_func_factory(mp_func):
+    def mp_function(x):
+        if np.isscalar(x):
+            return mp_func(x)
+        return np.array([mp_func(xi) for xi in x.flatten()], dtype=object).reshape(x.shape)
+    return mp_function
+negexp = mp_func_factory(lambda x: mp.exp(-x))
+exp, cos, sin = [mp_func_factory(func) for func in [mp.exp, mp.cos, mp.sin]]
 
 def summarize_values(func):
     """
@@ -84,14 +91,31 @@ def summarize_values(func):
     # Instead of returning a function, we return a descriptor that registers itself later
     return RegisterLater(wrapper_setattr)
 
+def mp_zeros(*shape: int):
+    return np.array(
+        [mp.mpf(0) for _ in range(functools.reduce(lambda x, y: x*y, shape, 1))],
+        dtype=object,
+    ).reshape(shape)
+
+def convert_to_mpf(array: npt.NDArray) -> npt.NDArray[object]:
+    """
+    Force every object in a numpy array to be mpf. This array has dtype=object.
+    """
+    new_array = [mp.mpf(i) for i in array.flatten()]
+    return np.array(new_array, dtype=object).reshape(array.shape)
+
+def mpf(value: float | npt.NDArray) -> mp.mpf | npt.NDArray[object]:
+    if np.isscalar(value):
+        return mp.mpf(value)
+    return convert_to_mpf(value)
 
 def gaussian_elim_solve_2x2(
-    matr: npt.NDArray[np.longdouble], vec: npt.NDArray[np.longdouble]
-) -> npt.NDArray[np.longdouble]:
+    matr: npt.NDArray[object], vec: npt.NDArray[object]
+) -> npt.NDArray[object]:
     """Manually solves a 2x2 system of simultaneous equations using
     Gaussian elimination. matrccepts a long-double"""
-    matr = np.asarray(matr, dtype=np.longdouble).copy()
-    vec = np.asarray(vec, dtype=np.longdouble).copy()
+    matr = convert_to_mpf(matr)
+    vec = convert_to_mpf(vec)
 
     # Scale each row so its largest element has magnitude 1.
     scale = np.max(np.abs(matr), axis=1)
@@ -118,7 +142,7 @@ def gaussian_elim_solve_2x2(
     x1 = vec[1] / matr[1, 1]
     x0 = (vec[0] - matr[0, 1] * x1) / matr[0, 0]
 
-    return np.array([x0, x1], dtype=np.longdouble)
+    return np.array([x0, x1], dtype=object)
 
 
 class RegisterLater:
@@ -276,9 +300,8 @@ class NeutronFluxProfile:
         self.extended_boundary = self.layer_x[-1] + extrapolation_length(
             self.materials[-1].diffusion_const
         ) #  vector
-        self.coefficients = np.zeros(
-            [self.n_layers, self.n_groups, self.n_groups, 2],
-            dtype=np.longdouble,
+        self.coefficients = mp_zeros(
+            self.n_layers, self.n_groups, self.n_groups, 2
         )
         self._is_solved = np.zeros(self.n_groups, dtype=bool)
         self.num_iteration = [0 for n in range(self.n_groups)]
@@ -335,65 +358,65 @@ class NeutronFluxProfile:
         return tables
 
     def _groupwise_cs_values_in_layer(
-        self, n: int, num_layer: int, abs_x: float
-    ) -> npt.NDArray:
+        self, n: int, num_layer: int, abs_x: float | npt.NDArray[float],
+    ) -> npt.NDArray[object]:
         """
         Calculate the num_layer-th layer n-th basis function at the specified
         x position(s).
         """
-        abs_x = np.longdouble(abs_x)
+        abs_x = mpf(abs_x)
         if self.materials[num_layer].l2[n] > 0:
-            l = np.sqrt(self.materials[num_layer].l2[n])  # noqa: E741
-            return np.array([negexp(abs_x / l), np.exp(abs_x / l)])
-        l = np.sqrt(-self.materials[num_layer].l2[n])  # noqa: E741
-        return np.array([np.cos(abs_x / l), np.sin(abs_x / l)])
+            l = mp.sqrt(self.materials[num_layer].l2[n])  # noqa: E741
+            return np.array([negexp(abs_x / l), exp(abs_x / l)], dtype=object)
+        l = mp.sqrt(-self.materials[num_layer].l2[n])  # noqa: E741
+        return np.array([cos(abs_x / l), sin(abs_x / l)], dtype=object)
 
     def _groupwise_cs_differential_in_layer(
-        self, n: int, num_layer: int, abs_x: float
-    ) -> npt.NDArray:
+        self, n: int, num_layer: int, abs_x: float | npt.NDArray[float],
+    ) -> npt.NDArray[object]:
         """
         Differentiate the num_layer-th layer n-th basis function, and evaluate
         it at position(s) x.
         """
-        abs_x = np.longdouble(abs_x)
+        abs_x = mpf(abs_x)
         if self.materials[num_layer].l2[n] > 0:
-            l = np.sqrt(self.materials[num_layer].l2[n])  # noqa: E741
-            return np.array([-negexp(abs_x / l) / l, np.exp(abs_x / l) / l])
-        l = np.sqrt(-self.materials[num_layer].l2[n])  # noqa: E741
-        return np.array([-np.sin(abs_x / l) / l, np.cos(abs_x / l) / l])
+            l = mp.sqrt(self.materials[num_layer].l2[n])  # noqa: E741
+            return np.array([-negexp(abs_x / l) / l, exp(abs_x / l) / l], dtype=object)
+        l = mp.sqrt(-self.materials[num_layer].l2[n])  # noqa: E741
+        return np.array([-sin(abs_x / l) / l, cos(abs_x / l) / l], dtype=object)
 
     def _groupwise_cs_definite_integral_in_layer(
-        self, n: int, num_layer: int, x_lower: float, x_upper
-    ) -> npt.NDArray:
+        self, n: int, num_layer: int, x_lower: float, x_upper: float,
+    ) -> npt.NDArray[object]:
         """
         Integrate the num_layer-th layer n-th basis function
         from x_lower to x_upper.
         """
-        x_lower, x_upper = np.longdouble(x_lower), np.longdouble(x_upper)
+        x_lower, x_upper = mpf(x_lower), mpf(x_upper)
         if self.materials[num_layer].l2[n] > 0:
-            l = np.sqrt(self.materials[num_layer].l2[n])  # noqa: E741
+            l = mp.sqrt(self.materials[num_layer].l2[n])  # noqa: E741
             return np.array([
-                l * negexp(x_upper / l) * np.expm1((x_upper-x_lower) / l),
-                l * np.exp(x_lower / l) * np.expm1((x_upper-x_lower) / l),
-            ])
-        l = np.sqrt(-self.materials[num_layer].l2[n])  # noqa: E741
+                l * negexp(x_upper / l) * mp.expm1((x_upper-x_lower) / l),
+                l * exp(x_lower / l) * mp.expm1((x_upper-x_lower) / l),
+            ], dtype=object)
+        l = mp.sqrt(-self.materials[num_layer].l2[n])  # noqa: E741
         return np.array([
-            l * (np.sin(x_upper / l) - np.sin(x_lower / l)),
-            l * (np.cos(x_lower / l) - np.cos(x_upper / l)),  # reverse sign
-        ])
+            l * (sin(x_upper / l) - sin(x_lower / l)),
+            l * (cos(x_lower / l) - cos(x_upper / l)),  # reverse sign
+        ], dtype=object)
 
     def _groupwise_flux_curvature_in_layer(
         self, n: int, num_layer: int, abs_x: float
     ) -> float:
         """Second derivative of the group n flux in num_layer at location x."""
-        abs_x = np.longdouble(abs_x)
+        abs_x = mpf(abs_x)
         trig_funcs = []
         for basis_group, cs_coefs in enumerate(
             self.coefficients[num_layer, n]
         ):
             l2 = self.materials[num_layer].l2[basis_group]
-            l = np.sqrt(abs(l2))  # noqa: E741
-            c, s = (negexp, np.exp) if l2 > 0 else (np.cos, np.sin)
+            l = mp.sqrt(abs(l2))  # noqa: E741
+            c, s = (negexp, exp) if l2 > 0 else (cos, sin)
             trig_funcs.append(
                 cs_coefs @ [c(abs_x / l) / l2, s(abs_x / l) / l2]
             )
@@ -648,22 +671,20 @@ class NeutronFluxProfile:
         _rms_residual, _residual_n, _vector_n = [], [], []
 
         def _set_coefficients(
-            input_vector: Iterable[float | np.double | np.longdouble]
+            input_vector: Iterable[float | mp.mpf]
         ) -> None:
             """
             Set the main diagonals coefficients. Force input float vector's
-            floats into np.longdouble format if necessary.
+            floats into mpf format.
             """
-            self.coefficients[:, n, n] = np.asarray(
-                input_vector, dtype=np.longdouble
-            ).reshape(self.n_layers, 2)
+            self.coefficients[:, n, n] = convert_to_mpf(input_vector).reshape(
+                self.n_layers, 2
+            )
             self._update_off_diag_coefs_of_column_n(n)
         scipy_method, scipy_method_accepts_jac = "hybr", True
 
-        def objective(coefficients_vector: npt.NDArray[float | np.longdouble]) -> tuple[npt.NDArray[float], npt.NDArray]:
-            precise_coefficients = np.asarray(
-                coefficients_vector, dtype=np.longdouble
-            )
+        def objective(coefficients_vector: npt.NDArray[float | object]) -> tuple[npt.NDArray[float], npt.NDArray]:
+            precise_coefficients = convert_to_mpf(coefficients_vector)
             _set_coefficients(precise_coefficients)
             cond, jac = self._groupwise_fitness(n)
             _vector_n.append(precise_coefficients)
@@ -827,7 +848,7 @@ class NeutronFluxProfile:
 
     def _groupwise_fitness(
             self, n: int, jac: bool=True
-        ) -> tuple[npt.NDArray[np.longdouble], npt.NDArray]:
+        ) -> tuple[npt.NDArray[object], npt.NDArray]:
             """
             Calculate how far the current values of coefficients deviates
             from the 2*n_layers equations, forming a vector with len=
@@ -849,11 +870,8 @@ class NeutronFluxProfile:
                 how much steeply does variable j affect condition i. The
                 variables are arranged as self.coefficients[:, n, n].flatten().
             """
-            conditions = np.zeros([2 * self.n_layers], dtype=np.longdouble)
-            jacobians = np.zeros(
-                [2 * self.n_layers, 2 * self.n_layers],
-                dtype=np.longdouble,
-            )
+            conditions = mp_zeros(2 * self.n_layers)
+            jacobians = mp_zeros(2 * self.n_layers, 2 * self.n_layers)
 
             # Net current at origin equal incident flux on that group.
             conditions[0] = (
@@ -1499,7 +1517,7 @@ def _get_sign_of(x_values):
     at those locations, rather than setting the neutron current to zer0.
     """
     negatives = np.signbit(x_values)
-    return np.array(negatives, dtype=float) * -2 + 1
+    return np.array(negatives, dtype=int) * -2 + 1
 
 
 def _plot_vertical_dotted_line(ax, x, ylims, *, symmetric: bool = True):
@@ -1582,9 +1600,9 @@ class CustomOptimizationRecord():
     """
     def __init__(
         self, parent: NeutronFluxProfile, n: int,
-        solution_vectors: Iterable[npt.NDArray[float | np.longdouble]],
-        rms_residuals: Iterable[np.longdouble],
-        residuals: Iterable[npt.NDArray[np.longdouble]],
+        solution_vectors: Iterable[npt.NDArray[float | object]],
+        rms_residuals: Iterable[object],
+        residuals: Iterable[npt.NDArray[object]],
         result: optimize.OptimizeResult,
     ):
         """
@@ -1611,9 +1629,9 @@ class CustomOptimizationRecord():
         """
         self.parent = parent
         self.n = n
-        self.solution_vectors = np.asarray(solution_vectors, dtype=np.longdouble)
-        self.rms_residuals = np.asarray(rms_residuals, dtype=np.longdouble)
-        self.residuals = np.asarray(residuals, dtype=np.longdouble)
+        self.solution_vectors = convert_to_mpf(np.array(solution_vectors, dtype=object))
+        self.rms_residuals = convert_to_mpf(np.array(rms_residuals, dtype=object))
+        self.residuals = convert_to_mpf(np.array(residuals, dtype=object))
         self.num_opt_steps = len(self.solution_vectors)
         self.result = result
 
