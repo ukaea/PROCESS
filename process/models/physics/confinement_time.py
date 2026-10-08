@@ -990,7 +990,7 @@ class PlasmaConfinementTime(Model):
                         / (
                             p_plasma_loss_mw
                             + self.data.physics.pden_plasma_sync_mw * vol_plasma
-                            + self.data.physics.p_plasma_inner_rad_mw
+                            + self.data.physics.p_plasma_core_rad_reduced_mw
                         )
                     )
                     ** 0.31
@@ -1299,7 +1299,7 @@ class PlasmaConfinementTime(Model):
                 self.outfile,
                 "Radiation power subtracted from plasma heating power balance (MW)",
                 "",
-                self.data.physics.p_plasma_inner_rad_mw,
+                self.data.physics.p_plasma_core_rad_reduced_mw,
                 "OP ",
             )
         else:  # NO_RADIATION

@@ -1261,8 +1261,8 @@ class PhysicsData:
     f_temp_plasma_electron_density_vol_avg: float = 0.0
     """Ratio of density weighted plasma electron tempertaurature to volume averaged (Profile Factor)"""
 
-    p_plasma_inner_rad_mw: float = 0.0
-    """radiation power from inner zone (MW)"""
+    p_plasma_core_rad_reduced_mw: float = 0.0
+    """Total reduced core radiation power [MW]"""
 
     pden_plasma_core_rad_reduced_vol_avg_mw: float = 0.0
     """Volume-averaged total reduced core radiation power per volume [MW/m³]"""
