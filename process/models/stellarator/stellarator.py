@@ -2148,7 +2148,9 @@ class Stellarator(Model):
             self.data.physics.vol_plasma,
             self.data,
         )
-        self.data.physics.pden_plasma_sync_mw = radpwr_data.pden_plasma_sync_mw
+        self.data.physics.pden_plasma_sync_vol_avg_mw = (
+            radpwr_data.pden_plasma_sync_vol_avg_mw
+        )
         self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw = (
             radpwr_data.pden_plasma_core_rad_reduced_vol_avg_mw
         )
