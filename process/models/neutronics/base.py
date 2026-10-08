@@ -44,8 +44,6 @@ from process.models.neutronics.data import N_A, MaterialMacroInfo
 
 NONCONVERGENCE_WARNING_ATOL = 1E-15
 
-mp.prec = 69
-
 def mp_func_factory(mp_func, np_func):
     def mp_function(x):
         if np.isscalar(x):
@@ -305,7 +303,7 @@ class NeutronFluxProfile:
         )
         self._is_solved = np.zeros(self.n_groups, dtype=bool)
         self.num_iteration = [0 for n in range(self.n_groups)]
-        self._optimization_record = [[] for n in range(self.n_groups)]
+        self._optimization_record = [{} for n in range(self.n_groups)]
         self.contains_upscatter = any(not mat.downscatter_only for mat in self.materials)
 
         self.solve()
@@ -611,106 +609,72 @@ class NeutronFluxProfile:
                     stacklevel=2,
                 )
 
-        # Determine coefficients[0, n, n] by boundary conditions:
-        # top row enforces current at (x=0) = source current,
-        # bottom row enforces flux = 0 at the extended boundary.
-        top_row = self._groupwise_cs_differential_in_layer(n, 0, 0)
-        y = -(
-            self.fluxes[n] / self.materials[0].diffusion_const[n]
-        ) - self._summation_shorthand(
-            n, 0, self._groupwise_cs_differential_in_layer, 0.0,
-            self.n_groups if (
-                not self.materials[0].downscatter_only and self.num_iteration[n]
-            ) else n
-        )
-
-        m_list, v_list = self._get_all_propagation_operator(n)
-        affine_transform_matrix_stack = multiply_2_2_matrices(*m_list[::-1])
-        affine_transformed_column_vector = np.sum(
-            [
-                multiply_2_2_matrices(*m_list[:k:-1]) @ v_list[k]
-                for k in range(self.n_layers - 1)
-            ]
-            or [[0, 0]],
-            axis=0,
-        )
-
-        bot_row = (
-            self._groupwise_cs_values_in_layer(
-                n, self.n_layers - 1, self.extended_boundary[n]
-            )
-            @ affine_transform_matrix_stack
-        )
-        z = -(
-            self._groupwise_cs_values_in_layer(
-                n, self.n_layers - 1, self.extended_boundary[n]
-            )
-            @ affine_transformed_column_vector
-        ) - self._summation_shorthand(
-            n,
-            self.n_layers - 1,
-            self._groupwise_cs_values_in_layer,
-            self.extended_boundary[n],
-            self.n_groups if (
-                not self.materials[0].downscatter_only and self.num_iteration[n]
-            ) else n,
-        )
-        eqn_32_matrix = np.array([top_row, bot_row])
-        eqn_32_vector = np.array([y, z])
-        self.coefficients[0, n, n] = gaussian_elim_solve_2x2(
-            eqn_32_matrix, eqn_32_vector
-        )
-
-        for num_layer in range(self.n_layers - 1):
-            self.coefficients[num_layer + 1, n, n] = (
-                m_list[num_layer] @ self.coefficients[num_layer, n, n]
-                + v_list[num_layer]
-            )
-        
-        init_coefs = self.coefficients[:, n, n].flatten()
-        _rms_residual, _residual_n, _vector_n = [], [], []
-
-        def _set_coefficients(
-            input_vector: Iterable[float | mp.mpf]
-        ) -> None:
-            """
-            Set the main diagonals coefficients. Force input float vector's
-            floats into mpf format.
-            """
-            self.coefficients[:, n, n] = convert_to_mpf(input_vector).reshape(
-                self.n_layers, 2
-            )
-            self._update_off_diag_coefs_of_column_n(n)
-        scipy_method, scipy_method_accepts_jac = "hybr", True
-
-        def objective(coefficients_vector: npt.NDArray[float | object]) -> tuple[npt.NDArray[float], npt.NDArray]:
-            precise_coefficients = convert_to_mpf(coefficients_vector)
-            _set_coefficients(precise_coefficients)
-            cond, jac = self._groupwise_fitness(n)
-            _vector_n.append(precise_coefficients)
-            _residual_n.append(cond)
-            _rms_residual.append(np.sqrt((cond**2).mean()))
-            if scipy_method_accepts_jac:
-                return (
-                    np.asarray(cond, dtype=float),
-                    np.asarray(jac, dtype=float),
+        self._optimization_record[n][mp.prec] = np.inf
+        extra_precision = -16
+        while list(self._optimization_record[n].values())[-1] > NONCONVERGENCE_WARNING_ATOL:  # TODO: need a better termination condition.
+            extra_precision += 16 # start at 0
+            with mp.extraprec(extra_precision):
+                # Determine coefficients[0, n, n] by boundary conditions:
+                # top row enforces current at (x=0) = source current,
+                # bottom row enforces flux = 0 at the extended boundary.
+                top_row = self._groupwise_cs_differential_in_layer(n, 0, 0)
+                y = -(
+                    self.fluxes[n] / self.materials[0].diffusion_const[n]
+                ) - self._summation_shorthand(
+                    n, 0, self._groupwise_cs_differential_in_layer, 0.0,
+                    self.n_groups if (
+                        not self.materials[0].downscatter_only and self.num_iteration[n]
+                    ) else n
                 )
-            return np.asarray(cond, dtype=float)
 
-        opt_result = optimize.root(
-            objective,
-            x0=np.asarray(init_coefs, dtype=float),
-            jac=scipy_method_accepts_jac,
-            method="hybr",
-        )
-        _set_coefficients(opt_result.x)
-        conditions = self._groupwise_fitness(n, jac=False)
-        self._optimization_record[n].append(
-            CustomOptimizationRecord(
-                self, n, _vector_n, _rms_residual, _residual_n, opt_result
-            )
-        )
+                m_list, v_list = self._get_all_propagation_operator(n)
+                affine_transform_matrix_stack = multiply_2_2_matrices(*m_list[::-1])
+                affine_transformed_column_vector = np.sum(
+                    [
+                        multiply_2_2_matrices(*m_list[:k:-1]) @ v_list[k]
+                        for k in range(self.n_layers - 1)
+                    ]
+                    or [[0, 0]],
+                    axis=0,
+                )
 
+                bot_row = (
+                    self._groupwise_cs_values_in_layer(
+                        n, self.n_layers - 1, self.extended_boundary[n]
+                    )
+                    @ affine_transform_matrix_stack
+                )
+                z = -(
+                    self._groupwise_cs_values_in_layer(
+                        n, self.n_layers - 1, self.extended_boundary[n]
+                    )
+                    @ affine_transformed_column_vector
+                ) - self._summation_shorthand(
+                    n,
+                    self.n_layers - 1,
+                    self._groupwise_cs_values_in_layer,
+                    self.extended_boundary[n],
+                    self.n_groups if (
+                        not self.materials[0].downscatter_only and self.num_iteration[n]
+                    ) else n,
+                )
+                eqn_32_matrix = np.array([top_row, bot_row])
+                eqn_32_vector = np.array([y, z])
+                self.coefficients[0, n, n] = gaussian_elim_solve_2x2(
+                    eqn_32_matrix, eqn_32_vector
+                )
+
+                for num_layer in range(self.n_layers - 1):
+                    self.coefficients[num_layer + 1, n, n] = (
+                        m_list[num_layer] @ self.coefficients[num_layer, n, n]
+                        + v_list[num_layer]
+                    )
+                
+                self._update_off_diag_coefs_of_column_n(n)
+                conditions = self._groupwise_fitness(n, jac=False)
+                self._optimization_record[n][mp.prec] = np.sqrt((conditions**2).mean()) # TODO: Need a better scalar summary metric than RMS. May need to scale according to flux?
+                print(self._optimization_record[n][mp.prec])
+        print(f"Loop terminated for group {n} neutrons!")
 
         if self.fluxes[n]:
             source_current_deviation = conditions[0]/self.fluxes[n]
@@ -1586,170 +1550,6 @@ def _generate_x_range(
         if symmetric:
             yield -layer_x_range[::-1]
         yield layer_x_range
-
-class CustomOptimizationRecord():
-    """
-    A class used to store a custom collection of information about the
-    optimization process, and replicate the neutron flux profile that would've
-    been generated during the optimization.
-
-    Attributes
-    ----------
-    num_opt_steps:
-        Number of steps taken by the optimizer.
-    """
-    def __init__(
-        self, parent: NeutronFluxProfile, n: int,
-        solution_vectors: Iterable[npt.NDArray[float | object]],
-        rms_residuals: Iterable[object],
-        residuals: Iterable[npt.NDArray[object]],
-        result: optimize.OptimizeResult,
-    ):
-        """
-        Parameters
-        ----------
-        parent:
-            A reference (weakref) to the parent NeutronFluxProfile object, to
-            allow for plotting to happen.
-        n:
-            Neutron group number n that this optimizer is trying to solve the
-            groupwise neutron flux for.
-        solution_vectors:
-            A list of the solution vectors that was tested by the optimizer,
-            with shape [num_opt_steps, 2 * parent.n_layers]
-        rms_residuals:
-            A list of scalar values, each stating the individual. Shape: [
-            num_opt_steps].
-        residuals:
-            A list of all of the residuals, before they were root-mean-squared.
-            Shape: [num_opt_steps, 2 * parent.n_layers]
-        results:
-            The scipy.optimize.OptimizeResult object produced by the optimizer
-            directly.
-        """
-        self.parent = parent
-        self.n = n
-        self.solution_vectors = convert_to_mpf(np.array(solution_vectors, dtype=object))
-        self.rms_residuals = convert_to_mpf(np.array(rms_residuals, dtype=object))
-        self.residuals = convert_to_mpf(np.array(residuals, dtype=object))
-        self.num_opt_steps = len(self.solution_vectors)
-        self.result = result
-
-    def plot_rms_residuals(self, ax: plt.Axes | None = None):
-        ax = ax or plt.axes()
-        ax.set_title(f"Trajectory of Group {self.n}\nneutron flux optimization")
-        ax.set_xlabel("iterations")
-        ax.set_ylabel(f"Root-mean-squares of residuals")
-        ax.plot(self.rms_residuals, marker="+")
-        if (self.rms_residuals>0).all():
-            ax.set_yscale("log")
-        return ax
-
-    def plot_groupwise_profile_evolution(
-        self, ax: plt.Axes | None=None,
-        plot_preceeding_groups: bool=True, animate: bool=False
-    ) -> plt.Axes:
-        """ Plot the each of the neutron flux profile found during the gradient
-        descend.
-
-        Parameters
-        ----------
-        ax:
-            plt.Axes object to plot the descend path onto. Optional.
-        plot_preceeding_groups:
-            Plot all neutron groups with higher energy than the current one.
-            This is useful in a down-scatter-only system, where neutron groups
-            with smaller n should've been solved first before the current group
-            is solved.
-
-        Returns
-        -------
-        ax:
-            plt.Axes object the function plotted on.
-        """
-        n = self.n
-        parent = self.parent
-        base_x = np.array([
-            np.linspace(*parent.interface_x[num_layer:num_layer+2])
-            for num_layer in range(parent.n_layers)
-        ])
-        flat_base_x = base_x.flatten()
-
-        ax = ax or plt.axes()
-        ax.set_title(
-            f"The evolution of group {n} neutron flux\n"
-            "during the optimization process"
-        )
-        ax.set_xlabel("Distance from the plasma-fw interface [m]")
-        ax.set_ylabel(f"Flux ({UNIT_LOOKUP['flux']})")
-        for _n in range(0 if plot_preceeding_groups else n, n + 1):
-            this_flux = []
-            for num_layer, xi in enumerate(base_x):
-                this_flux.extend(
-                    parent.groupwise_neutron_flux_in_layer(_n, num_layer, xi)
-                )
-            ax.plot(flat_base_x, this_flux, label=f"Final group {_n} neutron flux")
-        ax.set_yscale("log")
-        ylims = ax.get_ylim()
-        for interface in parent.interface_x:
-            _plot_vertical_dotted_line(ax, interface, ylims, symmetric=False)
-
-        def rollback_parent_to_get_flux(iteration: int):
-            """Rollback to a certain value of coefficient, and then """
-            saved_coefficients = parent.coefficients[:, n, n]
-            parent.coefficients[:, n, n] = self.solution_vectors[
-                iteration
-            ].reshape(parent.n_layers, 2)
-            parent._update_off_diag_coefs_of_column_n(n)
-            this_flux = []
-            for num_layer, xi in enumerate(base_x):
-                this_flux.extend(
-                    parent.groupwise_neutron_flux_in_layer(n, num_layer, xi)
-                )
-            this_flux = np.array(this_flux)
-            parent.coefficients[:, n, n] = saved_coefficients
-            return this_flux
-
-        if animate:
-            this_flux = []
-            for num_layer, xi in enumerate(base_x):
-                this_flux.extend(
-                    parent.groupwise_neutron_flux_in_layer(n, num_layer, xi)
-                )
-            animated_line, = ax.plot(flat_base_x, np.array(this_flux))
-            ax.legend()
-            for iteration in range(self.num_opt_steps):
-                animated_line.set_data(
-                    flat_base_x, rollback_parent_to_get_flux(iteration),
-                )
-                animated_line.set_label(
-                    f"Step {iteration} of group {self.n} flux"
-                )
-                ax.legend()
-                ax.set_ylim(ylims)
-                plt.pause(0.8)
-            print("Animation complete.")
-            plt.show()
-        else:
-            cmap = mpl.colors.LinearSegmentedColormap.from_list(
-                "iterations", [(1, 0, 0, 0.5), (0, 0, 1, 0.5)]
-            )
-            norm = mpl.colors.Normalize(vmin=0, vmax=self.num_opt_steps - 1)
-            sm = mpl.cm.ScalarMappable(norm=norm, cmap=cmap)
-            cbar = plt.colorbar(sm, ax=ax)
-            # linestyle_cycle = cycle(["-", ":", "--", "-."])
-            cbar.set_label("Iteration steps taken by the optimizer")
-
-            for iteration in range(self.num_opt_steps):
-                ax.plot(
-                    flat_base_x, rollback_parent_to_get_flux(iteration),
-                    color=cmap(norm(iteration)),
-                    # ls=next(linestyle_cycle),
-                    label=f"Evolution of group {self.n} flux" if iteration==(self.num_opt_steps-1) else None
-                )
-            ax.set_ylim(ylims)
-            ax.legend()
-        return ax
 
 
 def multiply_2_2_matrices(*matrices):
