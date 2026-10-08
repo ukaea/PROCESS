@@ -674,21 +674,7 @@ class Physics(Model):
             self.data.physics.f_p_alpha_plasma_deposited,
         )
 
-        self.data.physics.beta_fast_alpha = self.beta.fast_alpha_beta(
-            b_plasma_poloidal_average=self.data.physics.b_plasma_surface_poloidal_average,
-            b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
-            nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
-            nd_plasma_fuel_ions_vol_avg=self.data.physics.nd_plasma_fuel_ions_vol_avg,
-            nd_plasma_ions_total_vol_avg=self.data.physics.nd_plasma_ions_total_vol_avg,
-            temp_plasma_electron_density_weighted_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
-            temp_plasma_ion_density_weighted_kev=self.data.physics.temp_plasma_ion_density_weighted_kev,
-            pden_alpha_total_vol_avg_mw=self.data.physics.pden_alpha_total_vol_avg_mw,
-            pden_plasma_alpha_vol_avg_mw=self.data.physics.pden_plasma_alpha_vol_avg_mw,
-            i_beta_fast_alpha=self.data.physics.i_beta_fast_alpha,
-            f_plasma_fuel_deuterium=self.data.physics.f_plasma_fuel_deuterium,
-        )
-
-        # Calculate beta after the fast-particle contributions have been updated.
+        # Calculate beta quantities.
         self.beta.run()
 
         # Calculate ion/electron equilibration power
@@ -3515,6 +3501,23 @@ class PlasmaBeta(Model):
                 )
             ),
             b_field=self.data.physics.b_plasma_total,
+        )
+
+        # Fast-alpha beta is calculated here so all tokamak beta calculations are
+        # owned by PlasmaBeta.run(). Keep fast_alpha_beta() unchanged because it is
+        # also called directly by the stellarator physics model.
+        self.data.physics.beta_fast_alpha = self.fast_alpha_beta(
+            b_plasma_poloidal_average=self.data.physics.b_plasma_surface_poloidal_average,
+            b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
+            nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
+            nd_plasma_fuel_ions_vol_avg=self.data.physics.nd_plasma_fuel_ions_vol_avg,
+            nd_plasma_ions_total_vol_avg=self.data.physics.nd_plasma_ions_total_vol_avg,
+            temp_plasma_electron_density_weighted_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
+            temp_plasma_ion_density_weighted_kev=self.data.physics.temp_plasma_ion_density_weighted_kev,
+            pden_alpha_total_vol_avg_mw=self.data.physics.pden_alpha_total_vol_avg_mw,
+            pden_plasma_alpha_vol_avg_mw=self.data.physics.pden_plasma_alpha_vol_avg_mw,
+            i_beta_fast_alpha=self.data.physics.i_beta_fast_alpha,
+            f_plasma_fuel_deuterium=self.data.physics.f_plasma_fuel_deuterium,
         )
 
         # Total beta is derived from the thermal and fast-particle components.
