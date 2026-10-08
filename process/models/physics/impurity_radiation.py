@@ -324,7 +324,7 @@ def init_imp_element(
     data.impurity_radiation.impurity_arr_label[n_species_index - 1] = name_label
     data.impurity_radiation.impurity_arr_z[n_species_index - 1] = z
     data.impurity_radiation.m_impurity_amu_array[n_species_index - 1] = m_species_amu
-    data.impurity_radiation.f_nd_impurity_electron_array[n_species_index - 1] = (
+    data.impurity_radiation.f_nd_impurity_electrons[n_species_index - 1] = (
         f_nd_species_electron
     )
     data.impurity_radiation.impurity_arr_len_tab[n_species_index - 1] = len_tab
@@ -566,7 +566,7 @@ def calculate_impurity_radiation_power_density(
     # W/m³ = nᵢ * nₑ * L(Z, Tₑ)
     # nᵢ = f_nd_species_electron * nₑ
     pden_impurity_profile = (
-        data.impurity_radiation.f_nd_impurity_electron_array[imp_element_index]
+        data.impurity_radiation.f_nd_impurity_electrons[imp_element_index]
         * nd_electron_profile
         * nd_electron_profile
         * power_loss_function
@@ -658,7 +658,7 @@ class ImpurityRadiation:
         self.data = data_structure
         self.plasma_profile = plasma_profile
         self.imp = np.nonzero(
-            self.data.impurity_radiation.f_nd_impurity_electron_array > 1.0e-30
+            self.data.impurity_radiation.f_nd_impurity_electrons > 1.0e-30
         )[0]
 
         self.pden_impurity_radiation_profile = np.zeros(
