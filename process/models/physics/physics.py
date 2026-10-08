@@ -728,18 +728,26 @@ class Physics(Model):
             radpwrdata.pden_plasma_sync_vol_avg_mw
         )
         self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw = (
+            radpwrdata.pden_plasma_core_rad_reduced_vol_avg_mw
+        )
+        self.data.physics.pden_plasma_core_rad_vol_avg_mw = (
             radpwrdata.pden_plasma_core_rad_vol_avg_mw
         )
         self.data.physics.pden_plasma_edge_rad_vol_avg_mw = (
             radpwrdata.pden_plasma_edge_rad_vol_avg_mw
         )
-        self.data.physics.pden_plasma_rad_mw = radpwrdata.pden_plasma_rad_vol_avg_mw
+        self.data.physics.pden_plasma_rad_vol_avg_mw = radpwrdata.pden_plasma_rad_vol_avg_mw
 
         self.data.physics.p_plasma_sync_mw = (
             self.data.physics.pden_plasma_sync_vol_avg_mw * self.data.physics.vol_plasma
         )
         self.data.physics.p_plasma_core_rad_reduced_mw = (
             self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw
+            * self.data.physics.vol_plasma
+        )
+
+        self.data.physics.p_plasma_core_rad_mw = (
+            self.data.physics.pden_plasma_core_rad_vol_avg_mw
             * self.data.physics.vol_plasma
         )
         self.data.physics.p_plasma_edge_rad_mw = (
@@ -1921,6 +1929,19 @@ class Physics(Model):
             "Plasma total radiation power from edge region (Pᵧ,ₒᵤₜₑᵣ) [MW] ",
             "(p_plasma_edge_rad_mw)",
             self.data.physics.p_plasma_edge_rad_mw,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(
+            self.outfile,
+            "Note: Volume-averaged quantities are calculated over the whole plasma",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Volume-averaged total edge radiation power per volume [MW/m³]",
+            "(pden_plasma_edge_rad_vol_avg_mw)",
+            self.data.physics.pden_plasma_edge_rad_vol_avg_mw,
             "OP ",
         )
 

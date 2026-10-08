@@ -119,8 +119,13 @@ def calculate_radiation_powers(
     )
 
     # Total core radiation power/volume.
-    pden_plasma_core_rad_vol_avg_mw = (
+    pden_plasma_core_rad_reduced_vol_avg_mw = (
         imp_rad.pden_impurity_core_rad_reduced_vol_avg_mw + pden_plasma_sync_vol_avg_mw
+    )
+
+    # Total core radiation power/volume.
+    pden_plasma_core_rad_vol_avg_mw = (
+        imp_rad.pden_impurity_core_rad_vol_avg_mw + pden_plasma_sync_vol_avg_mw
     )
 
     # Total radiation power/volume.
@@ -131,7 +136,7 @@ def calculate_radiation_powers(
     return RadpwrData(
         pden_plasma_sync_vol_avg_mw=pden_plasma_sync_vol_avg_mw,
         pden_plasma_core_rad_vol_avg_mw=pden_plasma_core_rad_vol_avg_mw,
-        pden_plasma_core_rad_reduced_vol_avg_mw=imp_rad.pden_impurity_core_rad_reduced_vol_avg_mw,
+        pden_plasma_core_rad_reduced_vol_avg_mw=pden_plasma_core_rad_reduced_vol_avg_mw,
         pden_plasma_edge_rad_vol_avg_mw=imp_rad.pden_impurity_rad_edge_vol_avg_mw,
         pden_plasma_rad_vol_avg_mw=pden_plasma_rad_vol_avg_mw,
     )
