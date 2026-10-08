@@ -16,7 +16,7 @@ n_equality_constraints = 4               *number of equalities
 icc = 2                 *Global power balance (consistency equation)
 icc = 11                *Radial build (consistency equation)
 icc = 16                *Net electric power lower limit
-icc = 93
+icc = 93                *Fuel-ion equilibrium (consistency equation)
 
 
 *-------------- inequalities
