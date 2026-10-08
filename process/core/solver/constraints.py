@@ -274,8 +274,8 @@ def constraint_equation_2(constraint_registration, data):
         ion transport power per volume (MW/m3)
      pden_plasma_rad_mw:
         total radiation power per volume (MW/m3)
-     pden_plasma_core_rad_mw:
-        total core radiation power per volume (MW/m3)
+     pden_plasma_core_rad_reduced_vol_avg_mw:
+        Total reduced core radiation power per volume (MW/m3)
      f_p_alpha_plasma_deposited:
         fraction of alpha power deposited in plasma
      pden_alpha_total_vol_avg_mw:
@@ -304,7 +304,7 @@ def constraint_equation_2(constraint_registration, data):
         case ConfinementRadiationLossModel.FULL_RADIATION:
             pnumerator = pscaling + data.physics.pden_plasma_rad_mw
         case ConfinementRadiationLossModel.CORE_ONLY:
-            pnumerator = pscaling + data.physics.pden_plasma_core_rad_mw
+            pnumerator = pscaling + data.physics.pden_plasma_core_rad_reduced_vol_avg_mw
         case ConfinementRadiationLossModel.NO_RADIATION:
             pnumerator = pscaling
         case _:
@@ -404,7 +404,7 @@ def constraint_equation_4(constraint_registration, data):
         electron transport power per volume (MW/m3)
     pden_plasma_rad_mw:
         total radiation power per volume (MW/m3)
-    pden_plasma_core_rad_mw:
+    pden_plasma_core_rad_reduced_vol_avg_mw:
         total core radiation power per volume (MW/m3)
     f_p_alpha_plasma_deposited:
         fraction of alpha power deposited in plasma
@@ -423,7 +423,7 @@ def constraint_equation_4(constraint_registration, data):
     if data.physics.i_rad_loss == 0:
         pnumerator = pscaling + data.physics.pden_plasma_rad_mw
     elif data.physics.i_rad_loss == 1:
-        pnumerator = pscaling + data.physics.pden_plasma_core_rad_mw
+        pnumerator = pscaling + data.physics.pden_plasma_core_rad_reduced_vol_avg_mw
     else:
         pnumerator = pscaling
 
