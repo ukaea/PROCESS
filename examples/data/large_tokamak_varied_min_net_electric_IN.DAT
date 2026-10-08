@@ -30,6 +30,10 @@ icc = 2
 *--------------------------*
 icc = 11
 
+* Fuel-ion equilibrium *
+*----------------------*
+icc = 93
+
 * Constraint Equations - Limit Equations *
 ******************************************
 
