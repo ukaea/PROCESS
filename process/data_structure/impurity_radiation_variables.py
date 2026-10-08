@@ -131,10 +131,6 @@ class ImpurityRadiationData:
     )
     """Array of impurity labels for internal use"""
 
-    f_nd_impurity_electron_array: list[float] = field(
-        default_factory=lambda: np.zeros(N_ION_SPECIES)
-    )
-    """2D array of impurity relative densities (n_imp/n_e)"""
 
     impurity_arr_len_tab: list[int] = field(
         default_factory=lambda: np.full(N_ION_SPECIES, 0)
