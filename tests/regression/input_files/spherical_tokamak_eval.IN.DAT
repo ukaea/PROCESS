@@ -3,11 +3,12 @@ i_process_run_mode = -2
 
 *---------------Constraint Equations---------------*
 * Define number of equality constraints
-n_equality_constraints = 2
+n_equality_constraints = 3
 
 * Equalities
 icc = 2 * Global power balance
 icc = 11 * Radial build
+icc = 93 * Fuel-ion equilibrium
 
 * Inequalities
 icc = 9 * Fusion power upper limit
@@ -31,7 +32,9 @@ icc = 16 * Net electric lower limit
 ixc = 4 * temp_plasma_electron_vol_avg_kev
 boundl(4) = 5.0
 boundu(4) = 25.0
-
+ixc = 6 * nd_plasma_electrons_vol_avg
+boundl(6) = 0.5d+20
+boundu(6) = 5.0d+20
 ixc = 29 * bore
 boundl(29) = 0.1
 boundu(29) = 0.8
@@ -249,7 +252,7 @@ zref(10) = 1.0
 
 
 *----------------Physics Variables-----------------*
-
+molflow_plasma_fuelling = 4.45548408068305741e+21
 alphaj   = 0.1 * current profile index
 i_alphaj = 0 * Current profile index selection (0 = user input)
 alphan   = 0.9 * density profile index
