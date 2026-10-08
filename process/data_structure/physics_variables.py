@@ -639,7 +639,7 @@ class PhysicsData:
     """multiplier for beam-background fusion calculation"""
 
     beta_total_vol_avg: float = 0.042
-    """Volume averaged total plasma beta (⟨β⟩) (calculated if stellarator)"""
+    """Volume averaged total plasma beta (⟨β⟩)"""
 
     beta_fast_alpha: float = 0.0
     """Fast alpha beta component (β_alpha)"""
