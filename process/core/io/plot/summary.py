@@ -3123,7 +3123,7 @@ def plot_main_plasma_information(
         f"           $\\mathbf{{Radiation:}}$\n\n"
         f"           Total radiation power {mfile.get('p_plasma_rad_mw', scan=scan):.4f} MW\n"
         f"           Separatrix radiation fraction {mfile.get('f_p_plasma_separatrix_rad', scan=scan):.4f}\n"
-        f"           Core radiation power {mfile.get('p_plasma_inner_rad_mw', scan=scan):.4f} MW\n"
+        f"           Reduced Core radiation power {mfile.get('p_plasma_core_rad_reduced_mw', scan=scan):.4f} MW\n"
         f"              - $f_{{\\text{{core,reduce}}}}$ {mfile.get('f_p_plasma_core_rad_reduction', scan=scan):.4f}\n"
         f"           Edge radiation power {mfile.get('p_plasma_outer_rad_mw', scan=scan):.4f} MW\n"
         f"           Synchrotron radiation power {mfile.get('p_plasma_sync_mw', scan=scan):.4f} MW\n"
@@ -8823,7 +8823,7 @@ def plot_power_info(axis: plt.Axes, mfile: MFile, scan: int):
         coredescription,
         ped_height,
         ped_pos,
-        ("p_plasma_inner_rad_mw", "Inner zone radiation", "MW"),
+        ("p_plasma_core_rad_reduced_mw", "Inner zone radiation", "MW"),
         ("p_plasma_rad_mw", "Total radiation in LCFS", "MW"),
         ("p_blkt_nuclear_heat_total_mw", "Nuclear heating in blanket", "MW"),
         ("p_shld_nuclear_heat_mw", "Nuclear heating in shield", "MW"),
