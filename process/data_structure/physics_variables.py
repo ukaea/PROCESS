@@ -1269,7 +1269,10 @@ class PhysicsData:
 
     pden_plasma_core_rad_reduced_vol_avg_mw: float = 0.0
     """Volume-averaged total reduced core radiation power per volume [MW/m³]"""
-
+    
+    pden_plasma_core_rad_vol_avg_mw: float = 0.0
+    """Volume-averaged total core radiation power per volume [MW/m³]"""
+    
     p_dd_total_mw: float = 0.0
     """deuterium-deuterium fusion power (MW)"""
 
