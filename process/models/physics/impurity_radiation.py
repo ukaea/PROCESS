@@ -769,6 +769,9 @@ class ImpurityRadiation:
                 profile_dx=self.plasma_profile.neprofile.profile_dx,
             )
         )
+
+        # This volime average is still over the full plasma volume even though its
+        # just for the core
         self.pden_impurity_core_rad_vol_avg_mw = 1.0e-6 * calculate_vol_avg_of_profile(
             profile_x=self.plasma_profile.neprofile.profile_x,
             profile_y=self.pden_impurity_core_rad_profile,
@@ -782,6 +785,17 @@ class ImpurityRadiation:
             profile_y=self.pden_impurity_rad_edge_profile,
             profile_dx=self.plasma_profile.neprofile.profile_dx,
         )
+
+        if not np.isclose(
+            self.pden_impurity_rad_edge_vol_avg_mw
+            + self.pden_impurity_core_rad_vol_avg_mw,
+            self.pden_impurity_rad_total_vol_avg_mw,
+            rtol=1.0e-9,
+            atol=1.0e-12,
+        ):
+            raise ValueError(
+                "The sum of core and edge impurity radiation does not match the total volume averaged radiation."
+            )
 
     def calculate_imprad(self) -> None:
         """Call the map function to calculate impurity radiation parameters for each
