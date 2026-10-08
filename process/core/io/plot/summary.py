@@ -1,11 +1,12 @@
 """PROCESS plot_summary"""
 
 import json
+import math
 import textwrap
 from dataclasses import dataclass
 from importlib import resources
 from pathlib import Path
-from typing import Any, Literal, TypedDict
+from typing import Any, Literal
 
 import matplotlib as mpl
 import matplotlib.backends.backend_pdf as bpdf
@@ -14,9 +15,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import patches
 from matplotlib.axes import Axes
-from matplotlib.patches import Circle, Rectangle
+from matplotlib.patches import Circle, FancyBboxPatch, Rectangle
 from matplotlib.path import Path as mplPath
-from matplotlib.transforms import Transform
 from scipy.interpolate import interp1d
 
 from process.core import constants
@@ -189,9 +189,6 @@ rtangle2 = 2 * rtangle
 
 def _box_style(colour: str):
     return {"boxstyle": "round", "facecolor": colour, "alpha": 1.0, "linewidth": 2}
-
-
-white_box = {"boxstyle": "round", "facecolor": "white", "alpha": 1.0}
 
 
 def _text_layout(fig):
@@ -2252,63 +2249,41 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     # ===========================================
 
 
-def plot_main_plasma_information(
-    axis: plt.Axes,
-    mfile: MFile,
-    scan: int,
-    colour_scheme: Literal[1, 2],
-    fig: plt.Figure,
+def plasma_main_page(
+    axis,
+    fig,
+    rmajor,
+    rminor,
+    triang,
+    radius_plasma_core_norm,
+    kappa,
+    i_single_null,
+    plasma_square,
+    big_q_plasma,
+    p_fw_alpha_mw,
+    f_p_alpha_plasma_deposited,
+    p_neutron_total_mw,
+    pflux_plasma_surface_neutron_avg_mw,
 ):
-    """Plots the main plasma information including plasma shape, geometry, currents, heating,
-    confinement, and other relevant plasma parameters.
+    """Plot plasma from main page"""
+    white_box = {"boxstyle": "round", "facecolor": "white", "alpha": 1.0}
 
-    Parameters
-    ----------
-    axis : plt.Axes
-        The matplotlib axis object to plot on.
-    mfile : MFile
-        The MFILE data object containing plasma parameters.
-    scan : int
-        The scan number to use for extracting data.
-    colour_scheme : int
-        The colour scheme to use for plots.
-    fig : plt.Figure
-        The matplotlib figure object for additional annotations.
-    """
-    # Import key variables
-    triang = mfile.get("triang", scan=scan)
-    kappa = mfile.get("kappa", scan=scan)
-
-    # Remove the axes
-    axis.axis("off")
-
-    # Plot the main plasma shape
-    plot_plasma(axis, mfile, scan, colour_scheme)
-
-    rmajor = mfile.get("rmajor", scan=scan)
-    rminor = mfile.get("rminor", scan=scan)
-    # Get the plasma permieter points for the core plasma region
     pg = plasma_geometry(
         rmajor=rmajor,
-        rminor=mfile.get("rminor", scan=scan)
-        * mfile.get("radius_plasma_core_norm", scan=scan),
-        triang=mfile.get("triang", scan=scan),
-        kappa=mfile.get("kappa", scan=scan),
-        i_single_null=mfile.get("i_single_null", scan=scan),
+        rminor=rminor * radius_plasma_core_norm,
+        triang=triang,
+        kappa=kappa,
+        i_single_null=i_single_null,
         i_plasma_shape=1,
-        square=mfile.get("plasma_square", scan=scan),
+        square=plasma_square,
     )
-    # Plot the core plasma boundary line
     axis.plot(pg.rs, pg.zs, color="black", linestyle="--")
-
-    # Plot the centre of the plasma
     axis.plot(rmajor, 0, "r+", markersize=20, markeredgewidth=2)
 
-    # Add Q plasma information box
     axis.text(
         0.725,
         0.175,
-        f"$Q_{{\\text{{plasma}}}}$: {mfile.get('big_q_plasma', scan=scan):.2f}",
+        f"$Q_{{\\text{{plasma}}}}$: {big_q_plasma:.2f}",
         fontsize=15,
         verticalalignment="center",
         horizontalalignment="center",
@@ -2372,7 +2347,7 @@ def plot_main_plasma_information(
     axis.text(
         0.3,
         0.75,
-        f"$\\kappa$: {mfile.get('kappa', scan=scan):.2f}",
+        f"$\\kappa$: {kappa:.2f}",
         fontsize=9,
         color="black",
         rotation=270,
@@ -2395,23 +2370,18 @@ def plot_main_plasma_information(
     axis.text(
         rmajor - (rminor * triang * 0.75),
         kappa * rminor * 0.3,
-        f"$\\delta$: {mfile.get('triang', scan=scan):.2f}",
+        f"$\\delta$: {triang:.2f}",
         fontsize=9,
         color="black",
-        rotation=0,
         verticalalignment="center",
         bbox=white_box,
     )
 
-    # =============================================
-
-    radius_plasma_core_norm = mfile.get("radius_plasma_core_norm", scan=scan)
-
     # Draw a double-ended arrow for the plasma core region
     axis.annotate(
         "",
-        xy=(rmajor, -rminor * 0.1 * kappa),  # Inner plasma edge
-        xytext=(rmajor + (rminor * radius_plasma_core_norm), -rminor * 0.1 * kappa),
+        xy=(rmajor, -rminor * 0.1 * kappa),
+        xytext=(rmajor + rminor * radius_plasma_core_norm, -rminor * 0.1 * kappa),
         arrowprops={"arrowstyle": "<->", "color": "black"},
     )
     # Add a label for core region
@@ -2421,475 +2391,472 @@ def plot_main_plasma_information(
         f"$\\rho_{{\\text{{core}}}}$: {radius_plasma_core_norm:.2f}",
         fontsize=9,
         color="black",
-        rotation=0,
         verticalalignment="center",
         bbox=white_box,
     )
 
-    # ================================================
+    with (
+        resources.path(
+            "process.core.io.plot.images", "alpha_particle.png"
+        ) as image_path,
+        image_path.open("rb") as image_file,
+    ):
+        alpha_particle = mpimg.imread(image_file)
 
-    # Add plasma volume, areas and shaping information
-
-    geom_type = PlasmaGeometryModelType(mfile.get("i_plasma_geometry", scan=scan))
-
-    textstr_plasma = (
-        f"$\\mathbf{{Shaping:}}$\n\n"
-        f"$\\kappa_{{95}}$: {mfile.get('kappa95', scan=scan):.2f} ({geom_type.kappa95_model.description}) | $\\delta_{{95}}$: {mfile.get('triang95', scan=scan):.2f} ({geom_type.triang95_model.description}) | $\\zeta$: {mfile.get('plasma_square', scan=scan):.2f}\n"
-        f"$\\kappa$: {mfile.get('kappa', scan=scan):.2f} ({geom_type.kappa_model.description}) | $\\delta$: {mfile.get('triang', scan=scan):.2f} ({geom_type.triang_model.description}) | A: {mfile.get('aspect', scan=scan):.2f}\n"
-        f"$ V_{{\\text{{p}}}}:$ {mfile.get('vol_plasma', scan=scan):,.2f}$ \\ \\text{{m}}^3$ | $ A_{{\\text{{p,surface}}}}:$ {mfile.get('a_plasma_surface', scan=scan):,.2f}$ \\ \\text{{m}}^2$ | $ A_{{\\text{{p,poloidal}}}}:$ {mfile.get('a_plasma_poloidal', scan=scan):,.3f}$ \\ \\text{{m}}^2$\n"
-        f"$ L_{{\\text{{p,poloidal}}}}:$ {mfile.get('len_plasma_poloidal', scan=scan):,.3f}$ \\ \\text{{m}}$"
+    image_axis = axis.inset_axes(
+        (0.975, 0.275, 0.075, 0.075),
+        transform=axis.transAxes,
+        zorder=10,
     )
-
-    axis.text(
-        0.365,
-        0.975,
-        textstr_plasma,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox=_box_style("lightyellow"),
-    )
-
-    # ============================================
-
-    # Draw a red arrow coming from the right and pointing at the plasma
-    for kap in (-kappa, kappa):
-        axis.annotate(
-            "",
-            # Pointing at plasma
-            xy=(rmajor + (rminor * 0.8), kap * rminor * 0.2),
-            # Starting point of arrow
-            xytext=(rmajor + (rminor * 1.4), kap * rminor * 0.2),
-            arrowprops={"facecolor": "red", "edgecolor": "red", "lw": 2},
-        )
-
-    i_hcd_primary = mfile.get("i_hcd_primary", scan=scan)
-    i_hcd_secondary = mfile.get("i_hcd_secondary", scan=scan)
-
-    # Add heating and current drive information
-    textstr_hcd = (
-        f"$\\mathbf{{Heating \\ & \\ current \\ drive:}}$\n\n"
-        f"Total injected heat: {mfile.get('p_hcd_injected_total_mw', scan=scan):.3f} MW\n"
-        f"Ohmic heating power: {mfile.get('p_plasma_ohmic_mw', scan=scan):.3f} MW\n\n"
-        f"$\\mathbf{{Primary \\ system: {CurrentDriveModel(i_hcd_primary).abbreviation}}}$\n"
-        f"Current driving power {mfile.get('p_hcd_primary_injected_mw', scan=scan):.4f} MW\n"
-        f"Extra heat power: {mfile.get('p_hcd_primary_extra_heat_mw', scan=scan):.4f} MW\n"
-        f"$\\eta_{{\\text{{CD,prim}}}}$: {mfile.get('eta_cd_hcd_primary', scan=scan):.4f} A/W  |   $\\langle\\zeta_{{\\text{{CD,prim}}}}\\rangle$: {mfile.get('eta_cd_dimensionless_hcd_primary', scan=scan):.4f}\n"
-        f"$\\gamma_{{\\text{{CD,prim}}}}$: {mfile.get('eta_cd_norm_hcd_primary', scan=scan):.4f} $\\times 10^{{20}}  \\mathrm{{A}} / \\mathrm{{Wm}}^2$\n"
-        f"Current driven by primary: {mfile.get('c_hcd_primary_driven', scan=scan) / 1e6:.3f} MA\n\n"
-        f"$\\mathbf{{Secondary \\ system: {CurrentDriveModel(i_hcd_secondary).abbreviation}}}$\n"
-        f"Current driving power {mfile.get('p_hcd_secondary_injected_mw', scan=scan):.4f} MW\n"
-        f"Extra heat power: {mfile.get('p_hcd_secondary_extra_heat_mw', scan=scan):.4f} MW\n"
-        f"$\\eta_{{\\text{{CD,sec}}}}$: {mfile.get('eta_cd_hcd_secondary', scan=scan):.4f} A/W  |   $\\langle\\zeta_{{\\text{{CD,sec}}}}\\rangle$: {mfile.get('eta_cd_dimensionless_hcd_secondary', scan=scan):.4f}\n"
-        f"$\\gamma_{{\\text{{CD,sec}}}}$: {mfile.get('eta_cd_norm_hcd_secondary', scan=scan):.4f} $\\times 10^{{20}}  \\mathrm{{A}} / \\mathrm{{Wm}}^2$\n"
-        f"Current driven by secondary: {mfile.get('c_hcd_secondary_driven', scan=scan) / 1e6:.3f} MA"
-    )
-
-    axis.text(
-        0.73,
-        0.675,
-        textstr_hcd,
-        fontsize=9,
-        verticalalignment="top",
-        transform=plt.gcf().transFigure,
-        bbox=_box_style("paleturquoise") | {"edgecolor": "black"},
-    )
-
-    class TextArgs(TypedDict):
-        fontsize: int
-        verticalalignment: str
-        transform: Transform
-
-    text_args = TextArgs({
-        "fontsize": 23,
-        "verticalalignment": "top",
-        "transform": fig.transFigure,
-    })
-
-    # Add injected power label
-    axis.text(0.92, 0.625, "$P_{\\text{inj}}$", **text_args)
-
-    # ================================================
-
-    # Add beta information
-    textstr_beta = (
-        f"$\\mathbf{{Beta \\ Information:}}$\n\n"
-        f"Total beta,$ \\ \\langle \\beta \\rangle$: {mfile.get('beta_total_vol_avg', scan=scan):.4f}\n"
-        f"Thermal beta,$ \\ \\langle \\beta_{{\\text{{thermal}}}} \\rangle$: {mfile.get('beta_thermal_vol_avg', scan=scan):.4f}\n"
-        f"Toroidal beta,$ \\ \\langle \\beta_{{\\text{{t}}}} \\rangle$: {mfile.get('beta_toroidal_vol_avg', scan=scan):.4f}\n"
-        f"Poloidal beta,$ \\ \\langle \\beta_{{\\text{{p}}}} \\rangle$: {mfile.get('beta_poloidal_vol_avg', scan=scan):.4f}\n"
-        f"Fast-alpha beta,$ \\ \\langle \\beta_{{\\alpha}} \\rangle$: {mfile.get('beta_fast_alpha', scan=scan):.4f}\n"
-        f"Upper limit on {BetaComponentLimits(int(mfile.get('i_beta_component', scan=scan))).full_name}: $ \\langle \\beta \\rangle$: {mfile.get('beta_vol_avg_max', scan=scan):.4f}\n"
-        f"Normalised total beta,$ \\ \\beta_{{\\text{{N}}}}$: {mfile.get('beta_norm_total', scan=scan):.4f}\n"
-        f"Normalised thermal beta,$ \\ \\beta_{{\\text{{N,thermal}}}}$: {mfile.get('beta_norm_thermal', scan=scan):.4f}\n"
-        f"Maximum normalised beta ({BetaNormMaxModel(int(mfile.get('i_beta_norm_max', scan=scan))).full_name}),$ \\ \\beta_{{\\text{{N,max}}}}$: {mfile.get('beta_norm_max', scan=scan):.4f}"
-    )
-
-    axis.text(
-        0.025,
-        0.975,
-        textstr_beta,
-        fontsize=9,
-        verticalalignment="top",
-        transform=fig.transFigure,
-        bbox=_box_style("lightblue"),
-    )
-
-    # Add beta label
-    axis.text(0.27, 0.94, "$\\beta$", **text_args)
-
-    # ================================================
-
-    # Add volt-second information
-    textstr_volt_second = (
-        f"$\\mathbf{{Volt-second \\ requirements:}}$\n\n"
-        f"Total volt-second consumption: {mfile.get('vs_plasma_total_required', scan=scan):.4f} Vs\n"
-        f"  - Internal volt-seconds: {mfile.get('vs_plasma_internal', scan=scan):.4f} Vs\n"
-        f"  - Volt-seconds needed for burn: {mfile.get('vs_plasma_burn_required', scan=scan):.4f} Vs\n"
-        f"  - Volt-seconds needed for ramp: {mfile.get('vs_plasma_ramp_required', scan=scan):.4f} Vs | $C_{{\\text{{ejima}}}}$: {mfile.get('ejima_coeff', scan=scan):.4f}\n"
-        f"$V_{{\\text{{loop}}}}$: {mfile.get('v_plasma_loop_burn', scan=scan):.4f} V\n"
-        f"$\\Omega_{{\\text{{p}}}}$: {mfile.get('res_plasma', scan=scan):.4e} $\\Omega$\n"
-        f"Plasma resistive diffusion time: {mfile.get('t_plasma_res_diffusion', scan=scan):,.4f} s\n"
-        f"Plasma inductance: {mfile.get('ind_plasma', scan=scan):.4e} H | ITER $l_i(3)$: {mfile.get('ind_plasma_internal_norm_iter_3', scan=scan):.4f}\n"
-        f"Plasma stored magnetic energy: {mfile.get('e_plasma_magnetic_stored', scan=scan) / 1e9:.4f} GJ\n"
-        f"Plasma normalised internal inductance, $l_i$ ({IndInternalNormModel(int(mfile.get('i_ind_plasma_internal_norm', scan=scan))).full_name}) :{mfile.get('ind_plasma_internal_norm', scan=scan):.3f}"
-    )
-
-    axis.text(
-        0.025,
-        0.78,
-        textstr_volt_second,
-        fontsize=9,
-        verticalalignment="top",
-        transform=fig.transFigure,
-        bbox=_box_style("lightgreen"),
-    )
-
-    # Add volt second label
-    axis.text(0.30, 0.77, "Vs", **text_args)
-
-    # =========================================
-
-    # Add divertor information
-    textstr_div = (
-        f"\n$P_{{\\text{{sep}}}}$: {mfile.get('p_plasma_separatrix_mw', scan=scan):.2f} MW\n"
-        f"$\\frac{{P_{{\\text{{sep}}}}}}{{R}}$: {mfile.get('p_plasma_separatrix_rmajor_mw', scan=scan):.2f} MW/m\n"
-        f"$\\frac{{P_{{\\text{{sep}}}}B_T}}{{q_{{95}} A  R}}$: {mfile.get('p_div_bt_q_aspect_rmajor_mw', scan=scan):.2f} MW T/m               "
-    )
-
-    axis.text(
-        0.35,
-        0.12,
-        textstr_div,
-        fontsize=9,
-        verticalalignment="top",
-        transform=fig.transFigure,
-        bbox=_box_style("orange"),
-    )
-
-    # Add divertor label
-    axis.text(0.45, 0.1, "$P_{\\text{div}}$", **text_args)
-
-    # ================================================
-
-    # Add confinement information
-    textstr_confinement = (
-        f"$\\mathbf{{Confinement:}}$\n\n"
-        f"Confinement scaling law: {mfile.get('tauelaw', scan=scan)}\n"
-        f"Confinement $H$ factor: {mfile.get('hfact', scan=scan):.4f}\n"
-        f"Energy confinement time from scaling: {mfile.get('t_energy_confinement', scan=scan):.4f} s\n"
-        f"Fusion double product: {mfile.get('ntau', scan=scan):.4e} s/m³\n"
-        f"Lawson Triple product: {mfile.get('nttau', scan=scan):.4e} keV·s/m³\n"
-        f"Transport loss power assumed in scaling law: {mfile.get('p_plasma_loss_mw', scan=scan):.4f} MW\n"
-        f"Plasma thermal energy (inc. $\\alpha$), $W$: {mfile.get('e_plasma_beta', scan=scan) / 1e9:.4f} GJ\n"
-        f"Alpha particle confinement time: {mfile.get('t_alpha_confinement', scan=scan):.4f} s | $\\tau_{{\\alpha}}/\\tau_{{e}}$: {mfile.get('f_t_alpha_energy_confinement', scan=scan):.4f}"
-    )
-
-    axis.text(
-        0.025,
-        0.57,
-        textstr_confinement,
-        fontsize=9,
-        verticalalignment="top",
-        transform=fig.transFigure,
-        # Changed to a not normal color (Aquamarine)
-        bbox=_box_style("gainsboro") | {"edgecolor": "black"},
-    )
-
-    # Add tau label
-    axis.text(0.3, 0.55, "$\\tau_{\\text{e}} $", **text_args)
-
-    # =========================================
-
-    # Load the neutron image
-    with resources.path(
-        "process.core.io.plot.images", "alpha_particle.png"
-    ) as alpha_particle_image_path:
-        # Use importlib.resources to locate the image
-        alpha_particle = mpimg.imread(alpha_particle_image_path.open("rb"))
-
-    # Display the neutron image over the figure, not the axes
-    new_ax = axis.inset_axes(
-        (0.975, 0.275, 0.075, 0.075), transform=axis.transAxes, zorder=10
-    )
-    new_ax.imshow(alpha_particle)
-    new_ax.axis("off")
+    image_axis.imshow(alpha_particle)
+    image_axis.axis("off")
 
     axis.annotate(
         "",
-        xy=(rmajor + rminor, -rminor * kappa * 0.55),  # Pointing at the plasma
+        xy=(rmajor + rminor, -rminor * kappa * 0.55),
         xytext=(rmajor + 0.2 * rminor, -rminor * kappa * 0.25),
         arrowprops={"facecolor": "red", "edgecolor": "grey", "lw": 1},
     )
-
-    textstr_alpha = (
-        f"$P_{{\\alpha,\\text{{loss}}}}$ {mfile.get('p_fw_alpha_mw', scan=scan):.2f} MW\n"
-        f"$f_{{\\alpha,\\text{{coupled}}}}$ {mfile.get('f_p_alpha_plasma_deposited', scan=scan):.2f}"
-    )
-
     axis.text(
         1.0,
         0.275,
-        textstr_alpha,
+        f"$P_{{\\alpha,\\text{{loss}}}}$ {p_fw_alpha_mw:.2f} MW\n"
+        f"$f_{{\\alpha,\\text{{coupled}}}}$ "
+        f"{f_p_alpha_plasma_deposited:.2f}",
         fontsize=9,
+        color="black",
         verticalalignment="top",
         transform=axis.transAxes,
         bbox={"boxstyle": "round", "facecolor": "red", "alpha": 1.0, "linewidth": 2},
     )
 
-    # =========================================
-    with resources.path(
-        "process.core.io.plot.images", "neutron.png"
-    ) as neutron_image_path:
-        neutron = mpimg.imread(neutron_image_path.open("rb"))
-    new_ax = axis.inset_axes(
-        (0.975, 0.75, 0.075, 0.075), transform=axis.transAxes, zorder=10
-    )
-    new_ax.imshow(neutron)
-    new_ax.axis("off")
+    with (
+        resources.path("process.core.io.plot.images", "neutron.png") as image_path,
+        image_path.open("rb") as image_file,
+    ):
+        neutron = mpimg.imread(image_file)
 
-    # Draw a red arrow coming from the right and pointing at the plasma
+    image_axis = axis.inset_axes(
+        (0.975, 0.75, 0.075, 0.075),
+        transform=axis.transAxes,
+        zorder=10,
+    )
+    image_axis.imshow(neutron)
+    image_axis.axis("off")
+
     axis.annotate(
         "",
-        xy=(rmajor + rminor, rminor * kappa * 0.65),  # Pointing at the plasma
+        xy=(rmajor + rminor, rminor * kappa * 0.65),
         xytext=(rmajor, rminor * kappa * 0.5),
         arrowprops={"facecolor": "grey", "edgecolor": "grey", "lw": 1},
     )
-
-    textstr_neutron = (
-        f"$P_{{\\text{{n,total}}}}$ {mfile.get('p_neutron_total_mw', scan=scan):.2f} MW\n"
-        f"$\\phi_{{\\text{{n,avg}}}}$ {mfile.get('pflux_plasma_surface_neutron_avg_mw', scan=scan):.3f} MW/m²"
-    )
-
     axis.text(
         0.775,
         0.875,
-        textstr_neutron,
+        f"$P_{{\\text{{n,total}}}}$ {p_neutron_total_mw:.2f} MW\n"
+        f"$\\phi_{{\\text{{n,avg}}}}$ "
+        f"{pflux_plasma_surface_neutron_avg_mw:.3f} MW/m²",
         fontsize=9,
+        color="black",
         verticalalignment="top",
         transform=axis.transAxes,
         bbox={"boxstyle": "round", "facecolor": "grey", "alpha": 0.8, "linewidth": 2},
     )
+    for kap in (-kappa, kappa):
+        axis.annotate(
+            "",
+            xy=(rmajor + rminor * 0.8, kap * rminor * 0.2),
+            xytext=(rmajor + rminor * 1.4, kap * rminor * 0.2),
+            arrowprops={"facecolor": "red", "edgecolor": "red", "lw": 2},
+        )
 
-    # ===============================================
 
-    # Add fusion reaction information
+def plot_main_plasma_information(
+    axis: plt.Axes,
+    mfile: MFile,
+    scan: int,
+    colour_scheme: Literal[1, 2],
+    fig: plt.Figure,
+):
+    """Plots the main plasma information including plasma shape, geometry, currents, heating,
+    confinement, and other relevant plasma parameters.
+
+    Parameters
+    ----------
+    axis : plt.Axes
+        The matplotlib axis object to plot on.
+    mfile : MFile
+        The MFILE data object containing plasma parameters.
+    scan : int
+        The scan number to use for extracting data.
+    colour_scheme : int
+        The colour scheme to use for plots.
+    fig : plt.Figure
+        The matplotlib figure object for additional annotations.
+    """
+
+    def value(name: str):
+        return mfile.get(name, scan=scan)
+
+    def selector(name: str) -> int:
+        raw = float(value(name))
+        if not math.isfinite(raw) or not raw.is_integer():
+            raise ValueError(
+                f"{name} must contain an integer-valued float; got {raw!r}."
+            )
+        return int(raw)
+
+    def add_panel(
+        x: float,
+        top: float,
+        width: float,
+        height: float,
+        text: str,
+        style: dict,
+        text_x_offset: float = 0.004,
+    ):
+        """Add one fixed-size box and its unchanged original text."""
+        box_expansion = 0.002
+        left = x - box_expansion
+        bottom = top - height - box_expansion
+        expanded_width = width + 2 * box_expansion
+        expanded_height = height + 2 * box_expansion
+
+        patch = FancyBboxPatch(
+            (left, bottom),
+            expanded_width,
+            expanded_height,
+            boxstyle="round,pad=0,rounding_size=0.003",
+            transform=fig.transFigure,
+            facecolor=style.get("facecolor", "white"),
+            edgecolor=style.get("edgecolor", "black"),
+            linewidth=style.get("linewidth", 1.0),
+            alpha=style.get("alpha", 1.0),
+            clip_on=False,
+            zorder=20,
+        )
+        axis.add_patch(patch)
+
+        return axis.text(
+            x + text_x_offset,
+            top - 0.004,
+            text,
+            fontsize=9,
+            color="black",
+            verticalalignment="top",
+            horizontalalignment="left",
+            transform=fig.transFigure,
+            clip_on=False,
+            zorder=21,
+        )
+
+    def add_symbol(panel_name: str, x: float, top: float):
+        """Add a large symbol at its original figure-relative position."""
+        return axis.text(
+            x,
+            top,
+            panel_name,
+            fontsize=23,
+            color="black",
+            verticalalignment="top",
+            transform=fig.transFigure,
+            clip_on=False,
+            zorder=22,
+        )
+
+    triang = value("triang")
+    kappa = value("kappa")
+    rmajor = value("rmajor")
+    rminor = value("rminor")
+    radius_plasma_core_norm = value("radius_plasma_core_norm")
+
+    axis.axis("off")
+    plot_plasma(axis, mfile, scan, colour_scheme)
+    plasma_main_page(
+        axis,
+        fig,
+        rmajor,
+        rminor,
+        triang,
+        radius_plasma_core_norm,
+        kappa,
+        selector("i_single_null"),
+        value("plasma_square"),
+        value("big_q_plasma"),
+        value("p_fw_alpha_mw"),
+        value("f_p_alpha_plasma_deposited"),
+        value("p_neutron_total_mw"),
+        value("pflux_plasma_surface_neutron_avg_mw"),
+    )
+
+    geom_type = PlasmaGeometryModelType(selector("i_plasma_geometry"))
+    textstr_plasma = (
+        "$\\mathbf{Shaping:}$\n\n"
+        f"$\\kappa_{{95}}$: {value('kappa95'):.2f} ({geom_type.kappa95_model.description}) | "
+        f"$\\delta_{{95}}$: {value('triang95'):.2f} ({geom_type.triang95_model.description}) | "
+        f"$\\zeta$: {value('plasma_square'):.2f}\n"
+        f"$\\kappa$: {kappa:.2f} ({geom_type.kappa_model.description}) | "
+        f"$\\delta$: {triang:.2f} ({geom_type.triang_model.description}) | "
+        f"A: {value('aspect'):.2f}\n"
+        f"$V_{{\\text{{p}}}}$: {value('vol_plasma'):,.2f} $\\mathrm{{m}}^3$ | "
+        f"$A_{{\\text{{p,surface}}}}$: {value('a_plasma_surface'):,.2f} $\\mathrm{{m}}^2$ | "
+        f"$A_{{\\text{{p,poloidal}}}}$: {value('a_plasma_poloidal'):,.3f} $\\mathrm{{m}}^2$\n"
+        f"$L_{{\\text{{p,poloidal}}}}$: {value('len_plasma_poloidal'):,.3f} $\\mathrm{{m}}$"
+    )
+    add_panel(0.365, 0.975, 0.340, 0.110, textstr_plasma, _box_style("lightyellow"))
+
+    i_hcd_primary = selector("i_hcd_primary")
+    i_hcd_secondary = selector("i_hcd_secondary")
+    textstr_hcd = (
+        "$\\mathbf{Heating\\ &\\ current\\ drive:}$\n\n"
+        f"Total injected heat: {value('p_hcd_injected_total_mw'):.3f} MW\n"
+        f"Ohmic heating power: {value('p_plasma_ohmic_mw'):.3f} MW\n\n"
+        f"$\\mathbf{{Primary\\ system: {CurrentDriveModel(i_hcd_primary).abbreviation}}}$\n"
+        f"Current driving power: {value('p_hcd_primary_injected_mw'):.4f} MW\n"
+        f"Extra heat power: {value('p_hcd_primary_extra_heat_mw'):.4f} MW\n"
+        f"$\\eta_{{\\text{{CD,prim}}}}$: {value('eta_cd_hcd_primary'):.4f} A/W | "
+        f"$\\langle\\zeta_{{\\text{{CD,prim}}}}\\rangle$: "
+        f"{value('eta_cd_dimensionless_hcd_primary'):.4f}\n"
+        f"$\\gamma_{{\\text{{CD,prim}}}}$: {value('eta_cd_norm_hcd_primary'):.4f} "
+        "$\\times 10^{20}\\ \\mathrm{A}/\\mathrm{Wm}^2$\n"
+        f"Current driven by primary: {value('c_hcd_primary_driven') / 1e6:.3f} MA\n\n"
+        f"$\\mathbf{{Secondary\\ system: {CurrentDriveModel(i_hcd_secondary).abbreviation}}}$\n"
+        f"Current driving power: {value('p_hcd_secondary_injected_mw'):.4f} MW\n"
+        f"Extra heat power: {value('p_hcd_secondary_extra_heat_mw'):.4f} MW\n"
+        f"$\\eta_{{\\text{{CD,sec}}}}$: {value('eta_cd_hcd_secondary'):.4f} A/W | "
+        f"$\\langle\\zeta_{{\\text{{CD,sec}}}}\\rangle$: "
+        f"{value('eta_cd_dimensionless_hcd_secondary'):.4f}\n"
+        f"$\\gamma_{{\\text{{CD,sec}}}}$: {value('eta_cd_norm_hcd_secondary'):.4f} "
+        "$\\times 10^{20}\\ \\mathrm{A}/\\mathrm{Wm}^2$\n"
+        f"Current driven by secondary: {value('c_hcd_secondary_driven') / 1e6:.3f} MA"
+    )
+    add_panel(
+        0.730,
+        0.675,
+        0.245,
+        0.300,
+        textstr_hcd,
+        _box_style("paleturquoise") | {"edgecolor": "black"},
+    )
+    add_symbol("$P_{\\text{inj}}$", 0.92, 0.625)
+
+    beta_component = BetaComponentLimits(selector("i_beta_component")).full_name
+    beta_norm_model = BetaNormMaxModel(selector("i_beta_norm_max")).full_name
+    textstr_beta = (
+        "$\\mathbf{Beta\\ Information:}$\n\n"
+        f"Total beta, $\\langle\\beta\\rangle$: {value('beta_total_vol_avg'):.4f}\n"
+        f"Thermal beta, $\\langle\\beta_{{\\text{{thermal}}}}\\rangle$: "
+        f"{value('beta_thermal_vol_avg'):.4f}\n"
+        f"Toroidal beta, $\\langle\\beta_{{\\text{{t}}}}\\rangle$: "
+        f"{value('beta_toroidal_vol_avg'):.4f}\n"
+        f"Poloidal beta, $\\langle\\beta_{{\\text{{p}}}}\\rangle$: "
+        f"{value('beta_poloidal_vol_avg'):.4f}\n"
+        f"Fast-alpha beta, $\\langle\\beta_{{\\alpha}}\\rangle$: "
+        f"{value('beta_fast_alpha'):.4f}\n"
+        f"Upper limit on {beta_component}, $\\langle\\beta\\rangle$: "
+        f"{value('beta_vol_avg_max'):.4f}\n"
+        f"Normalised total beta, $\\beta_{{\\text{{N}}}}$: "
+        f"{value('beta_norm_total'):.4f}\n"
+        f"Normalised thermal beta, $\\beta_{{\\text{{N,thermal}}}}$: "
+        f"{value('beta_norm_thermal'):.4f}\n"
+        f"Maximum normalised beta ({beta_norm_model}), $\\beta_{{\\text{{N,max}}}}$: "
+        f"{value('beta_norm_max'):.4f}"
+    )
+    add_panel(0.025, 0.975, 0.325, 0.180, textstr_beta, _box_style("lightblue"))
+    add_symbol("$\\beta$", 0.27, 0.94)
+
+    inductance_model = IndInternalNormModel(
+        selector("i_ind_plasma_internal_norm")
+    ).full_name
+    textstr_volt_second = (
+        "$\\mathbf{Volt-second\\ requirements:}$\n\n"
+        f"Total volt-second consumption: {value('vs_plasma_total_required'):.4f} Vs\n"
+        f"  - Internal volt-seconds: {value('vs_plasma_internal'):.4f} Vs\n"
+        f"  - Volt-seconds needed for burn: {value('vs_plasma_burn_required'):.4f} Vs\n"
+        f"  - Volt-seconds needed for ramp: {value('vs_plasma_ramp_required'):.4f} Vs | "
+        f"$C_{{\\text{{ejima}}}}$: {value('ejima_coeff'):.4f}\n"
+        f"$V_{{\\text{{loop}}}}$: {value('v_plasma_loop_burn'):.4f} V\n"
+        f"$\\Omega_{{\\text{{p}}}}$: {value('res_plasma'):.4e} $\\Omega$\n"
+        f"Plasma resistive diffusion time: {value('t_plasma_res_diffusion'):,.4f} s\n"
+        f"Plasma inductance: {value('ind_plasma'):.4e} H | "
+        f"ITER $l_i(3)$: {value('ind_plasma_internal_norm_iter_3'):.4f}\n"
+        f"Plasma stored magnetic energy: {value('e_plasma_magnetic_stored') / 1e9:.4f} GJ\n"
+        f"Plasma normalised internal inductance, $l_i$ ({inductance_model}): "
+        f"{value('ind_plasma_internal_norm'):.3f}"
+    )
+    add_panel(0.025, 0.780, 0.335, 0.195, textstr_volt_second, _box_style("lightgreen"))
+    add_symbol("Vs", 0.30, 0.77)
+
+    textstr_div = (
+        f"$P_{{\\text{{sep}}}}$: {value('p_plasma_separatrix_mw'):.2f} MW\n"
+        f"$\\frac{{P_{{\\text{{sep}}}}}}{{R}}$: "
+        f"{value('p_plasma_separatrix_rmajor_mw'):.2f} MW/m\n"
+        f"$\\frac{{P_{{\\text{{sep}}}}B_T}}{{q_{{95}} A R}}$: "
+        f"{value('p_div_bt_q_aspect_rmajor_mw'):.2f} MW T/m"
+    )
+    add_panel(0.350, 0.120, 0.165, 0.095, textstr_div, _box_style("orange"))
+    add_symbol("$P_{\\text{div}}$", 0.45, 0.10)
+
+    textstr_confinement = (
+        "$\\mathbf{Confinement:}$\n\n"
+        f"Confinement scaling law: {value('tauelaw')}\n"
+        f"Confinement $H$ factor: {value('hfact'):.4f}\n"
+        f"Energy confinement time from scaling: {value('t_energy_confinement'):.4f} s\n"
+        f"Fusion double product: {value('ntau'):.4e} s/m³\n"
+        f"Lawson Triple product: {value('nttau'):.4e} keV·s/m³\n"
+        f"Transport loss power assumed in scaling law: {value('p_plasma_loss_mw'):.4f} MW\n"
+        f"Plasma thermal energy (inc. $\\alpha$), $W$: "
+        f"{value('e_plasma_beta') / 1e9:.4f} GJ\n"
+        f"Alpha particle confinement time: {value('t_alpha_confinement'):.4f} s | "
+        f"$\\tau_{{\\alpha}}/\\tau_{{e}}$: {value('f_t_alpha_energy_confinement'):.4f}"
+    )
+    add_panel(
+        0.025,
+        0.570,
+        0.325,
+        0.155,
+        textstr_confinement,
+        _box_style("gainsboro") | {"edgecolor": "black"},
+    )
+    add_symbol("$\\tau_{\\text{e}}$", 0.30, 0.55)
+
     textstr_reactions = (
-        f"$\\mathbf{{Fusion \\ Reactions:}}$\n\n"
-        f"Fuel mixture:\n"
-        f"|  D: {mfile.get('f_plasma_fuel_deuterium', scan=scan):.2f}  |  T: {mfile.get('f_plasma_fuel_tritium', scan=scan):.2f}  |  3He: {mfile.get('f_plasma_fuel_helium3', scan=scan):.2f}  |\n\n"
-        f"Fusion Power, $P_{{\\text{{fus}}}}:$ {mfile.get('p_fusion_total_mw', scan=scan):,.2f} MW\n"
-        f"D-T Power, $P_{{\\text{{fus,DT}}}}:$ {mfile.get('p_dt_total_mw', scan=scan):,.2f} MW\n"
-        f"D-D Power, $P_{{\\text{{fus,DD}}}}:$ {mfile.get('p_dd_total_mw', scan=scan):,.2f} MW\n"
-        f"D-3He Power, $P_{{\\text{{fus,D3He}}}}:$ {mfile.get('p_dhe3_total_mw', scan=scan):,.2f} MW\n"
-        f"Alpha Power, $P_{{\\alpha}}:$ {mfile.get('p_alpha_total_mw', scan=scan):,.2f} MW"
+        "$\\mathbf{Fusion\\ Reactions:}$\n\n"
+        "Fuel mixture:\n"
+        f"| D: {value('f_plasma_fuel_deuterium'):.2f} | "
+        f"T: {value('f_plasma_fuel_tritium'):.2f} | "
+        f"3He: {value('f_plasma_fuel_helium3'):.2f} |\n\n"
+        f"Fusion Power, $P_{{\\text{{fus}}}}$: {value('p_fusion_total_mw'):,.2f} MW\n"
+        f"D-T Power, $P_{{\\text{{fus,DT}}}}$: {value('p_dt_total_mw'):,.2f} MW\n"
+        f"D-D Power, $P_{{\\text{{fus,DD}}}}$: {value('p_dd_total_mw'):,.2f} MW\n"
+        f"D-3He Power, $P_{{\\text{{fus,D3He}}}}$: {value('p_dhe3_total_mw'):,.2f} MW\n"
+        f"Alpha Power, $P_{{\\alpha}}$: {value('p_alpha_total_mw'):,.2f} MW"
     )
-
-    axis.text(
+    add_panel(
         0.025,
-        0.4,
+        0.400,
+        0.185,
+        0.165,
         textstr_reactions,
-        fontsize=9,
-        verticalalignment="top",
-        transform=fig.transFigure,
-        bbox={"boxstyle": "round", "facecolor": "red", "alpha": 0.6, "linewidth": 2},
+        {"boxstyle": "round", "facecolor": "red", "alpha": 0.6, "linewidth": 2},
     )
 
-    # ================================================
-
-    # Add fuelling information
     textstr_fuelling = (
-        f"$\\mathbf{{Fuelling:}}$\n\n"
-        f"Plasma mass: {mfile.get('m_plasma', scan=scan) * 1000:.4f} g\n"
-        f"   - Average mass of all plasma ions: {mfile.get('m_ions_total_amu', scan=scan):.3f} amu\n"
-        f"Fuel mass: {mfile.get('m_plasma_fuel_ions', scan=scan) * 1000:.4f} g\n"
-        f"   - Average mass of all fuel ions: {mfile.get('m_fuel_amu', scan=scan):.3f} amu\n\n"
-        f"Fueling rate: {mfile.get('molflow_plasma_fuelling_required', scan=scan):.3e} nucleus-pairs/s\n"
-        f"Fuel burn-up rate: {mfile.get('rndfuel', scan=scan):.3e} reactions/s\n"
-        f"Burn-up fraction: {mfile.get('burnup', scan=scan):.4f}\n"
+        "$\\mathbf{Fuelling:}$\n\n"
+        f"Plasma mass: {value('m_plasma') * 1000:.4f} g\n"
+        f"   - Average mass of all plasma ions: {value('m_ions_total_amu'):.3f} amu\n"
+        f"Fuel mass: {value('m_plasma_fuel_ions') * 1000:.4f} g\n"
+        f"   - Average mass of all fuel ions: {value('m_fuel_amu'):.3f} amu\n\n"
+        f"Fueling rate: {value('molflow_plasma_fuelling_required'):.3e} nucleus-pairs/s\n"
+        f"Fuel burn-up rate: {value('rndfuel'):.3e} reactions/s\n"
+        f"Burn-up fraction: {value('burnup'):.4f}"
     )
-
-    axis.text(
+    add_panel(
         0.025,
-        0.22,
+        0.220,
+        0.255,
+        0.175,
         textstr_fuelling,
-        fontsize=9,
-        verticalalignment="top",
-        transform=fig.transFigure,
-        bbox=_box_style("khaki") | {"edgecolor": "black"},
+        _box_style("khaki") | {"edgecolor": "black"},
     )
 
-    # ================================================
-
-    # Add ion density information
     impurity_data = ImpurityRadiationData()
     textstr_ions = (
-        f"             $\\mathbf{{Ion \\ to \\ electron}}$\n"
-        f"             $\\mathbf{{relative \\ number}}$\n"
-        f"             $\\mathbf{{densities:}}$\n\n"
-        f"             Effective charge: {mfile.get('n_charge_plasma_effective_vol_avg', scan=scan):.3f}\n\n"
+        "$\\mathbf{Ion\\ to\\ electron}$\n"
+        "$\\mathbf{relative\\ number}$\n"
+        "$\\mathbf{densities:}$\n\n"
+        f"Effective charge: {value('n_charge_plasma_effective_vol_avg'):.3f}\n\n"
         + "\n".join(
-            f"             {label.replace('_', '') + ':':<6}"
-            f"{mfile.get(f'f_nd_impurity_electrons({index:02d})', scan=scan):.4e}"
+            f"{label.replace('_', '') + ':':<6}"
+            f"{value(f'f_nd_impurity_electrons({index:02d})'):.4e}"
             for index, label in enumerate(impurity_data.imp_label[:14], start=1)
         )
     )
-
-    axis.text(
+    add_panel(
         0.805,
         0.335,
+        0.170,
+        0.310,
         textstr_ions,
-        fontsize=9,
-        verticalalignment="top",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "olivedrab",
-            "alpha": 0.7,
-            "linewidth": 2,
-        },
+        {"boxstyle": "round", "facecolor": "olivedrab", "alpha": 0.7, "linewidth": 2},
+        text_x_offset=0.045,
     )
+    add_symbol("$Z$", 0.815, 0.29)
 
-    # Add ion charge label
-    axis.text(0.815, 0.29, "$Z$", **text_args)
-
-    # ================================================
-
-    # Add plasma current information
-    textstr_currents = (
-        f"$\\mathbf{{Plasma\\ currents:}}$\n\n"
-        f"Plasma current ({PlasmaCurrentModel(int(mfile.get('i_plasma_current', scan=scan))).full_name}): {mfile.get('plasma_current_ma', scan=scan):.4f} MA\n"
-        f"  - Bootstrap fraction ({BootstrapCurrentFractionModel(int(mfile.get('i_bootstrap_current', scan=scan))).full_name}): {mfile.get('f_c_plasma_bootstrap', scan=scan):.4f}\n"
-        f"  - Diamagnetic fraction ({PlasmaDiamagneticCurrentModel(int(mfile.get('i_diamagnetic_current', scan=scan))).full_name}): {mfile.get('f_c_plasma_diamagnetic', scan=scan):.4f}\n"
-        f"  - Pfirsch-Schlüter fraction {mfile.get('f_c_plasma_pfirsch_schluter', scan=scan):.4f}\n"
-        f"  - Auxiliary fraction {mfile.get('f_c_plasma_auxiliary', scan=scan):.4f}\n"
-        f"  - Inductive fraction {mfile.get('f_c_plasma_inductive', scan=scan):.4f}"
-    )
-
-    axis.text(
-        0.72,
-        0.975,
-        textstr_currents,
-        fontsize=9,
-        verticalalignment="top",
-        transform=fig.transFigure,
-        bbox=_box_style("#C8A2C8"),  # Hex code for lilac color
-    )
-
-    # Add plasma current label
-    axis.text(0.93, 0.9, "$I_{\\text{p}} $", **text_args)
-
-    # Add magnetic field information
-    textstr_fields = (
-        f"$\\mathbf{{Magnetic\\ fields:}}$\n\n"
-        f"Toroidal field at $R_0$, $B_{{T}}$: {mfile.get('b_plasma_toroidal_on_axis', scan=scan):.4f} T\n"
-        f"  Ripple at outboard , $\\delta$: {mfile.get('ripple_b_tf_plasma_edge', scan=scan):.2f}%\n"
-        f"Surface average poloidal field, $\\langle B_{{p}}(a) \\rangle$: {mfile.get('b_plasma_surface_poloidal_average', scan=scan):.4f} T\n"
-        f"Total field, $B_{{tot}}$: {mfile.get('b_plasma_total', scan=scan):.4f} T\n"
-        f"Vertical field, $B_{{vert}}$: {mfile.get('b_plasma_vertical_required', scan=scan):.4f} T"
-    )
-
-    axis.text(
-        0.5325,
-        0.14,
-        textstr_fields,
-        fontsize=9,
-        verticalalignment="top",
-        transform=fig.transFigure,
-        bbox=_box_style("royalblue"),
-    )
-
-    # Add magnetic field label
-    axis.text(0.75, 0.12, "$B$", **text_args)
-
-    # Add radiation information
-    textstr_radiation = (
-        f"           $\\mathbf{{Radiation:}}$\n\n"
-        f"           Total radiation power {mfile.get('p_plasma_rad_mw', scan=scan):.4f} MW\n"
-        f"           Separatrix radiation fraction {mfile.get('f_p_plasma_separatrix_rad', scan=scan):.4f}\n"
-        f"           Core radiation power {mfile.get('p_plasma_inner_rad_mw', scan=scan):.4f} MW\n"
-        f"              - $f_{{\\text{{core,reduce}}}}$ {mfile.get('f_p_plasma_core_rad_reduction', scan=scan):.4f}\n"
-        f"           Edge radiation power {mfile.get('p_plasma_outer_rad_mw', scan=scan):.4f} MW\n"
-        f"           Synchrotron radiation power {mfile.get('p_plasma_sync_mw', scan=scan):.4f} MW\n"
-        f"           Synchrotron wall reflectivity {mfile.get('f_sync_reflect', scan=scan):.4f}"
-    )
-
-    axis.text(
-        0.72,
-        0.83,
-        textstr_radiation,
-        fontsize=9,
-        verticalalignment="top",
-        transform=fig.transFigure,
-        bbox=_box_style("lavender") | {"edgecolor": "black"},
-    )
-
-    # Add radiation label
-    axis.text(0.725, 0.78, "$\\gamma$", **text_args)
-
-    # Add L-H threshold information
-    model_name = PlasmaConfinementTransitionModel(
-        int(mfile.get("i_l_h_threshold", scan=scan))
+    current_model = PlasmaCurrentModel(selector("i_plasma_current")).full_name
+    bootstrap_model = BootstrapCurrentFractionModel(
+        selector("i_bootstrap_current")
     ).full_name
+    diamagnetic_model = PlasmaDiamagneticCurrentModel(
+        selector("i_diamagnetic_current")
+    ).full_name
+    textstr_currents = (
+        "$\\mathbf{Plasma\\ currents:}$\n\n"
+        f"Plasma current ({current_model}): {value('plasma_current_ma'):.4f} MA\n"
+        f"  - Bootstrap fraction ({bootstrap_model}): "
+        f"{value('f_c_plasma_bootstrap'):.4f}\n"
+        f"  - Diamagnetic fraction ({diamagnetic_model}): "
+        f"{value('f_c_plasma_diamagnetic'):.4f}\n"
+        f"  - Pfirsch-Schlüter fraction: {value('f_c_plasma_pfirsch_schluter'):.4f}\n"
+        f"  - Auxiliary fraction: {value('f_c_plasma_auxiliary'):.4f}\n"
+        f"  - Inductive fraction: {value('f_c_plasma_inductive'):.4f}"
+    )
+    add_panel(0.720, 0.975, 0.255, 0.130, textstr_currents, _box_style("#C8A2C8"))
+    add_symbol("$I_{\\text{p}}$", 0.93, 0.90)
 
-    # Wrap long model names to new line
+    textstr_fields = (
+        "$\\mathbf{Magnetic\\ fields:}$\n\n"
+        f"Toroidal field at $R_0$, $B_T$: {value('b_plasma_toroidal_on_axis'):.4f} T\n"
+        f"  Ripple at outboard, $\\delta$: {value('ripple_b_tf_plasma_edge'):.2f}%\n"
+        f"Surface average poloidal field, $\\langle B_p(a)\\rangle$: "
+        f"{value('b_plasma_surface_poloidal_average'):.4f} T\n"
+        f"Total field, $B_{{\\text{{tot}}}}$: {value('b_plasma_total'):.4f} T\n"
+        f"Vertical field, $B_{{\\text{{vert}}}}$: "
+        f"{value('b_plasma_vertical_required'):.4f} T"
+    )
+    add_panel(0.5325, 0.140, 0.2575, 0.115, textstr_fields, _box_style("royalblue"))
+    add_symbol("$B$", 0.75, 0.12)
+
+    textstr_radiation = (
+        "$\\mathbf{Radiation:}$\n\n"
+        f"Total radiation power: {value('p_plasma_rad_mw'):.4f} MW\n"
+        f"Separatrix radiation fraction: {value('f_p_plasma_separatrix_rad'):.4f}\n"
+        f"Core radiation power: {value('p_plasma_inner_rad_mw'):.4f} MW\n"
+        f"   - $f_{{\\text{{core,reduce}}}}$: {value('f_p_plasma_core_rad_reduction'):.4f}\n"
+        f"Edge radiation power: {value('p_plasma_outer_rad_mw'):.4f} MW\n"
+        f"Synchrotron radiation power: {value('p_plasma_sync_mw'):.4f} MW\n"
+        f"Synchrotron wall reflectivity: {value('f_sync_reflect'):.4f}"
+    )
+    add_panel(
+        0.720,
+        0.830,
+        0.255,
+        0.145,
+        textstr_radiation,
+        _box_style("lavender") | {"edgecolor": "black"},
+        text_x_offset=0.032,
+    )
+    add_symbol("$\\gamma$", 0.725, 0.78)
+
+    model_name = PlasmaConfinementTransitionModel(selector("i_l_h_threshold")).full_name
     if len(model_name) > 20:
         model_name = "\n".join(textwrap.wrap(model_name, width=20))
-
     textstr_lh = (
-        f"$\\mathbf{{L-H \\ threshold:}}$\n"
+        "$\\mathbf{L-H\\ threshold:}$\n"
         f"{model_name}\n\n"
-        f"$P_{{\\text{{L-H}}}}:$ {mfile.get('p_l_h_threshold_mw', scan=scan):.4f} MW"
+        f"$P_{{\\text{{L-H}}}}$: {value('p_l_h_threshold_mw'):.4f} MW"
     )
+    add_panel(0.220, 0.400, 0.110, 0.080, textstr_lh, _box_style("peachpuff"))
 
-    axis.text(
-        0.22,
-        0.4,
-        textstr_lh,
-        fontsize=9,
-        verticalalignment="top",
-        transform=fig.transFigure,
-        bbox=_box_style("peachpuff"),
-    )
-
-    # Add density limit information
+    density_model = DensityLimitModel(selector("i_density_limit")).full_name
     textstr_density_limit = (
-        f"$\\mathbf{{Density \\ limit:}}$\n"
-        f"({DensityLimitModel(int(mfile.get('i_density_limit', scan=scan))).full_name})\n"
-        f"$n_{{\\text{{e,limit}}}}: {mfile.get('nd_plasma_electrons_max', scan=scan):.3e} \\ m^{{-3}}$\n"
-        f"$f_{{\\text{{GW}}}}$: {mfile.get('f_nd_plasma_greenwald', scan=scan):.4f}"
+        "$\\mathbf{Density\\ limit:}$\n"
+        f"({density_model})\n"
+        f"$n_{{\\text{{e,limit}}}}$: {value('nd_plasma_electrons_max'):.3e} "
+        "$\\mathrm{m}^{-3}$\n"
+        f"$f_{{\\text{{GW}}}}$: {value('f_nd_plasma_greenwald'):.4f}"
     )
-
-    axis.text(
-        0.22,
-        0.31,
-        textstr_density_limit,
-        fontsize=9,
-        verticalalignment="top",
-        transform=fig.transFigure,
-        bbox=_box_style("pink"),
-    )
+    add_panel(0.220, 0.310, 0.130, 0.075, textstr_density_limit, _box_style("pink"))
 
 
 def plot_current_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int):
