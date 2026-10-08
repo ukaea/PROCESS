@@ -676,6 +676,7 @@ class ImpurityRadiation:
 
         self.pden_impurity_rad_total_vol_avg_mw = 0.0
         self.pden_impurity_core_rad_reduced_vol_avg_mw = 0.0
+        self.pden_impurity_core_rad_vol_avg_mw = 0.0
         self.pden_impurity_rad_edge_vol_avg_mw = 0.0
 
     def run(self):
@@ -711,6 +712,8 @@ class ImpurityRadiation:
 
     def calculate_radiation_core_edge_profiles(self) -> None:
         """Calculate the impurity radiation specified core and edge profiles"""
+        # Create the reduced core radiation profile based on the full impurity
+        # radiation profile and the core reduction factor.
         self.pden_impurity_core_rad_reduced_profile = (
             self.pden_impurity_radiation_profile
             * (
@@ -720,6 +723,28 @@ class ImpurityRadiation:
                     f_p_plasma_core_rad_reduction=self.data.impurity_radiation.f_p_plasma_core_rad_reduction,
                 )
             )
+        )
+
+        # Create the full core radiation profile without any reduction factor.
+        self.pden_impurity_core_rad_profile = self.pden_impurity_radiation_profile * (
+            create_f_rad_core_profile(
+                rho=self.plasma_profile.neprofile.profile_x,
+                radius_plasma_core_norm=self.data.impurity_radiation.radius_plasma_core_norm,
+                f_p_plasma_core_rad_reduction=1.0,
+            )
+        )
+
+        # Calculate the edge radiation profile based on the full impurity radiation
+        # profile and the edge region.
+        fradedge_profile = np.zeros_like(self.plasma_profile.neprofile.profile_x)
+        fradedge_profile[
+            (
+                self.plasma_profile.neprofile.profile_x
+                >= self.data.impurity_radiation.radius_plasma_core_norm
+            )
+        ] = 1.0
+        self.pden_impurity_rad_edge_profile = (
+            self.pden_impurity_radiation_profile * fradedge_profile
         )
 
     def calculate_vol_avg_radiation_loss_profiles(self) -> None:
@@ -743,6 +768,19 @@ class ImpurityRadiation:
                 profile_y=self.pden_impurity_core_rad_reduced_profile,
                 profile_dx=self.plasma_profile.neprofile.profile_dx,
             )
+        )
+        self.pden_impurity_core_rad_vol_avg_mw = 1.0e-6 * calculate_vol_avg_of_profile(
+            profile_x=self.plasma_profile.neprofile.profile_x,
+            profile_y=self.pden_impurity_core_rad_profile,
+            profile_dx=self.plasma_profile.neprofile.profile_dx,
+        )
+
+        # This volime average is still over the full plasma volume even though its
+        # just for the edge
+        self.pden_impurity_rad_edge_vol_avg_mw = 1.0e-6 * calculate_vol_avg_of_profile(
+            profile_x=self.plasma_profile.neprofile.profile_x,
+            profile_y=self.pden_impurity_rad_edge_profile,
+            profile_dx=self.plasma_profile.neprofile.profile_dx,
         )
 
     def calculate_imprad(self) -> None:
