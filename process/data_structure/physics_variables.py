@@ -1393,8 +1393,8 @@ class PhysicsData:
     psolradmw: float = 0.0
     """SOL radiation power (MW) (`stellarator only`)"""
 
-    pden_plasma_sync_mw: float = 0.0
-    """Plasma synchrotron radiation power per unit volume [MW/m³]"""
+    pden_plasma_sync_vol_avg_mw: float = 0.0
+    """Plasma volume-averaged synchrotron radiation power per unit volume [MW/m³]"""
 
     p_plasma_sync_mw: float = 0.0
     """Total synchrotron radiation power from plasma (Pₛₙ) [MW]"""
