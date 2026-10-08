@@ -312,3 +312,21 @@ SECDAY = 86400e0
 
 ACCELERATION_GRAVITY = 9.81
 """Acceleration due to gravity [m/s2]"""
+
+DAY_SECONDS = 60 * 60 * 24
+"""Number of seconds in a day [s]"""
+
+DAYS_IN_YEAR = 365.25
+"""Number of days in a year"""
+
+YEAR_SECONDS = DAY_SECONDS * DAYS_IN_YEAR
+"""Number of seconds in a year [s]"""
+
+COPPER_DENSITY = 8960.0
+"""Density of copper [kg/m³]"""
+
+NB3SN_DENSITY = 8040.0
+"""Density of Nb3Sn [kg/m³]"""
+
+POISSON_STEEL: float = 0.3
+"""Steel Poisson's ratio, Source : https://www.engineeringtoolbox.com/metals-poissons-ratio-d_1268.html"""
