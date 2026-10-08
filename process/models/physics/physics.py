@@ -233,7 +233,30 @@ class Physics(Model):
         self.calculate_effective_charge_ionisation_profiles()
         self.calculate_stored_thermal_energy_profiles()
         self.outplas()
+        self.output_species_radiation_power_density()
         self.outtim()
+
+    def output_species_radiation_power_density(self) -> None:
+        """Output the volume-averaged radiation power density of each ion species."""
+        po.oheadr(self.outfile, "Impurity Radiation Power Density by Species")
+        species_powers = impurity_radiation.ImpurityRadiation(
+            self.plasma_profile, self.data
+        ).calculate_species_radiation_powers()
+        for label, (pden_mw, p_mw) in species_powers.items():
+            po.ovarre(
+                self.outfile,
+                f"{label} volume averaged radiation power density (MW/m3)",
+                f"(pden_rad_{label.lower()}_vol_avg_mw)",
+                pden_mw,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                f"{label} total radiation power (MW)",
+                f"(p_rad_{label.lower()}_mw)",
+                p_mw,
+                "OP ",
+            )
 
     def run(self):
         """Routine to calculate tokamak plasma physics information

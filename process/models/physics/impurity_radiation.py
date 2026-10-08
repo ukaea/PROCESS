@@ -693,6 +693,43 @@ class ImpurityRadiation:
     def output(self):
         """ImpurityRadiation model has no output"""
 
+    def calculate_species_radiation_powers(
+        self,
+    ) -> dict[str, tuple[float, float]]:
+        """Calculate the volume-averaged radiation power density and the total
+        radiation power of every ion species, including those with zero density.
+        Only intended to be run at output.
+
+        Returns
+        -------
+        dict[str, tuple[float, float]]
+            Volume-averaged radiation power density [MW/m³] and total radiation
+            power [MW] (density multiplied by the plasma volume), keyed by the
+            species label.
+        """
+        species_powers = {}
+        for index, label in enumerate(self.data.impurity_radiation.impurity_arr_label):
+            if self.data.impurity_radiation.f_nd_impurity_electron_array[index] > 1e-30:
+                pden_profile = calculate_impurity_radiation_power_density(
+                    imp_element_index=index,
+                    nd_electron_profile=self.plasma_profile.neprofile.profile_y,
+                    temp_electron_profile_kev=self.plasma_profile.teprofile.profile_y,
+                    data=self.data,
+                )
+                # 1e-6 converts from W/m³ to MW/m³
+                pden_vol_avg_mw = 1.0e-6 * calculate_vol_avg_of_profile(
+                    profile_x=self.plasma_profile.neprofile.profile_x,
+                    profile_y=pden_profile,
+                    profile_dx=self.plasma_profile.neprofile.profile_dx,
+                )
+            else:
+                pden_vol_avg_mw = 0.0
+            species_powers[str(label).strip()] = (
+                pden_vol_avg_mw,
+                pden_vol_avg_mw * self.data.physics.vol_plasma,
+            )
+        return species_powers
+
     def map_imprad_profile(self):
         """Map imprad_profile() over each impurity element index."""
         list(map(self.imprad_profile, self.imp))
