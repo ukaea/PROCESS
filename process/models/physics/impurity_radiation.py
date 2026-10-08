@@ -642,8 +642,8 @@ def element2index(element: str, data: DataStructure) -> int:
 class ImpurityRadiation:
     """Calculates the impurity radiation losses for given temperature and
     density profiles. The considers the  total impurity radiation from the core
-    (pden_impurity_core_rad_total_mw) and total impurity radiation
-    (pden_impurity_rad_total_mw) [MW/(m³)]. The class is used to sum the impurity
+    (pden_impurity_core_rad_vol_avg_mw) and total impurity radiation
+    (pden_impurity_rad_total_vol_avg_mw) [MW/(m³)]. The class is used to sum the impurity
     radiation loss from each impurity element to find the total impurity radiation loss.
     """
 
@@ -671,9 +671,9 @@ class ImpurityRadiation:
             self.data.physics.n_plasma_profile_elements
         )
 
-        self.pden_impurity_rad_total_mw = 0.0
-        self.pden_impurity_core_rad_total_mw = 0.0
-        self.pden_impurity_rad_edge_total_mw = 0.0
+        self.pden_impurity_rad_total_vol_avg_mw = 0.0
+        self.pden_impurity_core_rad_vol_avg_mw = 0.0
+        self.pden_impurity_rad_edge_vol_avg_mw = 0.0
 
     def run(self):
         """ImpurityRadiation model isn't run"""
@@ -717,10 +717,12 @@ class ImpurityRadiation:
         )
 
     def calculate_vol_avg_radiation_loss_profiles(self) -> None:
-        """Calculate the plasma volume averaged power density for the impurity profiles"""
+        """Calculate the plasma volume averaged power density for the impurity
+        profiles
+        """
         # 1e-6 converts from W/m³ to MW/m³
 
-        self.pden_impurity_rad_total_mw = 1.0e-6 * calculate_vol_avg_of_profile(
+        self.pden_impurity_rad_total_vol_avg_mw = 1.0e-6 * calculate_vol_avg_of_profile(
             profile_x=self.plasma_profile.neprofile.profile_x,
             profile_y=self.pden_impurity_radiation_profile,
             profile_dx=self.plasma_profile.neprofile.profile_dx,
@@ -728,7 +730,7 @@ class ImpurityRadiation:
 
         # This volime average is still over the full plasma volume even though its
         # just for the core
-        self.pden_impurity_core_rad_total_mw = 1.0e-6 * calculate_vol_avg_of_profile(
+        self.pden_impurity_core_rad_vol_avg_mw = 1.0e-6 * calculate_vol_avg_of_profile(
             profile_x=self.plasma_profile.neprofile.profile_x,
             profile_y=self.pden_impurity_core_rad_profile,
             profile_dx=self.plasma_profile.neprofile.profile_dx,
