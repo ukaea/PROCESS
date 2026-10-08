@@ -23,7 +23,6 @@ from process.data_structure.build_variables import (
     InboardBlanketConfiguration,
     TFCSRadialConfiguration,
 )
-from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.pfcoil_variables import PFConductorModel
 from process.data_structure.physics_variables import (
@@ -409,12 +408,6 @@ def check_process(inputs, data):  # noqa: ARG001
             " f_nd_alpha_thermal_electron (itv 109) and not f_nd_impurity_electrons(2)."
             "f_nd_impurity_electrons(2) should be removed from the input file,"
             " or set to the default value 0.1D0."
-        )
-
-    # Impurity fractions
-    for imp in range(N_IMPURITIES):
-        data.impurity_radiation.f_nd_impurity_electron_array[imp] = (
-            data.impurity_radiation.f_nd_impurity_electrons[imp]
         )
 
     # Stop the run if j_tf_coil_full_area is used as an optimisation variable
