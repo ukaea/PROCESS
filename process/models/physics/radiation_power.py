@@ -26,8 +26,8 @@ class RadpwrData:
     "Volume-averaged core radiation power density [MW/m³]"
     pden_plasma_core_rad_reduced_vol_avg_mw: float
     "Volume-averaged reduced core radiation power density [MW/m³]"
-    pden_plasma_outer_rad_vol_avg_mw: float
-    "Volume-averaged outer radiation power density [MW/m³]"
+    pden_plasma_edge_rad_vol_avg_mw: float
+    "Volume-averaged edge radiation power density [MW/m³]"
     pden_plasma_rad_vol_avg_mw: float
     "Volume-averaged total radiation power density [MW/m³]"
 
@@ -132,7 +132,7 @@ def calculate_radiation_powers(
         pden_plasma_sync_vol_avg_mw=pden_plasma_sync_vol_avg_mw,
         pden_plasma_core_rad_vol_avg_mw=pden_plasma_core_rad_vol_avg_mw,
         pden_plasma_core_rad_reduced_vol_avg_mw=imp_rad.pden_impurity_core_rad_reduced_vol_avg_mw,
-        pden_plasma_outer_rad_vol_avg_mw=imp_rad.pden_impurity_rad_edge_vol_avg_mw,
+        pden_plasma_edge_rad_vol_avg_mw=imp_rad.pden_impurity_rad_edge_vol_avg_mw,
         pden_plasma_rad_vol_avg_mw=pden_plasma_rad_vol_avg_mw,
     )
 
