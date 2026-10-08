@@ -10,7 +10,6 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 from numba import njit
-from scipy import integrate
 
 from process.core import constants
 from process.core.data_structure.base import DataStructure
@@ -18,6 +17,7 @@ from process.core.exceptions import ProcessError, ProcessValueError
 from process.data_structure.impurity_radiation_variables import (
     N_IMPURITIY_LOSS_FUNCTION_POINTS,
 )
+from process.models.physics.profiles import calculate_vol_avg_of_profile
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -715,13 +715,9 @@ class ImpurityRadiation:
         radiation  (pden_impurity_rad_total_mw). Update the stored arrays with the
         values.
         """
-        pden_impurity_rad_total = (
-            self.pden_impurity_radiation_profile
-            * self.plasma_profile.neprofile.profile_x
-        )
+        pden_impurity_rad_total = self.pden_impurity_radiation_profile
         pden_impurity_core_rad_total = self.pden_impurity_radiation_profile * (
-            self.plasma_profile.neprofile.profile_x
-            * create_f_rad_core_profile(
+            create_f_rad_core_profile(
                 rho=self.plasma_profile.neprofile.profile_x,
                 radius_plasma_core_norm=self.data.impurity_radiation.radius_plasma_core_norm,
                 f_p_plasma_core_rad_reduction=self.data.impurity_radiation.f_p_plasma_core_rad_reduction,
@@ -739,20 +735,20 @@ class ImpurityRadiation:
         """Integrate the radiation loss profiles using the Simpson rule.
         Store the total values for each aspect of impurity radiation loss.
         """
-        # 1e-6 converts from W/m^3 to MW/m^3
-        # The factor 2 below and and normalised radius profile_x above may be unexpected,
-        # but are correct:
-        # see github.com/ukaea/PROCESS/issues/3968#issuecomment-3491154712
-        # and github.com/ukaea/PROCESS/issues/3968#issuecomment-4935567006
-        self.pden_impurity_rad_total_mw = 2.0e-6 * integrate.simpson(
-            self.pden_impurity_rad_profile,
-            x=self.plasma_profile.neprofile.profile_x,
-            dx=self.plasma_profile.neprofile.profile_dx,
+        # 1e-6 converts from W/m³ to MW/m³
+
+        self.pden_impurity_rad_total_mw = 1.0e-6 * calculate_vol_avg_of_profile(
+            profile_x=self.plasma_profile.neprofile.profile_x,
+            profile_y=self.pden_impurity_rad_profile,
+            profile_dx=self.plasma_profile.neprofile.profile_dx,
         )
-        self.pden_impurity_core_rad_total_mw = 2.0e-6 * integrate.simpson(
-            self.pden_impurity_core_rad_profile,
-            x=self.plasma_profile.neprofile.profile_x,
-            dx=self.plasma_profile.neprofile.profile_dx,
+
+        # This volime average is still over the full plasma volume even though its
+        # just for the core
+        self.pden_impurity_core_rad_total_mw = 1.0e-6 * calculate_vol_avg_of_profile(
+            profile_x=self.plasma_profile.neprofile.profile_x,
+            profile_y=self.pden_impurity_core_rad_profile,
+            profile_dx=self.plasma_profile.neprofile.profile_dx,
         )
 
     def calculate_imprad(self) -> None:
