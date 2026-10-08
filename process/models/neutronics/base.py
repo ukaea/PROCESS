@@ -611,8 +611,15 @@ class NeutronFluxProfile:
 
         self._optimization_record[n][mp.prec] = np.inf
         extra_precision = -16
-        while list(self._optimization_record[n].values())[-1] > NONCONVERGENCE_WARNING_ATOL:  # TODO: need a better termination condition.
+        while True:
             extra_precision += 16 # start at 0
+            opt_record = list(self._optimization_record[n].values())
+            if opt_record[-1] <= NONCONVERGENCE_WARNING_ATOL:
+                break
+            if len(opt_record) >= 2 and (
+                    abs(opt_record[-2] - opt_record[-1])/opt_record[-1]
+                ) < NONCONVERGENCE_WARNING_ATOL:
+                break
             with mp.extraprec(extra_precision):
                 # Determine coefficients[0, n, n] by boundary conditions:
                 # top row enforces current at (x=0) = source current,
@@ -671,11 +678,11 @@ class NeutronFluxProfile:
                     )
                 
                 self._update_off_diag_coefs_of_column_n(n)
+                scaled_conditions = self._scaled_groupwise_fitness(n)
                 conditions = self._groupwise_fitness(n, jac=False)
-                self._optimization_record[n][mp.prec] = np.sqrt((conditions**2).mean()) # TODO: Need a better scalar summary metric than RMS. May need to scale according to flux?
-                print(self._optimization_record[n][mp.prec])
-        print(f"Loop terminated for group {n} neutrons!")
+                self._optimization_record[n][mp.prec] = np.sqrt((scaled_conditions**2).mean())
 
+        conditions = self._groupwise_fitness(n, jac=False)
         if self.fluxes[n]:
             source_current_deviation = conditions[0]/self.fluxes[n]
             source_current_dev_text = f"{source_current_deviation} %"
@@ -811,76 +818,107 @@ class NeutronFluxProfile:
                     ) * mat.conversion_factor[n, leakage_basis]
 
     def _groupwise_fitness(
-            self, n: int, jac: bool=True
-        ) -> tuple[npt.NDArray[object], npt.NDArray]:
-            """
-            Calculate how far the current values of coefficients deviates
-            from the 2*n_layers equations, forming a vector with len=
-            2*n_layers. A jacobian of shape (2*n_layers, 2*n_layers)
-            is also produced.
+        self, n: int, jac: bool=True
+    ) -> tuple[npt.NDArray[object], npt.NDArray]:
+        """
+        Calculate how far the current values of coefficients deviates
+        from the 2*n_layers equations, forming a vector with len=
+        2*n_layers. A jacobian of shape (2*n_layers, 2*n_layers)
+        is also produced.
 
-            Parameters
-            ----------
-            n:
-                The group that we want to evaluate the fitness for.
+        Parameters
+        ----------
+        n:
+            The group that we want to evaluate the fitness for.
 
-            Returns
-            -------
-            conditions:
-                A 2*n_layers vector corresponding to the difference between
-                the LHS and RHS of the 2*n_layers equations
-            jacobians:
-                A 2*n_layers x 2*n_layers matrix, row i column j denotes
-                how much steeply does variable j affect condition i. The
-                variables are arranged as self.coefficients[:, n, n].flatten().
-            """
-            conditions = mp_zeros(2 * self.n_layers)
-            jacobians = mp_zeros(2 * self.n_layers, 2 * self.n_layers)
+        Returns
+        -------
+        conditions:
+            A 2*n_layers vector corresponding to the difference between
+            the LHS and RHS of the 2*n_layers equations
+        jacobians:
+            A 2*n_layers x 2*n_layers matrix, row i column j denotes
+            how much steeply does variable j affect condition i. The
+            variables are arranged as self.coefficients[:, n, n].flatten().
+        """
+        conditions = mp_zeros(2 * self.n_layers)
+        jacobians = mp_zeros(2 * self.n_layers, 2 * self.n_layers)
 
-            # Net current at origin equal incident flux on that group.
-            conditions[0] = (
-                self.groupwise_neutron_current_through_interface(n, 0)
-                - self.fluxes[n]
+        # Net current at origin equal incident flux on that group.
+        conditions[0] = (
+            self.groupwise_neutron_current_through_interface(n, 0)
+            - self.fluxes[n]
+        )
+        jacobians[0, :2] = (
+            self._groupwise_cs_differential_in_layer(
+                n, 0, 0.0
             )
-            jacobians[0, :2] = (
-                self._groupwise_cs_differential_in_layer(
-                    n, 0, 0.0
-                )
+        )
+
+        for num_layer in range(self.n_layers - 1):
+            x = self.layer_x[num_layer]
+
+            i = 2 * num_layer
+            # Enforce flux continuity at self.interface[num_layer]
+            conditions[i + 1] = (
+                self.groupwise_neutron_flux_in_layer(n, num_layer, x)
+                - self.groupwise_neutron_flux_in_layer(n, num_layer + 1, x)
             )
+            jacobians[i + 1, i:i + 2] = self._groupwise_cs_values_in_layer(n, num_layer, x)
+            jacobians[i + 1, i + 2:i + 4] = -self._groupwise_cs_values_in_layer(n, num_layer + 1, x)
 
-            for num_layer in range(self.n_layers - 1):
-                x = self.layer_x[num_layer]
-
-                i = 2 * num_layer
-                # Enforce flux continuity at self.interface[num_layer]
-                conditions[i + 1] = (
-                    self.groupwise_neutron_flux_in_layer(n, num_layer, x)
-                    - self.groupwise_neutron_flux_in_layer(n, num_layer + 1, x)
-                )
-                jacobians[i + 1, i:i + 2] = self._groupwise_cs_values_in_layer(n, num_layer, x)
-                jacobians[i + 1, i + 2:i + 4] = -self._groupwise_cs_values_in_layer(n, num_layer + 1, x)
-
-                # Enforce current continuity at self.interface[num_layer]
-                conditions[i + 2] = (
-                    self.groupwise_neutron_current_in_layer(n, num_layer, x)
-                    - self.groupwise_neutron_current_in_layer(n, num_layer + 1, x)
-                )
-                jacobians[i + 2, i:i + 2] = self._groupwise_cs_differential_in_layer(n, num_layer, x)
-                jacobians[i + 2, i + 2:i + 4] = -self._groupwise_cs_differential_in_layer(n, num_layer + 1, x)
-
-            # Enforce zero flux at extended boundary
-            conditions[2 * self.n_layers - 1] = self.groupwise_neutron_flux_in_layer(
-                n, self.n_layers - 1, self.extended_boundary[n]
+            # Enforce current continuity at self.interface[num_layer]
+            conditions[i + 2] = (
+                self.groupwise_neutron_current_in_layer(n, num_layer, x)
+                - self.groupwise_neutron_current_in_layer(n, num_layer + 1, x)
             )
-            jacobians[2 * self.n_layers - 1, 2 * self.n_layers - 2:] = (
-                self._groupwise_cs_values_in_layer(
-                    n, self.n_layers-1, self.extended_boundary[n]
-                )
-            )
-            if jac:
-                return conditions, jacobians
-            return conditions
+            jacobians[i + 2, i:i + 2] = self._groupwise_cs_differential_in_layer(n, num_layer, x)
+            jacobians[i + 2, i + 2:i + 4] = -self._groupwise_cs_differential_in_layer(n, num_layer + 1, x)
 
+        # Enforce zero flux at extended boundary
+        conditions[2 * self.n_layers - 1] = self.groupwise_neutron_flux_in_layer(
+            n, self.n_layers - 1, self.extended_boundary[n]
+        )
+        jacobians[2 * self.n_layers - 1, 2 * self.n_layers - 2:] = (
+            self._groupwise_cs_values_in_layer(
+                n, self.n_layers-1, self.extended_boundary[n]
+            )
+        )
+        if jac:
+            return conditions, jacobians
+        return conditions
+
+    def _scaled_groupwise_fitness(self, n: int):
+        scaled_conditions = mp_zeros(2 * self.n_layers)
+        incident_flux_scalar = self.fluxes[n] or self.fluxes.mean()
+        scaled_conditions[0] = (
+            self.groupwise_neutron_current_through_interface(n, 0)
+            - self.fluxes[n]
+        ) / incident_flux_scalar
+
+        for num_layer in range(self.n_layers - 1):
+            x = self.layer_x[num_layer]
+            i = 2 * num_layer
+            # Enforce flux continuity at self.interface[num_layer]
+            this_flux = self.groupwise_neutron_flux_in_layer(n, num_layer, x)
+            next_flux = self.groupwise_neutron_flux_in_layer(n, num_layer + 1, x)
+            rms_flux = mp.sqrt((this_flux**2 + next_flux**2) / 2) or 1
+            scaled_conditions[i + 1] = (this_flux - next_flux) / rms_flux
+
+            # Enforce current continuity at self.interface[num_layer]
+            this_current = self.groupwise_neutron_current_in_layer(n, num_layer, x)
+            next_current = self.groupwise_neutron_current_in_layer(n, num_layer + 1, x)
+            rms_current = mp.sqrt((this_current**2 + next_current**2) / 2) or 1
+            scaled_conditions[i + 2] = (this_current - next_current) / rms_current
+
+        # Enforce zero flux at extended boundary
+        final_flux = self.groupwise_neutron_flux_in_layer(
+            n, self.n_layers - 1, self.interface_x[self.n_layers - 1]
+        ) or NONCONVERGENCE_WARNING_ATOL
+        scaled_conditions[2 * self.n_layers - 1] = self.groupwise_neutron_flux_in_layer(
+            n, self.n_layers - 1, self.extended_boundary[n]
+        ) / final_flux
+        return scaled_conditions
 
     def _check_if_in_layer(
         self, x: npt.NDArray[np.float64], num_layer: int
