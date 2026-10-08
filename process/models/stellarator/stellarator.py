@@ -2170,7 +2170,7 @@ class Stellarator(Model):
             self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw
             * self.data.physics.vol_plasma
         )  # Should probably be vol_core
-        self.data.physics.p_plasma_outer_rad_mw = (
+        self.data.physics.p_plasma_edge_rad_mw = (
             self.data.physics.pden_plasma_edge_rad_vol_avg_mw
             * self.data.physics.vol_plasma
         )

@@ -742,7 +742,7 @@ class Physics(Model):
             self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw
             * self.data.physics.vol_plasma
         )
-        self.data.physics.p_plasma_outer_rad_mw = (
+        self.data.physics.p_plasma_edge_rad_mw = (
             self.data.physics.pden_plasma_edge_rad_vol_avg_mw
             * self.data.physics.vol_plasma
         )
@@ -1877,9 +1877,9 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Plasma total radiation power from edge region (MW) (Pᵧ,ₒᵤₜₑᵣ)",
-            "(p_plasma_outer_rad_mw)",
-            self.data.physics.p_plasma_outer_rad_mw,
+            "Plasma total radiation power from edge region (Pᵧ,ₒᵤₜₑᵣ) [MW] ",
+            "(p_plasma_edge_rad_mw)",
+            self.data.physics.p_plasma_edge_rad_mw,
             "OP ",
         )
 

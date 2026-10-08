@@ -1306,8 +1306,8 @@ class PhysicsData:
     pden_plasma_dt_vol_avg_mw: float = 0.0
     """Volume-averaged deuterium-tritium fusion power per volume just from plasma [MW/m³]"""
 
-    p_plasma_outer_rad_mw: float = 0.0
-    """radiation power from outer zone (MW)"""
+    p_plasma_edge_rad_mw: float = 0.0
+    """Plasma edge zone radiation power [MW]"""
 
     pden_plasma_edge_rad_vol_avg_mw: float = 0.0
     """Plasma edge volume-averaged radiation power per volume [MW/m³]"""
