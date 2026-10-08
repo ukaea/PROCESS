@@ -989,7 +989,7 @@ class PlasmaConfinementTime(Model):
                         p_plasma_loss_mw
                         / (
                             p_plasma_loss_mw
-                            + self.data.physics.pden_plasma_sync_mw * vol_plasma
+                            + self.data.physics.pden_plasma_sync_vol_avg_mw * vol_plasma
                             + self.data.physics.p_plasma_core_rad_reduced_mw
                         )
                     )

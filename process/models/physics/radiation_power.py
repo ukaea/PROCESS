@@ -236,6 +236,6 @@ def psync_albajar_fidone(
         * k_function
     )
 
-    # pden_plasma_sync_mw should be per unit volume; Albajar gives it as total
+    # pden_plasma_sync_vol_avg_mw should be per unit volume; Albajar gives it as total
 
     return p_sync_mw / vol_plasma
