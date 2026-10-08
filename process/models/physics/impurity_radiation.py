@@ -707,10 +707,8 @@ class ImpurityRadiation:
         )
 
     def calculate_radiation_core_edge_profiles(self) -> None:
-        """Calculate the impurity radiation specified core and edge profiles
-        """
-        
-        pden_impurity_core_rad_total = self.pden_impurity_radiation_profile * (
+        """Calculate the impurity radiation specified core and edge profiles"""
+        self.pden_impurity_core_rad_profile = self.pden_impurity_radiation_profile * (
             create_f_rad_core_profile(
                 rho=self.plasma_profile.neprofile.profile_x,
                 radius_plasma_core_norm=self.data.impurity_radiation.radius_plasma_core_norm,
@@ -718,13 +716,8 @@ class ImpurityRadiation:
             )
         )
 
-        self.pden_impurity_core_rad_profile = np.add(
-            self.pden_impurity_core_rad_profile, pden_impurity_core_rad_total
-        )
-
     def calculate_vol_avg_radiation_loss_profiles(self) -> None:
-        """Calculate the plasma volume averaged power density for the impurity profiles
-        """
+        """Calculate the plasma volume averaged power density for the impurity profiles"""
         # 1e-6 converts from W/m³ to MW/m³
 
         self.pden_impurity_rad_total_mw = 1.0e-6 * calculate_vol_avg_of_profile(
