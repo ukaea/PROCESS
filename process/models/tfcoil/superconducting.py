@@ -3984,14 +3984,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             d_sc_tf.a_tf_turn_croco_cable_space_copper / self.data.tfcoil.a_tf_turn
         )
 
-        d_sc_tf.f_a_tf_turn_cable_space_cooling = (
-            self.data.tfcoil.a_tf_turn_cable_space_no_void
-            - (
-                (N_CROCO_STRANDS_TURN * d_sc_tf.a_tf_croco_strand)
-                - d_sc_tf.a_tf_turn_croco_copper_bar
-            )
-        ) / self.data.tfcoil.a_tf_turn_cable_space_no_void
-
         d_sc_tf.a_tf_turn_croco_hastelloy = (
             d_sc_tf.a_tf_croco_strand_hastelloy * N_CROCO_STRANDS_TURN
         )
@@ -4627,9 +4619,10 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             dx_tf_turn_conduit_full_average**2 - a_tf_turn_cable_space_no_void
         )
 
-        f_a_tf_turn_cable_space_cooling = a_tf_turn_cable_space_no_void - (
-            (N_CROCO_STRANDS_TURN + 1) * np.pi * (dia_tf_turn_croco_cable / 2.0e0) ** 2
-        )
+        f_a_tf_turn_cable_space_cooling = (
+            a_tf_turn_cable_space_no_void
+            - (N_CROCO_STRANDS_TURN + 1) * np.pi * (dia_tf_turn_croco_cable / 2.0e0) ** 2
+        ) / a_tf_turn_cable_space_no_void
 
         return CroCoCableSpaceGeometry(
             dia_tf_turn_croco_cable=dia_tf_turn_croco_cable,
