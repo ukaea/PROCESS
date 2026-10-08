@@ -137,10 +137,8 @@ def run_summary(data: DataStructure):
         process_output.ocmmnt(outfile, f"Git Tag : {git_tag}")
         process_output.ocmmnt(outfile, f"Git Branch : {git_branch}")
 
-        date_string = datetime.datetime.now(datetime.timezone.utc).strftime(
-            "%d/%m/%Y %Z"
-        )
-        time_string = datetime.datetime.now(datetime.timezone.utc).strftime("%H:%M")
+        date_string = datetime.datetime.now(datetime.UTC).strftime("%d/%m/%Y %Z")
+        time_string = datetime.datetime.now(datetime.UTC).strftime("%H:%M")
 
         process_output.ocmmnt(outfile, f"Date : {date_string}")
         process_output.ocmmnt(outfile, f"Time : {time_string}")
