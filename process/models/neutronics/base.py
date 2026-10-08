@@ -46,14 +46,14 @@ NONCONVERGENCE_WARNING_ATOL = 1E-15
 
 mp.prec = 69
 
-def mp_func_factory(mp_func):
+def mp_func_factory(mp_func, np_func):
     def mp_function(x):
         if np.isscalar(x):
             return mp_func(x)
-        return np.array([mp_func(xi) for xi in x.flatten()], dtype=object).reshape(x.shape)
+        return np_func(x)
     return mp_function
-negexp = mp_func_factory(lambda x: mp.exp(-x))
-exp, cos, sin = [mp_func_factory(func) for func in [mp.exp, mp.cos, mp.sin]]
+negexp = mp_func_factory(lambda x: mp.exp(-x), lambda x: np.exp(-x))
+exp, cos, sin = [mp_func_factory(*funcs) for funcs in [(mp.exp, np.exp), (mp.cos, np.cos), (mp.sin, np.sin)]]
 
 def summarize_values(func):
     """
@@ -107,7 +107,7 @@ def convert_to_mpf(array: npt.NDArray) -> npt.NDArray[object]:
 def mpf(value: float | npt.NDArray) -> mp.mpf | npt.NDArray[object]:
     if np.isscalar(value):
         return mp.mpf(value)
-    return convert_to_mpf(value)
+    return np.asarray(value)
 
 def gaussian_elim_solve_2x2(
     matr: npt.NDArray[object], vec: npt.NDArray[object]
@@ -366,9 +366,9 @@ class NeutronFluxProfile:
         """
         abs_x = mpf(abs_x)
         if self.materials[num_layer].l2[n] > 0:
-            l = mp.sqrt(self.materials[num_layer].l2[n])  # noqa: E741
+            l = np.sqrt(self.materials[num_layer].l2[n])  # noqa: E741
             return np.array([negexp(abs_x / l), exp(abs_x / l)], dtype=object)
-        l = mp.sqrt(-self.materials[num_layer].l2[n])  # noqa: E741
+        l = np.sqrt(-self.materials[num_layer].l2[n])  # noqa: E741
         return np.array([cos(abs_x / l), sin(abs_x / l)], dtype=object)
 
     def _groupwise_cs_differential_in_layer(
@@ -380,9 +380,9 @@ class NeutronFluxProfile:
         """
         abs_x = mpf(abs_x)
         if self.materials[num_layer].l2[n] > 0:
-            l = mp.sqrt(self.materials[num_layer].l2[n])  # noqa: E741
+            l = np.sqrt(self.materials[num_layer].l2[n])  # noqa: E741
             return np.array([-negexp(abs_x / l) / l, exp(abs_x / l) / l], dtype=object)
-        l = mp.sqrt(-self.materials[num_layer].l2[n])  # noqa: E741
+        l = np.sqrt(-self.materials[num_layer].l2[n])  # noqa: E741
         return np.array([-sin(abs_x / l) / l, cos(abs_x / l) / l], dtype=object)
 
     def _groupwise_cs_definite_integral_in_layer(
@@ -394,12 +394,12 @@ class NeutronFluxProfile:
         """
         x_lower, x_upper = mpf(x_lower), mpf(x_upper)
         if self.materials[num_layer].l2[n] > 0:
-            l = mp.sqrt(self.materials[num_layer].l2[n])  # noqa: E741
+            l = np.sqrt(self.materials[num_layer].l2[n])  # noqa: E741
             return np.array([
                 l * negexp(x_upper / l) * mp.expm1((x_upper-x_lower) / l),
                 l * exp(x_lower / l) * mp.expm1((x_upper-x_lower) / l),
             ], dtype=object)
-        l = mp.sqrt(-self.materials[num_layer].l2[n])  # noqa: E741
+        l = np.sqrt(-self.materials[num_layer].l2[n])  # noqa: E741
         return np.array([
             l * (sin(x_upper / l) - sin(x_lower / l)),
             l * (cos(x_lower / l) - cos(x_upper / l)),  # reverse sign
@@ -415,7 +415,7 @@ class NeutronFluxProfile:
             self.coefficients[num_layer, n]
         ):
             l2 = self.materials[num_layer].l2[basis_group]
-            l = mp.sqrt(abs(l2))  # noqa: E741
+            l = np.sqrt(abs(l2))  # noqa: E741
             c, s = (negexp, exp) if l2 > 0 else (cos, sin)
             trig_funcs.append(
                 cs_coefs @ [c(abs_x / l) / l2, s(abs_x / l) / l2]
