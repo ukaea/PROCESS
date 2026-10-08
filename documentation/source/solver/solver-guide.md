@@ -20,6 +20,7 @@ n_equality_constraints = 3
 * Equalities
 icc = 2 * Global power balance
 icc = 11 * Radial build
+icc = 93 * Fuel-ion equilibrium
 
 * Inequalities
 icc = 9 * Fusion power upper limit
@@ -34,14 +35,13 @@ their corresponding names can be found [here](../../source/reference/process/dat
 
 The `n_equality_constraints = 3` statement is telling PROCESS to treat the first `3` equations as equality constraints, and the rest as inequality constraints. Therefore, it is imperative that all equality constraints are stated before any inequality constraints.
 
-
 In both types of equations, an optimiser/solver uses the normalised residuals $c_i$ of the constraints (and sometimes its gradient, depending on the solver/optimiser) to guide the solution towards one that satisfies all of the constraints.
 
 ## Consistency Equations
 
 Consistency equations are equalities that ensure that the machine produced by PROCESS is 
 self-consistent. This means, therefore, that many of these constraint equations should 
-always be used, namely equations 1, 2, 10 and 11. Equation 7 should also be activated 
+always be used, namely equations 2, 10 and 11. Equation 7 should also be activated 
 if neutral beam injection is used. The other consistency equations can be activated if 
 required. A typical consistency equation ensures that two functions $g$ and $h$ are equal:
 
@@ -54,6 +54,16 @@ c_i = 1 - \frac{g}{h}
 $$
 
 The optimiser/solver will attempt to find a solution that produces $c_i = 0$ for all equality constraints.
+
+For the plasma model, a PROCESS solution is defined by satisfying two governing equations:
+
+- Global power balance (constraint 2): total plasma heating must balance transport and radiative losses.
+
+- Fuel-ion equilibrium (constraint 93): the plasma fuelling rate must balance the fuel consumption required to sustain the fusion reaction rate
+
+Both equations must therefore be satisfied for a self-consistent plasma solution, and solutions should be found by allowing the solver to vary
+the iteration variables for volume averaged electron temperature `temp_plasma_electron_vol_avg_kev (ixc = 4)` and volume averaged electron number
+density, `nd_plasma_electrons_vol_avg (ixc = 6)`.
 
 ## Limit Equations
 
@@ -144,6 +154,7 @@ n_equality_constraints = 2
 
 * Equalities
 icc = 2 * Global power balance
+icc = 93 * Fuel-ion equilibrium
 
 * Inequalities
 * Not enforced, but values reported
@@ -158,4 +169,4 @@ ixc = 4 * temp_plasma_electron_vol_avg_kev
 ixc = 6 * nd_plasma_electrons_vol_avg
 ...
 ```
-The plasma power balance equality constraint is recommended to ensure model consistency, the user may select one of `temp_plasma_electron_vol_avg_kev` and `nd_plasma_electrons_vol_avg` to solve it.
+Global power balance and fuel-ion equilibrium are recommended to ensure plasma-model consistency. In this example, `temp_plasma_electron_vol_avg_kev` and `nd_plasma_electrons_vol_avg` are varied to solve the two governing equations.
