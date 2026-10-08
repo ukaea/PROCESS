@@ -2813,7 +2813,7 @@ def plot_main_plasma_information(
         f"Separatrix radiation fraction: {value('f_p_plasma_separatrix_rad'):.4f}\n"
         f"Reduced Core radiation power: {value('p_plasma_core_rad_reduced_mw'):.4f} MW\n"
         f"   - $f_{{\\text{{core,reduce}}}}$: {value('f_p_plasma_core_rad_reduction'):.4f}\n"
-        f"Edge radiation power: {value('p_plasma_outer_rad_mw'):.4f} MW\n"
+        f"Edge radiation power: {value('p_plasma_edge_rad_mw'):.4f} MW\n"
         f"Synchrotron radiation power: {value('p_plasma_sync_mw'):.4f} MW\n"
         f"Synchrotron wall reflectivity: {value('f_sync_reflect'):.4f}"
     )
