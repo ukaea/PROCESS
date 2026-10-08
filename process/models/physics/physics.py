@@ -1978,8 +1978,8 @@ class Physics(Model):
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Volume-averaged total core radiation power per volume [MW/m³]",
-            "(pden_plasma_core_rad_vol_avg_mw)",
+            "Plasma total volume-averaged radiation power per unit volume [MW/m³]",
+            "(pden_plasma_rad_vol_avg_mw)",
             self.data.physics.pden_plasma_rad_vol_avg_mw,
             "OP ",
         )
