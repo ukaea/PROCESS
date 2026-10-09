@@ -1,7 +1,6 @@
 """PROCESS plot_summary"""
 
 import json
-import math
 import textwrap
 from dataclasses import dataclass
 from importlib import resources
@@ -2498,14 +2497,6 @@ def plot_main_plasma_information(
     def value(name: str):
         return mfile.get(name, scan=scan)
 
-    def selector(name: str) -> int:
-        raw = float(value(name))
-        if not math.isfinite(raw) or not raw.is_integer():
-            raise ValueError(
-                f"{name} must contain an integer-valued float; got {raw!r}."
-            )
-        return int(raw)
-
     def add_panel(
         x: float,
         top: float,
@@ -2580,7 +2571,7 @@ def plot_main_plasma_information(
         triang,
         radius_plasma_core_norm,
         kappa,
-        selector("i_single_null"),
+        value("i_single_null"),
         value("plasma_square"),
         value("big_q_plasma"),
         value("p_fw_alpha_mw"),
@@ -2589,7 +2580,7 @@ def plot_main_plasma_information(
         value("pflux_plasma_surface_neutron_avg_mw"),
     )
 
-    geom_type = PlasmaGeometryModelType(selector("i_plasma_geometry"))
+    geom_type = PlasmaGeometryModelType(value("i_plasma_geometry"))
     textstr_plasma = (
         "$\\mathbf{Shaping:}$\n\n"
         f"$\\kappa_{{95}}$: {value('kappa95'):.2f} ({geom_type.kappa95_model.description}) | "
@@ -2605,8 +2596,8 @@ def plot_main_plasma_information(
     )
     add_panel(0.365, 0.975, 0.340, 0.110, textstr_plasma, _box_style("lightyellow"))
 
-    i_hcd_primary = selector("i_hcd_primary")
-    i_hcd_secondary = selector("i_hcd_secondary")
+    i_hcd_primary = value("i_hcd_primary")
+    i_hcd_secondary = value("i_hcd_secondary")
     textstr_hcd = (
         "$\\mathbf{Heating\\ &\\ current\\ drive:}$\n\n"
         f"Total injected heat: {value('p_hcd_injected_total_mw'):.3f} MW\n"
@@ -2640,8 +2631,8 @@ def plot_main_plasma_information(
     )
     add_symbol("$P_{\\text{inj}}$", 0.92, 0.625)
 
-    beta_component = BetaComponentLimits(selector("i_beta_component")).full_name
-    beta_norm_model = BetaNormMaxModel(selector("i_beta_norm_max")).full_name
+    beta_component = BetaComponentLimits(value("i_beta_component")).full_name
+    beta_norm_model = BetaNormMaxModel(value("i_beta_norm_max")).full_name
     textstr_beta = (
         "$\\mathbf{Beta\\ Information:}$\n\n"
         f"Total beta, $\\langle\\beta\\rangle$: {value('beta_total_vol_avg'):.4f}\n"
@@ -2666,7 +2657,7 @@ def plot_main_plasma_information(
     add_symbol("$\\beta$", 0.27, 0.94)
 
     inductance_model = IndInternalNormModel(
-        selector("i_ind_plasma_internal_norm")
+        value("i_ind_plasma_internal_norm")
     ).full_name
     textstr_volt_second = (
         "$\\mathbf{Volt-second\\ requirements:}$\n\n"
@@ -2783,12 +2774,12 @@ def plot_main_plasma_information(
     )
     add_symbol("$Z$", 0.815, 0.29)
 
-    current_model = PlasmaCurrentModel(selector("i_plasma_current")).full_name
+    current_model = PlasmaCurrentModel(value("i_plasma_current")).full_name
     bootstrap_model = BootstrapCurrentFractionModel(
-        selector("i_bootstrap_current")
+        value("i_bootstrap_current")
     ).full_name
     diamagnetic_model = PlasmaDiamagneticCurrentModel(
-        selector("i_diamagnetic_current")
+        value("i_diamagnetic_current")
     ).full_name
     textstr_currents = (
         "$\\mathbf{Plasma\\ currents:}$\n\n"
@@ -2838,7 +2829,7 @@ def plot_main_plasma_information(
     )
     add_symbol("$\\gamma$", 0.725, 0.78)
 
-    model_name = PlasmaConfinementTransitionModel(selector("i_l_h_threshold")).full_name
+    model_name = PlasmaConfinementTransitionModel(value("i_l_h_threshold")).full_name
     if len(model_name) > 20:
         model_name = "\n".join(textwrap.wrap(model_name, width=20))
     textstr_lh = (
@@ -2848,7 +2839,7 @@ def plot_main_plasma_information(
     )
     add_panel(0.220, 0.400, 0.110, 0.080, textstr_lh, _box_style("peachpuff"))
 
-    density_model = DensityLimitModel(selector("i_density_limit")).full_name
+    density_model = DensityLimitModel(value("i_density_limit")).full_name
     textstr_density_limit = (
         "$\\mathbf{Density\\ limit:}$\n"
         f"({density_model})\n"
