@@ -2919,33 +2919,32 @@ class Physics(Model):
         # ======================================================================
 
     def plasma_composition_pb(self):
-        """Calculates various plasma component fractional makeups.
+        """Plasma composition for proton-boron-11 fuel.
 
-        This subroutine determines the various plasma component fractional makeups.
-        It is the replacement for the original routine betcom(), and is used in
-        conjunction with the new impurity radiation model.
+        Charge neutrality fixes the fuel-ion density. Boron (Z = 5) is fuel, so it
+        is left out of the impurity sums. The fuel charge per ion is
+        ``1 + 4 f_plasma_fuel_boron11`` because a proton has Z = 1 and boron-11
+        has Z = 5.
 
         This function performs the following calculations:
-        - Determines the alpha ash portion.
-        - Calculates the proton density.
-        - Calculates the beam hot ion component.
-        - Sums the ion densities for all impurity ions with charge greater than helium.
-        - Ensures charge neutrality by adjusting the fuel portion.
-        - Calculates the total ion density.
-        - Sets the relative impurity densities for radiation calculations.
-        - Calculates the effective charge.
-        - Defines the Coulomb logarithm for ion-electron and electron-electron
-          collisions.
-        - Calculates the fraction of alpha energy to ions and electrons.
-        - Calculates the average atomic masses of injected fuel species and neutral
-          beams.
-        - Calculates the density weighted mass and mass weighted plasma effective
-          charge.
+        - Thermal alpha ash density from ``f_nd_alpha_thermal_electron``.
+        - Extra proton density from ``i_nd_plasma_protons``.
+        - Beam ion density, set to zero if the plasma is ignited.
+        - Impurity charge sum for species with Z > 2, excluding boron.
+        - Fuel-ion density required for charge neutrality.
+        - Hydrogen, helium, and boron fractions used by the radiation model.
+        - Total impurity density and total ion density.
+        - Carbon, oxygen, and iron-plus-argon electron fractions.
+        - Volume-averaged effective charge.
+        - Fraction of alpha energy given to electrons and ions.
+        - Mean fuel mass from the proton and boron-11 fractions. Beam ions are
+          protons.
+        - Mean ion mass and mass-weighted effective charge.
 
         Raises
         ------
         ProcessValueError
-           If znfuel is negative
+            If ``i_nd_plasma_protons`` is not 0 or 1, or if ``znfuel`` is negative.
         """
         # Alpha ash portion
         self.data.physics.nd_plasma_alphas_thermal_vol_avg = (
