@@ -6004,7 +6004,7 @@ class DetailedPhysics(Model):
         )
 
     @staticmethod
-    @nb.njit(cache=True)
+    @nb.njit(cache=True, error_model="numpy")
     def calculate_electron_ion_collision_time(
         temp_plasma_electron_kev: float | np.ndarray,
         nd_plasma_ions: float | np.ndarray,
@@ -6027,7 +6027,11 @@ class DetailedPhysics(Model):
         Returns
         -------
         float | np.ndarray
-            Electron-ion collision time (s).
+            Electron-ion collision time (s). Infinite if the ion species is
+            absent (``nd_plasma_ions == 0``, e.g. tritons in a pure-deuterium
+            plasma): ``error_model="numpy"`` makes a scalar division by zero
+            return ``inf`` like the array case instead of raising
+            ``ZeroDivisionError``.
         """
         return (
             12
