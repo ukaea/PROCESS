@@ -237,23 +237,20 @@ class Physics(Model):
         self.outtim()
 
     def output_species_radiation_power_density(self) -> None:
-        """Output the volume-averaged radiation power density of each ion species."""
+        """Output the specific radiation power of each supported ion species."""
         po.oheadr(self.outfile, "Impurity Radiation Power Density by Species")
         species_powers = impurity_radiation.ImpurityRadiation(
             self.plasma_profile, self.data
         ).calculate_species_radiation_powers()
-        for label, (pden_mw, p_mw) in species_powers.items():
+        for (label, (_, p_mw)), attribute in zip(
+            species_powers.items(),
+            impurity_radiation.SPECIES_POWER_ATTRIBUTES,
+            strict=True,
+        ):
             po.ovarre(
                 self.outfile,
-                f"{label} volume averaged radiation power density (MW/m3)",
-                f"(pden_rad_{label.lower()}_vol_avg_mw)",
-                pden_mw,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                f"{label} total radiation power (MW)",
-                f"(p_rad_{label.lower()}_mw)",
+                f"{label} total radiation power [MW]",
+                f"({attribute})",
                 p_mw,
                 "OP ",
             )
