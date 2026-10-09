@@ -1029,20 +1029,24 @@ class BfmaxTestAsset(NamedTuple):
 @pytest.mark.parametrize(
     "test_asset",
     [
-        BfmaxTestAsset(a=2.0, h=8.0, bfmax_exp=2.461485e1),
-        BfmaxTestAsset(a=2.0, h=4.1, bfmax_exp=2.2072637e1),
-        BfmaxTestAsset(a=2.0, h=2.1, bfmax_exp=1.803889e1),
-        BfmaxTestAsset(a=2.0, h=1.6, bfmax_exp=1.693509e1),
-        BfmaxTestAsset(a=2.0, h=1.0, bfmax_exp=1.4601048e1),
+        BfmaxTestAsset(a=2.0, h=8.0, bfmax_exp=24.06422),
+        BfmaxTestAsset(a=2.0, h=4.1, bfmax_exp=22.11566),
+        BfmaxTestAsset(a=2.0, h=2.1, bfmax_exp=18.74317),
+        BfmaxTestAsset(a=2.0, h=1.6, bfmax_exp=17.10242),
+        BfmaxTestAsset(a=2.0, h=1.0, bfmax_exp=14.04760),
     ],
 )
-def test_bfmax(cs_coil, test_asset):
+def test_calculate_cs_self_peak_magnetic_field(cs_coil, test_asset):
     """Test calculate_cs_self_peak_magnetic_field() function.
 
     :param cs_coil: CSCoil object
     :type cs_coil: process.pfcoil.CSCoil
     :param test_asset: arguments and expected return value for single test case
     :type test_asset: BfmaxTestAsset
+
+    Notes
+    -----
+    This is just a regression test; the values are calculated using PROCESS.
     """
     rj = 2.0e7
     b = 3.0
@@ -1051,7 +1055,7 @@ def test_bfmax(cs_coil, test_asset):
         rj, test_asset.a, b, test_asset.h
     )
 
-    assert pytest.approx(bfmax) == test_asset.bfmax_exp
+    assert test_asset.bfmax_exp == pytest.approx(bfmax)
 
 
 def test_waveform(monkeypatch, pfcoil):
@@ -2778,8 +2782,8 @@ class OhCalcParam(NamedTuple):
             rmajor=8.938,
             plasma_current=1.8254e7,
             poisson_steel=3.0e-1,
-            exp_b_pf_coil_peak=13.073958753751993,
-            exp_j_cs_critical_flat_top_end=54101481.7685945,
+            exp_b_pf_coil_peak=13.069711729713154,
+            exp_j_cs_critical_flat_top_end=54154076.702704564,
         )
     ],
 )

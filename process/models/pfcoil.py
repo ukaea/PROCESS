@@ -3883,12 +3883,6 @@ class CSCoil(Model):
         -------
         float
             Maximum field of solenoid (T)
-
-        References
-        ----------
-        [1] Fits are taken from the figure on p.22 of M. Wilson's book
-        "Superconducting Magnets", Clarendon Press, Oxford, N.Y., 1983,
-        ISBN 13: 9780198548102
         """
         beta = dz_cs_half / r_cs_inner
         alpha = r_cs_outer / r_cs_inner
@@ -3901,37 +3895,86 @@ class CSCoil(Model):
             dz_cs_half=dz_cs_half,
         )
 
-        # Fits are for 1 < alpha < 2 , and 0.5 < beta < very large
-        if beta > 3.0:
-            b1 = constants.RMU0 * j_cs * (r_cs_outer - r_cs_inner)
-            f = (3.0 / beta) ** 2
-            b_cs_peak = (
-                f * b_cs_bore_centre * (1.007 + (alpha - 1.0) * 0.0055) + (1.0 - f) * b1
+        if not 1.003 <= alpha <= 2.0 or not 1.002 <= beta <= 5.0:
+            logger.warning(
+                "CS peak self-field surrogate is outside the range of validity: "
+                f"1.003 <= {alpha=} <= 2.0, 1.002 <= {beta=} <= 5.0"
             )
 
-        elif beta > 2.0:
-            rat = (1.025 - (beta - 2.0) * 0.018) + (alpha - 1.0) * (
-                0.01 - (beta - 2.0) * 0.0045
-            )
-            b_cs_peak = rat * b_cs_bore_centre
+        peak_ratio = self.calculate_cs_peak_to_bore_self_field_ratio(
+            alpha=alpha, beta=beta
+        )
 
-        elif beta > 1.0:
-            rat = (1.117 - (beta - 1.0) * 0.092) + (alpha - 1.0) * (beta - 1.0) * 0.01
-            b_cs_peak = rat * b_cs_bore_centre
+        return peak_ratio * b_cs_bore_centre
 
-        elif beta > 0.75:
-            rat = (1.30 - 0.732 * (beta - 0.75)) + (alpha - 1.0) * (
-                0.2 * (beta - 0.75) - 0.05
-            )
-            b_cs_peak = rat * b_cs_bore_centre
+    @staticmethod
+    @numba.njit(cache=True, fastmath=True, inline="always")
+    def calculate_cs_peak_to_bore_self_field_ratio(alpha: float, beta: float) -> float:
+        """
+        Calculate the ratio of the peak magnetic field in the central solenoid to the
+        magnetic field at the bore of the solenoid.
 
-        else:
-            rat = (1.65 - 1.4 * (beta - 0.5)) + (alpha - 1.0) * (
-                0.6 * (beta - 0.5) - 0.20
-            )
-            b_cs_peak = rat * b_cs_bore_centre
+        Parameters
+        ----------
+        alpha : float
+            Ratio of the outer radius to the inner radius of the solenoid.
+        beta : float
+            Ratio of the coil half-height to the inner radius of the solenoid.
 
-        return b_cs_peak
+        Returns
+        -------
+        k: float
+            Peak field amplification factor (dimensionless)
+
+        Notes
+        -----
+        This is for a single turn solenoid with uniform current density and no iron.
+        The peak field occurs at the inner radius of the solenoid, at the mid-plane of
+        the coil, where this ratio was calculated.
+
+        Fit calculated from unit-current data generated in BLUEMIRA for the ranges:
+        - 1.003 <= alpha <= 2.0
+        - 1.002 <= beta <= 5.0
+
+        Mean abs error  : 1.477160e-05
+        RMSE            : 3.339339e-05
+        Max abs error   : 5.057283e-04
+        Mean rel error  : 0.00137%
+        95% rel error   : 0.00551%
+        Max rel error   : 0.04351%
+
+        The inner radius of the solenoid has no effect.
+
+        Returned values >= 1.0
+        """
+        x = np.log(alpha)
+        y = np.log(beta)
+
+        x2 = x * x
+        xy = x * y
+        y2 = y * y
+
+        numerator = (
+            -1.8215253355640215
+            + 0.8172065397313144 * x
+            - 1.8719840795517062 * y
+            - 0.5424659742753115 * x2
+            + 1.307057139143707 * xy
+            - 0.2306157233611135 * y2
+        )
+
+        denominator = (
+            1.0
+            - 0.2785300863750654 * x
+            - 0.20588086220909704 * y
+            + 0.056237528552774516 * x2
+            - 0.02478308475047297 * xy
+            + 0.04818225222124836 * y2
+        )
+
+        fraction = numerator / denominator
+
+        return 1.0 + np.exp(fraction)
 
     def output_cs_structure(self) -> None:
         """Outputs the central solenoid structure parameters to the output file."""
