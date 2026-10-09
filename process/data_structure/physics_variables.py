@@ -1900,6 +1900,15 @@ class PhysicsData:
     - =3 MAST 2014 scaling 2
     """
 
+    f_b_div_outboard_lower_flux_expansion: float = 5.0
+    """Outboard lower divertor flux expansion factor for the divertor targets (fₓ)"""
+
+    len_div_outboard_lower_scarabosio15_power_spreading: float = 0.0
+    """Scarabosio 2015 H-mode power spreading length/factor in the scrape-off layer scaling (S) [m]"""
+
+    len_div_outboard_lower_power_spreading: float = 0.0
+    """Power spreading length/factor at the outboard lower divertor target (S) [m]"""
+
     fusrat: float = 0.0
 
 
