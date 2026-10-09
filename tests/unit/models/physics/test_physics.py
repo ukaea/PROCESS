@@ -1243,7 +1243,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     i_plasma_ignited: Any = None
 
-    f_alpha_electron: Any = None
+    f_p_alpha_total_electron: Any = None
 
     m_fuel_amu: Any = None
 
@@ -1263,7 +1263,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     f_nd_plasma_oxygen_electron: Any = None
 
-    f_alpha_ion: Any = None
+    f_p_alpha_total_ions: Any = None
 
     f_nd_alpha_thermal_electron: Any = None
 
@@ -1387,7 +1387,7 @@ class PlasmaCompositionParam(NamedTuple):
             ]),
             alphat=1.45,
             i_plasma_ignited=PlasmaIgnitionModel.NON_IGNITED,
-            f_alpha_electron=0,
+            f_p_alpha_total_electron=0,
             m_fuel_amu=0,
             f_plasma_fuel_tritium=0.5,
             nd_plasma_fuel_ions_vol_avg=0,
@@ -1397,7 +1397,7 @@ class PlasmaCompositionParam(NamedTuple):
             n_charge_plasma_effective_mass_weighted_vol_avg=0,
             f_nd_plasma_carbon_electron=0,
             f_nd_plasma_oxygen_electron=0,
-            f_alpha_ion=0,
+            f_p_alpha_total_ions=0,
             f_nd_alpha_thermal_electron=0.10000000000000001,
             f_nd_beam_electron=0,
             n_charge_plasma_effective_vol_avg=0,
@@ -1493,7 +1493,7 @@ class PlasmaCompositionParam(NamedTuple):
             ).transpose(),
             alphat=1.45,
             i_plasma_ignited=PlasmaIgnitionModel.NON_IGNITED,
-            f_alpha_electron=0.6845930883190634,
+            f_p_alpha_total_electron=0.6845930883190634,
             m_fuel_amu=2.5,
             f_plasma_fuel_tritium=0.5,
             nd_plasma_fuel_ions_vol_avg=5.8589175702454272e19,
@@ -1503,7 +1503,7 @@ class PlasmaCompositionParam(NamedTuple):
             n_charge_plasma_effective_mass_weighted_vol_avg=0.43046641789338563,
             f_nd_plasma_carbon_electron=0,
             f_nd_plasma_oxygen_electron=0,
-            f_alpha_ion=0.3154069116809366,
+            f_p_alpha_total_ions=0.3154069116809366,
             f_nd_alpha_thermal_electron=0.10000000000000001,
             f_nd_beam_electron=0,
             n_charge_plasma_effective_vol_avg=2.0913454745,
@@ -1589,7 +1589,7 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     for field in [
         "alphat",
         "i_plasma_ignited",
-        "f_alpha_electron",
+        "f_p_alpha_total_electron",
         "m_fuel_amu",
         "f_plasma_fuel_tritium",
         "nd_plasma_fuel_ions_vol_avg",
@@ -1599,7 +1599,7 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         "n_charge_plasma_effective_mass_weighted_vol_avg",
         "f_nd_plasma_carbon_electron",
         "f_nd_plasma_oxygen_electron",
-        "f_alpha_ion",
+        "f_p_alpha_total_ions",
         "f_nd_alpha_thermal_electron",
         "f_nd_beam_electron",
         "n_charge_plasma_effective_vol_avg",
@@ -1629,7 +1629,7 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         plasmacompositionparam.expected_impurity_arr_frac
     )
 
-    assert physics.data.physics.f_alpha_electron == pytest.approx(
+    assert physics.data.physics.f_p_alpha_total_electron == pytest.approx(
         plasmacompositionparam.expected_f_alpha_electron
     )
 
@@ -1654,7 +1654,7 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         == pytest.approx(plasmacompositionparam.expected_zeffai)
     )
 
-    assert physics.data.physics.f_alpha_ion == pytest.approx(
+    assert physics.data.physics.f_p_alpha_total_ions == pytest.approx(
         plasmacompositionparam.expected_f_alpha_ion
     )
 

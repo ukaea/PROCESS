@@ -2064,13 +2064,13 @@ class Stellarator(Model):
             self.data.physics.p_neutron_total_mw,
             self.data.physics.p_non_alpha_charged_mw,
             self.data.physics.pden_alpha_total_vol_avg_mw,
-            self.data.physics.f_pden_alpha_electron_mw,
-            self.data.physics.f_pden_alpha_ions_mw,
+            self.data.physics.pden_alpha_heating_electrons_vol_avg_mw,
+            self.data.physics.pden_alpha_heating_ions_vol_avg_mw,
             self.data.physics.p_charged_particle_mw,
             self.data.physics.p_fusion_total_mw,
         ) = reactions.set_fusion_powers(
-            self.data.physics.f_alpha_electron,
-            self.data.physics.f_alpha_ion,
+            self.data.physics.f_p_alpha_total_electron,
+            self.data.physics.f_p_alpha_total_ions,
             self.data.physics.p_beam_alpha_mw,
             self.data.physics.pden_non_alpha_charged_mw,
             self.data.physics.pden_plasma_neutron_vol_avg_mw,
@@ -2121,7 +2121,7 @@ class Stellarator(Model):
 
         # Calculate ion/electron equilibration power
 
-        self.data.physics.pden_ion_electron_equilibration_mw = rether(
+        self.data.physics.pden_ion_electron_equilibration_vol_avg_mw = rether(
             self.data.physics.alphan,
             self.data.physics.alphat,
             self.data.physics.nd_plasma_electrons_vol_avg,
