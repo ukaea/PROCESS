@@ -1,6 +1,7 @@
 """PROCESS plot_summary"""
 
 import json
+import operator
 import textwrap
 from dataclasses import dataclass
 from importlib import resources
@@ -4852,6 +4853,94 @@ def plot_line_brem_power_profile(
     axis.legend(loc="upper left", bbox_to_anchor=(1.0, 1.0), ncol=1)
     axis.set_yscale("log")
     axis.yaxis.grid(True, which="both", alpha=0.2)
+
+
+def plot_radiation_power_contributions(axis: plt.Axes, mfile: MFile, scan: int):
+    """Plot a sorted horizontal bar chart of the radiation power from synchrotron
+    and each ion species, annotated with the percentage of the total.
+
+    Parameters
+    ----------
+    axis : plt.Axes
+        axis object to add plot to
+    mfile : MFile
+        MFile object containing the radiation power information.
+    scan : int
+        scan number to use
+
+    """
+    species = [
+        ("H", "hydrogen"),
+        ("He", "helium"),
+        ("Be", "beryllium"),
+        ("C", "carbon"),
+        ("N", "nitrogen"),
+        ("O", "oxygen"),
+        ("Ne", "neon"),
+        ("Si", "silicon"),
+        ("Ar", "argon"),
+        ("Fe", "iron"),
+        ("Ni", "nickel"),
+        ("Kr", "krypton"),
+        ("Xe", "xenon"),
+        ("W", "tungsten"),
+    ]
+    colour_fuel, colour_imp, colour_sync = "tab:blue", "tab:orange", "tab:green"
+
+    contributions = [
+        (
+            "Synchrotron",
+            mfile.get("p_plasma_sync_mw", scan=scan),
+            colour_sync,
+        )
+    ]
+    for label, name in species:
+        contributions.append((
+            label,
+            mfile.get(f"p_plasma_rad_{name}_mw", scan=scan),
+            colour_fuel if label in {"H", "He"} else colour_imp,
+        ))
+
+    # Only show non-zero contributions, largest at the top
+    contributions = sorted(
+        (c for c in contributions if c[1] > 0.0), key=operator.itemgetter(1)
+    )
+    p_total_mw = mfile.get("p_plasma_rad_mw", scan=scan)
+
+    labels = [c[0] for c in contributions]
+    powers = [c[1] for c in contributions]
+    bars = axis.barh(labels, powers, color=[c[2] for c in contributions])
+    axis.bar_label(
+        bars,
+        labels=[f"{p:.2f} MW ({100.0 * p / p_total_mw:.1f}%)" for p in powers],
+        padding=3,
+        fontsize=8,
+    )
+
+    axis.set_xlim(0, 1.3 * max(powers, default=1.0))
+    axis.set_xlabel(r"$P_{\mathrm{rad}}$ $[\mathrm{MW}]$")
+    axis.set_title("Radiation Power Contributions")
+    axis.xaxis.grid(True, alpha=0.2)
+    axis.axvline(0, color="black", linewidth=0.5)
+    axis.legend(
+        handles=[
+            mpl.patches.Patch(color=colour_fuel, label="Fuel & ash (Z$\\leq$2)"),
+            mpl.patches.Patch(color=colour_imp, label="Impurities (Z>2)"),
+            mpl.patches.Patch(color=colour_sync, label="Synchrotron"),
+        ],
+        loc="lower right",
+    )
+    axis.text(
+        0.98,
+        0.25,
+        f"Total: {p_total_mw:.2f} MW\n"
+        f"Separatrix fraction: {mfile.get('f_p_plasma_separatrix_rad', scan=scan):.3f}",
+        transform=axis.transAxes,
+        ha="right",
+        va="bottom",
+        fontsize=9,
+        bbox={"boxstyle": "round", "facecolor": "white", "alpha": 0.8},
+    )
 
 
 def plot_line_brem_loss_function_profile(
@@ -17034,6 +17123,9 @@ def main_plot(
 
     plot_line_brem_power_profile(
         _add_page("line_brem_power").add_subplot(121), m_file, scan, imp
+    )
+    plot_radiation_power_contributions(
+        pages["line_brem_power"].add_subplot(224), m_file, scan
     )
 
     plot_fusion_rate_profiles(
