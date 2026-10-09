@@ -560,7 +560,7 @@ class ScrapeOffLayer(Model):
         """
         if np.any(r < (rmajor + rminor)):
             raise ValueError(
-                f"Radial position r={r} must be greater than or equal to the plasma "
+                f"Radial position {r=} must be greater than or equal to the plasma "
                 f"edge (rmajor + rminor)={rmajor + rminor}."
             )
 
