@@ -800,9 +800,23 @@ class PlasmaReactions(Model):
         )
         po.ovarre(
             self.outfile,
+            "Alpha power transferred to electrons [MW]",
+            "(p_alpha_heating_electrons_mw)",
+            self.data.physics.p_alpha_heating_electrons_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
             "Alpha power per unit volume transferred to ions [MW/m³]",
             "(pden_alpha_heating_ions_vol_avg_mw)",
             self.data.physics.pden_alpha_heating_ions_vol_avg_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Alpha power transferred to ions [MW]",
+            "(p_alpha_heating_ions_mw)",
+            self.data.physics.p_alpha_heating_ions_mw,
             "OP ",
         )
 

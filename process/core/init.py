@@ -1299,9 +1299,27 @@ def check_process(inputs, data):  # noqa: ARG001
 
     # Cannot use temperature margin constraint with REBCO CS coils
     if (
-        (data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 2).any()
-        and (data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 3).any()
-        and (data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 4).any()
+        (
+            data.numerics.icc[
+                : data.numerics.n_equality_constraints
+                + data.numerics.n_inequality_constraints
+            ]
+            == 2
+        ).any()
+        and (
+            data.numerics.icc[
+                : data.numerics.n_equality_constraints
+                + data.numerics.n_inequality_constraints
+            ]
+            == 3
+        ).any()
+        and (
+            data.numerics.icc[
+                : data.numerics.n_equality_constraints
+                + data.numerics.n_inequality_constraints
+            ]
+            == 4
+        ).any()
     ):
         raise ProcessValidationError(
             "Cannot have global power balance on as well as individual particle power "
