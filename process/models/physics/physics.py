@@ -233,12 +233,10 @@ class Physics(Model):
         self.calculate_effective_charge_ionisation_profiles()
         self.calculate_stored_thermal_energy_profiles()
         self.outplas()
-        self.output_species_radiation_power_density()
         self.outtim()
 
     def output_species_radiation_power_density(self) -> None:
         """Output the specific radiation power of each supported ion species."""
-        po.oheadr(self.outfile, "Impurity Radiation Power Density by Species")
         species_powers = impurity_radiation.ImpurityRadiation(
             self.plasma_profile, self.data
         ).calculate_species_radiation_powers()
@@ -1888,6 +1886,13 @@ class Physics(Model):
             "(f_sync_reflect)",
             self.data.physics.f_sync_reflect,
         )
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.osubhd(self.outfile, "Line, Recombination & Bremsstrahlung Radiation:")
+
+        self.output_species_radiation_power_density()
+
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
         po.osubhd(self.outfile, "Core region:")
