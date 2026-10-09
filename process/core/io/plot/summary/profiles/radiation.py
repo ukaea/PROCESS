@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
+from process.core import constants
 from process.core.io.plot.summary.common import add_colourbar
 from process.core.io.plot.summary.profiles.misc import (
     interp1d_profile,
@@ -13,7 +14,6 @@ from process.core.io.plot.summary.profiles.misc import (
     read_imprad_data,
 )
 from process.core.io.plot.summary.rendering import draw_text
-from process.models.engineering.materials import poisson_steel
 from process.models.pfcoil import N_CS_STRESS_PROFILE_POINTS, CSCoil
 
 if TYPE_CHECKING:
@@ -281,7 +281,7 @@ def plot_cs_radial_stress_profile(
             r_cs_outer=r_cs_outer,
             j_cs=j_cs,
             b_cs_inner=b_cs_inner,
-            f_poisson_cs_structure=poisson_steel,
+            f_poisson_cs_structure=constants.poisson_steel,
         )
         for radius in radii
     ])
@@ -338,7 +338,7 @@ def plot_cs_radial_stress_contour_profile(
                     r_cs_outer=r_cs_outer,
                     j_cs=j_cs,
                     b_cs_inner=b_cs_inner,
-                    f_poisson_cs_structure=poisson_steel,
+                    f_poisson_cs_structure=constants.poisson_steel,
                 )
                 / 1e6
             )
