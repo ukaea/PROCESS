@@ -2187,7 +2187,7 @@ class ConfinementTimeParam(NamedTuple):
 
     tauee_in: Any = None
 
-    pden_plasma_rad_mw: Any = None
+    pden_plasma_rad_vol_avg_mw: Any = None
 
     kappa_ipb: Any = None
 
@@ -2227,7 +2227,7 @@ class ConfinementTimeParam(NamedTuple):
 
     plasma_current: Any = None
 
-    pden_plasma_core_rad_mw: Any = None
+    pden_plasma_core_rad_reduced_vol_avg_mw: Any = None
 
     q95: Any = None
 
@@ -2276,7 +2276,7 @@ class ConfinementTimeParam(NamedTuple):
         ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
-            pden_plasma_rad_mw=0.11824275660100725,
+            pden_plasma_rad_vol_avg_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
@@ -2295,7 +2295,7 @@ class ConfinementTimeParam(NamedTuple):
             p_non_alpha_charged_mw=1.2453296074483358,
             p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pden_plasma_core_rad_mw=0.047757569353246924,
+            pden_plasma_core_rad_reduced_vol_avg_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -2328,7 +2328,7 @@ class ConfinementTimeParam(NamedTuple):
         ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
-            pden_plasma_rad_mw=0.11824275660100725,
+            pden_plasma_rad_vol_avg_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
@@ -2347,7 +2347,7 @@ class ConfinementTimeParam(NamedTuple):
             p_non_alpha_charged_mw=1.2453296074483358,
             p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pden_plasma_core_rad_mw=0.047757569353246924,
+            pden_plasma_core_rad_reduced_vol_avg_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -2380,7 +2380,7 @@ class ConfinementTimeParam(NamedTuple):
         ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
-            pden_plasma_rad_mw=0.11824275660100725,
+            pden_plasma_rad_vol_avg_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
@@ -2399,7 +2399,7 @@ class ConfinementTimeParam(NamedTuple):
             p_non_alpha_charged_mw=1.2453296074483358,
             p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pden_plasma_core_rad_mw=0.047757569353246924,
+            pden_plasma_core_rad_reduced_vol_avg_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -2432,7 +2432,7 @@ class ConfinementTimeParam(NamedTuple):
         ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
-            pden_plasma_rad_mw=0.11824275660100725,
+            pden_plasma_rad_vol_avg_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
@@ -2451,7 +2451,7 @@ class ConfinementTimeParam(NamedTuple):
             p_non_alpha_charged_mw=1.2453296074483358,
             p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pden_plasma_core_rad_mw=0.047757569353246924,
+            pden_plasma_core_rad_reduced_vol_avg_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -2484,7 +2484,7 @@ class ConfinementTimeParam(NamedTuple):
         ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
-            pden_plasma_rad_mw=0.11824275660100725,
+            pden_plasma_rad_vol_avg_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
@@ -2503,7 +2503,7 @@ class ConfinementTimeParam(NamedTuple):
             p_non_alpha_charged_mw=1.2453296074483358,
             p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pden_plasma_core_rad_mw=0.047757569353246924,
+            pden_plasma_core_rad_reduced_vol_avg_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -2536,7 +2536,7 @@ class ConfinementTimeParam(NamedTuple):
         ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
-            pden_plasma_rad_mw=0.11824275660100725,
+            pden_plasma_rad_vol_avg_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
@@ -2555,7 +2555,7 @@ class ConfinementTimeParam(NamedTuple):
             p_non_alpha_charged_mw=1.2453296074483358,
             p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pden_plasma_core_rad_mw=0.047757569353246924,
+            pden_plasma_core_rad_reduced_vol_avg_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -2588,7 +2588,7 @@ class ConfinementTimeParam(NamedTuple):
         ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
-            pden_plasma_rad_mw=0.11824275660100725,
+            pden_plasma_rad_vol_avg_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
@@ -2607,7 +2607,7 @@ class ConfinementTimeParam(NamedTuple):
             p_non_alpha_charged_mw=1.2453296074483358,
             p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pden_plasma_core_rad_mw=0.047757569353246924,
+            pden_plasma_core_rad_reduced_vol_avg_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -2640,7 +2640,7 @@ class ConfinementTimeParam(NamedTuple):
         ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
-            pden_plasma_rad_mw=0.11824275660100725,
+            pden_plasma_rad_vol_avg_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
@@ -2659,7 +2659,7 @@ class ConfinementTimeParam(NamedTuple):
             p_non_alpha_charged_mw=1.2453296074483358,
             p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pden_plasma_core_rad_mw=0.047757569353246924,
+            pden_plasma_core_rad_reduced_vol_avg_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -2692,7 +2692,7 @@ class ConfinementTimeParam(NamedTuple):
         ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
-            pden_plasma_rad_mw=0.11824275660100725,
+            pden_plasma_rad_vol_avg_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
@@ -2711,7 +2711,7 @@ class ConfinementTimeParam(NamedTuple):
             p_non_alpha_charged_mw=1.2453296074483358,
             p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pden_plasma_core_rad_mw=0.047757569353246924,
+            pden_plasma_core_rad_reduced_vol_avg_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -2744,7 +2744,7 @@ class ConfinementTimeParam(NamedTuple):
         ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
-            pden_plasma_rad_mw=0.11824275660100725,
+            pden_plasma_rad_vol_avg_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
@@ -2763,7 +2763,7 @@ class ConfinementTimeParam(NamedTuple):
             p_non_alpha_charged_mw=1.2453296074483358,
             p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pden_plasma_core_rad_mw=0.047757569353246924,
+            pden_plasma_core_rad_reduced_vol_avg_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -2796,7 +2796,7 @@ class ConfinementTimeParam(NamedTuple):
         ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
-            pden_plasma_rad_mw=0.11824275660100725,
+            pden_plasma_rad_vol_avg_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
@@ -2815,7 +2815,7 @@ class ConfinementTimeParam(NamedTuple):
             p_non_alpha_charged_mw=1.2453296074483358,
             p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pden_plasma_core_rad_mw=0.047757569353246924,
+            pden_plasma_core_rad_reduced_vol_avg_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -2848,7 +2848,7 @@ class ConfinementTimeParam(NamedTuple):
         ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
-            pden_plasma_rad_mw=0.11824275660100725,
+            pden_plasma_rad_vol_avg_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
@@ -2867,7 +2867,7 @@ class ConfinementTimeParam(NamedTuple):
             p_non_alpha_charged_mw=1.2453296074483358,
             p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pden_plasma_core_rad_mw=0.047757569353246924,
+            pden_plasma_core_rad_reduced_vol_avg_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -2900,7 +2900,7 @@ class ConfinementTimeParam(NamedTuple):
         ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
-            pden_plasma_rad_mw=0.11824275660100725,
+            pden_plasma_rad_vol_avg_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
@@ -2919,7 +2919,7 @@ class ConfinementTimeParam(NamedTuple):
             p_non_alpha_charged_mw=1.2453296074483358,
             p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pden_plasma_core_rad_mw=0.047757569353246924,
+            pden_plasma_core_rad_reduced_vol_avg_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -2952,7 +2952,7 @@ class ConfinementTimeParam(NamedTuple):
         ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
-            pden_plasma_rad_mw=0.11824275660100725,
+            pden_plasma_rad_vol_avg_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
@@ -2971,7 +2971,7 @@ class ConfinementTimeParam(NamedTuple):
             p_non_alpha_charged_mw=1.2453296074483358,
             p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pden_plasma_core_rad_mw=0.047757569353246924,
+            pden_plasma_core_rad_reduced_vol_avg_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -3004,7 +3004,7 @@ class ConfinementTimeParam(NamedTuple):
         ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
-            pden_plasma_rad_mw=0.11824275660100725,
+            pden_plasma_rad_vol_avg_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
@@ -3023,7 +3023,7 @@ class ConfinementTimeParam(NamedTuple):
             p_non_alpha_charged_mw=1.2453296074483358,
             p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pden_plasma_core_rad_mw=0.047757569353246924,
+            pden_plasma_core_rad_reduced_vol_avg_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -3056,7 +3056,7 @@ class ConfinementTimeParam(NamedTuple):
         ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
-            pden_plasma_rad_mw=0.11824275660100725,
+            pden_plasma_rad_vol_avg_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
@@ -3075,7 +3075,7 @@ class ConfinementTimeParam(NamedTuple):
             p_non_alpha_charged_mw=1.2453296074483358,
             p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pden_plasma_core_rad_mw=0.047757569353246924,
+            pden_plasma_core_rad_reduced_vol_avg_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -3123,7 +3123,7 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
     for field in [
         "i_rad_loss",
         "tauee_in",
-        "pden_plasma_rad_mw",
+        "pden_plasma_rad_vol_avg_mw",
         "kappa_ipb",
         "p_plasma_ohmic_mw",
         "f_p_alpha_plasma_deposited",
@@ -3148,7 +3148,7 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
         p_non_alpha_charged_mw=confinementtimeparam.p_non_alpha_charged_mw,
         p_hcd_injected_total_mw=confinementtimeparam.p_hcd_injected_total_mw,
         plasma_current=confinementtimeparam.plasma_current,
-        pden_plasma_core_rad_mw=confinementtimeparam.pden_plasma_core_rad_mw,
+        pden_plasma_core_rad_reduced_vol_avg_mw=confinementtimeparam.pden_plasma_core_rad_reduced_vol_avg_mw,
         q95=confinementtimeparam.q95,
         qstar=confinementtimeparam.qstar,
         rmajor=confinementtimeparam.rmajor,

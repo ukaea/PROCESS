@@ -724,22 +724,40 @@ class Physics(Model):
             self.data.physics.vol_plasma,
             self.data,
         )
-        self.data.physics.pden_plasma_sync_mw = radpwrdata.pden_plasma_sync_mw
-        self.data.physics.pden_plasma_core_rad_mw = radpwrdata.pden_plasma_core_rad_mw
-        self.data.physics.pden_plasma_outer_rad_mw = radpwrdata.pden_plasma_outer_rad_mw
-        self.data.physics.pden_plasma_rad_mw = radpwrdata.pden_plasma_rad_mw
+        self.data.physics.pden_plasma_sync_vol_avg_mw = (
+            radpwrdata.pden_plasma_sync_vol_avg_mw
+        )
+        self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw = (
+            radpwrdata.pden_plasma_core_rad_reduced_vol_avg_mw
+        )
+        self.data.physics.pden_plasma_core_rad_vol_avg_mw = (
+            radpwrdata.pden_plasma_core_rad_vol_avg_mw
+        )
+        self.data.physics.pden_plasma_edge_rad_vol_avg_mw = (
+            radpwrdata.pden_plasma_edge_rad_vol_avg_mw
+        )
+        self.data.physics.pden_plasma_rad_vol_avg_mw = (
+            radpwrdata.pden_plasma_rad_vol_avg_mw
+        )
 
         self.data.physics.p_plasma_sync_mw = (
-            self.data.physics.pden_plasma_sync_mw * self.data.physics.vol_plasma
+            self.data.physics.pden_plasma_sync_vol_avg_mw * self.data.physics.vol_plasma
         )
-        self.data.physics.p_plasma_inner_rad_mw = (
-            self.data.physics.pden_plasma_core_rad_mw * self.data.physics.vol_plasma
+        self.data.physics.p_plasma_core_rad_reduced_mw = (
+            self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw
+            * self.data.physics.vol_plasma
         )
-        self.data.physics.p_plasma_outer_rad_mw = (
-            self.data.physics.pden_plasma_outer_rad_mw * self.data.physics.vol_plasma
+
+        self.data.physics.p_plasma_core_rad_mw = (
+            self.data.physics.pden_plasma_core_rad_vol_avg_mw
+            * self.data.physics.vol_plasma
+        )
+        self.data.physics.p_plasma_edge_rad_mw = (
+            self.data.physics.pden_plasma_edge_rad_vol_avg_mw
+            * self.data.physics.vol_plasma
         )
         self.data.physics.p_plasma_rad_mw = (
-            self.data.physics.pden_plasma_rad_mw * self.data.physics.vol_plasma
+            self.data.physics.pden_plasma_rad_vol_avg_mw * self.data.physics.vol_plasma
         )
 
         # Calculate ohmic power
@@ -874,7 +892,7 @@ class Physics(Model):
             p_non_alpha_charged_mw=self.data.physics.p_non_alpha_charged_mw,
             p_hcd_injected_total_mw=self.data.current_drive.p_hcd_injected_total_mw,
             plasma_current=self.data.physics.plasma_current,
-            pden_plasma_core_rad_mw=self.data.physics.pden_plasma_core_rad_mw,
+            pden_plasma_core_rad_reduced_vol_avg_mw=self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw,
             rmajor=self.data.physics.rmajor,
             rminor=self.data.physics.rminor,
             temp_plasma_electron_density_weighted_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
@@ -1827,18 +1845,21 @@ class Physics(Model):
         self.plasma_reactions.output()
 
         po.oheadr(self.outfile, "Plasma Radiation (excluding SOL):")
+
+        po.osubhd(self.outfile, "Synchrotron Radiation:")
+
         po.ovarre(
             self.outfile,
-            "Plasma total synchrotron radiation power (Pₛₙ) (MW)",
+            "Plasma total synchrotron radiation power (Pₛₙ) [MW]",
             "(p_plasma_sync_mw)",
             self.data.physics.p_plasma_sync_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Plasma total synchrotron radiation power density (MW/m³)",
-            "(pden_plasma_sync_mw)",
-            self.data.physics.pden_plasma_sync_mw,
+            "Plasma volume-averaged synchrotron radiation power density [MW/m³]",
+            "(pden_plasma_sync_vol_avg_mw)",
+            self.data.physics.pden_plasma_sync_vol_avg_mw,
             "OP ",
         )
         po.ovarre(
@@ -1846,6 +1867,13 @@ class Physics(Model):
             "Synchrotron wall reflectivity factor",
             "(f_sync_reflect)",
             self.data.physics.f_sync_reflect,
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.osubhd(self.outfile, "Core region:")
+
+        po.ocmmnt(
+            self.outfile, "Note: Only the core region contains the synchrotron radiation"
         )
         po.oblnkl(self.outfile)
         po.ovarre(
@@ -1860,18 +1888,62 @@ class Physics(Model):
             "(f_p_plasma_core_rad_reduction)",
             self.data.impurity_radiation.f_p_plasma_core_rad_reduction,
         )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Plasma total radiation power from core region (MW) (Pᵧ,ᵢₙₙₑᵣ)",
-            "(p_plasma_inner_rad_mw)",
-            self.data.physics.p_plasma_inner_rad_mw,
+            "Plasma reduced core radiation power (Pᵧ,ᵢₙₙₑᵣ) [MW]",
+            "(p_plasma_core_rad_reduced_mw)",
+            self.data.physics.p_plasma_core_rad_reduced_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Plasma total radiation power from edge region (MW) (Pᵧ,ₒᵤₜₑᵣ)",
-            "(p_plasma_outer_rad_mw)",
-            self.data.physics.p_plasma_outer_rad_mw,
+            "Plasma core radiation power (Pᵧ,ᵢₙₙₑᵣ) [MW]",
+            "(p_plasma_core_rad_mw)",
+            self.data.physics.p_plasma_core_rad_mw,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(
+            self.outfile,
+            "Note: Volume-averaged quantities are calculated over the whole plasma",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Volume-averaged total reduced core radiation power per volume [MW/m³]",
+            "(pden_plasma_core_rad_reduced_vol_avg_mw)",
+            self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Volume-averaged total core radiation power per volume [MW/m³]",
+            "(pden_plasma_core_rad_vol_avg_mw)",
+            self.data.physics.pden_plasma_core_rad_vol_avg_mw,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.osubhd(self.outfile, "Edge region:")
+        po.ovarre(
+            self.outfile,
+            "Plasma total radiation power from edge region (Pᵧ,ₒᵤₜₑᵣ) [MW] ",
+            "(p_plasma_edge_rad_mw)",
+            self.data.physics.p_plasma_edge_rad_mw,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(
+            self.outfile,
+            "Note: Volume-averaged quantities are calculated over the whole plasma",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Volume-averaged total edge radiation power per volume [MW/m³]",
+            "(pden_plasma_edge_rad_vol_avg_mw)",
+            self.data.physics.pden_plasma_edge_rad_vol_avg_mw,
             "OP ",
         )
 
@@ -1884,10 +1956,14 @@ class Physics(Model):
                 "OP ",
             )
 
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.osubhd(self.outfile, "Totals:")
+
         po.ovarre(
             self.outfile,
             "Plasma total radiation power from inside last closed flux surface "
-            "(Pᵧ) (MW)",
+            "(Pᵧ) [MW]",
             "(p_plasma_rad_mw)",
             self.data.physics.p_plasma_rad_mw,
             "OP ",
@@ -1899,6 +1975,17 @@ class Physics(Model):
             self.data.physics.f_p_plasma_separatrix_rad,
             "OP ",
         )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Plasma total volume-averaged radiation power per unit volume [MW/m³]",
+            "(pden_plasma_rad_vol_avg_mw)",
+            self.data.physics.pden_plasma_rad_vol_avg_mw,
+            "OP ",
+        )
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
 
         po.oblnkl(self.outfile)
         po.ovarre(

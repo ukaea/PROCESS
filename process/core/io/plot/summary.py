@@ -2808,12 +2808,13 @@ def plot_main_plasma_information(
     add_symbol("$B$", 0.75, 0.12)
 
     textstr_radiation = (
-        "$\\mathbf{Radiation:}$\n\n"
+        "$\\mathbf{Radiation:}$\n"
         f"Total radiation power: {value('p_plasma_rad_mw'):.4f} MW\n"
         f"Separatrix radiation fraction: {value('f_p_plasma_separatrix_rad'):.4f}\n"
-        f"Core radiation power: {value('p_plasma_inner_rad_mw'):.4f} MW\n"
+        f"Reduced Core radiation power: {value('p_plasma_core_rad_reduced_mw'):.4f} MW\n"
         f"   - $f_{{\\text{{core,reduce}}}}$: {value('f_p_plasma_core_rad_reduction'):.4f}\n"
-        f"Edge radiation power: {value('p_plasma_outer_rad_mw'):.4f} MW\n"
+        f"Core radiation power: {value('p_plasma_core_rad_mw'):.4f} MW\n"
+        f"Edge radiation power: {value('p_plasma_edge_rad_mw'):.4f} MW\n"
         f"Synchrotron radiation power: {value('p_plasma_sync_mw'):.4f} MW\n"
         f"Synchrotron wall reflectivity: {value('f_sync_reflect'):.4f}"
     )
@@ -8330,7 +8331,7 @@ def plot_power_info(axis: plt.Axes, mfile: MFile, scan: int):
         coredescription,
         ped_height,
         ped_pos,
-        ("p_plasma_inner_rad_mw", "Inner zone radiation", "MW"),
+        ("p_plasma_core_rad_reduced_mw", "Inner zone radiation", "MW"),
         ("p_plasma_rad_mw", "Total radiation in LCFS", "MW"),
         ("p_blkt_nuclear_heat_total_mw", "Nuclear heating in blanket", "MW"),
         ("p_shld_nuclear_heat_mw", "Nuclear heating in shield", "MW"),

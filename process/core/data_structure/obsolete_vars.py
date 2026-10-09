@@ -71,8 +71,8 @@ OBS_VARS = {
     "strain_wp_max": "str_wp_max",
     "strain_wp": "str_wp",
     "rad_fraction": "rad_fraction_total",
-    "pcoreradmw": "p_plasma_inner_rad_mw",
-    "pedgeradmw": "p_plasma_outer_rad_mw",
+    "pcoreradmw": "p_plasma_core_rad_reduced_mw",
+    "pedgeradmw": "p_plasma_edge_rad_mw",
     "rad_fraction_core": "",
     "thshield": [
         "dr_shld_thermal_inboard",
