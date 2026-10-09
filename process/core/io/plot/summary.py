@@ -9271,10 +9271,13 @@ def plot_brunner_divertor_power_split_comparison_stackplot(
     axis: plt.Axes, mfile: MFile, scan: int
 ):
     """Plot Brunner divertor power split fractions as a stack plot over dr_sep."""
-    # Use the case decay length when available; fall back to 1 mm if absent.
-
     len_plasma_sol_outboard_pd = mfile.get("len_sol_outboard_power_decay", scan=scan)
     len_plasma_sol_inboard_pd = mfile.get("len_sol_inboard_power_decay", scan=scan)
+
+    # Use the case decay length when available; fall back to 1 mm if absent.
+    if not np.isfinite(len_plasma_sol_outboard_pd) or len_plasma_sol_outboard_pd == 0.0:  # noqa: RUF069
+        len_plasma_sol_outboard_pd = 0.001
+
     colors = plt.cm.plasma(np.linspace(0.15, 0.85, 4))
 
     dr_sep_values = np.linspace(
