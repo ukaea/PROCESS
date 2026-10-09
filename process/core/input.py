@@ -164,7 +164,6 @@ INPUT_VARIABLES = {
     "alphat": InputVariable("physics", float, range=(0.0, 10.0)),
     "aspect": InputVariable("physics", float, range=(1.001, 40.0)),
     "beamfus0": InputVariable("physics", float, range=(0.01, 10.0)),
-    "beta_total_vol_avg": InputVariable("physics", float, range=(0.0, 1.0)),
     "beta_vol_avg_max": InputVariable("physics", float, range=(0.0, 1.0)),
     "beta_vol_avg_min": InputVariable("physics", float, range=(0.0, 1.0)),
     "betbm0": InputVariable("physics", float, range=(0.0, 10.0)),

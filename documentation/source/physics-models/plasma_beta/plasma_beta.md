@@ -390,7 +390,7 @@ $$
 
 ### Beta consistency
 
-This constraint can be activated by stating `icc = 1` in the input file.
+`beta_total_vol_avg` is calculated directly from the current plasma state and is no longer an iteration variable. Constraint 1 may be activated as an optional global consistency check or safeguard against potential non-idempotent behaviour by stating `icc = 1` in the input file.
 
 Ensures the relationship between $\beta$, density, temperature and total magnetic field is withheld by checking the fixed input or iteration variable $\texttt{beta}$ is consistent in value with the rest of the physics parameters
 
@@ -403,8 +403,6 @@ Here the calculation of the volume averaged pressure of the ions and electrons h
 $$
 \langle n_{\text{e}}T_{\text{e}} \rangle_{\text{V}} = \overbrace{\langle n_{\text{e}} \rangle_{\text{V}}}^{\texttt{nd_plasma_electrons_vol_avg}} \times  \overbrace{\langle T_{\text{e}} \rangle_{\text{n}}}^{\texttt{temp_plasma_electron_density_weighted_kev}}
 $$
-
-**It is highly recommended to always have this constraint on as it is a global consistency checker**
 
 ----------------
 
