@@ -160,3 +160,13 @@ For $T_\text{e}$ in eV
 $$
 \eta_{\text{spitzer}} = \frac{4 \sqrt{2 \pi}}{3 }\frac{Z_i e^2 \sqrt{m_{\text{e}}} \ln \Lambda_{\text{ei}}}{\left(4 \pi \epsilon_0 \right)^2 T_{\text{e}}^{\frac{3}{2}}}
 $$
+
+------------------
+
+### Ion-electron equilibration time | `calculate_equilibriation_time()`
+
+For species temperatures $T$, measured in $[\text{eV}]$
+
+$$
+\frac{3(4\pi\epsilon_0)^2m_{\text{i}} m_{\text{e}}}{8\sqrt{2\pi}n_{\text{i}} \text{e}^4 Z_{\text{i}}^2 \ln\Lambda_{\text{ei}}}\left(\frac{T_{\text{e}}}{m_{\text{e}}}+\frac{T_{\text{i}}}{m_{\text{i}}}\right)^\frac{3}{2}
+$$
