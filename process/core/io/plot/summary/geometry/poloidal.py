@@ -28,10 +28,6 @@ from process.core.io.plot.summary.plasma.physics import (
 from process.core.io.plot.summary.radial_build import (
     cumulative_radial_build,
 )
-from process.core.io.plot.summary.rendering import (
-    draw_annotation,
-    draw_text,
-)
 from process.core.io.plot.summary.reporting.misc import (
     plot_centre_cross,
 )
@@ -746,8 +742,7 @@ def plot_first_wall_top_down_cross_section(axis: plt.Axes, mfile: MFile, scan: i
         color="black",
         label=f"$w_{{module}}$ = {dx_fw_module:.3f} cm",
     )
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(dx_fw_module, -0.2),
         xytext=(2 * dx_fw_module, -0.2),
@@ -852,8 +847,7 @@ def plot_first_wall_poloidal_cross_section(axis: plt.Axes, mfile: MFile, scan: i
     )
 
     # Add the inlet temperature beside the arrow
-    draw_text(
-        axis,
+    axis.text(
         dx_fw_module + 2 * dr_fw_wall,
         dr_fw_wall + radius_fw_channel + len_fw_channel / 6,
         f"$T_{{inlet}} = ${temp_fw_coolant_in:.2f} K",
@@ -877,8 +871,7 @@ def plot_first_wall_poloidal_cross_section(axis: plt.Axes, mfile: MFile, scan: i
     )
 
     # Add the outlet temperature beside the arrow
-    draw_text(
-        axis,
+    axis.text(
         dx_fw_module + 0.5 * dr_fw_wall,
         len_fw_channel * 0.9,
         f"$T_{{outlet}} = ${temp_fw_coolant_out:.2f} K",
@@ -898,8 +891,7 @@ def plot_first_wall_poloidal_cross_section(axis: plt.Axes, mfile: MFile, scan: i
     ))
 
     props_fw = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
-    draw_text(
-        axis,
+    axis.text(
         -0.5,
         0.05,
         textstr_fw,

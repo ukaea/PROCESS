@@ -8,7 +8,6 @@ import numpy as np
 
 from process.core.io.plot.summary.common import box_style, get_pulse_timings
 from process.core.io.plot.summary.magnets.cs import secs_to_hms
-from process.core.io.plot.summary.rendering import draw_text
 
 if TYPE_CHECKING:
     import matplotlib.pyplot as plt
@@ -204,8 +203,7 @@ def plot_system_power_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int
         f" {mfile.get('e_plant_net_electric_pulse_kwh', scan=scan):,.4f} kWh\n"
     )
 
-    draw_text(
-        axis,
+    axis.text(
         0.075,
         0.2,
         textstr_energy,
@@ -242,8 +240,7 @@ def plot_system_power_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int
         f" ({secs_to_hms(mfile.get('t_plant_pulse_total', scan=scan))})\n"
     )
 
-    draw_text(
-        axis,
+    axis.text(
         0.6,
         0.225,
         textstr_times,

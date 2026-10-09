@@ -10,7 +10,6 @@ import numpy as np
 
 from process.core.io.plot.summary.common import box_style
 from process.core.io.plot.summary.constants import PLASMA_COLOUR
-from process.core.io.plot.summary.rendering import draw_text
 from process.models.build import Build
 from process.models.geometry.plasma import plasma_geometry
 from process.models.physics.physics import BetaNormMaxModel
@@ -172,24 +171,21 @@ def plot_plasma_current_comparison(axis: plt.Axes, mfile: MFile, scan: int):
     median_density_limit = np.median(data_values)
 
     # Plot average, standard deviation, and median as text
-    draw_text(
-        axis,
+    axis.text(
         -0.45,
         0.15,
         rf"Average: {avg_density_limit * 1e-6:.4f}",
         transform=axis.transAxes,
         fontsize=9,
     )
-    draw_text(
-        axis,
+    axis.text(
         -0.45,
         0.1,
         rf"Standard Dev: {std_density_limit * 1e-6:.4f}",
         transform=axis.transAxes,
         fontsize=9,
     )
-    draw_text(
-        axis,
+    axis.text(
         -0.45,
         0.05,
         rf"Median: {median_density_limit * 1e-6:.4f}",
@@ -256,24 +252,21 @@ def plot_max_normalised_beta_comparison(axis: plt.Axes, mfile: MFile, scan: int)
     median_beta_norm_max = np.median(data_values)
 
     # Plot average, standard deviation, and median as text
-    draw_text(
-        axis,
+    axis.text(
         1.1,
         0.15,
         rf"Average: {avg_beta_norm_max:.4f}",
         transform=axis.transAxes,
         fontsize=9,
     )
-    draw_text(
-        axis,
+    axis.text(
         1.1,
         0.1,
         rf"Standard Dev: {std_beta_norm_max:.4f}",
         transform=axis.transAxes,
         fontsize=9,
     )
-    draw_text(
-        axis,
+    axis.text(
         1.1,
         0.05,
         rf"Median: {median_beta_norm_max:.4f}",
@@ -404,8 +397,7 @@ def plot_magnetic_fields_in_plasma(axis: plt.Axes, mfile: MFile, scan: int):
     axis.axhline(b_plasma_toroidal_profile[-1], **h_kwargs)
 
     # Text box for inboard toroidal field
-    draw_text(
-        axis,
+    axis.text(
         0.1,
         0.025,
         f"$B_{{\\text{{T,inboard}}}}={mfile.get('b_plasma_inboard_toroidal', scan=scan):.2f}$ T\n"  # noqa: E501
@@ -417,8 +409,7 @@ def plot_magnetic_fields_in_plasma(axis: plt.Axes, mfile: MFile, scan: int):
     )
 
     # Text box for outboard toroidal field
-    draw_text(
-        axis,
+    axis.text(
         0.9,
         0.1,
         f"$B_{{\\text{{T,outboard}}}}={mfile.get('b_plasma_outboard_toroidal', scan=scan):.2f}$ T\n"  # noqa: E501

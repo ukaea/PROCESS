@@ -13,7 +13,6 @@ from process.core.io.plot.summary.profiles.misc import (
     profiles_with_pedestal,
     read_imprad_data,
 )
-from process.core.io.plot.summary.rendering import draw_text
 from process.models.pfcoil import N_CS_STRESS_PROFILE_POINTS, CSCoil
 
 if TYPE_CHECKING:
@@ -147,8 +146,7 @@ def plot_rad_density_contour(axis: Axes, mfile: MFile, scan: int, impp: str):
         "facecolor": "khaki",
         "alpha": 0.8,
     }
-    draw_text(
-        axis,
+    axis.text(
         0.02,
         0.02,
         rf"$f_{{\text{{core,reduce}}}}$ =  {1.0}",

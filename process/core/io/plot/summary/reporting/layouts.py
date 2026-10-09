@@ -200,11 +200,11 @@ def draw_bend(
     ax:
         Target axes for plotting.
     elbow_radius:
-        Radius of the elbow in meters.
+        Radius of the elbow [m].
     theta_span:
-        Array of angles [0, θ] where θ is pi/2 or pi.
+        Array of angles [0, θ] where θ is pi/2 or pi [rad]
     radius_pipe:
-        Pipe radius in meters (fallback to 0.1m if not provided).
+        Pipe radius (fallback to 0.1m if not provided) [m]
     title:
         Plot title string.
     alpha:

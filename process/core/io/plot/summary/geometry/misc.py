@@ -261,13 +261,7 @@ def plot_blkt_structure(
             ha="center",
             va="center",
             weight="bold",
-            bbox={
-                "boxstyle": "round",
-                "facecolor": "white",
-                "alpha": 0.8,
-                "edgecolor": "black",
-                "linewidth": 1.5,
-            },
+            bbox=box_style("white", alpha=0.8, linewidth=1.5, edgecolor="black"),
             zorder=5,
         )
 
@@ -300,13 +294,7 @@ def plot_blkt_structure(
         ha="center",
         va="center",
         weight="bold",
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "white",
-            "alpha": 0.8,
-            "edgecolor": "black",
-            "linewidth": 1.5,
-        },
+        bbox=box_style("white", alpha=0.8, linewidth=1.5, edgecolor="black"),
         zorder=5,
     )
 

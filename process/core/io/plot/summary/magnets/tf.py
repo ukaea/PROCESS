@@ -19,7 +19,6 @@ from process.core.io.plot.summary.constants import (
     rtangle2,
 )
 from process.core.io.plot.summary.magnets.cables import plot_hts_tape_geometry
-from process.core.io.plot.summary.rendering import draw_annotation, draw_text
 from process.data_structure.superconducting_tf_coil_variables import TFWPIntegerTurnType
 from process.models.geometry.tfcoil import (
     tfcoil_geometry_d_shape,
@@ -771,8 +770,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
             " $\\Delta r$:"
             f" {mfile.get('dx_tf_side_case_peak', scan=scan):.3f} m"
         )
-        draw_text(
-            axis,
+        axis.text(
             0.55,
             0.975,
             textstr_casing,
@@ -780,12 +778,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
             verticalalignment="top",
             horizontalalignment="left",
             transform=fig.transFigure,
-            bbox={
-                "boxstyle": "round",
-                "facecolor": "grey",
-                "alpha": 1.0,
-                "linewidth": 2,
-            },
+            bbox=box_style("grey"),
         )
 
         # Add info about the steel casing surrounding the WP
@@ -797,8 +790,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
             " Insertion Gap:\n$\\Delta r$:"
             f" {mfile.get('dx_tf_wp_insertion_gap', scan=scan):.4f} m"
         )
-        draw_text(
-            axis,
+        axis.text(
             0.55,
             0.575,
             textstr_wp_insulation,
@@ -806,12 +798,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
             verticalalignment="top",
             horizontalalignment="left",
             transform=fig.transFigure,
-            bbox={
-                "boxstyle": "round",
-                "facecolor": "green",
-                "alpha": 1.0,
-                "linewidth": 2,
-            },
+            bbox=box_style("green"),
         )
 
         # Add info about the Winding Pack
@@ -843,8 +830,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
             f" {mfile.get('j_tf_wp', scan=scan) / 1e6:.4f} MA/m$^2$"
         )
 
-        draw_text(
-            axis,
+        axis.text(
             0.775,
             0.95,
             textstr_wp,
@@ -853,12 +839,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
             horizontalalignment="left",
             color="white",
             transform=fig.transFigure,
-            bbox={
-                "boxstyle": "round",
-                "facecolor": "blue",
-                "alpha": 1.0,
-                "linewidth": 2,
-            },
+            bbox=box_style("blue"),
         )
 
         # Add info about the Winding Pack
@@ -880,8 +861,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
             f" {mfile.get('a_tf_coil_inboard_insulation', scan=scan):.4f}"
             " $\\mathrm{m}^2$\n"
         )
-        draw_text(
-            axis,
+        axis.text(
             0.775,
             0.58,
             textstr_general_info,
@@ -889,12 +869,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
             verticalalignment="top",
             horizontalalignment="left",
             transform=fig.transFigure,
-            bbox={
-                "boxstyle": "round",
-                "facecolor": "wheat",
-                "alpha": 1.0,
-                "linewidth": 2,
-            },
+            bbox=box_style("wheat"),
         )
 
         axis.minorticks_on()
@@ -1293,8 +1268,7 @@ def plot_resistive_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
     axis.set_ylabel("Toroidal distance [m]")
     axis.legend(loc="upper left")
 
-    draw_text(
-        axis,
+    axis.text(
         0.05,
         0.975,
         "*Turn insulation and cooling pipes not shown",
@@ -1331,8 +1305,7 @@ def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
         f" {mfile.get('dr_tf_plasma_case', scan=scan):.3f} m\n$A$:"
         f" {mfile.get('a_tf_plasma_case', scan=scan):.3f} $\\mathrm{{m}}^2$"
     )
-    draw_text(
-        axis,
+    axis.text(
         0.775,
         0.925,
         textstr_casing,
@@ -1349,18 +1322,12 @@ def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
         " m\n\n$\\text{Turn Insulation:}$\n$\\Delta r$:"
         f" {mfile.get('dx_tf_turn_insulation', scan=scan):.4f} m"
     )
-    draw_text(
-        axis,
+    axis.text(
         0.775,
         0.62,
         textstr_wp_insulation,
         **text_layout(fig, v_align="top"),
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "green",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=box_style("green"),
     )
 
     # Add info about the Winding Pack
@@ -1381,8 +1348,7 @@ def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
         " $\\mathrm{m}^2$\nCoolant area void fraction per turn:"
         f" {mfile.get('fcoolcp', scan=scan):.3f}"
     )
-    draw_text(
-        axis,
+    axis.text(
         0.77,
         0.475,
         textstr_wp,
@@ -1391,12 +1357,7 @@ def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
         horizontalalignment="left",
         color="white",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "blue",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=box_style("blue"),
     )
 
     # Add info about the Winding Pack
@@ -1406,18 +1367,12 @@ def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
         " energy of all coils:"
         f" {mfile.get('e_tf_magnetic_stored_total_gj', scan=scan):.4f} GJ\n"
     )
-    draw_text(
-        axis,
+    axis.text(
         0.55,
         0.475,
         textstr_general_info,
         **text_layout(fig, v_align="top"),
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "wheat",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=box_style("wheat"),
     )
 
     # Add info about the Winding Pack
@@ -1440,8 +1395,7 @@ def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
         f" {mfile.get('p_tf_joints_resistive', scan=scan):,.2f}"
         " $\\mathrm{W}$\n"
     )
-    draw_text(
-        axis,
+    axis.text(
         0.55,
         0.35,
         textstr_cooling,
@@ -1891,8 +1845,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         f"$\\mathbf{{Turn \\ Insulation:}}$\n\n$\\Delta r:${insulation_thickness:.3e} m"
     )
 
-    draw_text(
-        axis,
+    axis.text(
         0.4,
         0.9,
         textstr_turn_insulation,
@@ -1906,8 +1859,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         f" m\n$A$: {a_tf_turn_steel:.3e} m$^2$"
     )
 
-    draw_text(
-        axis,
+    axis.text(
         0.65,
         0.9,
         textstr_turn_steel,
@@ -1938,8 +1890,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
             f" {a_tf_turn_cable_space_effective:.3e} m$^2$"
         )
 
-    draw_text(
-        axis,
+    axis.text(
         0.40,
         0.7,
         textstr_turn_cable_space,
@@ -1961,8 +1912,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
             f"$\\Delta x$: {turn_height:.3e} m"
         )
 
-    draw_text(
-        axis,
+    axis.text(
         0.525,
         0.9,
         textstr_turn,
@@ -1977,8 +1927,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         f" {a_tf_wp_coolant_channels:.4f} m$^2$"
     )
 
-    draw_text(
-        axis,
+    axis.text(
         0.45,
         0.8,
         textstr_turn_cooling,
@@ -2015,8 +1964,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         f" protection:\n{mfile.get('j_tf_wp_quench_heat_max', scan=scan):.2e}"
         " A/m$^2$\n"
     )
-    draw_text(
-        axis,
+    axis.text(
         0.75,
         0.9,
         textstr_superconductor,
@@ -2135,8 +2083,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         f"$\\mathbf{{Turn \\ Insulation:}}$\n\n$\\Delta r:${insulation_thickness:.3e} m"
     )
 
-    draw_text(
-        axis,
+    axis.text(
         0.4,
         0.9,
         textstr_turn_insulation,
@@ -2150,8 +2097,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         f" m\n$A$: {a_tf_turn_steel:.3e} m$^2$"
     )
 
-    draw_text(
-        axis,
+    axis.text(
         0.65,
         0.9,
         textstr_turn_steel,
@@ -2182,8 +2128,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
             f" {a_tf_turn_cable_space_effective:.3e} m$^2$"
         )
 
-    draw_text(
-        axis,
+    axis.text(
         0.40,
         0.7,
         textstr_turn_cable_space,
@@ -2205,8 +2150,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
             f"$\\Delta x$: {turn_height:.3e} m"
         )
 
-    draw_text(
-        axis,
+    axis.text(
         0.525,
         0.9,
         textstr_turn,
@@ -2221,8 +2165,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         f" {a_tf_wp_coolant_channels:.4f} m$^2$"
     )
 
-    draw_text(
-        axis,
+    axis.text(
         0.45,
         0.8,
         textstr_turn_cooling,
@@ -2259,8 +2202,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         f" protection:\n{mfile.get('j_tf_wp_quench_heat_max', scan=scan):.2e}"
         " A/m$^2$\n"
     )
-    draw_text(
-        axis,
+    axis.text(
         0.75,
         0.9,
         textstr_superconductor,
@@ -2300,8 +2242,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_schem
     labels = []
     for i, (x, y) in enumerate(zip(xs, ys, strict=False), 1):
         axis.plot(x, y, "ko", markersize=8)
-        draw_text(
-            axis,
+        axis.text(
             x,
             y,
             str(i),
@@ -2318,8 +2259,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_schem
     # If D-shaped coil, plot the full internal height arrow
     if mfile.get("i_tf_shape", scan=scan) == 1:
         # Arrow for internal coil width
-        draw_annotation(
-            axis,
+        axis.annotate(
             "",
             xy=(x2, y2),
             xytext=(x4, y4),
@@ -2327,8 +2267,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_schem
         )
 
         # Add a label for the internal coil width
-        draw_text(
-            axis,
+        axis.text(
             x2,
             0.0,
             f"{y2 - y4:.3f} m",
@@ -2337,7 +2276,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_schem
             rotation=270,
             verticalalignment="center",
             horizontalalignment="center",
-            bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+            bbox=box_style("pink", linewidth=0),
             zorder=100,  # Ensure label is on top of all plots
         )
 
@@ -2349,17 +2288,15 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_schem
     elif mfile.get("i_tf_shape", scan=scan) == 2:
         x = (x2 - x1) / 2
 
-    draw_annotation(
-        axis,
-        "",
-        xy=(x, y2 + dr_tf_inboard),
-        xytext=(x, y4 - dr_tf_inboard),
-        arrowprops={"arrowstyle": "<->", "color": "black"},
-    )
+        axis.annotate(
+            "",
+            xy=(x, y2 + dr_tf_inboard),
+            xytext=(x, y4 - dr_tf_inboard),
+            arrowprops={"arrowstyle": "<->", "color": "black"},
+        )
 
     # Add a label for the full TF coil height
-    draw_text(
-        axis,
+    axis.text(
         x,
         0.0,
         f"{((y2 + 2 * dr_tf_inboard) - y4):.3f} m",
@@ -2368,15 +2305,14 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_schem
         rotation=270,
         verticalalignment="center",
         horizontalalignment="center",
-        bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+        bbox=box_style("pink", linewidth=0),
         zorder=101,  # Ensure label is on top of all plots
     )
 
     # ==========================================================
 
     # Arrow for top half height of TF coil
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(-2.0, 0),
         xytext=(-2.0, y2 + dr_tf_inboard),
@@ -2385,8 +2321,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_schem
     axis.axhline(y=y2 + dr_tf_inboard, color="black", linestyle="--", linewidth=1)
 
     # Add a label for top of TF coil
-    draw_text(
-        axis,
+    axis.text(
         -2.0,
         (y2 + dr_tf_inboard) / 2,
         f"{y2 + dr_tf_inboard:.3f} m",
@@ -2395,14 +2330,13 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_schem
         rotation=270,
         verticalalignment="center",
         horizontalalignment="center",
-        bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+        bbox=box_style("pink", linewidth=0),
     )
 
     # ==========================================================
 
     # Arrow for bottom half height of TF coil
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(-2.0, 0),
         xytext=(-2.0, y4 - dr_tf_inboard),
@@ -2411,8 +2345,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_schem
     axis.axhline(y=y4 - dr_tf_inboard, color="black", linestyle="--", linewidth=1)
 
     # Add a label for top of TF coil
-    draw_text(
-        axis,
+    axis.text(
         -2.0,
         -z_tf_top / 2,
         f"{y4 - dr_tf_inboard:.3f} m",
@@ -2421,12 +2354,11 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_schem
         rotation=270,
         verticalalignment="center",
         horizontalalignment="center",
-        bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+        bbox=box_style("pink", linewidth=0),
     )
 
     # Arrow for top inside internal height
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(-1.0, 0),
         xytext=(-1.0, y2),
@@ -2435,8 +2367,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_schem
     axis.axhline(y=y2, color="black", linestyle="--", linewidth=1)
 
     # Add a label for height of top internal height
-    draw_text(
-        axis,
+    axis.text(
         -1.0,
         y2 / 2,
         f"{y2:.3f} m",
@@ -2445,14 +2376,13 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_schem
         rotation=270,
         verticalalignment="center",
         horizontalalignment="center",
-        bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+        bbox=box_style("pink", linewidth=0),
     )
 
     # =========================================================
 
     # Arrow for coil internal height
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(-1.0, 0),  # Inner plasma edge
         xytext=(-1.0, -z_tf_inside_half),  # Center
@@ -2461,8 +2391,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_schem
     axis.axhline(y=-z_tf_inside_half, color="black", linestyle="--", linewidth=1)
 
     # Add a label for coil internal height
-    draw_text(
-        axis,
+    axis.text(
         -1.0,
         -z_tf_inside_half / 2,
         f"{z_tf_inside_half:.3f} m",
@@ -2471,13 +2400,12 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_schem
         rotation=270,
         verticalalignment="center",
         horizontalalignment="center",
-        bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+        bbox=box_style("pink", linewidth=0),
     )
     # =========================================================
 
     # Arrow for internal coil width
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(r_tf_inboard_out, -z_tf_inside_half / 12),
         xytext=(r_tf_outboard_in, -z_tf_inside_half / 12),
@@ -2485,8 +2413,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_schem
     )
 
     # Add a label for the internal coil width
-    draw_text(
-        axis,
+    axis.text(
         (r_tf_inboard_out + r_tf_outboard_in) / 1.5,
         -z_tf_inside_half / 12,
         f"{mfile.get('dr_tf_internal_midplane', scan=scan):.3f} m",
@@ -2494,15 +2421,14 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_schem
         color="black",
         verticalalignment="center",
         horizontalalignment="center",
-        bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+        bbox=box_style("pink", linewidth=0),
         zorder=100,  # Ensure label is on top of all plots
     )
 
     # =============================================================
 
     # Arrow for full coil width
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(r_tf_inboard_in, 0.0),
         xytext=(r_tf_outboard_in + dr_tf_outboard, 0.0),
@@ -2511,8 +2437,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_schem
     )
 
     # Add a label for the full coil width
-    draw_text(
-        axis,
+    axis.text(
         (r_tf_inboard_out + r_tf_outboard_in) / 1.5,
         0.0,
         f"{mfile.get('dr_tf_full_midplane', scan=scan):.3f} m",
@@ -2520,7 +2445,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_schem
         color="black",
         verticalalignment="center",
         horizontalalignment="center",
-        bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+        bbox=box_style("pink", linewidth=0),
         zorder=100,  # Ensure label is on top of all plots
     )
 
@@ -2562,63 +2487,58 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_schem
     )
 
     # Add a label for the inboard thickness
-    draw_text(
-        axis,
+    axis.text(
         r_tf_inboard_in,
         (y4 - dr_tf_inboard) * 1.1,
         rf"$\Delta r = ${dr_tf_inboard:.3f} m",
         fontsize=7,
         color="black",
         verticalalignment="center",
-        bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+        bbox=box_style("pink", linewidth=0),
     )
 
     # Add a label for the outboard thickness
-    draw_text(
-        axis,
+    axis.text(
         r_tf_outboard_in,
         (y4 - dr_tf_inboard) * 1.1,
         rf"$\Delta r = ${dr_tf_outboard:.3f} m",
         fontsize=7,
         color="black",
         verticalalignment="center",
-        bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+        bbox=box_style("pink", linewidth=0),
     )
 
     # ==============================================================
 
     # Add a label for the length of the coil
-    draw_text(
-        axis,
+    axis.text(
         (r_tf_outboard_in + 2 * dr_tf_outboard),
         0.0,
         rf"Length of coil = {len_tf_coil:.3f} m",
         fontsize=7,
         color="black",
         verticalalignment="center",
-        bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+        bbox=box_style("pink", linewidth=0),
         zorder=100,  # Ensure label is on top of all plots
     )
 
     # ==============================================================
 
     # Add a label for the length of the coil
-    draw_text(
-        axis,
+    axis.text(
         (r_tf_outboard_in + 2 * dr_tf_outboard),
         -1.0,
         f"$\\Delta Z$ upper and lower to midplane = {dz_tf_upper_lower_midplane:.3f} m",
         fontsize=7,
         color="black",
         verticalalignment="center",
-        bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+        bbox=box_style("pink", linewidth=0),
     )
 
     # ==============================================================
 
     # Add arow for inboard coil radius
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(r_tf_inboard_in, 0),
         xytext=(0, 0),
@@ -2626,8 +2546,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_schem
     )
 
     # Add label for inboard coil radius
-    draw_text(
-        axis,
+    axis.text(
         r_tf_inboard_in / 2,
         0.0,
         f"{r_tf_inboard_in:.3f} m",
@@ -2635,7 +2554,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_schem
         color="black",
         verticalalignment="center",
         horizontalalignment="center",
-        bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+        bbox=box_style("pink", linewidth=0),
         zorder=101,  # Ensure label is on top of all plots
     )
 
@@ -2645,8 +2564,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_schem
 
     if mfile.get("i_tf_shape", scan=scan) == 1:
         # Add arow for inboard coil radius
-        draw_annotation(
-            axis,
+        axis.annotate(
             "",
             xy=(r_tf_outboard_in + dr_tf_outboard, y2 + dr_tf_inboard),
             xytext=(0, y2 + dr_tf_inboard),
@@ -2654,8 +2572,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_schem
         )
 
         # Add label for inboard coil radius
-        draw_text(
-            axis,
+        axis.text(
             r_tf_inboard_in / 2,
             y2 + dr_tf_inboard,
             f"{r_tf_outboard_in + dr_tf_outboard:.3f} m",
@@ -2663,7 +2580,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_schem
             color="black",
             verticalalignment="center",
             horizontalalignment="center",
-            bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+            bbox=box_style("pink", linewidth=0),
         )
 
         axis.plot(
@@ -2682,8 +2599,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_schem
     axis.axhline(y=y_center, color="red", linestyle="--", linewidth=1.0, zorder=5)
 
     # Add a label the plasma and TF vertical centre distance offset
-    draw_text(
-        axis,
+    axis.text(
         (r_tf_outboard_in + 2 * dr_tf_outboard),
         -2.0,
         "$\\Delta Z$ coil centre to plasma centre ="
@@ -2691,7 +2607,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_schem
         fontsize=7,
         color="black",
         verticalalignment="center",
-        bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+        bbox=box_style("pink", linewidth=0),
     )
 
     # =============================================================
@@ -3346,8 +3262,7 @@ def plot_tf_corc_cable_summary_box(axis, fig, mfile: MFile, scan: int):
         f" {mfile.get('a_tf_croco_strand', scan=scan) * 1e6:,.4f} mm²\n"
     )
 
-    draw_text(
-        axis,
+    axis.text(
         0.4,
         0.4,
         textstr_cable,

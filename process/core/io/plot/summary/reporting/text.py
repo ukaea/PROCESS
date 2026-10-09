@@ -4,8 +4,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from process.core.io.plot.summary.rendering import draw_text
-
 if TYPE_CHECKING:
     import matplotlib.pyplot as plt
 
@@ -34,13 +32,12 @@ def plot_info(axis: plt.Axes, data, mfile: MFile, scan: int):
                 colorflag = "red"
             elif mfile.data[data[i][0]].var_flag == "OP":
                 colorflag = "blue"
-        draw_text(axis, 0, -i, data[i][1], color=colorflag, ha="left", va="center")
+        axis.text(0, -i, data[i][1], color=colorflag, ha="left", va="center")
         if isinstance(data[i][0], str):
             if not data[i][0]:
-                draw_text(axis, eqpos, -i, "\n", ha="left", va="center")
+                axis.text(eqpos, -i, "\n", ha="left", va="center")
             elif data[i][0][0] == "#":
-                draw_text(
-                    axis,
+                axis.text(
                     -0.05,
                     -i,
                     f"{data[i][0][1:]}\n",
@@ -49,8 +46,7 @@ def plot_info(axis: plt.Axes, data, mfile: MFile, scan: int):
                 )
             elif data[i][0][0] == "!":
                 value = data[i][0][1:].replace('"', "")
-                draw_text(
-                    axis,
+                axis.text(
                     0.4,
                     -i,
                     f"-->  {value} {data[i][2]}",
@@ -65,19 +61,17 @@ def plot_info(axis: plt.Axes, data, mfile: MFile, scan: int):
                     value = f"{mfile.get(data[i][0], scan=scan):.4g}"
                 if "alpha" in data[i][0]:
                     value = str(float(value) + 1.0)
-                draw_text(
-                    axis,
-                    eqpos,
-                    -i,
-                    f"= {value} {data[i][2]}",
-                    color=colorflag,
-                    ha="left",
-                    va="center",
-                )
+                    axis.text(
+                        eqpos,
+                        -i,
+                        f"= {value} {data[i][2]}",
+                        color=colorflag,
+                        ha="left",
+                        va="center",
+                    )
             else:
                 mfile.get(data[i][0], scan=-1)
-                draw_text(
-                    axis,
+                axis.text(
                     eqpos,
                     -i,
                     "= ERROR! Var missing",
@@ -88,8 +82,7 @@ def plot_info(axis: plt.Axes, data, mfile: MFile, scan: int):
         else:
             dat = data[i][0]
             value = dat if isinstance(dat, str) else f"{data[i][0]:.4g}"
-            draw_text(
-                axis,
+            axis.text(
                 eqpos,
                 -i,
                 f"= {value} {data[i][2]}",

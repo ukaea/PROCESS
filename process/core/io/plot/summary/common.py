@@ -21,7 +21,6 @@ from process.core.io.plot.summary.constants import (
     THERMAL_SHIELD_COLOUR,
     VESSEL_COLOUR,
 )
-from process.core.io.plot.summary.rendering import draw_text
 from process.models.pulse import PulseTimings
 
 if TYPE_CHECKING:
@@ -56,12 +55,13 @@ def get_pulse_timings(mfile, scan: int) -> PulseTimings:
     return PulseTimings(**{key: mfile.get(key, scan=scan) for key in keys})
 
 
-def box_style(colour: str):
+def box_style(colour: str, alpha: float = 1.0, linewidth: float | None = 2, **kwargs):
     return {
         "boxstyle": "round",
         "facecolor": colour,
-        "alpha": 1.0,
-        "linewidth": 2,
+        "alpha": alpha,
+        "linewidth": linewidth,
+        **kwargs,
     }
 
 
@@ -133,7 +133,7 @@ def color_key(axis: plt.Axes, mfile: MFile, scan: int, colour_scheme: Literal[1,
         y_pos = 9 - row * 1.5
         x_pos = col * 2.5
 
-        draw_text(axis, x_pos, y_pos, text, ha="left", va="top", size="small")
+        axis.text(x_pos, y_pos, text, ha="left", va="top", size="small")
         axis.add_patch(
             patches.Rectangle(
                 (x_pos + 1.5, y_pos - 0.35),

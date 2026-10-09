@@ -15,10 +15,6 @@ from process.core.io.plot.summary.constants import (
     THERMAL_SHIELD_COLOUR,
     VESSEL_COLOUR,
 )
-from process.core.io.plot.summary.rendering import (
-    draw_annotation,
-    draw_text,
-)
 from process.core.io.plot.summary.reporting.layouts import (
     draw_bend,
 )
@@ -154,24 +150,21 @@ def plot_h_threshold_comparison(axis: plt.Axes, mfile: MFile, scan: int, u_seed=
     median_threshold = np.median(data_values)
 
     # Plot average, standard deviation, and median as text
-    draw_text(
-        axis,
+    axis.text(
         -0.45,
         0.15,
         f"Average: {avg_threshold:.4f}",
         transform=axis.transAxes,
         fontsize=9,
     )
-    draw_text(
-        axis,
+    axis.text(
         -0.45,
         0.1,
         f"Standard Dev: {std_threshold:.4f}",
         transform=axis.transAxes,
         fontsize=9,
     )
-    draw_text(
-        axis,
+    axis.text(
         -0.45,
         0.05,
         f"Median: {median_threshold:.4f}",
@@ -352,24 +345,21 @@ def plot_density_limit_comparison(axis: plt.Axes, mfile: MFile, scan: int):
     median_density_limit = np.median(data_values)
 
     # Plot average, standard deviation, and median as text
-    draw_text(
-        axis,
+    axis.text(
         1.02,
         0.2,
         rf"Average: {avg_density_limit * 1e-20:.4f} $\times 10^{{20}}$",
         transform=axis.transAxes,
         fontsize=9,
     )
-    draw_text(
-        axis,
+    axis.text(
         1.02,
         0.15,
         rf"Standard Dev: {std_density_limit * 1e-20:.4f} $\times 10^{{20}}$",
         transform=axis.transAxes,
         fontsize=9,
     )
-    draw_text(
-        axis,
+    axis.text(
         1.02,
         0.1,
         rf"Median: {median_density_limit * 1e-20:.4f} $\times 10^{{20}}$",
@@ -476,8 +466,7 @@ def plot_iteration_variables(axis: plt.Axes, m_file: MFile, scan: int):
         )
 
         # Draw an arrow from the initial value to the final value
-        draw_annotation(
-            axis,
+        axis.annotate(
             "",
             xy=(final_value_normalised, n_plot),
             xytext=(norm_relative_change, n_plot),
@@ -490,8 +479,7 @@ def plot_iteration_variables(axis: plt.Axes, m_file: MFile, scan: int):
             },
         )
         # Plot the value as a number at x = 0.5
-        draw_text(
-            axis,
+        axis.text(
             0.5,
             n_plot,
             f"{itvar_final:,.8g}",
@@ -514,8 +502,7 @@ def plot_iteration_variables(axis: plt.Axes, m_file: MFile, scan: int):
         )
 
         # Plot the value of the upper bound to the right of x=1
-        draw_text(
-            axis,
+        axis.text(
             1.05,
             n_plot,
             f"{itvar_upper:,.3g}",
@@ -525,8 +512,7 @@ def plot_iteration_variables(axis: plt.Axes, m_file: MFile, scan: int):
             color="gray",
         )
         # Plot the value of the lower bound to the left of x=0
-        draw_text(
-            axis,
+        axis.text(
             -0.05,
             n_plot,
             f"{itvar_lower:,.3g}",
