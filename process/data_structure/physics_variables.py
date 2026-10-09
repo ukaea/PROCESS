@@ -1385,7 +1385,49 @@ class PhysicsData:
     """plasma poloidal perimeter (m)"""
 
     p_plasma_rad_mw: float = 0.0
-    """total radiation power from inside LCFS (MW)"""
+    """Total plasma radiation power from inside LCFS [MW]"""
+
+    p_plasma_rad_hydrogen_mw: float = 0.0
+    """Plasma radiation power due to hydrogen presence [MW]"""
+
+    p_plasma_rad_helium_mw: float = 0.0
+    """Plasma radiation power due to helium presence [MW]"""
+
+    p_plasma_rad_beryllium_mw: float = 0.0
+    """Plasma radiation power due to beryllium presence [MW]"""
+
+    p_plasma_rad_carbon_mw: float = 0.0
+    """Plasma radiation power due to carbon presence [MW]"""
+
+    p_plasma_rad_nitrogen_mw: float = 0.0
+    """Plasma radiation power due to nitrogen presence [MW]"""
+
+    p_plasma_rad_oxygen_mw: float = 0.0
+    """Plasma radiation power due to oxygen presence [MW]"""
+
+    p_plasma_rad_neon_mw: float = 0.0
+    """Plasma radiation power due to neon presence [MW]"""
+
+    p_plasma_rad_silicon_mw: float = 0.0
+    """Plasma radiation power due to silicon presence [MW]"""
+
+    p_plasma_rad_argon_mw: float = 0.0
+    """Plasma radiation power due to argon presence [MW]"""
+
+    p_plasma_rad_iron_mw: float = 0.0
+    """Plasma radiation power due to iron presence [MW]"""
+
+    p_plasma_rad_nickel_mw: float = 0.0
+    """Plasma radiation power due to nickel presence [MW]"""
+
+    p_plasma_rad_krypton_mw: float = 0.0
+    """Plasma radiation power due to krypton presence [MW]"""
+
+    p_plasma_rad_xenon_mw: float = 0.0
+    """Plasma radiation power due to xenon presence [MW]"""
+
+    p_plasma_rad_tungsten_mw: float = 0.0
+    """Plasma radiation power due to tungsten presence [MW]"""
 
     pden_plasma_rad_vol_avg_mw: float = 0.0
     """Plasma total volume-averaged radiation power per unit volume [MW/m³]"""
