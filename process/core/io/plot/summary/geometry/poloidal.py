@@ -14,7 +14,6 @@ from process.core.io.plot.summary.constants import (
     FIRSTWALL_COLOUR,
     SHIELD_COLOUR,
     VESSEL_COLOUR,
-    thin,
 )
 from process.core.io.plot.summary.magnets.pf import (
     plot_pf_coils,
@@ -291,7 +290,7 @@ def plot_vacuum_vessel_and_divertor(
                 x_scale * np.array(vvg_single_null.rs),
                 vvg_single_null.zs,
                 color="black",
-                lw=thin,
+                lw=0,
                 zorder=5,
             )
 
@@ -354,7 +353,7 @@ def plot_vacuum_vessel_and_divertor(
                 x_scale * np.array(vvg_double_null.rs),
                 vvg_double_null.zs,
                 color="black",
-                lw=thin,
+                lw=0,
                 zorder=5,
             )
 
@@ -518,7 +517,7 @@ def plot_shield(
         x_scale * np.array(shield_geometry.rs),
         shield_geometry.zs,
         color="black",
-        lw=thin,
+        lw=0,
     )
     axis.fill(
         x_scale * np.array(shield_geometry.rs),
@@ -614,7 +613,7 @@ def plot_blanket(
                 x_scale * np.array(bg_single_null.rs),
                 bg_single_null.zs,
                 color="black",
-                lw=thin,
+                lw=0,
                 zorder=5,
             )
 
@@ -641,7 +640,7 @@ def plot_blanket(
                 x_scale * np.array(bg_double_null.rs[0]),
                 bg_double_null.zs[0],
                 color="black",
-                lw=thin,
+                lw=0,
             )
             axis.fill(
                 x_scale * np.array(bg_double_null.rs[0]),
@@ -656,7 +655,7 @@ def plot_blanket(
                     x_scale * np.array(bg_double_null.rs[1]),
                     bg_double_null.zs[1],
                     color="black",
-                    lw=thin,
+                    lw=0,
                     zorder=5,
                 )
                 axis.fill(
@@ -996,7 +995,7 @@ def plot_firstwall(
                 x_scale * np.array(fwg_single_null.rs),
                 fwg_single_null.zs,
                 color="black",
-                lw=thin,
+                lw=0,
             )
             axis.fill(
                 x_scale * np.array(fwg_single_null.rs),
@@ -1021,13 +1020,13 @@ def plot_firstwall(
                 x_scale * np.array(fwg_double_null.rs[0]),
                 fwg_double_null.zs[0],
                 color="black",
-                lw=thin,
+                lw=0,
             )
             axis.plot(
                 x_scale * np.array(fwg_double_null.rs[1]),
                 fwg_double_null.zs[1],
                 color="black",
-                lw=thin,
+                lw=0,
             )
             axis.fill(
                 x_scale * np.array(fwg_double_null.rs[0]),
