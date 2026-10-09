@@ -172,11 +172,11 @@ class Neoclassics(Model):
         Returns
         -------
         dens:
-            density of electron, deuterium, tritum and alpha [1/m3]
+            density of electron, deuterium, tritum and alpha [m⁻³]
         temp:
             temperature of electron, deuterium, tritum and alpha [J]
         dr_dens:
-            derivative density of electron, deuterium, tritum and alpha [1/m3]
+            derivative density of electron, deuterium, tritum and alpha [m⁻³]
         dr_temp:
             derivative temperature of electron, deuterium, tritum and alpha [J]
         """
