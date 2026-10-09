@@ -761,7 +761,7 @@ class ImpurityRadiation:
 
         Raises
         ------
-        ValueError
+        ProcessValueError
             If the sum of core and edge impurity radiation does not match the total
             volume averaged radiation.
 
@@ -774,7 +774,7 @@ class ImpurityRadiation:
             profile_dx=self.plasma_profile.neprofile.profile_dx,
         )
 
-        # This volime average is still over the full plasma volume even though its
+        # This volume average is still over the full plasma volume even though its
         # just for the core
         self.pden_impurity_core_rad_reduced_vol_avg_mw = (
             1.0e-6
@@ -785,7 +785,7 @@ class ImpurityRadiation:
             )
         )
 
-        # This volime average is still over the full plasma volume even though its
+        # This volume average is still over the full plasma volume even though its
         # just for the core
         self.pden_impurity_core_rad_vol_avg_mw = 1.0e-6 * calculate_vol_avg_of_profile(
             profile_x=self.plasma_profile.neprofile.profile_x,
@@ -793,7 +793,7 @@ class ImpurityRadiation:
             profile_dx=self.plasma_profile.neprofile.profile_dx,
         )
 
-        # This volime average is still over the full plasma volume even though its
+        # This volume average is still over the full plasma volume even though its
         # just for the edge
         self.pden_impurity_rad_edge_vol_avg_mw = 1.0e-6 * calculate_vol_avg_of_profile(
             profile_x=self.plasma_profile.neprofile.profile_x,
@@ -808,7 +808,7 @@ class ImpurityRadiation:
             rtol=1.0e-9,
             atol=1.0e-12,
         ):
-            raise ValueError(
+            raise ProcessValueError(
                 "The sum of core and edge impurity radiation does not match the total "
                 "volume averaged radiation."
             )
