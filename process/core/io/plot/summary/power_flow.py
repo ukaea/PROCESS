@@ -10,7 +10,6 @@ from process.core.io.plot.summary.common import (
     setup_axis,
     text_layout,
 )
-from process.core.io.plot.summary.rendering import draw_annotation, draw_text
 from process.core.io.plot.summary.reporting.text import plot_info
 
 if TYPE_CHECKING:
@@ -37,8 +36,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     fig:
         The matplotlib figure object for additional annotations.
     """
-    draw_text(
-        axis,
+    axis.text(
         0.05,
         0.95,
         "* Components do not represent the design",
@@ -64,8 +62,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     new_ax.axis("off")
 
     # Add fusion power to plasma
-    draw_text(
-        axis,
+    axis.text(
         0.22,
         0.75,
         f"$P_{{{{fus}}}}$\n{mfile.get('p_fusion_total_mw', scan=scan):.2f} MW",
@@ -85,8 +82,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     new_ax.axis("off")
 
     # Add lost alpha power
-    draw_text(
-        axis,
+    axis.text(
         0.22,
         0.81,
         f"$P_{{\\alpha,{{loss}}}}$\n{mfile.get('p_fw_alpha_mw', scan=scan):,.2f} MW",
@@ -98,8 +94,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Add radiation power to plasma
-    draw_text(
-        axis,
+    axis.text(
         0.22,
         0.69,
         f"$P_{{{{rad}}}}$\n{mfile.get('p_plasma_rad_mw', scan=scan):,.2f} MW",
@@ -111,8 +106,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Add photon image to plasma
-    draw_text(
-        axis,
+    axis.text(
         0.34,
         0.71,
         "$\\gamma$",
@@ -124,8 +118,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Draw from gamma arrow bend towards divertor
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.35, 0.55),
         xytext=(0.35, 0.695),
@@ -140,8 +133,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Add separatrix power to plasma
-    draw_text(
-        axis,
+    axis.text(
         0.22,
         0.63,
         f"$P_{{{{sep}}}}$\n{mfile.get('p_plasma_separatrix_mw', scan=scan):,.2f} MW",
@@ -153,8 +145,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Draw from separatrix power to arrow bend
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.3725, 0.65),
         xytext=(0.3, 0.65),
@@ -167,8 +158,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Draw from separatrix arrow bend to the divertor
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.37, 0.55),
         xytext=(0.37, 0.65),
@@ -183,8 +173,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Draw neutron arrow from plasma
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.95, 0.76),
         xytext=(0.31, 0.76),
@@ -199,8 +188,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Draw arrow from main neutron arrow down to divertor
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.39, 0.55),
         xytext=(0.39, 0.76),
@@ -215,8 +203,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Draw radiation arrow from plasma
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.56, 0.695),
         xytext=(0.3, 0.695),
@@ -244,8 +231,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     axis.axis("off")
 
     # Draw alpha particle arrow from plasma
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.56, 0.83),
         xytext=(0.3, 0.83),
@@ -260,18 +246,12 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Plot neutron power from plasma to box
-    draw_text(
-        axis,
+    axis.text(
         0.37,
         0.775,
         f"$P_{{\\text{{neutron}}}}$:\n{mfile.get('p_neutron_total_mw', scan=scan):,.2f} MW",  # noqa: E501
         **text_layout(fig),
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "grey",
-            "alpha": 0.8,
-            "linewidth": 2,
-        },
+        bbox=box_style("grey", alpha=0.8),
     )
 
     # ===========================================
@@ -281,8 +261,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     # =========================================
 
     # Add HCD primary injected power
-    draw_text(
-        axis,
+    axis.text(
         0.0725,
         0.83,
         "$P_{\\text{HCD,primary}}$:"
@@ -292,8 +271,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Add HCD secondary injected power
-    draw_text(
-        axis,
+    axis.text(
         0.0725,
         0.725,
         "$P_{\\text{HCD,secondary}}$:"
@@ -317,8 +295,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
 
     # Draw a dashed line with an arrow tip coming from the left of each injector
     for y in [0.875, 0.75]:
-        draw_annotation(
-            axis,
+        axis.annotate(
             "",
             xy=(-0.2, y),
             xytext=(-0.28, y),
@@ -344,8 +321,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Plot the HCD power supply box
-    draw_text(
-        axis,
+    axis.text(
         0.04,
         0.45,
         "\n\nH&CD Power Supply\n\n",
@@ -355,8 +331,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Draw arrow from HCD box going to primary HCD losses
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.2, 0.5),
         xytext=(0.1, 0.5),
@@ -372,18 +347,16 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Plot electric power losses for secondary HCD
-    draw_text(
-        axis,
+    axis.text(
         0.2,
         0.435,
         f"$P_{{\\text{{secondary,loss}}}}$:\n{mfile.get('p_hcd_secondary_electric_mw', scan=scan) * (1.0 - mfile.get('eta_hcd_secondary_injector_wall_plug', scan=scan)):.2f} MWe",  # noqa: E501
         **text_layout(fig),
-        bbox=box_style("lightblue") | {"linestyle": "dashed"},
+        bbox=box_style("lightblue", linestyle="dashed"),
     )
 
     # Draw an arrow from HCD secondary losses to the total secondary heat power
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.25, 0.3),
         xytext=(0.25, 0.43),
@@ -399,8 +372,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Draw an arrow from HCD primary losses bend to the total secondary heat power
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.28, 0.3),
         xytext=(0.28, 0.5),
@@ -416,8 +388,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Draw line from HCD primary losses to the arrow bend
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.26, 0.5),
         xytext=(0.28, 0.5),
@@ -433,8 +404,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Draw arrow frim HCD power supply to secondary HCD losses
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.2, 0.46),
         xytext=(0.1, 0.46),
@@ -450,18 +420,16 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Plot electric power losses for primary HCD
-    draw_text(
-        axis,
+    axis.text(
         0.2,
         0.485,
         f"$P_{{\\text{{primary,loss}}}}$:\n{mfile.get('p_hcd_primary_electric_mw', scan=scan) * (1.0 - mfile.get('eta_hcd_primary_injector_wall_plug', scan=scan)):.2f} MWe",  # noqa: E501
         **text_layout(fig),
-        bbox=box_style("lightblue") | {"linestyle": "dashed"},
+        bbox=box_style("lightblue", linestyle="dashed"),
     )
 
     # Draw arrow from HCD primary electric box to HCD power supply box
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.06, 0.45),
         xytext=(0.06, 0.38),
@@ -475,8 +443,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Draw arrow from HCD secondary electric box to HCD power supply box
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.12, 0.45),
         xytext=(0.12, 0.38),
@@ -490,8 +457,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Plot HCD secondary losses box
-    draw_text(
-        axis,
+    axis.text(
         0.12,
         0.35,
         f"$P_{{\\text{{secondary}}}}$:\n{mfile.get('p_hcd_secondary_electric_mw', scan=scan):.2f}"  # noqa: E501
@@ -502,8 +468,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Plot HCD primary electric box
-    draw_text(
-        axis,
+    axis.text(
         0.025,
         0.35,
         f"$P_{{\\text{{primary}}}}$:\n{mfile.get('p_hcd_primary_electric_mw', scan=scan):.2f}"  # noqa: E501
@@ -520,8 +485,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     # =============================================
 
     # Plot box of total low grade secondary heat
-    draw_text(
-        axis,
+    axis.text(
         0.325,
         0.225,
         "\n\nTotal Low Grade Secondary Heat\n\n"
@@ -530,7 +494,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         verticalalignment="bottom",
         horizontalalignment="center",
         transform=fig.transFigure,
-        bbox=box_style("lightblue") | {"linestyle": "dashed"},
+        bbox=box_style("lightblue", linestyle="dashed"),
         zorder=4,
     )
 
@@ -549,8 +513,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     new_ax.axis("off")
 
     # Plot the total primary thermal power box
-    draw_text(
-        axis,
+    axis.text(
         0.9,
         0.25,
         f"$P_{{\\text{{primary,thermal}}}}$:\n{mfile.get('p_plant_primary_heat_mw', scan=scan):,.2f}"  # noqa: E501
@@ -561,8 +524,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Draw arrow from bend to turbine inlet
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.925, 0.165),
         xytext=(0.96, 0.165),
@@ -577,8 +539,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Total primary thermal to turbine inlet line bend
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.96, 0.245),
         xytext=(0.96, 0.1625),
@@ -603,8 +564,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     new_ax.axis("off")
 
     # Generator to gross electric power
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.745, 0.17),
         xytext=(0.79, 0.17),
@@ -619,8 +579,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Generator labels
-    draw_text(
-        axis,
+    axis.text(
         0.79,
         0.16,
         "Generator",
@@ -629,8 +588,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Connector from turbine to generator
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.85, 0.17),
         xytext=(0.925, 0.17),
@@ -645,8 +603,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Turbine to loss power
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.91, 0.08),
         xytext=(0.91, 0.13),
@@ -672,8 +629,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     new_ax.axis("off")
 
     # Plot the gross electric power box
-    draw_text(
-        axis,
+    axis.text(
         0.68,
         0.15,
         f"$P_{{\\text{{gross}}}}$:\n{mfile.get('p_plant_electric_gross_mw', scan=scan):,.2f} MWe",  # noqa: E501
@@ -682,8 +638,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Gross to net electric power
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.72, 0.08),
         xytext=(0.72, 0.15),
@@ -698,19 +653,17 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Plot the turbine loss box
-    draw_text(
-        axis,
+    axis.text(
         0.875,
         0.05,
         f"$P_{{\\text{{loss}}}}$:\n{mfile.get('p_turbine_loss_mw', scan=scan):,.2f}"
         " MWth",
         **text_layout(fig),
-        bbox=box_style("orange") | {"linestyle": "dashed"},
+        bbox=box_style("orange", linestyle="dashed"),
     )
 
     # Shield primary thermal to plant total primary thermal arrow
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.95, 0.3),
         xytext=(0.95, 0.55),
@@ -725,8 +678,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Plot the net electric power box
-    draw_text(
-        axis,
+    axis.text(
         0.68,
         0.05,
         f"$P_{{\\text{{net,electric}}}}$:\n{mfile.get('p_plant_electric_net_mw', scan=scan):,.2f} MWe",  # noqa: E501
@@ -735,8 +687,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Plot the recirculated electric power box
-    draw_text(
-        axis,
+    axis.text(
         0.575,
         0.14,
         f"$P_{{\\text{{recirc,electric}}}}$:\n{mfile.get('p_plant_electric_recirc_mw', scan=scan):,.2f}"  # noqa: E501
@@ -747,8 +698,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Gross to recirculated power arrow
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.64, 0.17),
         xytext=(0.675, 0.17),
@@ -763,8 +713,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Recirculated to pumps electric
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.7, 0.225),
         xytext=(0.645, 0.185),
@@ -779,8 +728,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Recirculated power to HCD secondary electric arrow bend
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.14, 0.2),
         xytext=(0.57, 0.2),
@@ -795,8 +743,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Recirculated power to HCD primary electric arrow bend
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.08, 0.18),
         xytext=(0.57, 0.18),
@@ -811,8 +758,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Arrow to primary HCD electric from bend
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.08, 0.35),
         xytext=(0.08, 0.1775),
@@ -827,8 +773,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Arrow to secondary HCD electric from bend
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.14, 0.35),
         xytext=(0.14, 0.2),
@@ -857,8 +802,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     new_ax.axis("off")
 
     # Add first wall label above image
-    draw_text(
-        axis,
+    axis.text(
         0.5,
         0.9,
         "First Wall",
@@ -869,8 +813,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Alpha power incident on first wall box
-    draw_text(
-        axis,
+    axis.text(
         0.46,
         0.85,
         "$P_{\\text{FW,"
@@ -880,38 +823,25 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Neutron power incident on first wall box
-    draw_text(
-        axis,
+    axis.text(
         0.46,
         0.775,
         f"$P_{{\\text{{FW,nuclear}}}}$:\n{mfile.get('p_fw_nuclear_heat_total_mw', scan=scan):,.2f} MW",  # noqa: E501
         **text_layout(fig),
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "grey",
-            "alpha": 0.8,
-            "linewidth": 2,
-        },
+        bbox=box_style("grey", alpha=0.8),
     )
 
     # Plot radiation power incident on first wall box
-    draw_text(
-        axis,
+    axis.text(
         0.46,
         0.71,
         f"$P_{{\\text{{FW,rad}}}}$:\n{mfile.get('p_fw_rad_total_mw', scan=scan):,.2f} MW",  # noqa: E501
         **text_layout(fig),
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "dodgerblue",
-            "alpha": 0.8,
-            "linewidth": 2,
-        },
+        bbox=box_style("dodgerblue", alpha=0.8),
     )
 
     # Draw arrow from FW to heat depsoited box
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.61, 0.585),
         xytext=(0.61, 0.65),
@@ -926,8 +856,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Draw arrow from Blanket to heat deposited box
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.81, 0.585),
         xytext=(0.81, 0.63),
@@ -942,8 +871,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Draw arrow from shield to heat deposited box
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.92, 0.59),
         xytext=(0.92, 0.62),
@@ -958,52 +886,36 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # First wall heat deposited box
-    draw_text(
-        axis,
+    axis.text(
         0.5,
         0.555,
         "Primary thermal\n(inc pump):"
         f" {mfile.get('p_fw_heat_deposited_mw', scan=scan):,.2f} MWth",
         **text_layout(fig),
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "orange",
-            "linewidth": 2,
-        },
+        bbox=box_style("orange"),
     )
 
     # Blanket heat deposited box
-    draw_text(
-        axis,
+    axis.text(
         0.7,
         0.555,
         "Primary thermal\n(inc pump):"
         f" {mfile.get('p_blkt_heat_deposited_mw', scan=scan):,.2f} MWth",
         **text_layout(fig),
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "orange",
-            "linewidth": 2,
-        },
+        bbox=box_style("orange"),
     )
 
     # Shield heat deposited box
-    draw_text(
-        axis,
+    axis.text(
         0.875,
         0.555,
         f"Primary thermal:\n{mfile.get('p_shld_heat_deposited_mw', scan=scan):.2f} MWth",
         **text_layout(fig),
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "orange",
-            "linewidth": 2,
-        },
+        bbox=box_style("orange"),
     )
 
     # Draw arrow from FW primary heat box to blanket and FW primary heat deposited box
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.65, 0.52),
         xytext=(0.62, 0.55),
@@ -1019,8 +931,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
 
     # Draw arrow from blanket primary heat box to blanket and FW primary heat deposited
     # box
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.68, 0.52),
         xytext=(0.7, 0.55),
@@ -1036,8 +947,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
 
     # Draw a downward arrow from the primary thermal box to the right side of the
     # generator
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.825, 0.57),
         xytext=(0.87, 0.57),
@@ -1052,8 +962,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Connect blanket thermal heat deposited to the shield heat deposited
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.625, 0.57),
         xytext=(0.695, 0.57),
@@ -1068,8 +977,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Connect first wall thermal heat deposited to the blanket heat deposited
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.56, 0.52),
         xytext=(0.56, 0.55),
@@ -1084,8 +992,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # FW and blanket heat deposited box
-    draw_text(
-        axis,
+    axis.text(
         0.6,
         0.49,
         "Primary thermal (inc pump):"
@@ -1105,8 +1012,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     new_ax.axis("off")
 
     # Add blanket label above image
-    draw_text(
-        axis,
+    axis.text(
         0.7,
         0.9,
         "Blanket",
@@ -1117,8 +1023,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Plot the nuclear heat total from blanket
-    draw_text(
-        axis,
+    axis.text(
         0.625,
         0.775,
         f"$P_{{\\text{{Blkt,nuclear}}}}$:\n{mfile.get('p_blkt_nuclear_heat_total_mw', scan=scan):,.2f}"  # noqa: E501
@@ -1127,12 +1032,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         " MW\n"
         f"$f_{{\\text{{multiplication}}}}$:\n{mfile.get('f_p_blkt_multiplication', scan=scan):,.2f}",  # noqa: E501
         **text_layout(fig),
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "grey",
-            "alpha": 0.8,
-            "linewidth": 2,
-        },
+        bbox=box_style("grey", alpha=0.8),
     )
 
     # Load the vacuum vessel image
@@ -1146,8 +1046,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     new_ax.axis("off")
 
     # Add vacuum vessel label above image
-    draw_text(
-        axis,
+    axis.text(
         0.85,
         0.9,
         "Vacuum Vessel",
@@ -1158,19 +1057,17 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Plot the secondary heat from the shield
-    draw_text(
-        axis,
+    axis.text(
         0.38,
         0.375,
         f"$P_{{\\text{{shld,secondary}}}}$:\n{mfile.get('p_shld_secondary_heat_mw', scan=scan):,.2f}"  # noqa: E501
         " MWth",
         **text_layout(fig),
-        bbox=box_style("lightblue") | {"linestyle": "dashed"},
+        bbox=box_style("lightblue", linestyle="dashed"),
     )
 
     # Shield secondary power box to secondary heat total
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.4, 0.3),
         xytext=(0.4, 0.37),
@@ -1186,8 +1083,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Arrow from shield bend to sheidl secondary heat
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.445, 0.39),
         xytext=(0.85, 0.39),
@@ -1203,8 +1099,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Line from shield to arrow bend for secondary heat
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.85, 0.385),
         xytext=(0.85, 0.625),
@@ -1223,8 +1118,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     # Divertor
     # ============================================
 
-    draw_text(
-        axis,
+    axis.text(
         0.325,
         0.48,
         "Divertor",
@@ -1245,38 +1139,25 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     new_ax.axis("off")
 
     # Total divertor radiation power box
-    draw_text(
-        axis,
+    axis.text(
         0.29,
         0.57,
         f"$P_{{\\text{{div,rad}}}}$:\n{mfile.get('p_div_rad_total_mw', scan=scan):,.2f} MW",  # noqa: E501
         **text_layout(fig),
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "dodgerblue",
-            "alpha": 0.8,
-            "linewidth": 2,
-        },
+        bbox=box_style("dodgerblue", alpha=0.8),
     )
 
     # Divertor nuclear heat total box
-    draw_text(
-        axis,
+    axis.text(
         0.4,
         0.58,
         f"$P_{{\\text{{div,nuclear}}}}$:\n{mfile.get('p_div_nuclear_heat_total_mw', scan=scan):,.2f} MW",  # noqa: E501
         **text_layout(fig),
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "grey",
-            "alpha": 0.8,
-            "linewidth": 2,
-        },
+        bbox=box_style("grey", alpha=0.8),
     )
 
     # Divertor primary thermal heat deposited box
-    draw_text(
-        axis,
+    axis.text(
         0.44,
         0.46,
         "Primary thermal (inc"
@@ -1285,28 +1166,22 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         f" {mfile.get('f_ster_div_single', scan=scan):.3f}\nPrimary heat"
         f" fraction: {mfile.get('f_p_div_primary_heat', scan=scan):.3f}",
         **text_layout(fig),
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "orange",
-            "linewidth": 2,
-        },
+        bbox=box_style("orange"),
         zorder=100,
     )
 
     # Divertor secondary heat box
-    draw_text(
-        axis,
+    axis.text(
         0.3,
         0.375,
         f"$P_{{\\text{{div,secondary}}}}$:\n{mfile.get('p_div_secondary_heat_mw', scan=scan):.2f}"  # noqa: E501
         " MWth",
         **text_layout(fig),
-        bbox=box_style("lightblue") | {"linestyle": "dashed"},
+        bbox=box_style("lightblue", linestyle="dashed"),
     )
 
     # Divertor to divertor secondary heat arrow
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.33, 0.405),
         xytext=(0.33, 0.5),
@@ -1322,8 +1197,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Divertor to divertor primary thermal heat arrow
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.445, 0.5),
         xytext=(0.4, 0.5),
@@ -1338,8 +1212,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Divertor secondary heat to total secondary heat arrow
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.33, 0.3),
         xytext=(0.33, 0.375),
@@ -1361,24 +1234,17 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     # ===========================================
 
     # Divertor coolant pump box
-    draw_text(
-        axis,
+    axis.text(
         0.55,
         0.33,
         "$P_{\\text{div,pump}}$:"
         f" {mfile.get('p_div_coolant_pump_mw', scan=scan):.2f} MW",
         **text_layout(fig),
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "wheat",
-            "alpha": 0.8,
-            "linewidth": 2,
-        },
+        bbox=box_style("wheat", alpha=0.8),
     )
 
     # Divertor pump box to divertor primary heat deposited box
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.57, 0.46),
         xytext=(0.57, 0.35),
@@ -1393,8 +1259,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Coolant pumps total to divertor pump box
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.64, 0.34),
         xytext=(0.7, 0.34),
@@ -1409,8 +1274,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Pumps total to shield bump box arrow
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.875, 0.34),
         xytext=(0.81, 0.34),
@@ -1425,39 +1289,26 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Shield coolant pump box
-    draw_text(
-        axis,
+    axis.text(
         0.875,
         0.325,
         f"$P_{{\\text{{shld,pump}}}}$:\n{mfile.get('p_shld_coolant_pump_mw', scan=scan):.2f} MW",  # noqa: E501
         **text_layout(fig),
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "wheat",
-            "alpha": 0.8,
-            "linewidth": 2,
-        },
+        bbox=box_style("wheat", alpha=0.8),
     )
 
     # FW and Blanket coolant pumps total
-    draw_text(
-        axis,
+    axis.text(
         0.725,
         0.4,
         "$P_{\\text{FW +"
         f" Blkt}}}}$:\n{mfile.get('p_fw_blkt_coolant_pump_mw', scan=scan):.2f} MW",
         **text_layout(fig),
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "wheat",
-            "alpha": 0.8,
-            "linewidth": 2,
-        },
+        bbox=box_style("wheat", alpha=0.8),
     )
 
     # FW and Blanket coolant pumps total to FW and Blanket heat deposited box
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.75, 0.49),
         xytext=(0.75, 0.44),
@@ -1472,8 +1323,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Coolant pumps total to blanket and FW pump
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.75, 0.4),
         xytext=(0.75, 0.36),
@@ -1488,8 +1338,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Shield pump to sheild primary thermal
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.9, 0.54),
         xytext=(0.9, 0.36),
@@ -1504,8 +1353,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Coolant pumps total electric box
-    draw_text(
-        axis,
+    axis.text(
         0.7,
         0.225,
         "Coolant pumps"
@@ -1513,33 +1361,21 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         " MWe\n$\\eta$:"
         f" {mfile.get('eta_coolant_pump_electric', scan=scan):.3f}",
         **text_layout(fig),
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lime",
-            "alpha": 0.8,
-            "linewidth": 2,
-        },
+        bbox=box_style("lime", alpha=0.8),
     )
 
     # Coolant pumps total
-    draw_text(
-        axis,
+    axis.text(
         0.7,
         0.325,
         "Coolant pumps"
         f" total:\n{mfile.get('p_coolant_pump_total_mw', scan=scan):.3f} MW",
         **text_layout(fig),
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "wheat",
-            "alpha": 0.8,
-            "linewidth": 2,
-        },
+        bbox=box_style("wheat", alpha=0.8),
     )
 
     # Electric recirculated to pumps total arrow
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.75, 0.325),
         xytext=(0.75, 0.275),
@@ -1554,26 +1390,18 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Coolant pumps losses total box
-    draw_text(
-        axis,
+    axis.text(
         0.5,
         0.235,
         "Coolant pumps losses"
         f" total:\n{mfile.get('p_coolant_pump_loss_total_mw', scan=scan):.3f}"
         " MWth",
         **text_layout(fig),
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightblue",
-            "alpha": 0.8,
-            "linewidth": 2,
-            "linestyle": "dashed",
-        },
+        bbox=box_style("lightblue", alpha=0.8, linestyle="dashed"),
     )
 
     # Coolant electric to pump losses arrow
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.645, 0.25),
         xytext=(0.695, 0.25),
@@ -1589,8 +1417,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Coolant losses to secondary heat total arrow
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.405, 0.25),
         xytext=(0.4975, 0.25),
@@ -1612,23 +1439,16 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     # ===========================================
 
     # Cryo Plant box
-    draw_text(
-        axis,
+    axis.text(
         0.49,
         0.05,
         f"Cryo Plant:\n{mfile.get('p_cryo_plant_electric_mw', scan=scan):.3f} MWe",
         **text_layout(fig),
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "burlywood",
-            "alpha": 0.8,
-            "linewidth": 2,
-        },
+        bbox=box_style("burlywood", alpha=0.8),
     )
 
     # Recirculated power to cryo plant arrow
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.525, 0.075),
         xytext=(0.525, 0.1625),
@@ -1643,23 +1463,16 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Tritium Plant box
-    draw_text(
-        axis,
+    axis.text(
         0.4,
         0.05,
         f"Tritium Plant:\n{mfile.get('p_tritium_plant_electric_mw', scan=scan):.3f} MWe",
         **text_layout(fig),
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "burlywood",
-            "alpha": 0.8,
-            "linewidth": 2,
-        },
+        bbox=box_style("burlywood", alpha=0.8),
     )
 
     # # Recirculated power to tritium plant arrow
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.44, 0.075),
         xytext=(0.44, 0.1625),
@@ -1674,23 +1487,16 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Vacuum Pumps box
-    draw_text(
-        axis,
+    axis.text(
         0.575,
         0.05,
         f"Vacuum pumps:\n{mfile.get('vachtmw', scan=scan):.3f} MWe",
         **text_layout(fig),
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "burlywood",
-            "alpha": 0.8,
-            "linewidth": 2,
-        },
+        bbox=box_style("burlywood", alpha=0.8),
     )
 
     # Recirculated power to vacuum pumps arrow
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.62, 0.08),
         xytext=(0.62, 0.1375),
@@ -1705,8 +1511,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Plant base load box
-    draw_text(
-        axis,
+    axis.text(
         0.085,
         0.075,
         "Plant base"
@@ -1717,47 +1522,29 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         f" density:\n{mfile.get('pflux_plant_floor_electric', scan=scan) * 1.0e-3:.3f}"
         " kW$\\text{m}^{-2}$",
         **text_layout(fig),
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "burlywood",
-            "alpha": 0.8,
-            "linewidth": 2,
-        },
+        bbox=box_style("burlywood", alpha=0.8),
     )
 
     # TF coil power box
-    draw_text(
-        axis,
+    axis.text(
         0.325,
         0.075,
         f"TF coils:\n{mfile.get('p_tf_electric_supplies_mw', scan=scan):.3f} MWe",
         **text_layout(fig),
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "burlywood",
-            "alpha": 0.8,
-            "linewidth": 2,
-        },
+        bbox=box_style("burlywood", alpha=0.8),
     )
 
     # PF coil power box
-    draw_text(
-        axis,
+    axis.text(
         0.25,
         0.05,
         f"PF coils:\n{mfile.get('p_pf_electric_supplies_mw', scan=scan):.3f} MWe",
         **text_layout(fig),
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "burlywood",
-            "alpha": 0.8,
-            "linewidth": 2,
-        },
+        bbox=box_style("burlywood", alpha=0.8),
     )
 
     # Recirculated power to TF,PF and plant base arrow bend
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.22, 0.16),
         xytext=(0.574, 0.16),
@@ -1772,8 +1559,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Recirculated power to  PF
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.28, 0.075),
         xytext=(0.28, 0.1625),
@@ -1788,8 +1574,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Recirculated power to TF
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.35, 0.1),
         xytext=(0.35, 0.1625),
@@ -1804,25 +1589,17 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # HCD secondary heat box
-    draw_text(
-        axis,
+    axis.text(
         0.46,
         0.285,
         f"$P_{{\\text{{HCD,loss}}}}$:\n{mfile.get('p_hcd_secondary_heat_mw', scan=scan):.2f}"  # noqa: E501
         " MWth",
         **text_layout(fig),
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightblue",
-            "alpha": 0.8,
-            "linewidth": 2,
-            "linestyle": "dashed",
-        },
+        bbox=box_style("lightblue", alpha=0.8, linestyle="dashed"),
     )
 
     # FW to HCD secondary heat arrow
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.47, 0.32),
         xytext=(0.47, 0.65),
@@ -1838,8 +1615,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # HCD loss to total secondary heat
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.41, 0.295),
         xytext=(0.455, 0.295),
@@ -1855,19 +1631,17 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # TF nuclear heat box
-    draw_text(
-        axis,
+    axis.text(
         0.155,
         0.25,
         f"$P_{{\\text{{TF,nuclear}}}}$:\n{mfile.get('p_tf_nuclear_heat_mw', scan=scan):.2f}"  # noqa: E501
         " MWth",
         **text_layout(fig),
-        bbox=box_style("lightblue") | {"linestyle": "dashed"},
+        bbox=box_style("lightblue", linestyle="dashed"),
     )
 
     # TF nuclear heat to secondary heat total box arrow
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=(0.245, 0.265),
         xytext=(0.215, 0.265),
@@ -1895,7 +1669,7 @@ def plot_power_info(axis: plt.Axes, mfile: MFile, scan: int):
     scan :
         scan number to use
     """
-    draw_text(axis, -0.05, 1, "Power flows:", ha="left", va="center")
+    axis.text(-0.05, 1, "Power flows:", ha="left", va="center")
     setup_axis(axis, xmin=0, xmax=1, ymin=-16, ymax=1)
 
     gross_eff = 100.0 * (

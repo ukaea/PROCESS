@@ -10,7 +10,6 @@ from matplotlib import patches
 from matplotlib.patches import Rectangle
 
 from process.core.io.plot.summary.common import box_style, text_layout
-from process.core.io.plot.summary.rendering import draw_text
 
 if TYPE_CHECKING:
     from process.core.io.mfile import MFile
@@ -84,8 +83,7 @@ def plot_cable_in_conduit_cable(axis: plt.Axes, fig, mfile: MFile, scan: int):
         " km\nTotal length of superconductor in all coils:"
         f" {len_tf_superconductor_total_km:,.2f} km\n"
     )
-    draw_text(
-        axis,
+    axis.text(
         0.4,
         0.3,
         textstr_cable,

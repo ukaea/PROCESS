@@ -6,8 +6,6 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
-from process.core.io.plot.summary.rendering import draw_text
-
 if TYPE_CHECKING:
     import matplotlib.pyplot as plt
 
@@ -71,8 +69,7 @@ def plot_equality_constraint_equations(axis: plt.Axes, m_file_data: MFile, scan:
         )
 
         # Add the value as a number to the right of the bar
-        draw_text(
-            axis,
+        axis.text(
             con_norm_residual + 0.52,
             n_plot,
             f"{con_norm_residual:.8g}",
@@ -83,8 +80,7 @@ def plot_equality_constraint_equations(axis: plt.Axes, m_file_data: MFile, scan:
         )
 
         # Add the constraint value as text to the left of the y-axis
-        draw_text(
-            axis,
+        axis.text(
             0.45,
             n_plot,
             f"{con_value:.8g} {con_units}",
@@ -224,8 +220,7 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: MFile, scan: in
             )
 
         # Plot the value as a number at x = 0.5
-        draw_text(
-            axis,
+        axis.text(
             0.5,
             n_plot,
             f"{con_value:,.8g} {con_units}",
@@ -249,8 +244,7 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: MFile, scan: in
         # Annoate the bound value depending if it is an upper or lower limit
         if con_symbol == "'<='":
             # Add the constraint symbol and bound as text
-            draw_text(
-                axis,
+            axis.text(
                 1.02,  # Position text slightly to the right of the normalised bound
                 n_plot,
                 f"$\\leq$ {con_bound:,.8g} {con_units}",
@@ -260,8 +254,7 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: MFile, scan: in
                 color="black",
             )
         else:  # con_symbol == ">="
-            draw_text(
-                axis,
+            axis.text(
                 -0.025,  # Position text slightly to the left of the normalised bound
                 n_plot,
                 f"$\\geq$ {con_bound:,.8g} {con_units}",

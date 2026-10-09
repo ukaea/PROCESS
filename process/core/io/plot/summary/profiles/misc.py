@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 import numpy as np
 from scipy.interpolate import interp1d
 
-from process.core.io.plot.summary.rendering import draw_text
+from process.core.io.plot.summary.common import box_style
 from process.data_structure.impurity_radiation_variables import ImpurityRadiationData
 from process.models.geometry.plasma import plasma_geometry
 from process.models.physics.impurity_radiation import read_impurity_file
@@ -227,13 +227,7 @@ def plot_line_brem_power_density_profile(
     # Plot a vertical line at the core region radius
     axis.axvline(x=core_radius, color="black", linestyle="--", linewidth=1.0, alpha=0.7)
     # Plot a box in the bottom left with f_{core,reduce} and \rho_{core}
-    props_core_reduce = {
-        "boxstyle": "round",
-        "facecolor": "khaki",
-        "alpha": 0.8,
-    }
-    draw_text(
-        axis,
+    axis.text(
         0.02,
         0.02,
         rf"$f_{{\text{{core,reduce}}}}$ =  {1.0}\n"
@@ -241,7 +235,7 @@ def plot_line_brem_power_density_profile(
         transform=axis.transAxes,
         fontsize=8,
         verticalalignment="bottom",
-        bbox=props_core_reduce,
+        bbox=box_style("khaki", alpha=0.8, linewidth=None),
     )
 
     # Ranges
@@ -374,7 +368,6 @@ def plot_line_brem_power_profile(
     # Plot a vertical line at the core region radius
     axis.axvline(x=core_radius, color="black", linestyle="--", linewidth=1.0, alpha=0.7)
     # Plot a box in the bottom left with f_{core,reduce} and \rho_{core}
-    props_core_reduce = {"boxstyle": "round", "facecolor": "khaki", "alpha": 0.8}
     axis.text(
         0.05,
         0.02,
@@ -384,7 +377,7 @@ def plot_line_brem_power_profile(
         transform=axis.transAxes,
         fontsize=8,
         verticalalignment="bottom",
-        bbox=props_core_reduce,
+        bbox=box_style("khaki", alpha=0.8, linewidth=None),
     )
 
     cumulative_thermal_energy_mj = np.cumsum(p_total_profile)

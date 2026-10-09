@@ -11,7 +11,6 @@ from process.core import constants
 from process.core.io.plot.summary.common import box_style, text_layout
 from process.core.io.plot.summary.plasma.physics import reaction_plot_grid
 from process.core.io.plot.summary.profiles.misc import interp1d_profile
-from process.core.io.plot.summary.rendering import draw_text
 from process.data_structure.impurity_radiation_variables import ImpurityRadiationData
 from process.models.physics.profiles import PlasmaProfileShapeType
 
@@ -263,7 +262,6 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
         ),
     ))
 
-    props_density = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
     ax_main.text(
         -0.05,
         -0.175,
@@ -271,7 +269,7 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
         transform=ax_impurity.transAxes,
         fontsize=9,
         verticalalignment="top",
-        bbox=props_density,
+        bbox=box_style("wheat", alpha=0.5, linewidth=None),
     )
 
     textstr_ions = "\n".join((
@@ -810,8 +808,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         " reactions/m3/s\n"
     )
 
-    draw_text(
-        axis,
+    axis.text(
         0.05,
         0.85,
         textstr_general,
@@ -831,8 +828,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         f" {mfile.get('p_beam_dt_mw', scan=scan):,.2f} MW\n"
     )
 
-    draw_text(
-        axis,
+    axis.text(
         0.05,
         0.75,
         textstr_dt,
@@ -840,8 +836,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         bbox=box_style("lightyellow"),
     )
 
-    draw_text(
-        axis,
+    axis.text(
         0.24,
         0.8,
         "$\\text{D - T}$",
@@ -860,8 +855,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         f" {mfile.get('f_dd_branching_trit', scan=scan):.4f}\n"
     )
 
-    draw_text(
-        axis,
+    axis.text(
         0.05,
         0.65,
         textstr_dd,
@@ -869,8 +863,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         bbox=box_style("lightyellow"),
     )
 
-    draw_text(
-        axis,
+    axis.text(
         0.22,
         0.685,
         "$\\text{D - D}$",
@@ -887,8 +880,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         f" {mfile.get('pden_dhe3_total_vol_avg_mw', scan=scan):,.3e} MW/m³\n\n"
     )
 
-    draw_text(
-        axis,
+    axis.text(
         0.05,
         0.55,
         textstr_dhe3,
@@ -896,8 +888,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         bbox=box_style("lightyellow"),
     )
 
-    draw_text(
-        axis,
+    axis.text(
         0.21,
         0.59,
         "$\\text{D - 3He}$",
@@ -926,8 +917,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         f" {mfile.get('f_pden_alpha_ions_mw', scan=scan):.4e} MW/m3\n\n"
     )
 
-    draw_text(
-        axis,
+    axis.text(
         0.05,
         0.25,
         textstr_alpha,
@@ -935,8 +925,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         bbox=box_style("red"),
     )
 
-    draw_text(
-        axis,
+    axis.text(
         0.35,
         0.45,
         "$\\alpha$",
@@ -959,8 +948,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         " MW/m3\n"
     )
 
-    draw_text(
-        axis,
+    axis.text(
         0.05,
         0.1,
         textstr_neutron,
@@ -968,8 +956,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         bbox=box_style("grey"),
     )
 
-    draw_text(
-        axis,
+    axis.text(
         0.25,
         0.2,
         "$n$",
@@ -1066,8 +1053,7 @@ def plot_plasma_pressure_profiles(axis: plt.Axes, mfile: MFile, scan: int):
         ),
     ))
 
-    draw_text(
-        axis,
+    axis.text(
         0.5,
         1.2,
         textstr_pressure,
@@ -1093,8 +1079,7 @@ def plot_plasma_pressure_profiles(axis: plt.Axes, mfile: MFile, scan: int):
             ),
         ))
 
-        draw_text(
-            axis,
+        axis.text(
             0.9,
             1.2,
             textstr_pressure_pedestal,

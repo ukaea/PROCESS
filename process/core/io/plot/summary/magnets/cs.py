@@ -10,7 +10,6 @@ from matplotlib import patches
 
 from process.core.io.plot.summary.common import box_style, setup_axis, text_layout
 from process.core.io.plot.summary.constants import SOLENOID_COLOUR
-from process.core.io.plot.summary.rendering import draw_annotation, draw_text
 from process.core.io.plot.summary.reporting.text import plot_info
 from process.data_structure.pfcoil_variables import NFIXMX
 from process.models.superconductors import SuperconductorModel
@@ -37,13 +36,8 @@ def plot_physics_info(axis: plt.Axes, mfile: MFile, scan: int):
     scan :
         scan number to use
     """
-    xmin = 0
-    xmax = 1
-    ymin = -16
-    ymax = 1
-
-    draw_text(axis, -0.05, 1, "Physics:", ha="left", va="center")
-    setup_axis(axis, xmin, xmax, ymin, ymax)
+    axis.text(-0.05, 1, "Physics:", ha="left", va="center")
+    setup_axis(axis, xmin=0, xmax=1, ymin=-16, ymax=1)
 
     nong = mfile.get("nd_plasma_electron_line", scan=scan) / mfile.get(
         "nd_plasma_electron_max_array(7)", scan=scan
@@ -113,7 +107,7 @@ def plot_magnetics_info(axis: plt.Axes, mfile: MFile, scan: int):
     # Check for Copper magnets
     i_tf_sup = int(mfile.get("i_tf_sup", scan=scan)) if "i_tf_sup" in mfile.data else 1
 
-    draw_text(axis, -0.05, 1, "Coil currents etc:", ha="left", va="center")
+    axis.text(-0.05, 1, "Coil currents etc:", ha="left", va="center")
     setup_axis(axis, xmin=0, xmax=1, ymin=-16, ymax=1)
 
     # Number of coils (1 is OH coil)
@@ -344,8 +338,7 @@ def plot_cs_coil_structure(
         axis.axvline(x=-mfile.get("r_cs_middle", scan=scan), **l_kwargs)
 
         # Arrow for coil width
-        draw_annotation(
-            axis,
+        axis.annotate(
             "",
             xy=(0, (dz_cs_full / 2)),
             xytext=(0, -(dz_cs_full / 2)),
@@ -353,8 +346,7 @@ def plot_cs_coil_structure(
         )
 
         # Add a label for full coil width
-        draw_text(
-            axis,
+        axis.text(
             0.0,
             -(dz_cs_full / 4),
             f"{dz_cs_full:.3f} m",
@@ -363,12 +355,11 @@ def plot_cs_coil_structure(
             rotation=270,
             verticalalignment="center",
             horizontalalignment="center",
-            bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+            bbox=box_style("pink", linewidth=0),
         )
 
         # Arrow for coil width
-        draw_annotation(
-            axis,
+        axis.annotate(
             "",
             xy=(-(dr_cs_full / 2), (dz_cs_full / 4)),
             xytext=((dr_cs_full / 2), (dz_cs_full / 4)),
@@ -376,8 +367,7 @@ def plot_cs_coil_structure(
         )
 
         # Add a label for full coil width
-        draw_text(
-            axis,
+        axis.text(
             0.0,
             (dz_cs_full / 4),
             f"{dr_cs_full:.3f} m",
@@ -386,7 +376,7 @@ def plot_cs_coil_structure(
             rotation=0,
             verticalalignment="center",
             horizontalalignment="center",
-            bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+            bbox=box_style("pink", linewidth=0),
         )
 
     textstr_cs = (
@@ -413,8 +403,7 @@ def plot_cs_coil_structure(
         f" {mfile.get('stress_shear_cs_peak', scan=scan) / 1e6:.3f} MPa "
     )
 
-    draw_text(
-        axis,
+    axis.text(
         0.5,
         0.6,
         textstr_cs,
@@ -528,8 +517,7 @@ def plot_cs_turn_structure(axis: plt.Axes, fig, mfile: MFile, scan: int):
         f" {f_a_cs_turn_steel:.4f}\n"
     )
 
-    draw_text(
-        axis,
+    axis.text(
         0.7,
         0.375,
         textstr_turn,
@@ -605,8 +593,7 @@ def plot_pf_cs_plasma_mutual_inductance(
                     )
                 )
                 # Add text annotation with values
-                draw_text(
-                    axis,
+                axis.text(
                     j,
                     i,
                     f"{mutual_inductance[i, j]:.3e}",

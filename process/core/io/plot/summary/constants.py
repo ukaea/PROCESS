@@ -62,7 +62,6 @@ ANIMATION_INFO = [
 ]
 rtangle = np.pi / 2
 rtangle2 = 2 * rtangle
-white_box = {"boxstyle": "round", "facecolor": "white", "alpha": 1.0}
 
 
 __all__ = [
@@ -83,5 +82,4 @@ __all__ = [
     "rtangle2",
     "thin",
     "vertical_lower",
-    "white_box",
 ]

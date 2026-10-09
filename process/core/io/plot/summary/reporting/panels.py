@@ -20,10 +20,6 @@ from process.core.io.plot.summary.geometry.poloidal import (
 from process.core.io.plot.summary.plasma.physics import (
     plot_plasma,
 )
-from process.core.io.plot.summary.rendering import (
-    draw_annotation,
-    draw_text,
-)
 from process.core.io.plot.summary.reporting.text import plot_info
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.physics_variables import DivertorNumberModels
@@ -67,9 +63,8 @@ def plot_header(axis: plt.Axes, mfile: MFile, scan: int):
         ),
     ]
 
-    draw_text(axis, -0.05, 4.0, "Colour Legend:", ha="left", va="center")
-    draw_text(
-        axis,
+    axis.text(-0.05, 4.0, "Colour Legend:", ha="left", va="center")
+    axis.text(
         0.0,
         3.0,
         "ITR --> Iteration variable",
@@ -77,8 +72,7 @@ def plot_header(axis: plt.Axes, mfile: MFile, scan: int):
         ha="left",
         va="center",
     )
-    draw_text(
-        axis,
+    axis.text(
         0.0,
         2.0,
         "OP  --> Output variable",
@@ -154,9 +148,8 @@ def plot_header(axis: plt.Axes, mfile: MFile, scan: int):
             ("", "More than 11 impurities", ""),
         ]
     else:
-        draw_text(axis, -0.05, -6.4, "Plasma composition:", ha="left", va="center")
-        draw_text(
-            axis,
+        axis.text(-0.05, -6.4, "Plasma composition:", ha="left", va="center")
+        axis.text(
             -0.05,
             -7.2,
             "Number densities relative to electron density:",
@@ -236,8 +229,7 @@ def plot_separatrix_power_split(axis: plt.Axes, mfile: MFile, scan: int, colour_
     upper_inboard_pos = (rmajor - rminor, kappa * rminor)
     upper_outboard_pos = (rmajor + rminor, kappa * rminor)
 
-    draw_text(
-        axis,
+    axis.text(
         *centre_pos,
         f"$P_{{\\mathrm{{sep}}}} = {p_sep:.3f}$ MW",
         fontsize=text_fontsize,
@@ -246,8 +238,7 @@ def plot_separatrix_power_split(axis: plt.Axes, mfile: MFile, scan: int, colour_
         bbox=make_bbox_props(p_sep),
         zorder=101,
     )
-    draw_text(
-        axis,
+    axis.text(
         *outboard_pos,
         f"$f_{{\\mathrm{{outboard}}}} = {f_outboard:.3f}$\n"
         f"$\\Delta r_{{\\mathrm{{sep}}}} = {dr_sep:.3f}$ m",
@@ -257,8 +248,7 @@ def plot_separatrix_power_split(axis: plt.Axes, mfile: MFile, scan: int, colour_
         bbox=make_bbox_props(p_outboard),
         zorder=101,
     )
-    draw_text(
-        axis,
+    axis.text(
         *inboard_pos,
         f"$f_{{\\mathrm{{inboard}}}} = {f_inboard:.3f}$",
         fontsize=text_fontsize,
@@ -267,8 +257,7 @@ def plot_separatrix_power_split(axis: plt.Axes, mfile: MFile, scan: int, colour_
         bbox=make_bbox_props(p_inboard),
         zorder=101,
     )
-    draw_text(
-        axis,
+    axis.text(
         *lower_inboard_pos,
         "$f_{\\mathrm{lower\\ inboard}} ="
         f" {mfile.get('f_p_div_lower_inboard_separatrix', scan=scan):.3f}$\n$P_{{\\mathrm{{lower\\"  # noqa: E501
@@ -279,8 +268,7 @@ def plot_separatrix_power_split(axis: plt.Axes, mfile: MFile, scan: int, colour_
         bbox=make_bbox_props(p_lower_inboard),
         zorder=101,
     )
-    draw_text(
-        axis,
+    axis.text(
         *lower_outboard_pos,
         "$f_{\\mathrm{lower\\ outboard}} ="
         f" {mfile.get('f_p_div_lower_outboard_separatrix', scan=scan):.3f}$\n$P_{{\\mathrm{{lower\\"  # noqa: E501
@@ -292,8 +280,7 @@ def plot_separatrix_power_split(axis: plt.Axes, mfile: MFile, scan: int, colour_
         zorder=101,
     )
     if is_double_null:
-        draw_text(
-            axis,
+        axis.text(
             *upper_inboard_pos,
             "$f_{\\mathrm{upper\\ inboard}} ="
             f" {mfile.get('f_p_div_upper_inboard_separatrix', scan=scan):.3f}$\n$P_{{\\mathrm{{upper\\"  # noqa: E501
@@ -304,8 +291,7 @@ def plot_separatrix_power_split(axis: plt.Axes, mfile: MFile, scan: int, colour_
             bbox=make_bbox_props(p_upper_inboard),
             zorder=101,
         )
-        draw_text(
-            axis,
+        axis.text(
             *upper_outboard_pos,
             "$f_{\\mathrm{upper\\ outboard}} ="
             f" {mfile.get('f_p_div_upper_outboard_separatrix', scan=scan):.3f}$\n$P_{{\\mathrm{{upper\\"  # noqa: E501
@@ -325,24 +311,21 @@ def plot_separatrix_power_split(axis: plt.Axes, mfile: MFile, scan: int, colour_
         "shrinkB": 14 * scale_factor,
         "mutation_scale": 12 * scale_factor,
     }
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=outboard_pos,
         xytext=centre_pos,
         arrowprops=arrow_props,
         zorder=1,
     )
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=inboard_pos,
         xytext=centre_pos,
         arrowprops=arrow_props,
         zorder=1,
     )
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=lower_outboard_pos,
         xytext=outboard_pos,
@@ -352,8 +335,7 @@ def plot_separatrix_power_split(axis: plt.Axes, mfile: MFile, scan: int, colour_
         },
         zorder=102,
     )
-    draw_annotation(
-        axis,
+    axis.annotate(
         "",
         xy=lower_inboard_pos,
         xytext=inboard_pos,
@@ -364,8 +346,7 @@ def plot_separatrix_power_split(axis: plt.Axes, mfile: MFile, scan: int, colour_
         zorder=102,
     )
     if is_double_null:
-        draw_annotation(
-            axis,
+        axis.annotate(
             "",
             xy=upper_outboard_pos,
             xytext=outboard_pos,
@@ -375,8 +356,7 @@ def plot_separatrix_power_split(axis: plt.Axes, mfile: MFile, scan: int, colour_
             },
             zorder=102,
         )
-        draw_annotation(
-            axis,
+        axis.annotate(
             "",
             xy=upper_inboard_pos,
             xytext=inboard_pos,
@@ -453,8 +433,7 @@ def plot_cover_page(
         figure_merit_switch = int(figure_merit_switch)
         objective_text = f"  -> Maximising: {objf_name}"
 
-    draw_text(
-        axis,
+    axis.text(
         0.1,
         0.85,
         "PROCESS Run Summary",
@@ -471,8 +450,7 @@ def plot_cover_page(
         f"• User: {user}\n"
         f"• PROCESS Version: {procver}"
     )
-    draw_text(
-        axis,
+    axis.text(
         0.1,
         0.72,
         run_info,
@@ -490,8 +468,7 @@ def plot_cover_page(
     fileprefix = textwrap.fill(f"File Prefix: {fileprefix}", max_line_len)
 
     file_info = f"• Tag Number: {tagno}\n{branch_line}\n• {fileprefix}"
-    draw_text(
-        axis,
+    axis.text(
         0.1,
         0.57,
         file_info,
@@ -515,8 +492,7 @@ def plot_cover_page(
         f"• Solver Iterations: {n_solver_iterations}\n"
         f"• Runtime: {mfile.get('process_runtime', scan=-1):.6f} seconds"
     )
-    draw_text(
-        axis,
+    axis.text(
         0.1,
         0.46,
         settings_info,
@@ -527,8 +503,7 @@ def plot_cover_page(
         bbox=box_style("#f3e5f5"),
     )
 
-    draw_text(
-        axis,
+    axis.text(
         0.1,
         0.15,
         "For more information, see the following pages.",

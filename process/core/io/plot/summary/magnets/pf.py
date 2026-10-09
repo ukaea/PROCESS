@@ -9,7 +9,6 @@ from matplotlib import patches
 
 from process.core.io.plot.summary.constants import CSCOMPRESSION_COLOUR, SOLENOID_COLOUR
 from process.core.io.plot.summary.radial_build import cumulative_radial_build2
-from process.core.io.plot.summary.rendering import draw_annotation, draw_text
 from process.models.geometry.pfcoil import pfcoil_geometry
 
 if TYPE_CHECKING:
@@ -107,8 +106,7 @@ def plot_pf_coils(
         axis.plot(mirrored_r_points, z_points[i], color="black")
         # Scale fontsize relative to axis height and coil size
         fontsize = max(6, axis_height * abs(coils_dr[i] * coils_dz[i]) * 1.5)
-        draw_text(
-            axis,
+        axis.text(
             x_scale * coils_r[i],
             coils_z[i] - 0.05,
             coil_text[i],
@@ -191,8 +189,7 @@ def plot_pf_dimensions(
                     zorder=4,
                 )
 
-            draw_annotation(
-                axis,
+            axis.annotate(
                 f"({r_middle:.3f}, {z_middle:.3f})",
                 xy=(coil_left * 0.925, z_middle),
                 ha="right",
@@ -210,8 +207,7 @@ def plot_pf_dimensions(
             radial_arrow_y = coil_bottom if z_middle < 0 else coil_top
             radial_label_offset = (0, -24) if z_middle < 0 else (0, 4)
             radial_label_va = "top" if z_middle < 0 else "bottom"
-            draw_annotation(
-                axis,
+            axis.annotate(
                 "",
                 xy=(coil_left, radial_arrow_y),
                 xytext=(coil_right, radial_arrow_y),
@@ -224,8 +220,7 @@ def plot_pf_dimensions(
                 },
                 zorder=5,
             )
-            draw_annotation(
-                axis,
+            axis.annotate(
                 f"ΔR={abs(dr_coil):.3f}",
                 xy=(r_middle, radial_arrow_y),
                 xytext=radial_label_offset,
@@ -243,8 +238,7 @@ def plot_pf_dimensions(
             )
 
             vertical_arrow_x = coil_right
-            draw_annotation(
-                axis,
+            axis.annotate(
                 "",
                 xy=(vertical_arrow_x, coil_bottom),
                 xytext=(vertical_arrow_x, coil_top),
@@ -256,8 +250,7 @@ def plot_pf_dimensions(
                     "shrinkB": 0,
                 },
             )
-            draw_annotation(
-                axis,
+            axis.annotate(
                 f"ΔZ={abs(dz_coil):.3f}",
                 xy=(vertical_arrow_x, z_middle),
                 xytext=(4, 0),

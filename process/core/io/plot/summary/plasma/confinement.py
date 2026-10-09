@@ -7,7 +7,6 @@ from typing import TYPE_CHECKING
 import matplotlib.pyplot as plt
 import numpy as np
 
-from process.core.io.plot.summary.rendering import draw_text
 from process.data_structure.physics_variables import (
     ConfinementTimeModel,
     OutbordSOLPowerDecayLengthModel,
@@ -84,24 +83,21 @@ def plot_sol_power_decay_length_comparison(axis: plt.Axes, mfile: MFile, scan: i
     median_decay_length = np.median(data_values)
 
     # Plot average, standard deviation, and median as text
-    draw_text(
-        axis,
+    axis.text(
         1.02,
         0.2,
         f"Average: {avg_decay_length:.4f}",
         transform=axis.transAxes,
         fontsize=9,
     )
-    draw_text(
-        axis,
+    axis.text(
         1.02,
         0.15,
         f"Standard Dev: {std_decay_length:.4f}",
         transform=axis.transAxes,
         fontsize=9,
     )
-    draw_text(
-        axis,
+    axis.text(
         1.02,
         0.1,
         f"Median: {median_decay_length:.4f}",
@@ -484,32 +480,28 @@ def plot_confinement_time_comparison(
     median_threshold = np.median(data_values)
 
     # Plot average, standard deviation, and median as text
-    draw_text(
-        axis,
+    axis.text(
         0.7,
         1.25,
         f"Average: {avg_threshold:.4f} s",
         transform=axis.transAxes,
         fontsize=9,
     )
-    draw_text(
-        axis,
+    axis.text(
         0.7,
         1.2,
         f"Standard Dev: {std_threshold:.4f} s",
         transform=axis.transAxes,
         fontsize=9,
     )
-    draw_text(
-        axis,
+    axis.text(
         0.7,
         1.15,
         f"Median: {median_threshold:.4f} s",
         transform=axis.transAxes,
         fontsize=9,
     )
-    draw_text(
-        axis,
+    axis.text(
         0.75,
         -0.05,
         r"$H \ factor = 1.0$",

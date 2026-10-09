@@ -20,9 +20,6 @@ from process.core.io.plot.summary.constants import (
     THERMAL_SHIELD_COLOUR,
     VESSEL_COLOUR,
 )
-from process.core.io.plot.summary.rendering import (
-    draw_text,
-)
 from process.core.io.plot.summary.reporting.text import (
     plot_info,
 )
@@ -46,13 +43,8 @@ def plot_geometry_info(axis: plt.Axes, mfile: MFile, scan: int):
     scan :
         scan number to use
     """
-    xmin = 0
-    xmax = 1
-    ymin = -16
-    ymax = 1
-
-    draw_text(axis, -0.05, 1, "Geometry:", ha="left", va="center")
-    setup_axis(axis, xmin, xmax, ymin, ymax)
+    axis.text(-0.05, 1, "Geometry:", ha="left", va="center")
+    setup_axis(axis, xmin=0, xmax=1, ymin=-16, ymax=1)
 
     in_blanket_thk = mfile.get("dr_shld_inboard", scan=scan) + mfile.get(
         "dr_blkt_inboard", scan=scan

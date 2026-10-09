@@ -8,7 +8,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from process.core.io.plot.summary.common import setup_axis
-from process.core.io.plot.summary.rendering import draw_text
 from process.core.io.plot.summary.reporting.text import plot_info
 
 if TYPE_CHECKING:
@@ -32,8 +31,7 @@ def plot_current_drive_info(axis: plt.Axes, mfile: MFile, scan: int):
     i_hcd_primary = mfile.get("i_hcd_primary", scan=scan)
 
     if nbi := (i_hcd_primary in {5, 8}):
-        draw_text(
-            axis,
+        axis.text(
             -0.05,
             1,
             "Neutral Beam Current Drive:",
@@ -41,8 +39,7 @@ def plot_current_drive_info(axis: plt.Axes, mfile: MFile, scan: int):
             va="center",
         )
     if ecrh := (i_hcd_primary in {3, 7, 10, 11, 13}):
-        draw_text(
-            axis,
+        axis.text(
             -0.05,
             1,
             "Electron Cyclotron Current Drive:",
@@ -50,8 +47,7 @@ def plot_current_drive_info(axis: plt.Axes, mfile: MFile, scan: int):
             va="center",
         )
     if ebw := (i_hcd_primary == 12):
-        draw_text(
-            axis,
+        axis.text(
             -0.05,
             1,
             "Electron Bernstein Wave Drive:",
@@ -59,8 +55,7 @@ def plot_current_drive_info(axis: plt.Axes, mfile: MFile, scan: int):
             va="center",
         )
     if lhcd := (i_hcd_primary in {1, 4, 6}):
-        draw_text(
-            axis,
+        axis.text(
             -0.05,
             1,
             "Lower Hybrid Current Drive:",
@@ -68,8 +63,7 @@ def plot_current_drive_info(axis: plt.Axes, mfile: MFile, scan: int):
             va="center",
         )
     if iccd := (i_hcd_primary == 2):
-        draw_text(
-            axis,
+        axis.text(
             -0.05,
             1,
             "Ion Cyclotron Current Drive:",
@@ -249,24 +243,21 @@ def plot_bootstrap_comparison(axis: plt.Axes, mfile: MFile, scan: int):
     median_bootstrap = np.median(data_values)
 
     # Plot average, standard deviation, and median as text
-    draw_text(
-        axis,
+    axis.text(
         1.02,
         0.2,
         f"Average: {avg_bootstrap:.4f}",
         transform=axis.transAxes,
         fontsize=9,
     )
-    draw_text(
-        axis,
+    axis.text(
         1.02,
         0.15,
         f"Standard Dev: {std_bootstrap:.4f}",
         transform=axis.transAxes,
         fontsize=9,
     )
-    draw_text(
-        axis,
+    axis.text(
         1.02,
         0.1,
         f"Median: {median_bootstrap:.4f}",
