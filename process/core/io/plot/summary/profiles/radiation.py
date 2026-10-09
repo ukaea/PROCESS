@@ -279,7 +279,7 @@ def plot_cs_radial_stress_profile(
             r_cs_outer=r_cs_outer,
             j_cs=j_cs,
             b_cs_inner=b_cs_inner,
-            f_poisson_cs_structure=constants.poisson_steel,
+            f_poisson_cs_structure=constants.POISSON_STEEL,
         )
         for radius in radii
     ])
@@ -336,7 +336,7 @@ def plot_cs_radial_stress_contour_profile(
                     r_cs_outer=r_cs_outer,
                     j_cs=j_cs,
                     b_cs_inner=b_cs_inner,
-                    f_poisson_cs_structure=constants.poisson_steel,
+                    f_poisson_cs_structure=constants.POISSON_STEEL,
                 )
                 / 1e6
             )

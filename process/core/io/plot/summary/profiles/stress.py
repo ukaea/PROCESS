@@ -66,7 +66,7 @@ def plot_cs_hoop_stress_profile(
             r_cs_outer=r_cs_outer,
             j_cs=j_cs,
             b_cs_inner=b_cs_inner,
-            f_poisson_cs_structure=constants.poisson_steel,
+            f_poisson_cs_structure=constants.POISSON_STEEL,
             f_a_cs_turn_steel=mfile.get("f_a_cs_turn_steel", scan=scan),
         )
         for radius in radii
@@ -125,7 +125,7 @@ def plot_cs_hoop_stress_contour_profile(
                     r_cs_outer=r_cs_outer,
                     j_cs=j_cs,
                     b_cs_inner=b_cs_inner,
-                    f_poisson_cs_structure=constants.poisson_steel,
+                    f_poisson_cs_structure=constants.POISSON_STEEL,
                     f_a_cs_turn_steel=f_a_cs_turn_steel,
                 )
                 / 1e6
@@ -333,7 +333,7 @@ def plot_cs_tresca_2d_contour(
                 r_cs_outer=r_cs_outer,
                 j_cs=j_cs,
                 b_cs_inner=b_cs_inner,
-                f_poisson_cs_structure=constants.poisson_steel,
+                f_poisson_cs_structure=constants.POISSON_STEEL,
                 f_a_cs_turn_steel=f_a_cs_turn_steel,
             )
             stress_radial = CSCoil.calculate_cs_radial_stress(
@@ -342,7 +342,7 @@ def plot_cs_tresca_2d_contour(
                 r_cs_outer=r_cs_outer,
                 j_cs=j_cs,
                 b_cs_inner=b_cs_inner,
-                f_poisson_cs_structure=constants.poisson_steel,
+                f_poisson_cs_structure=constants.POISSON_STEEL,
             )
             tresca_data[i, j] = (
                 calculate_tresca_stress(
@@ -443,7 +443,7 @@ def plot_cs_von_mises_2d_contour(
                 r_cs_outer=r_cs_outer,
                 j_cs=j_cs,
                 b_cs_inner=b_cs_inner,
-                f_poisson_cs_structure=constants.poisson_steel,
+                f_poisson_cs_structure=constants.POISSON_STEEL,
                 f_a_cs_turn_steel=f_a_cs_turn_steel,
             )
             stress_radial = CSCoil.calculate_cs_radial_stress(
@@ -452,7 +452,7 @@ def plot_cs_von_mises_2d_contour(
                 r_cs_outer=r_cs_outer,
                 j_cs=j_cs,
                 b_cs_inner=b_cs_inner,
-                f_poisson_cs_structure=constants.poisson_steel,
+                f_poisson_cs_structure=constants.POISSON_STEEL,
             )
             von_mises_data[i, j] = (
                 calculate_von_mises_stress(
