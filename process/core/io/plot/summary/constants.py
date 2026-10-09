@@ -15,7 +15,6 @@ PLASMA_COLOUR = ["khaki", "#cc8acc"]
 CRYOSTAT_COLOUR = ["red", "#2e7ebc"]
 FIRSTWALL_COLOUR = ["darkblue", "darkblue"]
 NBSHIELD_COLOUR = ["black", "black"]
-thin = 0.0
 RADIAL_BUILD = [
     "dr_bore",
     "dr_cs",
@@ -55,17 +54,12 @@ vertical_lower = [
     "dr_tf_shld_gap",
     "dr_tf_inboard",
 ]
-ANIMATION_INFO = [
-    ("rmajor", "Major radius", "m"),
-    ("rminor", "Minor radius", "m"),
-    ("aspect", "Aspect ratio", ""),
-]
+
 rtangle = np.pi / 2
 rtangle2 = 2 * rtangle
 
 
 __all__ = [
-    "ANIMATION_INFO",
     "BLANKET_COLOUR",
     "CRYOSTAT_COLOUR",
     "CSCOMPRESSION_COLOUR",
@@ -80,6 +74,5 @@ __all__ = [
     "VESSEL_COLOUR",
     "rtangle",
     "rtangle2",
-    "thin",
     "vertical_lower",
 ]
