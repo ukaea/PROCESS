@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 
 from process.core.io.plot.summary.common import (
     box_style,
-    load_plot_image,
+    place_plot_image,
     setup_axis,
     text_layout,
 )
@@ -52,14 +52,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     # ===========================================
 
     # Load the plasma image
-    plasma = load_plot_image("plasma.png")
-
     # Display the plasma image over the figure, not the axes
-    new_ax = axis.inset_axes(
-        (-0.15, 0.6, 0.45, 0.45), transform=axis.transAxes, zorder=1
-    )
-    new_ax.imshow(plasma)
-    new_ax.axis("off")
+    place_plot_image(axis, "plasma.png", (-0.15, 0.6, 0.45, 0.45), zorder=1)
 
     # Add fusion power to plasma
     axis.text(
@@ -73,13 +67,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         fontsize=11,
     )
     # Load the neutron image
-    neutron = load_plot_image("neutron.png")
-
-    new_ax = axis.inset_axes(
-        (0.2, 0.85, 0.03, 0.03), transform=axis.transAxes, zorder=10
-    )
-    new_ax.imshow(neutron)
-    new_ax.axis("off")
+    place_plot_image(axis, "neutron.png", (0.2, 0.85, 0.03, 0.03))
 
     # Add lost alpha power
     axis.text(
@@ -218,14 +206,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Load the alpha particle image
-    alpha = load_plot_image("alpha_particle.png")
-
-    # Display the alpha particle image over the figure, not the axes
-    new_ax = axis.inset_axes(
-        (0.16, 0.95, 0.025, 0.025), transform=axis.transAxes, zorder=10
-    )
-    new_ax.imshow(alpha)
-    new_ax.axis("off")
+    place_plot_image(axis, "alpha_particle.png", (0.16, 0.95, 0.025, 0.025))
 
     # Hide the axes for a cleaner look
     axis.axis("off")
@@ -281,17 +262,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Load the HCD injector image
-    hcd_injector_1 = hcd_injector_2 = load_plot_image("hcd_injector.png")
-
-    # Display the injector image over the figure, not the axes
-    new_ax = axis.inset_axes(
-        (-0.2, 0.8, 0.15, 0.15), transform=axis.transAxes, zorder=10
-    )
-    new_ax.imshow(hcd_injector_1)
-    new_ax.axis("off")
-    new_ax = axis.inset_axes((-0.2, 0.5, 0.15, 0.5), transform=axis.transAxes, zorder=10)
-    new_ax.imshow(hcd_injector_2)
-    new_ax.axis("off")
+    for bounds in [(-0.2, 0.8, 0.15, 0.15), (-0.2, 0.5, 0.15, 0.5)]:
+        place_plot_image(axis, "hcd_injector.png", bounds)
 
     # Draw a dashed line with an arrow tip coming from the left of each injector
     for y in [0.875, 0.75]:
@@ -505,12 +477,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     # ===========================================
 
     # Load the turbine image
-    turbine = load_plot_image("turbine.png")
-
-    # Display the turbine image over the figure, not the axes
-    new_ax = axis.inset_axes((1.1, 0.0, 0.15, 0.15), transform=axis.transAxes, zorder=10)
-    new_ax.imshow(turbine)
-    new_ax.axis("off")
+    place_plot_image(axis, "turbine.png", (1.1, 0.0, 0.15, 0.15))
 
     # Plot the total primary thermal power box
     axis.text(
@@ -554,14 +521,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Load the generator image
-    generator = load_plot_image("generator.png")
-
-    # Display the generator image over the figure, not the axes
-    new_ax = axis.inset_axes(
-        (0.96, 0.0, 0.15, 0.15), transform=axis.transAxes, zorder=10
-    )
-    new_ax.imshow(generator)
-    new_ax.axis("off")
+    place_plot_image(axis, "generator.png", (0.96, 0.0, 0.15, 0.15))
 
     # Generator to gross electric power
     axis.annotate(
@@ -619,14 +579,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Load the pylon image
-    pylon = load_plot_image("pylon.png")
-
-    # Display the pylon image over the figure, not the axes
-    new_ax = axis.inset_axes(
-        (0.925, -0.1, 0.1, 0.1), transform=axis.transAxes, zorder=10
-    )
-    new_ax.imshow(pylon)
-    new_ax.axis("off")
+    place_plot_image(axis, "pylon.png", (0.925, -0.1, 0.1, 0.1))
 
     # Plot the gross electric power box
     axis.text(
@@ -794,12 +747,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     # ================================
 
     # Load the first wall image
-    fw = load_plot_image("fw.png")
-
-    # Display the first wall image over the figure, not the axes
-    new_ax = axis.inset_axes((0.4, 0.625, 0.4, 0.4), transform=axis.transAxes, zorder=10)
-    new_ax.imshow(fw)
-    new_ax.axis("off")
+    place_plot_image(axis, "fw.png", (0.4, 0.625, 0.4, 0.4))
 
     # Add first wall label above image
     axis.text(
@@ -1002,14 +950,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Load the blanket image
-    blanket = load_plot_image("blanket_with_coolant.png")
-
-    # Display the blanket image over the figure, not the axes
-    new_ax = axis.inset_axes(
-        (0.75, 0.625, 0.4, 0.4), transform=axis.transAxes, zorder=10
-    )
-    new_ax.imshow(blanket)
-    new_ax.axis("off")
+    place_plot_image(axis, "blanket_with_coolant.png", (0.75, 0.625, 0.4, 0.4))
 
     # Add blanket label above image
     axis.text(
@@ -1036,14 +977,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Load the vacuum vessel image
-    vv = load_plot_image("vv.png")
-
-    # Display the vacuum vessel image over the figure, not the axes
-    new_ax = axis.inset_axes(
-        (0.975, 0.625, 0.4, 0.4), transform=axis.transAxes, zorder=10
-    )
-    new_ax.imshow(vv)
-    new_ax.axis("off")
+    place_plot_image(axis, "vv.png", (0.975, 0.625, 0.4, 0.4))
 
     # Add vacuum vessel label above image
     axis.text(
@@ -1131,12 +1065,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # Load the divertor image
-    divertor = load_plot_image("divertor.png")
-
-    # Display the divertor image over the figure, not the axes
-    new_ax = axis.inset_axes((0.1, 0.4, 0.3, 0.25), transform=axis.transAxes, zorder=10)
-    new_ax.imshow(divertor)
-    new_ax.axis("off")
+    place_plot_image(axis, "divertor.png", (0.1, 0.4, 0.3, 0.25))
 
     # Total divertor radiation power box
     axis.text(
