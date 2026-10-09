@@ -561,7 +561,7 @@ class ScrapeOffLayer(Model):
         if np.any(r < (rmajor + rminor)):
             raise ValueError(
                 f"Radial position {r=} must be greater than or equal to the plasma "
-                f"edge (rmajor + rminor)={rmajor + rminor}."
+                f"edge {(rmajor + rminor)=}."
             )
 
         return pflux_plasma_outboard_sol_parallel_mw * np.exp(
