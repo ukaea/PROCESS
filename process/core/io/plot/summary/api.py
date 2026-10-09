@@ -796,7 +796,7 @@ def main_plot(
 
     ax_blanket = _add_page("blkt_structure").add_subplot(122, aspect="equal")
     plot_blkt_structure(
-        ax_blanket, pages["blkt_pipe_bends"], m_file, scan, radial_build, colour_scheme
+        ax_blanket, pages["blkt_structure"], m_file, scan, radial_build, colour_scheme
     )
     plot_blkt_pipe_bends(_add_page("blkt_cooling"), m_file, scan)
     if (

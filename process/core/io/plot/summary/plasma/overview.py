@@ -363,23 +363,24 @@ def plot_main_plasma_information(
         f"$\\delta$: {triang:.2f} ({geom_type.triang_model.description}) | "
         f"A: {value('aspect'):.2f}\n"
         f"$V_{{\\text{{p}}}}$: {value('vol_plasma'):,.2f} $\\mathrm{{m}}^3$ | "
-        "$A_{{\\text{{p,surface}}}}$: "
+        "$A_{\\text{p,surface}}$: "
         f"{value('a_plasma_surface'):,.2f} $\\mathrm{{m}}^2$ | "
-        "$A_{{\\text{{p,poloidal}}}}$: "
+        "$A_{\\text{p,poloidal}}$: "
         f"{value('a_plasma_poloidal'):,.3f} $\\mathrm{{m}}^2$\n"
-        "$L_{{\\text{{p,poloidal}}}}$: "
+        "$L_{\\text{p,poloidal}}$: "
         f"{value('len_plasma_poloidal'):,.3f} $\\mathrm{{m}}$"
     )
     add_panel(0.365, 0.975, 0.340, 0.110, textstr_plasma, box_style("lightyellow"))
 
     i_hcd_primary = value("i_hcd_primary")
     i_hcd_secondary = value("i_hcd_secondary")
+    cd_1 = CurrentDriveModel(i_hcd_primary)
+    cd_2 = CurrentDriveModel(i_hcd_secondary)
     textstr_hcd = (
         "$\\mathbf{Heating\\ &\\ current\\ drive:}$\n\n"
         f"Total injected heat: {value('p_hcd_injected_total_mw'):.3f} MW\n"
         f"Ohmic heating power: {value('p_plasma_ohmic_mw'):.3f} MW\n\n"
-        "$\\mathbf{{Primary\\ system: "
-        f"{CurrentDriveModel(i_hcd_primary).abbreviation}}}$\n"
+        f"$\\mathbf{{Primary\\ system: {cd_1.abbreviation}}}$\n"
         f"Current driving power: {value('p_hcd_primary_injected_mw'):.4f} MW\n"
         f"Extra heat power: {value('p_hcd_primary_extra_heat_mw'):.4f} MW\n"
         f"$\\eta_{{\\text{{CD,prim}}}}$: {value('eta_cd_hcd_primary'):.4f} A/W | "
@@ -388,8 +389,7 @@ def plot_main_plasma_information(
         f"$\\gamma_{{\\text{{CD,prim}}}}$: {value('eta_cd_norm_hcd_primary'):.4f} "
         "$\\times 10^{20}\\ \\mathrm{A}/\\mathrm{Wm}^2$\n"
         f"Current driven by primary: {value('c_hcd_primary_driven') / 1e6:.3f} MA\n\n"
-        "$\\mathbf{{Secondary\\ system: "
-        f"{CurrentDriveModel(i_hcd_secondary).abbreviation}}}$\n"
+        f"$\\mathbf{{Secondary\\ system: {cd_2.abbreviation}}}$\n"
         f"Current driving power: {value('p_hcd_secondary_injected_mw'):.4f} MW\n"
         f"Extra heat power: {value('p_hcd_secondary_extra_heat_mw'):.4f} MW\n"
         f"$\\eta_{{\\text{{CD,sec}}}}$: {value('eta_cd_hcd_secondary'):.4f} A/W | "
@@ -594,7 +594,7 @@ def plot_main_plasma_information(
         f"Total radiation power: {value('p_plasma_rad_mw'):.4f} MW\n"
         f"Separatrix radiation fraction: {value('f_p_plasma_separatrix_rad'):.4f}\n"
         f"Core radiation power: {value('p_plasma_inner_rad_mw'):.4f} MW\n"
-        "   - $f_{{\\text{{core,reduce}}}}$: "
+        "   - $f_{\\text{core,reduce}}$: "
         f"{value('f_p_plasma_core_rad_reduction'):.4f}\n"
         f"Edge radiation power: {value('p_plasma_outer_rad_mw'):.4f} MW\n"
         f"Synchrotron radiation power: {value('p_plasma_sync_mw'):.4f} MW\n"

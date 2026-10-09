@@ -167,7 +167,7 @@ def plot_line_brem_power_density_profile(
         mfile.get(f"f_nd_impurity_electrons({i:02d})", scan=scan) for i in range(1, 15)
     ])
 
-    rho, nd_electron, temp_electron_kev = profiles_with_pedestal(mfile, scan)
+    rho, nd_electron, temp_electron_kev = profiles_with_pedestal(mfile=mfile, scan=scan)
     # imp_data Te values are in eV, but te from profiles_with_pedestal is in keV
     temp_electron_ev = temp_electron_kev * 1.0e3
 
@@ -195,30 +195,29 @@ def plot_line_brem_power_density_profile(
                         np.log(temp_electron_ev[temp_point]), log_te_data, log_lz_data
                     )
                 )
-                pden_rad_array[impurity][temp_point] = (
-                    imp_frac[impurity]
-                    * nd_electron[temp_point]
-                    * nd_electron[temp_point]
-                    * lz[impurity][temp_point]
-                )
+            pden_rad_array[impurity][temp_point] = (
+                imp_frac[impurity]
+                * nd_electron[temp_point]
+                * nd_electron[temp_point]
+                * lz[impurity][temp_point]
+            )
 
         for l_ in range(imp_data.shape[0]):
             pden_total_profile[temp_point] += pden_rad_array[l_][temp_point] * 1.0e-6
 
-        # Plot the total radiation profile and individual impurity contributions
-        axis.plot(rho, pden_total_profile, label="Total", linestyle="dotted")
-        axis.plot(rho, pden_rad_array[0] * 1.0e-6, label="H")
-        axis.plot(rho, pden_rad_array[1] * 1.0e-6, label="He")
-
-        # Plot the remaining impurity contributions if their fraction is significant
-        imp_labels = ImpurityRadiationData().imp_label
-        for ind in range(2, imp_data.shape[0]):
-            if imp_frac[ind] > 1.0e-30:
-                axis.plot(
-                    rho,
-                    pden_rad_array[ind] * 1.0e-6,
-                    label=imp_labels[ind].replace("_", ""),
-                )
+    # Plot the total radiation profile and individual impurity contributions
+    axis.plot(rho, pden_total_profile, label="Total", linestyle="dotted")
+    axis.plot(rho, pden_rad_array[0] * 1.0e-6, label="H")
+    axis.plot(rho, pden_rad_array[1] * 1.0e-6, label="He")
+    # Plot the remaining impurity contributions if their fraction is significant
+    imp_labels = ImpurityRadiationData().imp_label
+    for ind in range(2, imp_data.shape[0]):
+        if imp_frac[ind] > 1.0e-30:
+            axis.plot(
+                rho,
+                pden_rad_array[ind] * 1.0e-6,
+                label=imp_labels[ind].replace("_", ""),
+            )
 
     axis.minorticks_on()
     # Plot a vertical line at the core region radius
@@ -235,7 +234,7 @@ def plot_line_brem_power_density_profile(
         transform=axis.transAxes,
         fontsize=8,
         verticalalignment="bottom",
-        bbox=box_style("khaki", alpha=0.8, linewidth=None),
+        bbox={"boxstyle": "round", "facecolor": "khaki", "alpha": 0.8},
     )
 
     # Ranges
