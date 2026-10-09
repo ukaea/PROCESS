@@ -156,7 +156,7 @@ def test_1_group_1_layer():
     assert isclose(neutron_profile.neutron_current_at(0), incoming_flux)
 
 
-def test_1_group_1_layer_with_fission():
+def test_1_group_2_layer_with_fission():
     """
     Regression test against Desmos snapshot with fission involved:
     https://www.desmos.com/calculator/cd830add9c
