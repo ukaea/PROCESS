@@ -965,6 +965,19 @@ class PlasmaConfinementTime(Model):
 
             # ====================================================================
 
+            # Kurskiev spherical tokamak confinement time scaling
+            case ConfinementTimeModel.KURSKIEV_ST:
+                t_electron_confinement = self.kurskiev_st_confinement_time(
+                    cur_plasma_ma=cur_plasma_ma,
+                    b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+                    p_plasma_loss_mw=p_plasma_loss_mw,
+                    nd_plasma_electron_line_19=nd_plasma_electron_line_19,
+                    rmajor=rmajor,
+                    kappa=kappa,
+                )
+
+            # ====================================================================
+
             case _:
                 raise ProcessValueError(
                     "Illegal value for i_confinement_time",
@@ -4200,4 +4213,60 @@ class PlasmaConfinementTime(Model):
             * b_plasma_toroidal_on_axis**0.11
             * nd_plasma_electron_line_19**0.51
             * p_plasma_loss_mw ** (-0.91)
+        )
+
+    @staticmethod
+    def kurskiev_st_confinement_time(
+        cur_plasma_ma: float,
+        b_plasma_toroidal_on_axis: float,
+        p_plasma_loss_mw: float,
+        nd_plasma_electron_line_19: float,
+        rmajor: float,
+        kappa: float,
+    ) -> float:
+        """Calculate the Kurskiev spherical-tokamak confinement time.
+
+        The fit combines L-mode and H-mode spherical tokamak data. It has no
+        isotope-mass term.
+
+        Parameters
+        ----------
+        cur_plasma_ma :
+            Plasma current [MA]
+        b_plasma_toroidal_on_axis :
+            Toroidal magnetic field [T]
+        p_plasma_loss_mw :
+            Thermal power lost due to transport through the LCFS [MW]
+        nd_plasma_electron_line_19 :
+            Line-averaged electron density in units of 10¹⁹ m⁻³
+        rmajor :
+            Plasma major radius [m]
+        kappa :
+            Plasma separatrix elongation
+
+        Returns
+        -------
+        :
+            float: Kurskiev spherical-tokamak confinement time [s]
+
+        References
+        ----------
+        G. S. Kurskiev et al., “Energy confinement in the spherical tokamak
+        Globus-M2 with toroidal magnetic field reaching 0.8 T,” Nuclear Fusion,
+        vol. 62, no. 1, p. 016011, 2022,
+        doi: https://doi.org/10.1088/1741-4326/ac38c9.
+
+        H.-S. Xie et al. use this scaling for proton-boron spherical tori in
+        “ENN's roadmap for proton-boron fusion based on spherical torus,”
+        Physics of Plasmas, vol. 31, no. 6, p. 062507, 2024,
+        doi: https://doi.org/10.1063/5.0199112.
+        """
+        return (
+            0.066
+            * cur_plasma_ma**0.53
+            * b_plasma_toroidal_on_axis**1.05
+            * p_plasma_loss_mw ** (-0.58)
+            * nd_plasma_electron_line_19**0.65
+            * rmajor**2.66
+            * kappa**0.78
         )

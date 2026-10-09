@@ -666,6 +666,18 @@ $$
 $$
 
 -------------------------
+
+#### 53: Kurskiev spherical tokamak scaling | `kurskiev_st_confinement_time()`
+
+Is selected with `i_confinement_time = 53` [^kurskiev_st]
+
+The fit includes both L-mode and H-mode spherical tokamak discharges and has no isotope-mass term.
+
+$$
+\tau_{\text{E}} =  0.066 I_{\text{p}}^{0.53} B_{\text{T}}^{1.05} P_{\text{L}}^{-0.58} \overline{n}_{19}^{0.65} R^{2.66} \kappa^{0.78}
+$$
+
+-------------------------
 ### Transport Powers
 
 After the confinement time scaling with $H$-factor correction has been calculated, the ion and electron transport power densities are found. `PROCESS` assumes the scaling confinement time to be equal to the ion and electron energy confinement time.
@@ -750,6 +762,7 @@ The value of `f_t_alpha_energy_confinement_min` can be set to the desired minimu
 [^22]: G. Verdoolaege et al., “The updated ITPA global H-mode confinement database: description and analysis,” Nuclear Fusion, vol. 61, no. 7, pp. 076006-076006, Jan. 2021, doi: https://doi.org/10.1088/1741-4326/abdb91.
 [^23]: Y. Chen, X. C. Chen, X. F. Wu, and S. Q. Liu, “Energy confinement scaling in the NCST spherical tokamak,” AIP Advances, vol. 16, no. 3, pp. 035043-035043, Mar. 2026, doi: https://doi.org/10.1063/5.0311657.
 [^paz_soldan_neg]: P. Lunia, A.O. Nelson, and C. Paz-Soldan, "Energy Confinement Time Scaling Law Derived from Paz-Soldan NF 2024", doi: https://arxiv.org/abs/2509.04279v2
+[^kurskiev_st]: G. S. Kurskiev et al., “Energy confinement in the spherical tokamak Globus-M2 with toroidal magnetic field reaching 0.8 T,” Nuclear Fusion, vol. 62, no. 1, p. 016011, 2022, doi: https://doi.org/10.1088/1741-4326/ac38c9. The same expression is used for proton-boron spherical tori by H.-S. Xie et al., “ENN's roadmap for proton-boron fusion based on spherical torus,” Physics of Plasmas, vol. 31, no. 6, p. 062507, 2024, doi: https://doi.org/10.1063/5.0199112.
 [^24]: H. Lux, R. Kemp, E. Fable, and R. Wenninger, “Radiation and confinement in 0D fusion systems codes,” Plasma Physics and Controlled Fusion, vol. 58, no. 7, pp. 075001–075001, May 2016, doi: https://doi.org/10.1088/0741-3335/58/7/075001.
 [^25]: H. Lux, R. Kemp, D. J. Ward, and M. Sertoli, “Impurity radiation in DEMO systems modelling,” Fusion Engineering and Design, vol. 101, pp. 42–51, Dec. 2015, doi: https://doi.org/10.1016/j.fusengdes.2015.10.002.
 ‌

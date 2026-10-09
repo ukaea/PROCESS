@@ -252,6 +252,11 @@ from process.models.physics.confinement_time import PlasmaConfinementTime
             (1.0, 1.0, 1.0, 1.0),
             0.0821,
         ),
+        (
+            PlasmaConfinementTime.kurskiev_st_confinement_time,
+            (1.0, 1.0, 1.0, 1.0, 1.0, 1.0),
+            0.066,
+        ),
     ],
 )
 def test_confinement_time(func, args, expected):

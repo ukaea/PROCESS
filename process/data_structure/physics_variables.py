@@ -454,6 +454,11 @@ class ConfinementTimeModel(IntEnum):
         f"Paz-Soldan Neg Triang          ({ConfinementMode.L_MODE.abbreviation})",
         ConfinementMode.L_MODE,
     )
+    KURSKIEV_ST = (
+        53,
+        f"Kurskiev ST                    ({ConfinementMode.H_MODE.abbreviation})",
+        ConfinementMode.H_MODE,
+    )
 
     def __new__(cls, value: int, full_name: str, mode: ConfinementMode = None):
         """Create a new instance of ConfinementTimeModel.
