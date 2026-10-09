@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Literal
 
 from matplotlib.patches import FancyBboxPatch
 
-from process.core.io.plot.summary.common import box_style, load_plot_image, text_layout
+from process.core.io.plot.summary.common import box_style, place_plot_image, text_layout
 from process.core.io.plot.summary.plasma.physics import plot_plasma
 from process.data_structure.impurity_radiation_variables import ImpurityRadiationData
 from process.models.geometry.plasma import plasma_geometry
@@ -177,14 +177,7 @@ def plasma_main_page(
         bbox=white_box,
     )
 
-    alpha_particle = load_plot_image("alpha_particle.png")
-    image_axis = axis.inset_axes(
-        (0.975, 0.275, 0.075, 0.075),
-        transform=axis.transAxes,
-        zorder=10,
-    )
-    image_axis.imshow(alpha_particle)
-    image_axis.axis("off")
+    place_plot_image(axis, "alpha_particle.png", (0.975, 0.275, 0.075, 0.075))
 
     axis.annotate(
         "",
@@ -205,14 +198,7 @@ def plasma_main_page(
         bbox=box_style("red"),
     )
 
-    neutron = load_plot_image("neutron.png")
-    image_axis = axis.inset_axes(
-        (0.975, 0.75, 0.075, 0.075),
-        transform=axis.transAxes,
-        zorder=10,
-    )
-    image_axis.imshow(neutron)
-    image_axis.axis("off")
+    place_plot_image(axis, "neutron.png", (0.975, 0.75, 0.075, 0.075))
 
     axis.annotate(
         "",
