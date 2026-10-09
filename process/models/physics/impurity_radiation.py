@@ -732,6 +732,7 @@ class ImpurityRadiation:
             species label.
         """
         species_powers = {}
+        p_plasma_rad_impurities_mw = 0.0
         for index, label in enumerate(self.data.impurity_radiation.imp_label):
             pden_vol_avg_mw = 0.0
             if self.data.impurity_radiation.f_nd_impurity_electron_array[index] > 1e-30:
@@ -750,6 +751,9 @@ class ImpurityRadiation:
             p_mw = pden_vol_avg_mw * self.data.physics.vol_plasma
             species_powers[str(label)] = (pden_vol_avg_mw, p_mw)
             setattr(self.data.physics, SPECIES_POWER_ATTRIBUTES[index], p_mw)
+            if index >= 2:  # Exclude hydrogen and helium
+                p_plasma_rad_impurities_mw += p_mw
+        self.data.physics.p_plasma_rad_impurities_mw = p_plasma_rad_impurities_mw
         return species_powers
 
     def map_imprad_profile(self):

@@ -1447,6 +1447,18 @@ class PhysicsData:
     p_plasma_sync_mw: float = 0.0
     """Total synchrotron radiation power from plasma (Pₛₙ) [MW]"""
 
+    p_plasma_rad_impurities_mw: float = 0.0
+    """Plasma radiation power due to impurity presence (Z>2) [MW]"""
+
+    f_p_plasma_rad_sync: float = 0.0
+    """Fraction of total plasma radiation power due to synchrotron radiation"""
+
+    f_p_plasma_rad_ions: float = 0.0
+    """Fraction of total plasma radiation power due to radiation caused by ion presence"""
+
+    f_p_plasma_rad_impurities: float = 0.0
+    """Fraction of total plasma radiation power due to radiation caused by impurity presence (Z>2)"""
+
     i_l_h_threshold: int = 19
     """switch for L-H mode power threshold scaling to use (see l_h_threshold_powers for list)"""
 

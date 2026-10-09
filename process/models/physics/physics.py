@@ -1094,6 +1094,22 @@ class Physics(Model):
                 p_plasma_heating_mw=self.data.physics.p_plasma_heating_total_mw,
             )
         )
+
+        self.data.physics.f_p_plasma_rad_sync = (
+            self.data.physics.p_plasma_sync_mw / self.data.physics.p_plasma_rad_mw
+            if self.data.physics.p_plasma_rad_mw > 0.0
+            else 0.0
+        )
+        self.data.physics.f_p_plasma_rad_ions = (
+            1.0 - self.data.physics.f_p_plasma_rad_sync
+        )
+        self.data.physics.f_p_plasma_rad_impurities = (
+            self.data.physics.p_plasma_rad_impurities_mw
+            / self.data.physics.p_plasma_rad_mw
+            if self.data.physics.p_plasma_rad_mw > 0.0
+            else 0.0
+        )
+
         self.data.physics.rad_fraction_total = (
             self.data.physics.f_p_plasma_separatrix_rad
             + (1.0e0 - self.data.physics.f_p_plasma_separatrix_rad)
@@ -1886,12 +1902,43 @@ class Physics(Model):
             "(f_sync_reflect)",
             self.data.physics.f_sync_reflect,
         )
+        po.ovarre(
+            self.outfile,
+            "Fraction of plasma radiation power due to synchrotron radiation",
+            "(f_p_plasma_rad_sync)",
+            self.data.physics.f_p_plasma_rad_sync,
+            "OP ",
+        )
 
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
         po.osubhd(self.outfile, "Line, Recombination & Bremsstrahlung Radiation:")
 
         self.output_species_radiation_power_density()
+
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Fraction of plasma radiation power due to presence of ions",
+            "(f_p_plasma_rad_ions)",
+            self.data.physics.f_p_plasma_rad_ions,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Plasma radiation power due to impurities, Z>2 (Pᵧ,ᵢₘₚ) [MW]",
+            "(p_plasma_rad_impurities_mw)",
+            self.data.physics.p_plasma_rad_impurities_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Fraction of plasma radiation power due to impurities, Z>2",
+            "(f_p_plasma_rad_impurities)",
+            self.data.physics.f_p_plasma_rad_impurities,
+            "OP ",
+        )
 
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
