@@ -3203,14 +3203,14 @@ class Physics(Model):
             self.data.physics.p_alpha_total_mw,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Fraction of alpha power deposited in plasma",
             "(f_p_alpha_plasma_deposited)",
             self.data.physics.f_p_alpha_plasma_deposited,
             "IP",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Total power injected into the plasma (MW)",
             "(p_hcd_injected_total_mw)",
@@ -3328,7 +3328,7 @@ class Physics(Model):
 
         po.ocmmnt(self.outfile, "Heating powers:")
         po.oblnkl(self.outfile)
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Fraction of alpha power to ions",
             "(f_p_alpha_total_ions)",
