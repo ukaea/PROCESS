@@ -28,6 +28,25 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
+# Names of the physics power variables, in the same order as `imp_label`
+SPECIES_POWER_ATTRIBUTES = (
+    "p_plasma_rad_hydrogen_mw",
+    "p_plasma_rad_helium_mw",
+    "p_plasma_rad_beryllium_mw",
+    "p_plasma_rad_carbon_mw",
+    "p_plasma_rad_nitrogen_mw",
+    "p_plasma_rad_oxygen_mw",
+    "p_plasma_rad_neon_mw",
+    "p_plasma_rad_silicon_mw",
+    "p_plasma_rad_argon_mw",
+    "p_plasma_rad_iron_mw",
+    "p_plasma_rad_nickel_mw",
+    "p_plasma_rad_krypton_mw",
+    "p_plasma_rad_xenon_mw",
+    "p_plasma_rad_tungsten_mw",
+)
+
+
 def initialise_imprad(data: DataStructure):
     """Initialises the impurity radiation data structure
 
@@ -542,7 +561,10 @@ def calculate_impurity_radiation_power_density(
     -Temperatures outside the range of the L(Z,Tₑ) table are handled by using the
     L(Z,Tₑ) value at the closest temperature in the table,
     """
-    bins = data.impurity_radiation.temp_impurity_keV_array[imp_element_index]
+    table_length = data.impurity_radiation.impurity_arr_len_tab[imp_element_index]
+    bins = data.impurity_radiation.temp_impurity_keV_array[
+        imp_element_index, :table_length
+    ]
     indices = np.digitize(temp_electron_profile_kev, bins)
     indices[indices >= bins.shape[0]] = bins.shape[0] - 1
     indices[indices < 0] = 0
@@ -553,11 +575,13 @@ def calculate_impurity_radiation_power_density(
         np.interp(
             np.log(temp_electron_profile_kev),
             np.log(
-                data.impurity_radiation.temp_impurity_keV_array[imp_element_index, :]
+                data.impurity_radiation.temp_impurity_keV_array[
+                    imp_element_index, :table_length
+                ]
             ),
             np.log(
                 data.impurity_radiation.pden_impurity_lz_nd_temp_array[
-                    imp_element_index, :
+                    imp_element_index, :table_length
                 ]
             ),
         )
@@ -592,14 +616,14 @@ def calculate_impurity_radiation_power_density(
         temp_electron_profile_kev
         >= data.impurity_radiation.temp_impurity_keV_array[
             imp_element_index,
-            data.impurity_radiation.impurity_arr_len_tab[imp_element_index] - 1,
+            table_length - 1,
         ]
     )
     #  This is okay because Bremsstrahlung will dominate at higher temp.
     pden_impurity_profile[greater_than_imp_temp_mask] = (
         data.impurity_radiation.pden_impurity_lz_nd_temp_array[
             imp_element_index,
-            data.impurity_radiation.impurity_arr_len_tab[imp_element_index] - 1,
+            table_length - 1,
         ]
     )
 
@@ -708,7 +732,8 @@ class ImpurityRadiation:
             species label.
         """
         species_powers = {}
-        for index, label in enumerate(self.data.impurity_radiation.impurity_arr_label):
+        for index, label in enumerate(self.data.impurity_radiation.imp_label):
+            pden_vol_avg_mw = 0.0
             if self.data.impurity_radiation.f_nd_impurity_electron_array[index] > 1e-30:
                 pden_profile = calculate_impurity_radiation_power_density(
                     imp_element_index=index,
@@ -722,12 +747,9 @@ class ImpurityRadiation:
                     profile_y=pden_profile,
                     profile_dx=self.plasma_profile.neprofile.profile_dx,
                 )
-            else:
-                pden_vol_avg_mw = 0.0
-            species_powers[str(label).strip()] = (
-                pden_vol_avg_mw,
-                pden_vol_avg_mw * self.data.physics.vol_plasma,
-            )
+            p_mw = pden_vol_avg_mw * self.data.physics.vol_plasma
+            species_powers[str(label)] = (pden_vol_avg_mw, p_mw)
+            setattr(self.data.physics, SPECIES_POWER_ATTRIBUTES[index], p_mw)
         return species_powers
 
     def map_imprad_profile(self):
