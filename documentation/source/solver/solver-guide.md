@@ -1,172 +1,247 @@
+# Solver PROCESS docs
 
-# Constraint Equations
+## Constraint Equations
 
-Any computer program naturally contains many equations. The built-in equation 
-solvers within PROCESS act on a special class, known as constraint equations, 
-all of which are formulated in the source file `process/core/solver/constraints.py`. These 
-can be split into two types:
- 
-**Equality constraints (consistency equations)** that enforce consistency between the physics and 
-engineering parameters in the various models.
+PROCESS models a fusion power plant at a **self-consistent operating point**. It contains a large set of coupled physics and engineering models that describe different aspects of the plant. For a design to constitute a PROCESS solution, quantities calculated by different parts of the code must satisfy the required relationships between them.
 
-**Inequality constraints (limit equations)** that enforce a value be greater/less than or equal to some bound (limit).
+PROCESS represents these relationships using **constraint equations**, which are defined in `process/core/solver/constraints.py`.
 
-A PROCESS input file will, for example, define which constraint equations are being used as follows:
+Constraint equations fall into two classes:
 
-```
-...
+- **Equality constraints (consistency equations)** define relationships that must be satisfied for the calculated plant to be self-consistent.
+- **Inequality constraints (limit equations)** define physics or engineering limits that determine whether a solution is feasible.
+
+PROCESS uses user-defined **iteration variables** as the degrees of freedom available to the solver when solving the selected constraint problem.
+
+## PROCESS Solutions
+
+At the heart of a PROCESS solution is a plasma operating in a self-consistent equilibrium state. Its state cannot be chosen arbitrarily: plasma temperature, density, heating, fusion reactions, radiation, transport losses and fuelling are all coupled.
+
+The principal plasma state is described by the electron temperature and density,
+
+$$
+T_e,\qquad n_e.
+$$
+
+To determine these two quantities, two independent governing equations are required.
+
+### Governing plasma equations
+
+In PROCESS these are:
+
+1. **Global plasma power balance - constraint 2**
+2. **Fuel-ion equilibrium - constraint 93**
+
+Together these equations close the plasma system and define the equilibrium plasma state solved by PROCESS.
+
+For a given set of design parameters, a plasma solution is therefore a pair
+
+$$
+(T_e,n_e)
+$$
+
+for which both governing equations are satisfied simultaneously.
+
+#### Global plasma power balance
+
+For the plasma to remain in a steady operating state, the power supplied to the plasma must balance the power lost from it.
+
+Schematically,
+
+$$
+P_{\mathrm{heating}} = P_{\mathrm{loss}}.
+$$
+
+The heating and loss terms depend on the plasma state and on the selected PROCESS physics models. The power balance therefore provides one relationship between plasma temperature and density.
+
+PROCESS represents this condition using **constraint 2**.
+
+#### Fuel-ion equilibrium
+
+The plasma must also satisfy particle balance for the fuel ions.
+
+Fusion reactions consume fuel ions. To maintain the plasma state, this consumption must be consistent with the calculated fuelling rate and fuel burn-up.
+
+Schematically,
+
+$$
+\text{fuel supplied} = \text{fuel required to sustain the fusion reaction rate}.
+$$
+
+PROCESS represents this condition using **constraint 93**.
+
+Together, global plasma power balance and fuel-ion equilibrium form a coupled system in $T_e$ and $n_e$, whose simultaneous solution determines the self-consistent plasma state.
+
+### Other consistency equations
+
+The governing plasma equations are not necessarily the only equality constraints required for a complete PROCESS calculation.
+
+Other physics and engineering models may introduce additional consistency relationships, for example for the machine radial build.
+
+A **PROCESS solution** is therefore a point at which the governing plasma equations and all other required equality constraints are satisfied.
+
+### Feasible solutions
+
+A self-consistent PROCESS solution is not necessarily feasible.
+
+PROCESS therefore also defines **inequality constraints**, or **limit equations**, which represent physics and engineering limits on the design.
+
+Examples include limits on plasma density, beta, fusion power, neutron wall load, divertor power loading, magnet stresses and burn time.
+
+This gives an important distinction:
+
+$$
+\text{PROCESS solution}
+=
+\text{required equality constraints satisfied}
+$$
+
+whereas
+
+$$
+\text{feasible PROCESS solution}
+=
+\text{solution that also satisfies the required inequality constraints}
+$$
+
+A point may therefore be a valid solution of the PROCESS governing equations while still being infeasible because one or more design limits are violated.
+
+## Specifying constraint equations
+
+Constraint equations are selected using the `icc` array. For example:
+
+```text
 n_equality_constraints = 3
 
 * Equalities
-icc = 2 * Global power balance
-icc = 11 * Radial build
-icc = 93 * Fuel-ion equilibrium
+icc = 2   * Global plasma power balance
+icc = 11  * Radial build
+icc = 93  * Fuel-ion equilibrium
 
 * Inequalities
-icc = 9 * Fusion power upper limit
-icc = 5 * Density upper limit
-icc = 24 * Beta upper limit
-icc = 15 * LH power threshold limit
-...
+icc = 5   * Density upper limit
+icc = 9   * Fusion power upper limit
+icc = 15  * L-H power threshold limit
+icc = 24  * Beta upper limit
 ```
 
-Here each `icc=n` statement tells PROCESS to activate a constraint with the name `n`. A list of the constraints and 
-their corresponding names can be found [here](../../source/reference/process/data_structure/numerics/#process.data_structure.numerics.lablcc).
+Each `icc = n` statement activates constraint `n`.
 
-The `n_equality_constraints = 3` statement is telling PROCESS to treat the first `3` equations as equality constraints, and the rest as inequality constraints. Therefore, it is imperative that all equality constraints are stated before any inequality constraints.
+`n_equality_constraints` specifies how many entries at the beginning of the `icc` array are treated as equality constraints. All equality constraints must therefore be listed before any inequality constraints.
 
-In both types of equations, an optimiser/solver uses the normalised residuals $c_i$ of the constraints (and sometimes its gradient, depending on the solver/optimiser) to guide the solution towards one that satisfies all of the constraints.
+A list of the available constraints and their corresponding names can be found [here](../../source/reference/process/data_structure/numerics/#process.data_structure.numerics.lablcc).
 
-## Consistency Equations
-
-Consistency equations are equalities that ensure that the machine produced by PROCESS is 
-self-consistent. This means, therefore, that many of these constraint equations should 
-always be used, namely equations 2, 10 and 11. Equation 7 should also be activated 
-if neutral beam injection is used. The other consistency equations can be activated if 
-required. A typical consistency equation ensures that two functions $g$ and $h$ are equal:
+For a typical equality constraint,
 
 $$
-g(x, y, z, \cdots) = h(x, y, z, \cdots)
+g(\mathbf{x}) = h(\mathbf{x}),
 $$
 
-$$
-c_i = 1 - \frac{g}{h}
-$$
-
-The optimiser/solver will attempt to find a solution that produces $c_i = 0$ for all equality constraints.
-
-For the plasma model, a PROCESS solution is defined by satisfying two governing equations:
-
-- Global power balance (constraint 2): total plasma heating must balance transport and radiative losses.
-
-- Fuel-ion equilibrium (constraint 93): the plasma fuelling rate must balance the fuel consumption required to sustain the fusion reaction rate
-
-Both equations must therefore be satisfied for a self-consistent plasma solution, and solutions should be found by allowing the solver to vary
-the iteration variables for volume averaged electron temperature `temp_plasma_electron_vol_avg_kev (ixc = 4)` and volume averaged electron number
-density, `nd_plasma_electrons_vol_avg (ixc = 6)`.
-
-## Limit Equations
-
-The limit equations are inequalities that ensure that various physics or engineering 
-limits are not exceeded. 
-
-As with the consistency equations, the general form of the limit equations is
+PROCESS forms the normalised residual
 
 $$
-c_i = 1 - \frac{h_{max}}{h}
+c_i = 1 - \frac{g}{h},
 $$
 
-where $h_{max}$ is the maximum allowed value of the quantity $h$, or
+which is satisfied when
 
 $$
-c_i = 1 - f.\frac{h}{h_{min}}
+c_i = 0.
 $$
 
-where $h_{min}$ is the minimum allowed value of the quantity $h$.
+For inequality constraints, the residual is formulated so that the permitted region satisfies
 
-For example, to set the net electric power to a certain value, the following 
-should be carried out:
-
-1. Activate `constraint 16` (net electric power lower limit) by including it in the `icc` array
-2. Set `p_plant_electric_net_required_mw` to the required net electric power.
-
-The optimiser/solver will attempt to find a solution that produces $c_i \geq 0$ for all inequality constraints.
+$$
+c_i \geq 0.
+$$
 
 ## Iteration Variables
 
-...
+Iteration variables are the quantities that the solver is allowed to vary in order to satisfy the active constraints.
+
+They are selected using the `ixc` array, for example:
+
+```text
+ixc = 4  * temp_plasma_electron_vol_avg_kev
+ixc = 6  * nd_plasma_electrons_vol_avg
+```
+
+The equations are coupled, so iteration variables should not generally be thought of as corresponding one-to-one with individual constraints. Changing one iteration variable may affect several constraint residuals.
 
 ## Figure of Merit
 
-In optimisation mode, PROCESS finds the self-consistent set of iteration 
-variable values that maximises or minimises a certain function of them, 
-known as the figure of merit. 
+In optimisation mode there may be many feasible solutions. PROCESS selects between them using a **figure of merit**, or objective function.
 
-Several possible figures of merit are available, all of which are in the 
-source file `evaluators.f90`. 
+The switch `i_figure_merit` selects the objective. A positive value indicates minimisation, while a negative value indicates maximisation.
 
-Switch `i_figure_merit` is used to control which figure of merit is to be used. If the 
-figure of merit is to be minimised, `i_figure_merit` should be **positive**, and if a 
-maximised figure of merit is desired, `i_figure_merit` should be **negative**.
+The optimisation problem can therefore be viewed as finding the feasible PROCESS solution that gives the best value of the selected figure of merit.
 
 ## Convergence
 
-...
+PROCESS solves a nonlinear, coupled constrained problem iteratively. Numerical convergence indicates that the solver has satisfied its convergence criteria. The constraint residuals should then be inspected to determine whether the required consistency equations and limits have been satisfied.
+
+For equality constraints,
+
+$$
+c_i \approx 0.
+$$
+
+Numerical convergence should not be confused with feasibility: a converged calculation may still violate one or more inequality constraints.
 
 ## Optimisation mode
 
-Switch `i_process_run_mode` should be set to 1 for optimisation mode.
+Optimisation mode is selected using
 
-If `i_process_run_mode = 0`, a non-optimisation pass is performed first. Occasionally this provides a feasible set of initial conditions that aids convergence of the optimiser, but it is recommended to use `i_process_run_mode = 1`.
+```text
+i_process_run_mode = 1
+```
 
-Enable all the relevant consistency equations, and it is advisable to enable the corresponding iterations variables. A number of limit equations (inequality constraints) can also be activated. In optimisation mode, the number of iteration variables is unlimited.
+In this mode, PROCESS varies the active iteration variables in order to:
 
-It may still be difficult, if not impossible, to reconcile the fusion power and the net electric power with the required values. This may well be due to the power conversion efficiency values being used.
+1. satisfy the equality constraints;
+2. satisfy the inequality constraints; and
+3. optimise the selected figure of merit.
 
-If scan of a given variable are to be made over a large range of values, it is often a good idea to start the scan in the middle of the desired range, and to split the in two - one going downwards from the initial value,  and the other upwards. This ensures that the whole range of the scan produces well-converged machines (assuming a "good" initial point), without sharp changes in gradient in the parameter values.
-
-It should be remembered that the value of the scan variable is set in the array `sweep`, and this overrules any value set for the variable elsewhere in the input file.
-
-The output from an optimisation run contains an indication as to which iteration variables lie at their limit values.
+The number of iteration variables may exceed the number of equality constraints because the additional degrees of freedom allow the optimiser to explore the feasible design space.
 
 ## Evaluation mode
 
-Evaluation mode is used to evaluate models for a given set of input parameters (a "point") whilst ensuring that the models are self-consistent. It can also be used to perform benchmark comparison, whereby the machine size, output power etc. are known and one only wishes to find the calculated stresses, beta values and fusion powers, for example.
+Evaluation mode is selected using
 
-Running `PROCESS` in evaluation mode requires few changes to be made to the input file from the optimisation case. The main differences between optimisation mode and evaluation mode are:
-
-1. Evaluation mode does not apply lower or upper bounds to the iteration variables. 
-
-1. Inequality constraints are not enforced.
-
-2. The number of iteration variables must be equal to the number of equality constraints being solved.
-
-3. An objective function is not available, as no optimisation is taking place.
-
-As before, the user must decide which constraint equations and iteration variables to activate. For example, an extract from an input file might look like:
+```text
+i_process_run_mode = -2
 ```
-* Evaluation problem: evaluate models consistently by solving equality constraints only
-i_process_run_mode  = -2 * evaluation mode
 
-*---------------Constraint Equations---------------*
-* Define number of equality constraints
+It is intended for evaluating a specified design while maintaining model consistency, rather than searching for an optimum.
+
+In evaluation mode:
+
+1. equality constraints are solved;
+2. inequality constraints may be reported but are not enforced;
+3. the number of iteration variables must equal the number of equality constraints;
+4. no figure of merit is optimised; and
+5. iteration-variable optimisation bounds are not applied.
+
+For example, for a specified design point the plasma state can be obtained by solving the two governing plasma equations for $T_e$ and $n_e$:
+
+```text
+i_process_run_mode = -2
+
 n_equality_constraints = 2
 
 * Equalities
-icc = 2 * Global power balance
-icc = 93 * Fuel-ion equilibrium
+icc = 2   * Global plasma power balance
+icc = 93  * Fuel-ion equilibrium
 
 * Inequalities
-* Not enforced, but values reported
-icc = 5 * Density upper limit
-icc = 8 * Neutron wall load upper limit
-icc = 9 * Fusion power upper limit
-...
+* Reported but not enforced
+icc = 5   * Density upper limit
+icc = 8   * Neutron wall load upper limit
+icc = 9   * Fusion power upper limit
 
-*---------------Iteration Variables----------------*
-* Used to solve equality constraints
-ixc = 4 * temp_plasma_electron_vol_avg_kev
-ixc = 6 * nd_plasma_electrons_vol_avg
-...
+* Iteration variables
+ixc = 4   * temp_plasma_electron_vol_avg_kev
+ixc = 6   * nd_plasma_electrons_vol_avg
 ```
-Global power balance and fuel-ion equilibrium are recommended to ensure plasma-model consistency. In this example, `temp_plasma_electron_vol_avg_kev` and `nd_plasma_electrons_vol_avg` are varied to solve the two governing equations.
+
+This is useful for benchmark calculations or for evaluating a prescribed machine design without performing an optimisation.
