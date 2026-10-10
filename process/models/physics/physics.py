@@ -1224,6 +1224,7 @@ class Physics(Model):
             self.data.physics.vol_plasma,
             self.data.physics.burnup_in,
             self.data.physics.tauratio,
+            self.data.physics.i_fusion_reactions,
         )
 
         self.data.physics.ntau, self.data.physics.nTtau = (
@@ -2124,6 +2125,7 @@ class Physics(Model):
         vol_plasma: float,
         burnup_in: float,
         tauratio: float,
+        i_fusion_reactions: str,
     ) -> tuple[float, float, float, float, float, float, float, float]:
         """Auxiliary physics quantities
 
@@ -2151,7 +2153,8 @@ class Physics(Model):
             fractional plasma burnup user input
         tauratio: float
             ratio of He and pellet particle confinement times
-
+        i_fusion_reactions: str
+            Fusion reaction type
         Returns
         -------
         tuple
@@ -2200,6 +2203,12 @@ class Physics(Model):
                 / (nd_plasma_alphas_thermal_vol_avg + 0.5 * nd_plasma_fuel_ions_vol_avg)
                 / tauratio
             )
+            if i_fusion_reactions == "p-b11":
+                burnup = (
+                    nd_plasma_alphas_thermal_vol_avg
+                    / (nd_plasma_alphas_thermal_vol_avg + 1.5 * nd_plasma_fuel_ions_vol_avg)
+                    / tauratio
+                )
         else:
             burnup = burnup_in
 

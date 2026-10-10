@@ -2402,6 +2402,7 @@ class Stellarator(Model):
             self.data.physics.vol_plasma,
             self.data.physics.burnup_in,
             self.data.physics.tauratio,
+            self.data.physics.i_fusion_reactions,
         )
 
         # Calculate the neoclassical sanity check with PROCESS parameters
