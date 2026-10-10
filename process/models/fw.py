@@ -24,6 +24,12 @@ from process.models.engineering.pumping import (
 logger = logging.getLogger(__name__)
 
 
+N_FW_PIPE_90_DEG_BENDS = 2
+"Number of 90 degree bends in first wall coolant channels."
+N_FW_PIPE_180_DEG_BENDS = 0
+"Number of 180 degree bends in first wall coolant channels."
+
+
 class FirstWall(Model):
     """Calculate the first wall parameters"""
 
@@ -782,7 +788,13 @@ class FirstWall(Model):
     def output_fw_pumping(self):
         """Outputs the first wall pumping details to the output file."""
         po.oheadr(self.outfile, "First wall pumping")
-
+        po.ovarre(
+            self.outfile,
+            "Pumping power calculation option",
+            "(i_p_coolant_pumping)",
+            self.data.fwbs.i_p_coolant_pumping,
+            "OP ",
+        )
         po.ovarre(
             self.outfile,
             "First wall coolant type",

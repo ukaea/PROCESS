@@ -50,6 +50,7 @@ from process.core.model import Model
 from process.core.process_output import OutputFileManager, oheadr
 from process.core.scan import Scan
 from process.data_structure.blanket_variables import BlktModelTypes
+from process.data_structure.build_variables import InboardBlanketConfiguration
 from process.data_structure.cost_variables import CostModels
 from process.data_structure.numerics import PROCESSRunMode
 from process.data_structure.stellarator_variables import StellaratorModel
@@ -82,6 +83,10 @@ from process.models.physics.current_drive import (
 )
 from process.models.physics.density_limit import PlasmaDensityLimit
 from process.models.physics.exhaust import PlasmaExhaust
+from process.models.physics.fusion_reactions import (
+    BeamReactions,
+    PlasmaReactions,
+)
 from process.models.physics.impurity_radiation import (
     initialise_imprad,
 )
@@ -105,7 +110,7 @@ from process.models.physics.profiles import (
     IonTemperatureProfile,
 )
 from process.models.physics.scrape_off_layer import ScrapeOffLayer
-from process.models.power import Power
+from process.models.power import Power, PumpingPowerModelTypes
 from process.models.pulse import Pulse
 from process.models.shield import Shield
 from process.models.stellarator.neoclassics import Neoclassics
@@ -203,12 +208,12 @@ def process_cli(
     \b
     PROCESS
     Power Reactor Optimisation Code
-    Copyright (c) [2023] [United Kingdom Atomic Energy Authority]
+    Copyright (c) [2023-present] [United Kingdom Atomic Energy Authority]
 
     \b
-    Contact
-    James Morris     : james.morris2@ukaea.uk
-    Jonathan Maddock : jonathan.maddock@ukaea.uk
+    Please use the contact form on our website https://www.ukaea.org/service/process/
+    to send any message to PROCESS maintainers that is unsuitable for a GitHub
+    issue or discussion.
 
     GitHub        : https://github.com/ukaea/PROCESS
     """  # noqa: DOC501
@@ -707,6 +712,8 @@ class Models:
         self.plasma_fields = PlasmaFields()
         self.plasma_dia_current = PlasmaDiamagneticCurrent()
         self.scrape_off_layer = ScrapeOffLayer()
+        self.plasma_reactions = PlasmaReactions(plasma_profile=self.plasma_profile)
+        self.beam_reactions = BeamReactions()
         self.physics = Physics(
             plasma_profile=self.plasma_profile,
             current_drive=self.current_drive,
@@ -722,6 +729,8 @@ class Models:
             plasma_dia_current=self.plasma_dia_current,
             plasma_geometry=self.plasma_geom,
             scrape_off_layer=self.scrape_off_layer,
+            plasma_reactions=self.plasma_reactions,
+            beam_reactions=self.beam_reactions,
         )
         self.physics_detailed = DetailedPhysics(
             plasma_profile=self.plasma_profile,
@@ -832,6 +841,8 @@ class Models:
             self.physics_detailed,
             self.electron_cyclotron,
             self.lower_hybrid,
+            self.plasma_reactions,
+            self.beam_reactions,
         )
 
     def setup_data_structure(self):
@@ -954,6 +965,18 @@ class Models:
         elif data.fwbs.i_blanket_type == BlktModelTypes.DCLL:
             # DCLL model
             self.dcll.output()
+
+        if (
+            data.fwbs.i_p_coolant_pumping
+            == PumpingPowerModelTypes.CALCULATE_PRESSURE_DROP
+        ):
+            if (
+                data.build.i_blkt_inboard
+                == InboardBlanketConfiguration.INBOARD_BLANKET_PRESENT
+            ):
+                self.blanket_library.output_inboard_blkt_pumping_variables()
+
+            self.blanket_library.output_outboard_blkt_pumping_variables()
 
         # FISPACT and LOCA model (not used)- removed
 

@@ -137,7 +137,9 @@ class TFSuperconductorLimits:
     j_tf_coil_turn: float
     """Current density in the TF coil turn at operating conditions (A/m²)."""
     bc20m: float
-    """Critical magnetic field at 20 K and zero strain (T)."""
+    """Effective upper critical field at zero temperature
+    and intrinsic strain B*_c2 (0,0) (T).
+    """
     tc0m: float
     """Critical temperature at zero magnetic field and zero strain (K)."""
     c_turn_cables_critical: float
@@ -2272,15 +2274,27 @@ class TFGeneralTurnGeometry:
     """General turn geometry info needed for all TF turn types."""
 
     a_tf_turn_cable_space_no_void: float
+    """Cable space area (per turn), includes the area that would be taken up
+    by voids and central cooling channel [m²]
+    """
     a_tf_turn_steel: float
+    """Area of the steel cable conduit around the cable space [m²]"""
     a_tf_turn_insulation: float
+    """Single turn insulation area [m²]"""
     n_tf_coil_turns: int
+    """Number of turns per TF coil"""
     c_tf_turn: float
+    """TF coil current per turn [A]"""
     dx_tf_turn_general: float
+    """TF coil turn edge length including turn insulation [m]"""
     dr_tf_turn: float
+    """Radial width of turn [m]"""
     dx_tf_turn: float
+    """Turn radial and toroidal dimension (integer turn only) [m]"""
     dx_tf_turn_conduit_full_average: float
+    """Average full width of the conduit surrounding the TF turn cable space [m]"""
     dx_tf_turn_cable_space_average: float
+    """Cable area averaged dimension (square shape) [m]"""
 
 
 @dataclass(slots=True)
@@ -2288,14 +2302,23 @@ class SuperconTFAreasFractions:
     """Superconducting TF coil winding pack areas and fractions."""
 
     a_tf_wp_coolant_channels: float
+    """Total area of coolant channels in winding pack [m²]"""
     a_tf_wp_conductor: float
+    """Winding pack conductor area [m²]"""
     a_tf_wp_extra_void: float
+    """Winding pack void space in conductor region for coolant [m²]"""
     a_tf_coil_wp_turn_insulation: float
+    """Winding pack turn insulation area per coil [m²]"""
     a_tf_wp_steel: float
+    """Total area of all winding pack steel [m²]"""
     a_tf_coil_inboard_steel: float
+    """Total steel area in inboard TF coil (turn and case) [m²]"""
     f_a_tf_coil_inboard_steel: float
+    """Fraction of total inboard TF coil area that is steel"""
     a_tf_coil_inboard_insulation: float
+    """Inboard coil insulation cross-section per coil [m²]"""
     f_a_tf_coil_inboard_insulation: float
+    """Fraction of total inboard TF coil area that is insulation"""
 
 
 @dataclass(slots=True)
@@ -2303,8 +2326,13 @@ class CICCAveragedTurnGeometry(TFGeneralTurnGeometry):
     """Averaged turn geometry for a CICC conductor with LTS cables."""
 
     radius_tf_turn_cable_space_corners: float
+    """Radius of the corners of the cable space in the TF turn [m]"""
     a_tf_turn_cable_space_effective: float
+    """True area taken up by conductor in the cable space [m²]"""
     f_a_tf_turn_cable_space_cooling: float
+    """Fraction of turn cable space area that is for cooling
+    (cooling channel and void space)
+    """
 
 
 @dataclass(slots=True)
@@ -2312,12 +2340,21 @@ class CICCIntegerTurnGeometry(TFGeneralTurnGeometry):
     """Integer turn geometry for a CICC conductor with LTS cables."""
 
     radius_tf_turn_cable_space_corners: float
+    """Radius of turn cable space rounded corners [m]"""
     dr_tf_turn_conduit_full: float
+    """Radial thickness of the full conduit around the cable space [m]"""
     dx_tf_turn_conduit_full_toroidal: float
+    """Toroidal thickness of the full conduit around the cable space [m]"""
     dr_tf_turn_cable_space: float
+    """Cable area radial and toroidal dimension (integer turn only) [m]"""
     dx_tf_turn_cable_space: float
+    """Cable area radial and toroidal dimension (integer turn only) [m]"""
     a_tf_turn_cable_space_effective: float
+    """True area taken up by conductor in the cable space [m²]"""
     f_a_tf_turn_cable_space_cooling: float
+    """Fraction of turn cable space area that is for cooling
+    (cooling channel and void space)
+    """
 
 
 class CICCSuperconductingTFCoil(SuperconductingTFCoil):
@@ -3761,10 +3798,17 @@ class CroCoCableSpaceGeometry:
     """Data class for the geometry of the cable space in a CroCo conductor."""
 
     dia_tf_turn_croco_cable: float
+    """Diameter of the CroCo cable in the TF turn [m]"""
     a_tf_turn_cable_space_no_void: float
+    """Cable space area (per turn) [m²]"""
     a_tf_turn_cable_space_effective: float
+    """True area taken up by conductor in the cable space [m²]"""
     a_tf_turn_steel: float
+    """Area of the steel conduit around the cable space [m²]"""
     f_a_tf_turn_cable_space_cooling: float
+    """Fraction of turn cable space area that is for cooling
+    (cooling channel and void space)
+    """
 
 
 class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
@@ -3939,14 +3983,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         d_sc_tf.f_a_tf_turn_copper = (
             d_sc_tf.a_tf_turn_croco_cable_space_copper / self.data.tfcoil.a_tf_turn
         )
-
-        d_sc_tf.f_a_tf_turn_cable_space_cooling = (
-            self.data.tfcoil.a_tf_turn_cable_space_no_void
-            - (
-                (N_CROCO_STRANDS_TURN * d_sc_tf.a_tf_croco_strand)
-                - d_sc_tf.a_tf_turn_croco_copper_bar
-            )
-        ) / self.data.tfcoil.a_tf_turn_cable_space_no_void
 
         d_sc_tf.a_tf_turn_croco_hastelloy = (
             d_sc_tf.a_tf_croco_strand_hastelloy * N_CROCO_STRANDS_TURN
@@ -4583,9 +4619,10 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             dx_tf_turn_conduit_full_average**2 - a_tf_turn_cable_space_no_void
         )
 
-        f_a_tf_turn_cable_space_cooling = a_tf_turn_cable_space_no_void - (
-            (N_CROCO_STRANDS_TURN + 1) * np.pi * (dia_tf_turn_croco_cable / 2.0e0) ** 2
-        )
+        f_a_tf_turn_cable_space_cooling = (
+            a_tf_turn_cable_space_no_void
+            - (N_CROCO_STRANDS_TURN + 1) * np.pi * (dia_tf_turn_croco_cable / 2.0e0) ** 2
+        ) / a_tf_turn_cable_space_no_void
 
         return CroCoCableSpaceGeometry(
             dia_tf_turn_croco_cable=dia_tf_turn_croco_cable,

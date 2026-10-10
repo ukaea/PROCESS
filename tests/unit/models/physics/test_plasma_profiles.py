@@ -4,6 +4,7 @@ import numpy as np
 import pytest
 
 from process.models.physics.plasma_profiles import PlasmaProfile
+from process.models.physics.profiles import calculate_profile_shell_contributions
 
 
 @pytest.fixture
@@ -87,6 +88,21 @@ def test_calculate_pedestal_profile_on_axis_density(
         nd_vol_average=nav,
         alphan=alphan,
     ) == pytest.approx(9.7756974320342041e19)
+
+
+def test_calculate_profile_shell_contributions():
+    profile_x = np.array([0.0, 0.25, 0.75, 1.0])
+    profile_y = np.full(profile_x.size, 4.0)
+    vol_plasma = 10.0
+
+    contributions = calculate_profile_shell_contributions(
+        profile_x=profile_x,
+        profile_y=profile_y,
+        vol_plasma=vol_plasma,
+    )
+
+    assert contributions == pytest.approx(np.array([0, 5.0, 15.0, 20.0]))
+    assert np.sum(contributions) == pytest.approx(4.0 * vol_plasma)
 
 
 class TeProfileParam(NamedTuple):

@@ -78,8 +78,8 @@ def test_plot_summary(temp_data, mfile_name, cli_runner):
     # Run on input, then plot custom mfile name
     cli_runner(process_cli, args=["-i", input_file_str, "--full-output"])
 
-    # Assert a pdf has been created
-    assert list(temp_data.glob("*.pdf"))
+    # Assert the summary pdf has been created, named after the MFILE
+    assert (temp_data / "large_tokamak_MFILE.DAT.SUMMARY.pdf").exists()
 
 
 def test_single_run_with_mfilejson(temp_data, cli_runner):
