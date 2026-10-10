@@ -30,11 +30,17 @@ from process.models.physics.current_drive import (
     CurrentDriveModel,
 )
 from process.models.physics.exhaust import calculate_brunner_divertor_power_splits
+from process.models.physics.plasma_equilibrium import (
+    PlasmaEquilibrium,
+    clear_veqpy_equilibrium_state,
+    store_veqpy_equilibrium,
+)
 from process.models.physics.profiles import (
     DensityProfilePedestalType,
     PlasmaProfileShapeType,
     calculate_profile_shell_contributions,
 )
+from process.models.physics.plasma_current import PlasmaCurrentModel
 from process.models.pulse import PulseTimings
 
 if TYPE_CHECKING:
@@ -266,6 +272,8 @@ class Physics(Model):
         # Issue #261 Remove old radiation model (imprad_model=0)
         self.plasma_composition()
 
+        clear_veqpy_equilibrium_state(self.data)
+
         (
             self.data.physics.m_plasma_fuel_ions,
             self.data.physics.m_plasma_ions_total,
@@ -377,11 +385,95 @@ class Physics(Model):
 
         self.plasma_profile.run()
 
-        # Calculate total magnetic field [T]
-        self.data.physics.b_plasma_total = self.fields.calculate_total_magnetic_field(
-            b_plasma_toroidal=self.data.physics.b_plasma_toroidal_on_axis,
-            b_plasma_poloidal=self.data.physics.b_plasma_surface_poloidal_average,
-        )
+        if self.data.physics.i_equilibrium_solve == 1:
+            equilibrium = PlasmaEquilibrium(
+                alphaj=self.data.physics.alphaj,
+                i_plasma_pedestal=self.data.physics.i_plasma_pedestal,
+                alphan=self.data.physics.alphan,
+                alphat=self.data.physics.alphat,
+                tbeta=self.data.physics.tbeta,
+                nd_plasma_pedestal_electron=self.data.physics.nd_plasma_pedestal_electron,
+                nd_plasma_separatrix_electron=self.data.physics.nd_plasma_separatrix_electron,
+                temp_plasma_pedestal_electron_kev=(
+                    self.data.physics.temp_plasma_pedestal_electron_kev
+                ),
+                temp_plasma_separatrix_electron_kev=(
+                    self.data.physics.temp_plasma_separatrix_electron_kev
+                ),
+                radius_plasma_pedestal_density_norm=self.data.physics.radius_plasma_pedestal_density_norm,
+                radius_plasma_pedestal_temp_norm=self.data.physics.radius_plasma_pedestal_temp_norm,
+                b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
+                rminor=self.data.physics.rminor,
+                rmajor=self.data.physics.rmajor,
+                kappa=self.data.physics.kappa,
+                triang=self.data.physics.triang,
+            )
+            f_nd_ie = (
+                self.data.physics.nd_plasma_ions_total_vol_avg
+                / self.data.physics.nd_plasma_electrons_vol_avg
+            )
+            f_temp_ie = (
+                self.data.physics.temp_plasma_ion_vol_avg_kev
+                / self.data.physics.temp_plasma_electron_vol_avg_kev
+            )
+            f_pres_ie = f_nd_ie * f_temp_ie
+
+            (
+                _ne_axis,
+                _te_axis,
+                _ne_vol,
+                _te_vol,
+                _q95,
+                _current,
+                _f_temp_plasma_electron_density_vol_avg,
+                eq,
+            ) = equilibrium.solve_axis_for_volume_averages(
+                f_pres_ie=f_pres_ie,
+                ne_vol_avg_target=self.data.physics.nd_plasma_electrons_vol_avg,
+                te_vol_avg_target=self.data.physics.temp_plasma_electron_vol_avg_kev,
+                q95_target=self.data.physics.q95,
+                current=self.data.physics.plasma_current,
+                ne_axis=self.data.physics.nd_plasma_electron_on_axis,
+                te_axis=self.data.physics.temp_plasma_electron_on_axis_kev,
+                match_q95=(self.data.physics.i_plasma_current != PlasmaCurrentModel.USER_INPUT),
+            )
+            store_veqpy_equilibrium(
+                self.data,
+                eq,
+                _ne_axis,
+                _te_axis,
+                _f_temp_plasma_electron_density_vol_avg,
+            )
+
+            self.data.physics.nd_plasma_electron_on_axis = _ne_axis
+            self.data.physics.temp_plasma_electron_on_axis_kev = _te_axis
+            self.data.physics.nd_plasma_ions_on_axis = (
+                f_nd_ie * self.data.physics.nd_plasma_electron_on_axis
+            )
+            self.plasma_profile.run()    
+            
+            self.data.physics.kappa95 = np.interp(0.95, eq.psin, eq.kappa)
+            triang = equilibrium.miller_delta_profile(eq)
+            self.data.physics.triang95 = np.interp(0.95, eq.psin, triang)
+            r = eq.R[-1, :]
+            z = eq.Z[-1, :]
+            (_, 
+                self.data.physics.a_plasma_surface_outboard, 
+                self.data.physics.a_plasma_surface, 
+                self.data.physics.len_plasma_poloidal, 
+                self.data.physics.a_plasma_poloidal, 
+                self.data.physics.vol_plasma
+            ) = self.geometry.cal_integral_geometry(r, z)
+
+            self.data.physics.q0 = eq.q[0]
+            self.data.physics.q95 = np.interp(0.95, eq.psin, eq.q)
+
+            self.data.physics.ind_plasma_internal_norm = (
+                equilibrium.calculate_ind_plasma_internal_norm(
+                    eq=eq,
+                    b_poloidal_avg=self.data.physics.b_plasma_surface_poloidal_average,
+                )
+            )
 
         # Calculate the inboard and outboard toroidal field
         self.data.physics.b_plasma_inboard_toroidal = (
@@ -425,6 +517,50 @@ class Physics(Model):
                 rmajor=self.data.physics.rmajor,
                 rminor=self.data.physics.rminor,
                 n_plasma_profile_elements=self.data.physics.n_plasma_profile_elements,
+            )
+        )
+
+        if self.data.physics.i_equilibrium_solve == 1:
+            eq = self.data.veqpy.equilibrium
+            self.data.physics.b_plasma_inboard_toroidal = eq.F[-1] / (
+                self.data.physics.rmajor - self.data.physics.rminor
+            )
+            self.data.physics.b_plasma_outboard_toroidal = eq.F[-1] / (
+                self.data.physics.rmajor + self.data.physics.rminor
+            )
+            r_in = eq.Rc - self.data.physics.rminor * eq.rho
+            r_out = eq.Rc + self.data.physics.rminor * eq.rho
+            r_major = np.concatenate([r_in[::-1], r_out])
+            b_plasma_toroidal = np.concatenate([eq.F[::-1] / r_in[::-1], eq.F / r_out])
+            rho = np.linspace(
+                self.data.physics.rmajor - self.data.physics.rminor,
+                self.data.physics.rmajor + self.data.physics.rminor,
+                2 * self.data.physics.n_plasma_profile_elements,
+            )
+            rho = np.where(rho == 0, 1e-10, rho)
+            self.data.physics.b_plasma_toroidal_profile = np.interp(
+                rho, r_major, b_plasma_toroidal
+            )
+
+        # Calculate total magnetic field [T]
+        self.data.physics.b_plasma_total = self.fields.calculate_total_magnetic_field(
+            b_plasma_toroidal=self.data.physics.b_plasma_toroidal_on_axis,
+            b_plasma_poloidal=self.data.physics.b_plasma_surface_poloidal_average,
+        )
+
+        # Calculate total magnetic field at the outboard [T]
+        self.data.physics.b_plasma_outboard_total = (
+            self.fields.calculate_total_magnetic_field(
+                b_plasma_toroidal=self.data.physics.b_plasma_outboard_toroidal,
+                b_plasma_poloidal=self.data.physics.b_plasma_surface_poloidal_average,
+            )
+        )
+
+        # Calculate total magnetic field at the inboard [T]
+        self.data.physics.b_plasma_inboard_total = (
+            self.fields.calculate_total_magnetic_field(
+                b_plasma_toroidal=self.data.physics.b_plasma_inboard_toroidal,
+                b_plasma_poloidal=self.data.physics.b_plasma_surface_poloidal_average,
             )
         )
 
@@ -533,6 +669,12 @@ class Physics(Model):
         # ***************************** #
 
         self.dia_current.run()
+        if self.data.physics.i_equilibrium_solve == 1:
+            eq = self.data.veqpy.equilibrium
+            if eq is not None:
+                self.data.current_drive.f_c_plasma_diamagnetic = (
+                    self.dia_current.diamagnetic_integral(eq)
+                )
 
         # ***************************** #
         #    PFIRSCH-SCHLÜTER CURRENT   #
@@ -549,6 +691,31 @@ class Physics(Model):
             )
 
         self.plasma_bootstrap_current.run()
+        if self.data.physics.i_equilibrium_solve == 1:
+            zmain = 1.0 + self.data.physics.f_plasma_fuel_helium3
+            if self.data.physics.i_fusion_reactions == "p-b11":
+                zmain = 1.0 + self.data.physics.f_plasma_fuel_boron11 * 4.0
+            n_i_ratio = (
+                self.data.physics.nd_plasma_ions_total_vol_avg
+                / self.data.physics.nd_plasma_electrons_vol_avg
+            )
+            t_i_ratio = (
+                self.data.physics.temp_plasma_ion_vol_avg_kev
+                / self.data.physics.temp_plasma_electron_vol_avg_kev
+            )
+            self.data.current_drive.f_c_plasma_bootstrap = (
+                self.plasma_bootstrap_current.bootstrap_fraction_sauter_equilibrium(
+                    rminor=self.data.physics.rminor,
+                    zeff=self.data.physics.n_charge_plasma_effective_vol_avg,
+                    zmain=zmain,
+                    rho=self.plasma_profile.neprofile.profile_x,
+                    ne=self.plasma_profile.neprofile.profile_y,
+                    ni=self.plasma_profile.neprofile.profile_y * n_i_ratio,
+                    te=self.plasma_profile.teprofile.profile_y,
+                    ti=self.plasma_profile.teprofile.profile_y * t_i_ratio,
+                    eq=self.data.veqpy.equilibrium,
+                )
+            )
 
         self.data.physics.err242 = 0
         if (
@@ -2496,6 +2663,13 @@ class Physics(Model):
             f"Plasma profile model selected: "
             f"{PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal).description}",
         )
+        if self.data.physics.i_equilibrium_solve == 1:
+            po.ocmmnt(
+                self.outfile,
+                "Equilibrium solve holds the volume-averaged electron density and "
+                "temperature fixed, and solves for the magnetic-axis density and "
+                "temperature",
+            )
 
         if (
             PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
