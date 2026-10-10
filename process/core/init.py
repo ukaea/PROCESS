@@ -30,6 +30,7 @@ from process.data_structure.physics_variables import (
     ConfinementMode,
     ConfinementTimeModel,
     DivertorNumberModels,
+    PlasmaCurrentModel,
 )
 from process.data_structure.stellarator_variables import StellaratorModel
 from process.data_structure.superconducting_tf_coil_variables import TFWPIntegerTurnType

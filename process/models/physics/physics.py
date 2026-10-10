@@ -265,6 +265,8 @@ class Physics(Model):
 
         clear_veqpy_equilibrium_state(self.data)
 
+        clear_veqpy_equilibrium_state(self.data)
+
         (
             self.data.physics.m_plasma_fuel_ions,
             self.data.physics.m_plasma_ions_total,
@@ -385,8 +387,12 @@ class Physics(Model):
                 tbeta=self.data.physics.tbeta,
                 nd_plasma_pedestal_electron=self.data.physics.nd_plasma_pedestal_electron,
                 nd_plasma_separatrix_electron=self.data.physics.nd_plasma_separatrix_electron,
-                temp_plasma_pedestal_kev=self.data.physics.temp_plasma_pedestal_kev,
-                temp_plasma_separatrix_kev=self.data.physics.temp_plasma_separatrix_kev,
+                temp_plasma_pedestal_electron_kev=(
+                    self.data.physics.temp_plasma_pedestal_electron_kev
+                ),
+                temp_plasma_separatrix_electron_kev=(
+                    self.data.physics.temp_plasma_separatrix_electron_kev
+                ),
                 radius_plasma_pedestal_density_norm=self.data.physics.radius_plasma_pedestal_density_norm,
                 radius_plasma_pedestal_temp_norm=self.data.physics.radius_plasma_pedestal_temp_norm,
                 b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
@@ -395,13 +401,16 @@ class Physics(Model):
                 kappa=self.data.physics.kappa,
                 triang=self.data.physics.triang,
             )
-            f_pres_ie = (
+            f_nd_ie = (
                 self.data.physics.nd_plasma_ions_total_vol_avg
                 / self.data.physics.nd_plasma_electrons_vol_avg
-            ) * (
+            )
+            f_temp_ie = (
                 self.data.physics.temp_plasma_ion_vol_avg_kev
                 / self.data.physics.temp_plasma_electron_vol_avg_kev
             )
+            f_pres_ie = f_nd_ie * f_temp_ie
+
             (
                 _ne_axis,
                 _te_axis,
@@ -409,6 +418,7 @@ class Physics(Model):
                 _te_vol,
                 _q95,
                 _current,
+                _f_temp_plasma_electron_density_vol_avg,
                 eq,
             ) = equilibrium.solve_axis_for_volume_averages(
                 f_pres_ie=f_pres_ie,
@@ -420,26 +430,37 @@ class Physics(Model):
                 te_axis=self.data.physics.temp_plasma_electron_on_axis_kev,
                 match_q95=(self.data.physics.i_plasma_current != PlasmaCurrentModel.USER_INPUT),
             )
-            store_veqpy_equilibrium(self.data, eq, _ne_axis, _te_axis)
-            psin = eq.psin
-            self.data.physics.q0 = float(eq.q[0])
-            self.data.physics.q95 = float(np.interp(0.95, psin, eq.q))
-            self.data.physics.kappa95 = float(np.interp(0.95, psin, eq.kappa))
-            triang_profile = equilibrium.miller_delta_profile(eq)
-            self.data.physics.triang95 = float(np.interp(0.95, psin, triang_profile))
-            self.data.physics.vol_plasma = (
-                float(eq.grid.integrate(eq.R * eq.J)) * 2.0 * np.pi
+            store_veqpy_equilibrium(
+                self.data,
+                eq,
+                _ne_axis,
+                _te_axis,
+                _f_temp_plasma_electron_density_vol_avg,
             )
-            r_lcfs = eq.R[-1, :]
-            z_lcfs = eq.Z[-1, :]
-            ds = np.sqrt(np.diff(r_lcfs) ** 2 + np.diff(z_lcfs) ** 2)
-            self.data.physics.len_plasma_poloidal = float(np.sum(ds))
-            _, s_out, s, _, area, _ = self.geometry.cal_integral_geometry(r_lcfs, z_lcfs)
-            self.data.physics.a_plasma_surface_outboard = s_out
-            self.data.physics.a_plasma_surface = s
-            self.data.physics.a_plasma_poloidal = area
 
-            self.plasma_profile.run()
+            self.data.physics.nd_plasma_electron_on_axis = _ne_axis
+            self.data.physics.temp_plasma_electron_on_axis_kev = _te_axis
+            self.data.physics.nd_plasma_ions_on_axis = (
+                f_nd_ie * self.data.physics.nd_plasma_electron_on_axis
+            )
+            self.plasma_profile.run()    
+            
+            self.data.physics.kappa95 = np.interp(0.95, eq.psin, eq.kappa)
+            triang = equilibrium.miller_delta_profile(eq)
+            self.data.physics.triang95 = np.interp(0.95, eq.psin, triang)
+            r = eq.R[-1, :]
+            z = eq.Z[-1, :]
+            (_, 
+                self.data.physics.a_plasma_surface_outboard, 
+                self.data.physics.a_plasma_surface, 
+                self.data.physics.len_plasma_poloidal, 
+                self.data.physics.a_plasma_poloidal, 
+                self.data.physics.vol_plasma
+            ) = self.geometry.cal_integral_geometry(r, z)
+
+            self.data.physics.q0 = eq.q[0]
+            self.data.physics.q95 = np.interp(0.95, eq.psin, eq.q)
+
             self.data.physics.ind_plasma_internal_norm = (
                 equilibrium.calculate_ind_plasma_internal_norm(
                     eq=eq,
@@ -3438,6 +3459,13 @@ class Physics(Model):
             f"Plasma profile model selected: "
             f"{PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal).description}",
         )
+        if self.data.physics.i_equilibrium_solve == 1:
+            po.ocmmnt(
+                self.outfile,
+                "Equilibrium solve holds the volume-averaged electron density and "
+                "temperature fixed, and solves for the magnetic-axis density and "
+                "temperature",
+            )
 
         if (
             PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)

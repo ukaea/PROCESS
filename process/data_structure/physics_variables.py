@@ -65,6 +65,7 @@ class PlasmaCurrentModel(IntEnum):
     current based on various plasma and machine parameters.
     """
 
+    USER_INPUT = (0, "User input")
     PENG_ANALYTIC_FIT = (1, "Peng analytic fit")
     PENG_DIVERTOR_SCALING = (2, "Peng divertor scaling")
     ITER_SCALING = (3, "Simple ITER scaling (cylindrical case)")

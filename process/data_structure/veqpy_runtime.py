@@ -4,14 +4,21 @@
 class VeqpyRuntime:
     """Holds the latest veqpy equilibrium object and axis iteration results."""
 
-    __slots__ = ("equilibrium", "ne_axis_m3", "te_axis_kev")
+    __slots__ = (
+        "equilibrium",
+        "f_temp_plasma_electron_density_vol_avg",
+        "ne_axis_m3",
+        "te_axis_kev",
+    )
 
     def __init__(self) -> None:
         self.equilibrium = None
         self.ne_axis_m3 = 0.0
         self.te_axis_kev = 0.0
+        self.f_temp_plasma_electron_density_vol_avg = 0.0
 
     def clear(self) -> None:
         self.equilibrium = None
         self.ne_axis_m3 = 0.0
         self.te_axis_kev = 0.0
+        self.f_temp_plasma_electron_density_vol_avg = 0.0
