@@ -803,136 +803,46 @@ class Physics(Model):
             self.data.physics.pden_dd_total_vol_avg_mw * self.data.physics.vol_plasma
         )
         self.data.physics.p_plasma_pb_mw = (
-            self.data.physics.pb_power_density * self.data.physics.vol_plasma
+            self.data.physics.pden_plasma_pb_vol_avg_mw * self.data.physics.vol_plasma
         )
-        self.data.physics.p_pb_total_mw = self.data.physics.p_plasma_pb_mw
-        self.data.physics.p_beam_pb_mw = 0.0
 
-        # Calculate neutral beam slowing down effects
-        # If ignited, then ignore beam fusion effects
-        if (self.data.current_drive.c_beam_total != 0.0e0) and (  # noqa: RUF069
-            PlasmaIgnitionModel(self.data.physics.i_plasma_ignited)
-            == PlasmaIgnitionModel.NON_IGNITED
-        ):
-            if self.data.physics.i_fusion_reactions == "p-b11":
-                (
-                    self.data.physics.beta_beam,
-                    self.data.physics.nd_beam_ions_out,
-                    self.data.physics.p_beam_alpha_mw,
-                ) = reactions.beam_fusion_p_b11(
-                    sigmv_pb=self.data.physics.sigmav_pb_average,
-                    ti=self.data.physics.temp_plasma_ion_vol_avg_kev,
-                    te=self.data.physics.temp_plasma_electron_vol_avg_kev,
-                    vol_plasma=self.data.physics.vol_plasma,
-                    current_beam_total=self.data.current_drive.c_beam_total,
-                    b_total=self.data.physics.b_plasma_total,
-                    ne=self.data.physics.nd_plasma_electrons_vol_avg,
-                    nd_fuel_b11=self.data.physics.nd_plasma_fuel_ions_vol_avg * self.data.physics.f_plasma_fuel_boron11,
-                    charge_eff_mass_weighted=self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg,
-                    dlamie=self.data.physics.dlamie,
-                    dlamee=self.data.physics.dlamee,
-                    betbm0=self.data.physics.betbm0,
-                    beamfus0=self.data.physics.beamfus0,
-                    e_beam_kev=self.data.current_drive.e_beam_kev,
-                )
-                self.data.physics.fusden_total = (
-                    self.data.physics.fusden_plasma
-                    + 1.0e6
-                    * self.data.physics.p_beam_alpha_mw
-                    / (constants.PB_ENERGY)
-                    / self.data.physics.vol_plasma
-                    )
-                self.data.physics.fusden_alpha_total = (
-                    self.data.physics.fusden_plasma_alpha
-                    + 1.0e6
-                    * self.data.physics.p_beam_alpha_mw
-                    / (constants.PB_ENERGY) * 3.0
-                    / self.data.physics.vol_plasma
-                )
-                self.data.physics.p_dt_total_mw = (
-                    self.data.physics.p_plasma_dt_mw
-                )
-                self.data.physics.p_pb_total_mw = (
-                    self.data.physics.p_plasma_pb_mw
-                    + self.data.physics.p_beam_alpha_mw
-                )
-                self.data.physics.p_beam_neutron_mw = 0.0
-                self.data.physics.p_beam_dt_mw = 0.0
-                self.data.physics.p_beam_pb_mw = self.data.physics.p_beam_alpha_mw
-            else:
-                (
-                    self.data.physics.beta_beam,
-                    self.data.physics.nd_beam_ions_out,
-                    self.data.physics.p_beam_alpha_mw,
-                ) = reactions.beam_fusion(
-                    self.data.physics.beamfus0,
-                    self.data.physics.betbm0,
-                    self.data.physics.b_plasma_total,
-                    self.data.current_drive.c_beam_total,
-                    self.data.physics.nd_plasma_electrons_vol_avg,
-                    self.data.physics.nd_plasma_fuel_ions_vol_avg,
-                    self.data.physics.dlamie,
-                    self.data.current_drive.e_beam_kev,
-                    self.data.physics.f_plasma_fuel_deuterium,
-                    self.data.physics.f_plasma_fuel_tritium,
-                    self.data.current_drive.f_beam_tritium,
-                    self.data.physics.temp_plasma_electron_density_weighted_kev,
-                    self.data.physics.vol_plasma,
-                    self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg,
-                )
-                self.data.physics.fusden_total = (
-                    self.data.physics.fusden_plasma
-                    + 1.0e6
-                    * self.data.physics.p_beam_alpha_mw
-                    / (constants.DT_ALPHA_ENERGY)
-                    / self.data.physics.vol_plasma
-                    )
-                self.data.physics.fusden_alpha_total = (
-                    self.data.physics.fusden_plasma_alpha
-                    + 1.0e6
-                    * self.data.physics.p_beam_alpha_mw
-                    / (constants.DT_ALPHA_ENERGY)
-                    / self.data.physics.vol_plasma
-                )
-                self.data.physics.p_dt_total_mw = (
-                    self.data.physics.p_plasma_dt_mw
-                    + (1.0 / (1.0 - constants.DT_NEUTRON_ENERGY_FRACTION))
-                    * self.data.physics.p_beam_alpha_mw
-                )
-                self.data.physics.p_beam_neutron_mw = self.data.physics.p_beam_alpha_mw * (
-                    constants.DT_NEUTRON_ENERGY_FRACTION
-                    / (1 - constants.DT_NEUTRON_ENERGY_FRACTION)
-                )
-                self.data.physics.p_beam_dt_mw = self.data.physics.p_beam_alpha_mw * (
-                    1 / (1 - constants.DT_NEUTRON_ENERGY_FRACTION)
-                )
-        else:
-            # If no beams present then the total alpha rates and power are the same as
-            # the plasma values
+        if self.data.physics.i_fusion_reactions == "d-t-he3":
+            beam_alpha_rate_add = (
+                1.0e6
+                * self.data.physics.p_beam_alpha_mw
+                / constants.DT_ALPHA_ENERGY
+                / self.data.physics.vol_plasma
+            )
             self.data.physics.fusden_total_vol_avg = (
-                self.data.physics.fusden_plasma_vol_avg
+                self.data.physics.fusden_plasma_vol_avg + beam_alpha_rate_add
             )
             self.data.physics.fusden_alpha_total_vol_avg = (
-                self.data.physics.fusden_plasma_alpha_vol_avg
+                self.data.physics.fusden_plasma_alpha_vol_avg + beam_alpha_rate_add
             )
-            self.data.physics.p_dt_total_mw = self.data.physics.p_plasma_dt_mw
-        beam_alpha_rate_add = (
-            1.0e6
-            * self.data.physics.p_beam_alpha_mw
-            / constants.DT_ALPHA_ENERGY
-            / self.data.physics.vol_plasma
-        )
-        self.data.physics.fusden_total_vol_avg = (
-            self.data.physics.fusden_plasma_vol_avg + beam_alpha_rate_add
-        )
-        self.data.physics.fusden_alpha_total_vol_avg = (
-            self.data.physics.fusden_plasma_alpha_vol_avg + beam_alpha_rate_add
-        )
-        self.data.physics.p_dt_total_mw = (
-            self.data.physics.p_plasma_dt_mw
-            + (1.0 / (1.0 - constants.DT_NEUTRON_ENERGY_FRACTION))
-            * self.data.physics.p_beam_alpha_mw
-        )
+            self.data.physics.p_dt_total_mw = (
+                self.data.physics.p_plasma_dt_mw
+                + (1.0 / (1.0 - constants.DT_NEUTRON_ENERGY_FRACTION))
+                * self.data.physics.p_beam_alpha_mw
+            )
+            self.data.physics.p_pb_total_mw = 0.0
+        else:
+            beam_alpha_rate_add = (
+                1.0e6
+                * self.data.physics.p_beam_alpha_mw
+                / constants.PB_ENERGY
+                / self.data.physics.vol_plasma
+            )
+            self.data.physics.fusden_total_vol_avg = (
+                self.data.physics.fusden_plasma_vol_avg + beam_alpha_rate_add
+            )
+            self.data.physics.fusden_alpha_total_vol_avg = (
+                self.data.physics.fusden_plasma_alpha_vol_avg + beam_alpha_rate_add * 3.0
+            )
+            self.data.physics.p_pb_total_mw = (
+                self.data.physics.p_plasma_pb_mw
+                + self.data.physics.p_beam_alpha_mw
+            )
+            self.data.physics.p_dt_total_mw = 0.0
 
         self.data.physics.fusrat_total = (
             self.data.physics.fusden_total_vol_avg * self.data.physics.vol_plasma
@@ -989,6 +899,7 @@ class Physics(Model):
                 b_total=self.data.physics.b_plasma_total,
                 fusden_alpha_total=self.data.physics.fusden_alpha_total_vol_avg
             )
+
         # Calculate ion/electron equilibration power
 
         self.data.physics.pden_ion_electron_equilibration_mw = rether(
@@ -1020,7 +931,6 @@ class Physics(Model):
             self.data,
         )
         if self.data.physics.i_fusion_reactions == "p-b11":
-            
             radpwrdata = physics_funcs.calculate_power_radiation(
                 nd_plasma_electron_on_axis=self.data.physics.nd_plasma_electron_on_axis,
                 rminor=self.data.physics.rminor,

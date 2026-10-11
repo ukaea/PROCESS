@@ -947,6 +947,9 @@ class PhysicsData:
     sigma_v_plasma_dt_vol_avg: float = 0.0
     """Volume averaged plasma D-T fusion reactivity (〈σv〉ᵥ) [m³/s]"""  # noqa: RUF001
 
+    sigma_v_plasma_pb_vol_avg: float = 0.0
+    """Volume averaged plasma p-B11 fusion reactivity (〈σv〉ᵥ) [m³/s]"""
+
     fusden_plasma_dt_profile: list[float] = field(default_factory=list)
     """Profile of D-T fusion reaction rate density in plasma, [reactions/m³/sec]"""
 
@@ -956,7 +959,7 @@ class PhysicsData:
     fusden_plasma_dd_helion_profile: list[float] = field(default_factory=list)
     """Profile of D-D fusion reaction rate density (helium branch) in plasma, [reactions/m³/sec]"""
 
-    fusrat_plasma_pb_profile: list[float] = field(default_factory=list)
+    fusden_plasma_pb_profile: list[float] = field(default_factory=list)
     """Profile of p-B11 fusion reaction rate in plasma, (reactions/sec)"""
 
     fusden_plasma_dhe3_profile: list[float] = field(default_factory=list)
@@ -1371,6 +1374,9 @@ class PhysicsData:
 
     pden_plasma_dt_vol_avg_mw: float = 0.0
     """Volume-averaged deuterium-tritium fusion power per volume just from plasma [MW/m³]"""
+
+    pden_plasma_pb_vol_avg_mw: float = 0.0
+    """Volume-averaged proton-boron11 fusion power per volume just from plasma [MW/m³]"""
 
     p_plasma_outer_rad_mw: float = 0.0
     """radiation power from outer zone (MW)"""
@@ -1972,13 +1978,6 @@ class PhysicsData:
     - =3 MAST 2014 scaling 2
     """
 
-    dt_power_density_plasma: float = 0.0
-    sigmav_dt_average: float = 0.0
-    dhe3_power_density: float = 0.0
-    dd_power_density: float = 0.0
-    pb_power_density: float = 0.0
-    sigmav_pb_average: float = 0.0
-    
     f_b_div_outboard_lower_flux_expansion: float = 5.0
     """Outboard lower divertor flux expansion factor for the divertor targets (fₓ)"""
 

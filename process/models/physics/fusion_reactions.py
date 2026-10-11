@@ -14,6 +14,7 @@ from process.core import process_output as po
 from process.core.model import Model
 from process.models.physics.profiles import calculate_vol_avg_of_profile
 from process.data_structure.physics_variables import PhysicsData
+from process.models.physics.plasma_equilibrium import PlasmaEquilibrium
 
 logger = logging.getLogger(__name__)
 
@@ -64,18 +65,6 @@ REACTION_CONSTANTS_DD2 = {
     "cc3": 1.99167e-3,
     "cc4": 0.0,
     "cc5": 1.05060e-5,
-    "cc6": 0.0,
-    "cc7": 0.0,
-}
-
-REACTION_CONSTANTS_PB = {
-    "bg": -1.0,
-    "mrc2": 0.0,
-    "cc1": 0.0,
-    "cc2": 0.0,
-    "cc3": 0.0,
-    "cc4": 0.0,
-    "cc5": 0.0,
     "cc6": 0.0,
     "cc7": 0.0,
 }
@@ -184,9 +173,11 @@ class PlasmaReactions(Model):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
         self.sigma_v_plasma_dt_vol_avg = 0.0
+        self.sigma_v_plasma_pb_vol_avg = 0.0
         self.pden_dhe3_total_vol_avg_mw = 0.0
         self.pden_dd_total_vol_avg_mw = 0.0
         self.dt_power_density = 0.0
+        self.pb_power_density = 0.0
         self.fusion_rates = FusionYieldDensities()
         self.f_dd_branching_trit = 0.0
 
@@ -533,27 +524,12 @@ class PlasmaReactions(Model):
         pb fusion reaction.
         
         """
-        pb = BoschHaleConstants(**REACTION_CONSTANTS_PB)
-
-        # Calculate the fusion reaction rate integral using Simpson's rule
-        sigmav = integrate.simpson(
-            fusion_rate_integral(
-                self.plasma_profile,
-                pb,
-                physics_data=self.data.physics,
-            ),
-            x=self.plasma_profile.neprofile.profile_x,
-            dx=self.plasma_profile.neprofile.profile_dx,
+        sigma_v_profile = nevins_reactivity(
+            ion_temperature_profile=self.plasma_profile.tiprofile.profile_y,
         )
 
-        self.data.physics.fusrat_plasma_pb_profile = (
-            nevins_reactivity(
-                (
-                    self.data.physics.temp_plasma_ion_vol_avg_kev
-                    / self.data.physics.temp_plasma_electron_vol_avg_kev
-                )
-                * self.plasma_profile.teprofile.profile_y,
-            )
+        self.data.physics.fusden_plasma_pb_profile = (
+            sigma_v_profile
             * self.data.physics.f_plasma_fuel_proton
             * self.data.physics.f_plasma_fuel_boron11
             * (
@@ -566,49 +542,40 @@ class PlasmaReactions(Model):
             ** 2
         )
 
-        # Store the average fusion reaction rate
-        self.sigmav_pb_average = sigmav
-
         # Reaction energy in MegaJoules [MJ]
         reaction_energy = constants.PB_ENERGY / 1.0e6
 
-        # Calculate the fusion power density produced [MW/m^3]
-        # The power density is scaled by the branching ratio to simulate the different
-        # product pathways
-        fusion_power_density = (
-            sigmav
-            * reaction_energy
-            * (
-                self.data.physics.f_plasma_fuel_proton
-                * self.data.physics.nd_plasma_fuel_ions_vol_avg
+        if self.data.physics.i_equilibrium_solve == 1 and self.data.veqpy.equilibrium is not None:
+            eq = self.data.veqpy.equilibrium
+            self.sigma_v_plasma_pb_vol_avg = PlasmaEquilibrium.get_volume_average(
+                eq,
+                self.plasma_profile.neprofile.profile_x, 
+                sigma_v_profile,
             )
-            * (
-                self.data.physics.f_plasma_fuel_boron11
-                * self.data.physics.nd_plasma_fuel_ions_vol_avg
+            fusden_pb_vol_avg = PlasmaEquilibrium.get_volume_average(
+                eq,
+                self.plasma_profile.neprofile.profile_x, 
+                self.data.physics.fusden_plasma_pb_profile,
             )
-        )
+        else:
+            self.sigma_v_plasma_pb_vol_avg = calculate_vol_avg_of_profile(
+                profile_x=self.plasma_profile.neprofile.profile_x,
+                profile_y=sigma_v_profile,
+                profile_dx=self.plasma_profile.neprofile.profile_dx,
+            )
+            fusden_pb_vol_avg = calculate_vol_avg_of_profile(
+                profile_x=self.plasma_profile.neprofile.profile_x,
+                profile_y=self.data.physics.fusden_plasma_pb_profile,
+                profile_dx=self.plasma_profile.neprofile.profile_dx,
+            )
 
-        # Power densities for different particles [MW/m³]
-        alpha_power_density = fusion_power_density
-        pden_non_alpha_charged_mw = 0.0
-        neutron_power_density = 0.0
+        pb_power_density = fusden_pb_vol_avg * reaction_energy
+        self.pb_power_density = pb_power_density
 
-        # Calculate the fusion rate density [reactions/m³/s]
-        fusion_rate_density = fusion_power_density / reaction_energy
-        alpha_rate_density = fusion_rate_density * 3.0
-        proton_rate_density = 0.0
-
-        # Update the cumulative D-D power density
-        self.pb_power_density = fusion_power_density
-
-        # Sum the fusion rates for all particles
         self.fusion_rates += FusionYieldDensities(
-            pden_plasma_alpha_vol_avg_mw=alpha_power_density,
-            pden_non_alpha_charged_vol_avg_mw=pden_non_alpha_charged_mw,
-            pden_neutron_vol_avg_mw=neutron_power_density,
-            fusden_vol_avg=fusion_rate_density,
-            fusden_plasma_alpha_vol_avg=alpha_rate_density,
-            fusden_plasma_protons_vol_avg=proton_rate_density,
+            pden_plasma_alpha_vol_avg_mw=pb_power_density,
+            fusden_vol_avg=fusden_pb_vol_avg,
+            fusden_plasma_alpha_vol_avg=fusden_pb_vol_avg * 3.0,
         )
 
 
@@ -670,8 +637,8 @@ class PlasmaReactions(Model):
         self.data.physics.pden_dhe3_total_vol_avg_mw = self.pden_dhe3_total_vol_avg_mw
         self.data.physics.pden_dd_total_vol_avg_mw = self.pden_dd_total_vol_avg_mw
         self.data.physics.f_dd_branching_trit = self.f_dd_branching_trit
-        self.data.physics.pb_power_density = self.pb_power_density
-        self.data.physics.sigmav_pb_average = self.sigmav_pb_average
+        self.data.physics.sigma_v_plasma_pb_vol_avg = self.sigma_v_plasma_pb_vol_avg
+        self.data.physics.pden_plasma_pb_vol_avg_mw = self.pb_power_density
 
     def output(self):
         """Output fusion reaction information."""
@@ -1020,6 +987,7 @@ class BeamReactions(Model):
         self.p_beam_alpha_mw = 0.0
         self.p_beam_neutron_mw = 0.0
         self.p_beam_dt_mw = 0.0
+        self.p_beam_pb_mw = 0.0
 
     def run(self) -> None:
         """Run the beam reactions calculations."""
@@ -1047,6 +1015,7 @@ class BeamReactions(Model):
         self.p_beam_alpha_mw = 0.0
         self.p_beam_neutron_mw = 0.0
         self.p_beam_dt_mw = 0.0
+        self.p_beam_pb_mw = 0.0
 
         self.beta_beam, self.nd_beam_ions_out, self.p_beam_alpha_mw = beam_fusion(
             self.data.physics.beamfus0,
@@ -1072,6 +1041,31 @@ class BeamReactions(Model):
         self.p_beam_dt_mw = self.p_beam_alpha_mw * (
             1.0 / (1.0 - constants.DT_NEUTRON_ENERGY_FRACTION)
         )
+ 
+        if self.data.physics.i_fusion_reactions == "p-b11":
+            (
+                self.beta_beam,
+                self.nd_beam_ions_out,
+                self.p_beam_alpha_mw,
+            ) = beam_fusion_p_b11(
+                sigmv_pb=self.data.physics.sigma_v_plasma_pb_vol_avg,
+                ti=self.data.physics.temp_plasma_ion_vol_avg_kev,
+                te=self.data.physics.temp_plasma_electron_vol_avg_kev,
+                vol_plasma=self.data.physics.vol_plasma,
+                current_beam_total=self.data.current_drive.c_beam_total,
+                b_total=self.data.physics.b_plasma_total,
+                ne=self.data.physics.nd_plasma_electrons_vol_avg,
+                nd_fuel_b11=self.data.physics.nd_plasma_fuel_ions_vol_avg * self.data.physics.f_plasma_fuel_boron11,
+                charge_eff_mass_weighted=self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg,
+                dlamie=self.data.physics.dlamie,
+                dlamee=self.data.physics.dlamee,
+                betbm0=self.data.physics.betbm0,
+                beamfus0=self.data.physics.beamfus0,
+                e_beam_kev=self.data.current_drive.e_beam_kev,
+            )
+            self.p_beam_neutron_mw = 0.0
+            self.p_beam_dt_mw = 0.0
+            self.p_beam_pb_mw = self.p_beam_alpha_mw
 
     def set_physics_variables(self):
         """Set the beam fusion physics variables in the physics module."""
@@ -1080,6 +1074,7 @@ class BeamReactions(Model):
         self.data.physics.p_beam_alpha_mw = self.p_beam_alpha_mw
         self.data.physics.p_beam_neutron_mw = self.p_beam_neutron_mw
         self.data.physics.p_beam_dt_mw = self.p_beam_dt_mw
+        self.data.physics.p_beam_pb_mw = self.p_beam_pb_mw
 
 
 @dataclass
