@@ -276,8 +276,6 @@ class Physics(Model):
 
         clear_veqpy_equilibrium_state(self.data)
 
-        clear_veqpy_equilibrium_state(self.data)
-
         (
             self.data.physics.m_plasma_fuel_ions,
             self.data.physics.m_plasma_ions_total,
@@ -911,8 +909,12 @@ class Physics(Model):
         else:
             # If no beams present then the total alpha rates and power are the same as
             # the plasma values
-            self.data.physics.fusden_total = self.data.physics.fusden_plasma
-            self.data.physics.fusden_alpha_total = self.data.physics.fusden_plasma_alpha
+            self.data.physics.fusden_total_vol_avg = (
+                self.data.physics.fusden_plasma_vol_avg
+            )
+            self.data.physics.fusden_alpha_total_vol_avg = (
+                self.data.physics.fusden_plasma_alpha_vol_avg
+            )
             self.data.physics.p_dt_total_mw = self.data.physics.p_plasma_dt_mw
         beam_alpha_rate_add = (
             1.0e6
@@ -985,7 +987,7 @@ class Physics(Model):
                 charge_eff=self.data.physics.n_charge_plasma_effective_vol_avg,
                 dlamie=self.data.physics.dlamie,
                 b_total=self.data.physics.b_plasma_total,
-                fusden_alpha_total=self.data.physics.fusden_alpha_total
+                fusden_alpha_total=self.data.physics.fusden_alpha_total_vol_avg
             )
         # Calculate ion/electron equilibration power
 
@@ -1534,19 +1536,6 @@ class Physics(Model):
                 / self.data.physics.fusden_alpha_total_vol_avg,
             )
 
-        if self.data.physics.i_fusion_reactions == "p-b11":
-            if self.data.physics.i_nd_plasma_protons == 0:
-                self.data.physics.nd_plasma_protons_vol_avg = 0.0
-            elif self.data.physics.i_nd_plasma_protons == 1:
-                self.data.physics.nd_plasma_protons_vol_avg = (
-                    self.data.physics.f_nd_protons_electrons_input
-                    * self.data.physics.nd_plasma_electrons_vol_avg
-                )
-            else:
-                raise ProcessValueError(
-                    "Invalid value for i_nd_plasma_protons",
-                    i_nd_plasma_protons=self.data.physics.i_nd_plasma_protons,
-                )
         # ======================================================================
 
         # Beam hot ion component
@@ -1603,14 +1592,9 @@ class Physics(Model):
         # = nD + nT + 2*nHe3
         # So nd_plasma_fuel_ions_vol_avg = znfuel - nHe3 = znfuel
         # - f_plasma_fuel_helium3*nd_plasma_fuel_ions_vol_avg
-        if self.data.physics.i_fusion_reactions == "p-b11":
-            self.data.physics.nd_plasma_fuel_ions_vol_avg = znfuel / (
-                1.0 + self.data.physics.f_plasma_fuel_boron11 * 4.0
-            )
-        else:
-            self.data.physics.nd_plasma_fuel_ions_vol_avg = znfuel / (
-                1.0 + self.data.physics.f_plasma_fuel_helium3
-            )
+        self.data.physics.nd_plasma_fuel_ions_vol_avg = znfuel / (
+            1.0 + self.data.physics.f_plasma_fuel_helium3
+        )
 
         # ======================================================================
 
@@ -1623,7 +1607,6 @@ class Physics(Model):
             + (
                 self.data.physics.f_plasma_fuel_deuterium
                 + self.data.physics.f_plasma_fuel_tritium
-                + self.data.physics.f_plasma_fuel_proton
             )
             * self.data.physics.nd_plasma_fuel_ions_vol_avg
             + self.data.physics.nd_beam_ions
@@ -1638,18 +1621,9 @@ class Physics(Model):
             + self.data.physics.f_nd_alpha_thermal_electron
         )
 
-        if self.data.physics.i_fusion_reactions == "p-b11":
-            self.data.impurity_radiation.f_nd_impurity_electron_array[
-                impurity_radiation.element2index("B_", self.data)
-            ] = (
-                self.data.physics.f_plasma_fuel_boron11
-                * self.data.physics.nd_plasma_fuel_ions_vol_avg
-                / self.data.physics.nd_plasma_electrons_vol_avg
-            )
-        else:
-            self.data.impurity_radiation.f_nd_impurity_electron_array[
-                impurity_radiation.element2index("B_", self.data)
-            ] = 0.0
+        self.data.impurity_radiation.f_nd_impurity_electron_array[
+            impurity_radiation.element2index("B_", self.data)
+        ] = 0.0
 
         # ======================================================================
 
@@ -1758,15 +1732,6 @@ class Physics(Model):
 
         # ======================================================================
 
-        if self.data.physics.i_fusion_reactions == "p-b11":
-            self.data.physics.m_fuel_amu = (
-                constants.M_BORON11_AMU * self.data.physics.f_plasma_fuel_boron11
-                + constants.M_PROTON_AMU * self.data.physics.f_plasma_fuel_proton
-            )
-            self.data.physics.m_beam_amu = constants.M_PROTON_AMU
-
-        # ======================================================================
-
         # Average mass of all ions
         self.data.physics.m_ions_total_amu = (
             (
@@ -1831,27 +1796,6 @@ class Physics(Model):
                 / constants.M_TRITON_AMU
             )
         ) / self.data.physics.nd_plasma_electrons_vol_avg
-
-        if self.data.physics.i_fusion_reactions == "p-b11":
-            self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg = (
-                (
-                    25.0 * self.data.physics.f_plasma_fuel_boron11
-                    * self.data.physics.nd_plasma_fuel_ions_vol_avg
-                    / constants.M_BORON11_AMU
-                )
-                + (
-                    self.data.physics.f_plasma_fuel_proton
-                    * self.data.physics.nd_plasma_fuel_ions_vol_avg
-                    / constants.M_PROTON_AMU
-                )
-                + (
-                    4.0
-                    * self.data.physics.nd_plasma_alphas_thermal_vol_avg
-                    / constants.M_ALPHA_AMU
-                )
-                + (self.data.physics.nd_plasma_protons_vol_avg / constants.M_PROTON_AMU)
-                + (self.data.physics.nd_beam_ions / constants.M_PROTON_AMU)
-            ) / self.data.physics.nd_plasma_electrons_vol_avg
 
         for imp in range(N_IMPURITIES):
             z_imp = self.data.impurity_radiation.impurity_arr_z[imp]
@@ -2110,7 +2054,7 @@ class Physics(Model):
         # ======================================================================
 
         # Average atomic masses of injected fuel species in the neutral beams
-        # Only deuterium and tritium in the beams
+        # Only protons in the beams
         self.data.physics.m_beam_amu = constants.M_PROTON_AMU
 
         # ======================================================================

@@ -2213,7 +2213,7 @@ class CurrentDrive(Model):
                 # Electron bernstein cases
                 case CurrentDriveMethodType.ELECTRON_BERNSTEIN:
                     p_hcd_primary_electrons_mw = (
-                        self.data.current_drive.p_ebw_injected_mw
+                        self.data.current_drive.p_hcd_primary_injected_mw
                         + self.data.current_drive.p_hcd_primary_extra_heat_mw
                     )
 
@@ -2234,7 +2234,7 @@ class CurrentDrive(Model):
 
                     # Wall plug power
                     self.data.current_drive.p_hcd_ebw_electric_mw = (
-                        self.data.current_drive.p_ebw_injected_mw
+                        self.data.current_drive.p_hcd_ebw_injected_total_mw
                         / self.data.current_drive.eta_ebw_injector_wall_plug
                     )
 
@@ -2296,7 +2296,7 @@ class CurrentDrive(Model):
                         self.data.current_drive.eta_beam_injector_wall_plug
                     )
 
-                    self.data.current_drive.c_beam_total = (
+                    self.data.current_drive.c_beam_total += (
                         1.0e-3
                         * (
                             (

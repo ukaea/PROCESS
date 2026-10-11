@@ -239,21 +239,17 @@ class PlasmaProfile(Model):
         integ1 = sp.integrate.simpson(arg1, x=rho, dx=drho)
         integ2 = sp.integrate.simpson(arg2, x=rho, dx=drho)
 
-        if veqpy_equilibrium_available(self.data):
+        if (
+            self.data.physics.i_equilibrium_solve == 1
+            and self.data.veqpy.equilibrium is not None
+        ):
             eq = self.data.veqpy.equilibrium
             integ1 = PlasmaEquilibrium.get_volume_average(eq, rho, dens * temp)
             integ2 = PlasmaEquilibrium.get_volume_average(eq, rho, dens)
 
         #  Density-weighted temperatures
         self.data.physics.temp_plasma_electron_density_weighted_kev = integ1 / integ2
-        if (
-            self.data.physics.i_equilibrium_solve == 1
-            and self.data.veqpy.equilibrium is not None
-        ):
-            self.data.physics.temp_plasma_electron_density_weighted_kev = (
-                self.data.veqpy.f_temp_plasma_electron_density_vol_avg
-                * self.data.physics.temp_plasma_electron_vol_avg_kev
-            )
+
         self.data.physics.temp_plasma_ion_density_weighted_kev = (
             self.data.physics.temp_plasma_ion_vol_avg_kev
             / self.data.physics.temp_plasma_electron_vol_avg_kev
@@ -279,6 +275,12 @@ class PlasmaProfile(Model):
         self.data.physics.f_temp_plasma_electron_on_axis_vol_avg = (
             self.data.physics.temp_plasma_electron_on_axis_kev
             / self.data.physics.temp_plasma_electron_vol_avg_kev
+        )
+
+        self.data.physics.nd_plasma_ions_on_axis = (
+            self.data.physics.nd_plasma_electron_on_axis
+            * self.data.physics.nd_plasma_ions_total_vol_avg
+            / self.data.physics.nd_plasma_electrons_vol_avg
         )
 
         #  Scrape-off density / volume averaged density

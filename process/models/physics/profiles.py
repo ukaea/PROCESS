@@ -348,8 +348,8 @@ class ElectronDensityProfile(Profile):
 
     def set_physics_variables(self):
         """Calculates and sets physics variables required for the profile."""
-        match DensityProfilePedestalType(
-            self.data.physics.i_nd_plasma_pedestal_separatrix
+        match PlasmaProfileShapeType(
+            self.data.physics.i_plasma_pedestal
         ):
             case PlasmaProfileShapeType.PARABOLIC_PROFILE:
                 self.data.physics.nd_plasma_electron_on_axis = (

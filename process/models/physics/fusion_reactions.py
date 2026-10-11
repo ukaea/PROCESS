@@ -602,13 +602,13 @@ class PlasmaReactions(Model):
         self.pb_power_density = fusion_power_density
 
         # Sum the fusion rates for all particles
-        self.sum_fusion_rates(
-            alpha_power_density,
-            pden_non_alpha_charged_mw,
-            neutron_power_density,
-            fusion_rate_density,
-            alpha_rate_density,
-            proton_rate_density,
+        self.fusion_rates += FusionYieldDensities(
+            pden_plasma_alpha_vol_avg_mw=alpha_power_density,
+            pden_non_alpha_charged_vol_avg_mw=pden_non_alpha_charged_mw,
+            pden_neutron_vol_avg_mw=neutron_power_density,
+            fusden_vol_avg=fusion_rate_density,
+            fusden_plasma_alpha_vol_avg=alpha_rate_density,
+            fusden_plasma_protons_vol_avg=proton_rate_density,
         )
 
 
