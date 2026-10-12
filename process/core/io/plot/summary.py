@@ -16585,9 +16585,11 @@ def main_plot(
     plot_cumulative_plasma_thermal_energy_profiles(
         ax_thermal_energy_cumulative, m_file, scan
     )
-
-    plot_ebw_ecrh_coupling_graph(_add_page().add_subplot(111), m_file, scan)
-
+    if CurrentDriveModel(m_file.get("i_hcd_primary", scan=scan)) in {
+        CurrentDriveModel.USER_INPUT_ELECTRON_BERNSTEIN,
+        CurrentDriveModel.FREETHY_ELECTRON_CYCLOTRON,
+    }:
+        plot_ebw_ecrh_coupling_graph(_add_page().add_subplot(111), m_file, scan)
     plot_bootstrap_comparison(_add_page("current").add_subplot(221), m_file, scan)
     plot_plasma_current_comparison(pages["current"].add_subplot(224), m_file, scan)
     plot_h_threshold_comparison(
