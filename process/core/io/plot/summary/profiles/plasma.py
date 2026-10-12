@@ -17,6 +17,11 @@ from process.core.io.plot.summary.profiles.misc import (
 from process.data_structure.impurity_radiation_variables import (
     IonSpecies,
 )
+from process.models.physics.fusion_reactions import (
+    REACTION_CONSTANTS_DT,
+    BoschHaleConstants,
+    bosch_hale_reactivity,
+)
 from process.models.physics.profiles import (
     PlasmaProfileShapeType,
     calculate_profile_shell_contributions,
@@ -1083,6 +1088,40 @@ def plot_fusion_rate_profiles(
         )
         zoom_axis.grid(True, which="both", linestyle="--", alpha=0.5)
         zoom_axis.minorticks_on()
+
+
+def plot_plasma_fusion_reactivity_profiles(
+    axis: plt.Axes,
+    m_file: MFile,
+    scan: int,
+):
+    """Function to plot plasma fusion reactivity profiles.
+
+    Parameters
+    ----------
+    axis : plt.Axes
+        axis object to add plot to
+    m_file : MFile
+        MFILE
+    scan : int
+        scan to read from MFILE
+
+    """
+    dt = BoschHaleConstants(**REACTION_CONSTANTS_DT)
+    rho, _, temp_electron_kev = profiles_with_pedestal(mfile=m_file, scan=scan)
+    # Placeholder for actual plotting logic
+    # Velocity-space average reactivity D-T profile [m³/s]
+    sigma_v_profile = bosch_hale_reactivity(
+        ion_temperature_profile=temp_electron_kev,
+        reaction_constants=dt,
+    )
+    axis.plot(rho, sigma_v_profile)
+
+    axis.set_title("Plasma Fusion Reactivity Profiles")
+    axis.set_xlabel("Normalized Radius [$\\rho$]")
+    axis.grid(True)
+    axis.minorticks_on()
+    axis.set_ylabel("Plasma Fusion Reactivity $(\\langle \\sigma v \\rangle)$ [m^3/s]")
 
 
 def plot_plasma_pressure_profiles(axis: plt.Axes, mfile: MFile, scan: int):
