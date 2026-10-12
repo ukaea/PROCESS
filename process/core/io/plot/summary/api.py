@@ -75,7 +75,10 @@ from process.core.io.plot.summary.plasma.physics import (
 )
 from process.core.io.plot.summary.plasma.sol import (
     plot_brunner_divertor_power_split_comparison_stackplot,
+    plot_div_lower_outboard_eich_target_profile,
+    plot_midplane_near_sol_radial_profile,
     plot_sol_power_decay_length_comparison,
+    plot_sol_power_flux_profiles,
 )
 from process.core.io.plot.summary.power_flow import (
     plot_blanket_coolant_properties,
@@ -432,6 +435,19 @@ def main_plot(
         pages["plasma_exhaust"].add_subplot(122), m_file, scan, colour_scheme
     )
 
+    plot_sol_power_flux_profiles(
+        _add_page("sol_powerfluxes").add_subplot(121), m_file, scan, colour_scheme
+    )
+
+    ax_midplane_near_sol = pages["sol_powerfluxes"].add_subplot(336)
+    plot_midplane_near_sol_radial_profile(
+        ax_midplane_near_sol, m_file, scan, colour_scheme
+    )
+
+    ax_div_lower_outboard = pages["sol_powerfluxes"].add_subplot(
+        339, sharex=ax_midplane_near_sol
+    )
+    plot_div_lower_outboard_eich_target_profile(ax_div_lower_outboard, m_file, scan)
     plot_debye_length_profile(
         _add_page("microscopic_quantities").add_subplot(232), m_file, scan
     )
