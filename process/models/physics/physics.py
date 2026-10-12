@@ -5907,8 +5907,7 @@ class DetailedPhysics(Model):
 
         self.data.physics.t_plasma_electron_deuteron_equilibration_profile = self.calculate_equilibriation_time(
             temp_plasma_electron_kev=self.plasma_profile.teprofile.profile_y,
-            temp_plasma_ion_kev=self.plasma_profile.teprofile.profile_y
-            * self.data.physics.f_temp_plasma_ion_electron,
+            temp_plasma_ion_kev=self.plasma_profile.tiprofile.profile_y,
             nd_plasma_ions=(
                 self.plasma_profile.neprofile.profile_y
                 * self.data.physics.f_plasma_fuel_deuterium
@@ -5939,8 +5938,7 @@ class DetailedPhysics(Model):
 
         self.data.physics.t_plasma_electron_triton_equilibration_profile = self.calculate_equilibriation_time(
             temp_plasma_electron_kev=self.plasma_profile.teprofile.profile_y,
-            temp_plasma_ion_kev=self.plasma_profile.teprofile.profile_y
-            * self.data.physics.f_temp_plasma_ion_electron,
+            temp_plasma_ion_kev=self.plasma_profile.tiprofile.profile_y,
             nd_plasma_ions=(
                 self.plasma_profile.neprofile.profile_y
                 * self.data.physics.f_plasma_fuel_tritium
@@ -5966,8 +5964,7 @@ class DetailedPhysics(Model):
 
         self.data.physics.t_plasma_electron_alpha_thermal_equilibration_profile = self.calculate_equilibriation_time(
             temp_plasma_electron_kev=self.plasma_profile.teprofile.profile_y,
-            temp_plasma_ion_kev=self.plasma_profile.teprofile.profile_y
-            * self.data.physics.f_temp_plasma_ion_electron,
+            temp_plasma_ion_kev=self.plasma_profile.tiprofile.profile_y,
             nd_plasma_ions=(
                 self.plasma_profile.neprofile.profile_y
                 * (
