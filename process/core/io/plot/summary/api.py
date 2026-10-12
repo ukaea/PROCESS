@@ -79,7 +79,7 @@ from process.core.io.plot.summary.plasma.sol import (
     plot_sol_power_decay_length_comparison,
     plot_sol_power_flux_profiles,
 )
-from process.core.io.plot.summary.power_flow import (
+from process.core.io.plot.summary.power_cycle.misc import (
     plot_blanket_coolant_properties,
     plot_main_power_flow,
     plot_power_info,
