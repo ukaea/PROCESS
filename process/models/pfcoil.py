@@ -4033,6 +4033,21 @@ class CSCoil(Model):
             self.data.pf_coil.a_cs_toroidal,
             "OP ",
         )
+        op.oblnkl(self.outfile)
+        op.ovarre(
+            self.outfile,
+            "Ratio of outer to inner radius of the CS coil (α)",  # noqa: RUF001
+            "(f_r_cs_outer_inner)",
+            self.data.pf_coil.f_r_cs_outer_inner,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "Ratio of the solenoid half height to its inner radius (β)",
+            "(f_len_cs_upper_inner)",
+            self.data.pf_coil.f_len_cs_upper_inner,
+            "OP ",
+        )
 
         op.oblnkl(self.outfile)
         op.ocmmnt(self.outfile, "----------------------------")
