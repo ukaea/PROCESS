@@ -3075,6 +3075,10 @@ class CSGeometry:
     """Full height of CS coil (m)"""
     dr_cs_full: float
     """Full radial thickness of CS coil (m)"""
+    f_r_cs_outer_inner: float
+    """Ratio of outer to inner radius of the CS coil (α)"""  # noqa: RUF001
+    f_len_cs_upper_inner: float
+    """Ratio of the solenoid half height to its inner radius (β)"""
 
 
 @dataclass
@@ -3157,6 +3161,12 @@ class CSCoil(Model):
         # Radius of inner edge
         r_cs_coil_inner = r_cs_coil_outer - dr_cs
 
+        # Ratio of outer to inner radius of the CS coil, also known as (alpha)
+        f_r_cs_outer_inner = r_cs_coil_outer / r_cs_coil_inner
+
+        # Ratio of the solenoid half height to its inner radius, also known as β (beta)
+        f_len_cs_upper_inner = z_cs_coil_upper / r_cs_coil_inner
+
         # Full radial thickness of CS coil
         dr_cs_full = 2 * r_cs_coil_outer
 
@@ -3170,6 +3180,8 @@ class CSCoil(Model):
             r_cs_coil_inner=r_cs_coil_inner,
             dz_cs_full=dz_cs_full,
             dr_cs_full=dr_cs_full,
+            f_r_cs_outer_inner=f_r_cs_outer_inner,
+            f_len_cs_upper_inner=f_len_cs_upper_inner,
         )
 
     @staticmethod
@@ -3356,6 +3368,8 @@ class CSCoil(Model):
         ] = cs_geometry.r_cs_coil_inner
         self.data.pf_coil.dz_cs_full = cs_geometry.dz_cs_full
         self.data.pf_coil.dr_cs_full = cs_geometry.dr_cs_full
+        self.data.pf_coil.f_r_cs_outer_inner = cs_geometry.f_r_cs_outer_inner
+        self.data.pf_coil.f_len_cs_upper_inner = cs_geometry.f_len_cs_upper_inner
 
         # Maximum current (MA-turns) in central Solenoid, at either BOP or EOF
         if self.data.pf_coil.j_cs_pulse_start > self.data.pf_coil.j_cs_flat_top_end:
