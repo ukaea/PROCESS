@@ -28,7 +28,6 @@ __all__ = [
     "plot_max_normalised_beta_comparison",
     "plot_physics_info",
     "plot_plasma",
-    "plot_plasma_coloumb_logarithms",
     "plot_plasma_current_comparison",
     "plot_plasma_outboard_toroidal_ripple_map",
     "reaction_plot_grid",
@@ -1043,83 +1042,3 @@ def plot_plasma_outboard_toroidal_ripple_map(fig, mfile: MFile, scan: int):
 
     # Improve layout
     fig.tight_layout()
-
-
-def plot_plasma_coloumb_logarithms(axis: plt.Axes, mfile_data: MFile, scan: int) -> None:
-    """Plot the plasma coloumb logarithms on the given axis."""
-    plasma_coulomb_log_electron_electron_profile = [
-        mfile_data.data[f"plasma_coulomb_log_electron_electron_profile{i}"].get_scan(
-            scan
-        )
-        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
-    ]
-
-    plasma_coulomb_log_electron_deuteron_profile = [
-        mfile_data.data[f"plasma_coulomb_log_electron_deuteron_profile{i}"].get_scan(
-            scan
-        )
-        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
-    ]
-
-    plasma_coulomb_log_electron_triton_profile = [
-        mfile_data.data[f"plasma_coulomb_log_electron_triton_profile{i}"].get_scan(scan)
-        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
-    ]
-
-    plasma_coulomb_log_deuteron_triton_profile = [
-        mfile_data.data[f"plasma_coulomb_log_deuteron_triton_profile{i}"].get_scan(scan)
-        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
-    ]
-
-    plasma_coulomb_log_electron_alpha_thermal_profile = [
-        mfile_data.data[
-            f"plasma_coulomb_log_electron_alpha_thermal_profile{i}"
-        ].get_scan(scan)
-        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
-    ]
-
-    axis.plot(
-        np.linspace(0, 1, len(plasma_coulomb_log_electron_electron_profile)),
-        plasma_coulomb_log_electron_electron_profile,
-        color="blue",
-        linestyle="-",
-        label=r"$ln \Lambda_{e-e}$",
-    )
-
-    axis.plot(
-        np.linspace(0, 1, len(plasma_coulomb_log_electron_deuteron_profile)),
-        plasma_coulomb_log_electron_deuteron_profile,
-        color="pink",
-        linestyle="-",
-        label=r"$ln \Lambda_{e-D}$",
-    )
-
-    axis.plot(
-        np.linspace(0, 1, len(plasma_coulomb_log_electron_triton_profile)),
-        plasma_coulomb_log_electron_triton_profile,
-        color="green",
-        linestyle="-",
-        label=r"$ln \Lambda_{e-T}$",
-    )
-
-    axis.plot(
-        np.linspace(0, 1, len(plasma_coulomb_log_deuteron_triton_profile)),
-        plasma_coulomb_log_deuteron_triton_profile,
-        color="orange",
-        linestyle="-",
-        label=r"$ln \Lambda_{D-T}$",
-    )
-
-    axis.plot(
-        np.linspace(0, 1, len(plasma_coulomb_log_electron_alpha_thermal_profile)),
-        plasma_coulomb_log_electron_alpha_thermal_profile,
-        color="red",
-        linestyle="-",
-        label=r"$ln \Lambda_{e-\alpha,thermal}$",
-    )
-
-    axis.set_ylabel("Coulomb Logarithm")
-    axis.set_xlabel("$\\rho \\ [r/a]$")
-    axis.grid(True, which="both", linestyle="--", alpha=0.5)
-    axis.minorticks_on()
-    axis.legend()

@@ -69,7 +69,6 @@ from process.core.io.plot.summary.plasma.physics import (
     plot_magnetic_fields_in_plasma,
     plot_max_normalised_beta_comparison,
     plot_physics_info,
-    plot_plasma_coloumb_logarithms,
     plot_plasma_current_comparison,
     plot_plasma_outboard_toroidal_ripple_map,
 )
@@ -95,11 +94,9 @@ from process.core.io.plot.summary.profiles.atomic import (
     plot_ion_slowing_down_time_profile,
     plot_larmor_radius_profile,
     plot_mean_free_path_profile,
+    plot_plasma_coloumb_logarithms,
     plot_resistivity_profile,
     plot_velocity_profile,
-)
-from process.core.io.plot.summary.profiles.misc import (
-    plot_line_brem_power_density_profile,
 )
 from process.core.io.plot.summary.profiles.plasma import (
     plot_beta_profiles,
@@ -117,6 +114,7 @@ from process.core.io.plot.summary.profiles.plasma import (
 )
 from process.core.io.plot.summary.profiles.radiation import (
     plot_line_brem_loss_function_profile,
+    plot_line_brem_power_density_profile,
     plot_line_brem_power_profile,
     plot_plasma_pressure_gradient_profiles,
     plot_rad_density_contour,
