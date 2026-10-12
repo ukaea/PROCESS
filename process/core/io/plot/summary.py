@@ -12039,7 +12039,7 @@ def plot_fusion_rate_profiles(
         zoom_axis.set_xlim([0, 1.01])
         zoom_axis.set_ylim(bottom=0.0)
         zoom_axis.legend(
-            loc="lower right",
+            loc="upper right",
             edgecolor="black",
             facecolor="white",
             framealpha=1.0,
