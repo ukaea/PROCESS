@@ -63,6 +63,43 @@ def plot_line_brem_loss_function_profile(
     ])
     axis.set_xscale("log")
     axis.set_yscale("log")
+    x_max = axis.get_xlim()[1]
+    temp_core_min = 5000
+    temp_pedestal_min = 100
+    temp_sol_min = 0
+    if x_max > temp_core_min:
+        axis.axvspan(temp_core_min, x_max, color="red", alpha=0.2, zorder=0)
+        axis.text(
+            0.85,
+            0.375,
+            "Core",
+            transform=axis.transAxes,
+            horizontalalignment="right",
+            verticalalignment="top",
+        )
+
+        axis.axvspan(
+            temp_pedestal_min, temp_core_min, color="orange", alpha=0.2, zorder=0
+        )
+        axis.text(
+            0.6,
+            0.375,
+            "Pedestal",
+            transform=axis.transAxes,
+            horizontalalignment="right",
+            verticalalignment="top",
+        )
+        axis.axvspan(
+            temp_sol_min, temp_pedestal_min, color="yellow", alpha=0.2, zorder=0
+        )
+        axis.text(
+            0.3,
+            0.375,
+            "SOL",
+            transform=axis.transAxes,
+            horizontalalignment="right",
+            verticalalignment="top",
+        )
     axis.minorticks_on()
     axis.xaxis.grid(True, which="both", alpha=0.2)
     axis.yaxis.grid(True, which="both", alpha=0.2)
