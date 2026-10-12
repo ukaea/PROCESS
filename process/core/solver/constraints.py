@@ -320,7 +320,7 @@ def constraint_equation_3(constraint_registration, data):
         == PlasmaIgnitionModel.NON_IGNITED
     ):
         p_ion_heating = (
-            data.physics.pden_alpha_heating_ions_mw
+            data.physics.pden_alpha_heating_ions_vol_avg_mw
             + (data.current_drive.p_hcd_injected_ions_mw / data.physics.vol_plasma)
             + data.physics.pden_ion_electron_equilibration_vol_avg_mw
             + data.physics.pden_non_alpha_charged_mw
@@ -335,7 +335,7 @@ def constraint_equation_3(constraint_registration, data):
 
     # Plasma ignited
     p_ion_heating = (
-        data.physics.pden_alpha_heating_ions_mw
+        data.physics.pden_alpha_heating_ions_vol_avg_mw
         + data.physics.pden_ion_electron_equilibration_vol_avg_mw
         + data.physics.pden_non_alpha_charged_mw
     )
@@ -421,14 +421,14 @@ def constraint_equation_4(constraint_registration, data):
         == PlasmaIgnitionModel.NON_IGNITED
     ):
         p_electron_heating = (
-            data.physics.pden_alpha_heating_electrons_mw
+            data.physics.pden_alpha_heating_electrons_vol_avg_mw
             + (data.current_drive.p_hcd_injected_electrons_mw / data.physics.vol_plasma)
             + data.physics.pden_plasma_ohmic_mw
         )
     else:
         # if plasma ignited
         p_electron_heating = (
-            data.physics.pden_alpha_heating_electrons_mw
+            data.physics.pden_alpha_heating_electrons_vol_avg_mw
             + data.physics.pden_plasma_ohmic_mw
         )
     return eq(p_electron_loss, p_electron_heating, constraint_registration)
