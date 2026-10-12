@@ -26,6 +26,17 @@ from process.models.pulse import PulseTimings
 if TYPE_CHECKING:
     from process.core.io.mfile import MFile
 
+__all__ = [
+    "add_colourbar",
+    "box_style",
+    "color_key",
+    "get_pulse_timings",
+    "load_plot_image",
+    "place_plot_image",
+    "setup_axis",
+    "text_layout",
+]
+
 
 def load_plot_image(name: str):
     """Load an image bundled with the PROCESS plotting resources."""
@@ -56,6 +67,7 @@ def get_pulse_timings(mfile, scan: int) -> PulseTimings:
 
 
 def box_style(colour: str, alpha: float = 1.0, linewidth: float | None = 2, **kwargs):
+    """Matplotlib boxstyle"""
     return {
         "boxstyle": "round",
         "facecolor": colour,
@@ -66,6 +78,7 @@ def box_style(colour: str, alpha: float = 1.0, linewidth: float | None = 2, **kw
 
 
 def text_layout(fig, h_align="left", v_align="bottom"):
+    """Matplotlib text layout"""
     return {
         "fontsize": 9,
         "verticalalignment": v_align,
@@ -75,6 +88,7 @@ def text_layout(fig, h_align="left", v_align="bottom"):
 
 
 def setup_axis(axis, xmin, xmax, ymin, ymax):
+    """Matplotlib axis setup"""
     axis.set_ylim(ymin, ymax)
     axis.set_xlim(xmin, xmax)
     axis.set_axis_off()
@@ -83,6 +97,7 @@ def setup_axis(axis, xmin, xmax, ymin, ymax):
 
 
 def add_colourbar(contour_fill, axis, colourbar_axis):
+    """Add colourbar to axis"""
     # Use a dedicated colorbar axes when provided so the main axes width is unchanged.
     if colourbar_axis is None:
         return axis.figure.colorbar(contour_fill, ax=axis, pad=0.02)
@@ -144,6 +159,3 @@ def color_key(axis: plt.Axes, mfile: MFile, scan: int, colour_scheme: Literal[1,
                 edgecolor="black" if color == "none" else "none",
             )
         )
-
-
-__all__ = ["color_key"]

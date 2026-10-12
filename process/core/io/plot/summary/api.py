@@ -14,11 +14,13 @@ from process.core.io.plot.summary.common import color_key
 from process.core.io.plot.summary.constants import RADIAL_BUILD, vertical_lower
 from process.core.io.plot.summary.geometry.build import (
     plot_geometry_info,
+    plot_lower_vertical_build,
     plot_radial_build,
 )
 from process.core.io.plot.summary.geometry.misc import (
     plot_blkt_pipe_bends,
     plot_blkt_structure,
+    plot_fw_90_deg_pipe_bend,
 )
 from process.core.io.plot.summary.geometry.poloidal import (
     plot_first_wall_poloidal_cross_section,
@@ -36,7 +38,6 @@ from process.core.io.plot.summary.magnets.cs import (
     plot_cs_turn_structure,
     plot_magnetics_info,
     plot_pf_cs_plasma_mutual_inductance,
-    plot_physics_info,
 )
 from process.core.io.plot.summary.magnets.pf import plot_pf_dimensions
 from process.core.io.plot.summary.magnets.tf import (
@@ -52,21 +53,29 @@ from process.core.io.plot.summary.magnets.tf import (
     plot_tf_stress,
 )
 from process.core.io.plot.summary.plasma.confinement import (
-    plot_brunner_divertor_power_split_comparison_stackplot,
     plot_confinement_time_comparison,
-    plot_sol_power_decay_length_comparison,
 )
-from process.core.io.plot.summary.plasma.current_drive import plot_bootstrap_comparison
+from process.core.io.plot.summary.plasma.current_drive import (
+    plot_bootstrap_comparison,
+    plot_ebw_ecrh_coupling_graph,
+)
 from process.core.io.plot.summary.plasma.overview import (
     plot_detailed_plasma_parameters,
     plot_main_plasma_information,
 )
 from process.core.io.plot.summary.plasma.physics import (
+    plot_density_limit_comparison,
+    plot_h_threshold_comparison,
     plot_magnetic_fields_in_plasma,
     plot_max_normalised_beta_comparison,
+    plot_physics_info,
     plot_plasma_coloumb_logarithms,
     plot_plasma_current_comparison,
     plot_plasma_outboard_toroidal_ripple_map,
+)
+from process.core.io.plot.summary.plasma.sol import (
+    plot_brunner_divertor_power_split_comparison_stackplot,
+    plot_sol_power_decay_length_comparison,
 )
 from process.core.io.plot.summary.power_flow import (
     plot_blanket_coolant_properties,
@@ -81,14 +90,13 @@ from process.core.io.plot.summary.profiles.atomic import (
     plot_ion_charge_profile,
     plot_ion_frequency_profile,
     plot_ion_slowing_down_time_profile,
+    plot_larmor_radius_profile,
     plot_mean_free_path_profile,
     plot_resistivity_profile,
     plot_velocity_profile,
 )
 from process.core.io.plot.summary.profiles.misc import (
-    plot_line_brem_loss_function_profile,
     plot_line_brem_power_density_profile,
-    plot_line_brem_power_profile,
 )
 from process.core.io.plot.summary.profiles.plasma import (
     plot_beta_profiles,
@@ -105,15 +113,16 @@ from process.core.io.plot.summary.profiles.plasma import (
     plot_t_profiles,
 )
 from process.core.io.plot.summary.profiles.radiation import (
-    plot_cs_radial_stress_contour_profile,
-    plot_cs_radial_stress_profile,
-    plot_larmor_radius_profile,
+    plot_line_brem_loss_function_profile,
+    plot_line_brem_power_profile,
     plot_plasma_pressure_gradient_profiles,
     plot_rad_density_contour,
 )
 from process.core.io.plot.summary.profiles.stress import (
     plot_cs_hoop_stress_contour_profile,
     plot_cs_hoop_stress_profile,
+    plot_cs_radial_stress_contour_profile,
+    plot_cs_radial_stress_profile,
     plot_cs_stress_time_profile,
     plot_cs_tresca_2d_contour,
     plot_cs_vertical_stress_profile,
@@ -127,12 +136,7 @@ from process.core.io.plot.summary.reporting.constraints import (
 from process.core.io.plot.summary.reporting.layouts import plot_upper_vertical_build
 from process.core.io.plot.summary.reporting.misc import (
     RadialBuild,
-    plot_density_limit_comparison,
-    plot_ebw_ecrh_coupling_graph,
-    plot_fw_90_deg_pipe_bend,
-    plot_h_threshold_comparison,
     plot_iteration_variables,
-    plot_lower_vertical_build,
 )
 from process.core.io.plot.summary.reporting.panels import (
     plot_cover_page,
@@ -147,6 +151,8 @@ from process.models.physics.plasma_geometry import PlasmaShapeModelType
 from process.models.power import PumpingPowerModelTypes
 from process.models.tfcoil.base import TFConductorModel
 from process.models.tfcoil.superconducting import SuperconductingTFTurnType
+
+__all__ = ["create_thickness_builds", "main_plot", "plot_summary"]
 
 
 def main_plot(
@@ -961,6 +967,3 @@ def plot_summary(
         plt.show(block=True)
 
     plt.close("all")
-
-
-__all__ = ["create_thickness_builds", "main_plot", "plot_summary"]

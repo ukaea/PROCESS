@@ -6,20 +6,260 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
-from process.core import constants
-from process.core.io.plot.summary.common import add_colourbar
+from process.core.io.plot.summary.common import box_style
 from process.core.io.plot.summary.profiles.misc import (
     interp1d_profile,
     profiles_with_pedestal,
     read_imprad_data,
 )
-from process.models.pfcoil import N_CS_STRESS_PROFILE_POINTS, CSCoil
+from process.data_structure.impurity_radiation_variables import ImpurityRadiationData
+from process.models.physics.profiles import calculate_profile_shell_contributions
 
 if TYPE_CHECKING:
     import matplotlib.pyplot as plt
     from matplotlib.axes import Axes
 
     from process.core.io.mfile import MFile
+
+
+__all__ = [
+    "plot_line_brem_loss_function_profile",
+    "plot_line_brem_power_profile",
+    "plot_plasma_pressure_gradient_profiles",
+    "plot_rad_density_contour",
+]
+
+
+def plot_line_brem_loss_function_profile(
+    axis: plt.Axes,
+    mfile: MFile,
+    scan: int,
+    impp: str,
+):
+    """Function to plot Line and Bremsstrahlung loss function (L_z) profile.
+
+    Parameters
+    ----------
+    axis : plt.Axes
+        axis object to add plot to
+    mfile : MFile
+        MFile object containing plasma and impurity profile information.
+    scan : int
+        scan number to use
+    impp : str
+        impurity path
+
+    """
+    # read in the impurity data
+    imp_data = read_imprad_data(_skiprows=2, data_path=impp)
+
+    # find impurity densities
+    imp_frac = np.array([
+        mfile.get(f"f_nd_impurity_electrons({i:02d})", scan=scan) for i in range(1, 15)
+    ])
+
+    rho, _, temp_electron_kev = profiles_with_pedestal(mfile, scan)
+    # imp_data Te values are in eV, but te from profiles_with_pedestal is in keV
+    temp_electron_ev = temp_electron_kev * 1.0e3
+
+    # Intailise the radiation profile arrays
+    lz = np.zeros([imp_data.shape[0], temp_electron_kev.shape[0]])
+
+    # Intailise the impurity radiation profile
+    for temp_point in range(temp_electron_kev.shape[0]):
+        for impurity in range(imp_data.shape[0]):
+            if temp_electron_ev[temp_point] <= imp_data[impurity][0][0]:
+                lz[impurity][temp_point] = imp_data[impurity][0][1]
+            elif (
+                temp_electron_ev[temp_point]
+                >= imp_data[impurity][imp_data.shape[1] - 1][0]
+            ):
+                lz[impurity][temp_point] = imp_data[impurity][imp_data.shape[1] - 1][1]
+            else:
+                # Use np.interp for log-log interpolation
+                log_te_data = np.log([row[0] for row in imp_data[impurity]])
+                log_lz_data = np.log([row[1] for row in imp_data[impurity]])
+                lz[impurity][temp_point] = np.exp(
+                    np.interp(
+                        np.log(temp_electron_ev[temp_point]), log_te_data, log_lz_data
+                    )
+                )
+
+    # Plot the radiation loss function profiles
+    axis.plot(rho, lz[0], label="H")
+    axis.plot(rho, lz[1], label="He")
+    # Plot the remaining impurities if their fraction is significant
+    impurity_data = ImpurityRadiationData()
+    for ind in range(2, imp_data.shape[0]):
+        if imp_frac[ind] > 1.0e-30:
+            axis.plot(
+                rho,
+                lz[ind],
+                label=impurity_data.imp_label[ind].replace("_", ""),
+            )
+    axis.legend(loc="best", ncol=4)
+    axis.minorticks_on()
+
+    axis.set_xlabel(r"$\rho \quad [r/a]$")
+    axis.set_ylabel(r"$L_z$ $[\mathrm{W}\mathrm{m}^3]$")
+    axis.set_title("Line & Bremsstrahlung Loss Function ($L_z$) Profiles")
+    axis.set_xlim(0, 1.0)
+    axis.set_yscale("log")
+    axis.yaxis.grid(True, which="both", alpha=0.2)
+
+
+def plot_line_brem_power_profile(
+    axis: plt.Axes,
+    mfile: MFile,
+    scan: int,
+    impp: str,
+):
+    """Function to plot Line and Bremsstrahlung radiation power [MW] profile.
+
+    Parameters
+    ----------
+    axis : plt.Axes
+        axis object to add plot to
+    mfile : MFile
+        MFile object containing plasma and impurity profile information.
+    scan : int
+        scan number to use
+    impp : str
+        impurity path
+
+    """
+    axis.set_xlabel(r"$\rho \quad [r/a]$")
+    axis.set_ylabel(r"$P_{\mathrm{rad}}$ $[\mathrm{MW}]$")
+    axis.set_title("Line & Bremsstrahlung Radiation Power Profile")
+
+    # read in the impurity data
+    imp_data = read_imprad_data(_skiprows=2, data_path=impp)
+
+    # find impurity densities
+    imp_frac = np.array([
+        mfile.get(f"f_nd_impurity_electrons({i:02d})", scan=scan) for i in range(1, 15)
+    ])
+    vol_plasma = mfile.get("vol_plasma", scan=scan)
+    p_plasma_rad_imps_mw = mfile.get("p_plasma_rad_mw", scan=scan) - mfile.get(
+        "p_plasma_sync_mw", scan=scan
+    )
+
+    rho, nd_electron, temp_electron_kev = profiles_with_pedestal(mfile=mfile, scan=scan)
+    # imp_data Te values are in eV, but te from profiles_with_pedestal is in keV
+    temp_electron_ev = temp_electron_kev * 1.0e3
+
+    # Intailise the radiation profile arrays
+    p_rad_array = np.zeros([imp_data.shape[0], temp_electron_kev.shape[0]])
+    lz = np.zeros([imp_data.shape[0], temp_electron_kev.shape[0]])
+    p_total_profile = np.zeros(temp_electron_kev.shape[0])
+
+    # Intailise the impurity radiation profile
+    for temp_point in range(temp_electron_kev.shape[0]):
+        for impurity in range(imp_data.shape[0]):
+            if temp_electron_ev[temp_point] <= imp_data[impurity][0][0]:
+                lz[impurity][temp_point] = imp_data[impurity][0][1]
+            elif (
+                temp_electron_ev[temp_point]
+                >= imp_data[impurity][imp_data.shape[1] - 1][0]
+            ):
+                lz[impurity][temp_point] = imp_data[impurity][imp_data.shape[1] - 1][1]
+            else:
+                # Use np.interp for log-log interpolation
+                log_te_data = np.log([row[0] for row in imp_data[impurity]])
+                log_lz_data = np.log([row[1] for row in imp_data[impurity]])
+                lz[impurity][temp_point] = np.exp(
+                    np.interp(
+                        np.log(temp_electron_ev[temp_point]), log_te_data, log_lz_data
+                    )
+                )
+
+            # Calculate the absolue radiation power for each volumetric shell for each
+            # impurity
+            p_rad_array[impurity] = calculate_profile_shell_contributions(
+                profile_x=rho,
+                profile_y=(
+                    imp_frac[impurity] * nd_electron * nd_electron * lz[impurity]
+                ),
+                vol_plasma=vol_plasma,
+                profile_dx=rho[1] - rho[0],
+            )
+
+        for l_ in range(imp_data.shape[0]):
+            p_total_profile[temp_point] += p_rad_array[l_][temp_point] * 1.0e-6
+
+    axis.plot(
+        rho, p_total_profile, label="$P_{\\Sigma\\text{Impurities}}$", linestyle="dotted"
+    )
+
+    # Plot individual impurity radiation profiles
+    axis.plot(rho, p_rad_array[0] * 1.0e-6, label="H")
+    axis.plot(rho, p_rad_array[1] * 1.0e-6, label="He")
+    # Only plot impurities with a significant fraction
+    for ind in range(2, imp_data.shape[0]):
+        if imp_frac[ind] > 1.0e-30:
+            axis.plot(
+                rho,
+                p_rad_array[ind] * 1.0e-6,
+                label=ImpurityRadiationData().imp_label[ind].replace("_", ""),
+            )
+
+    axis.plot(
+        rho,
+        np.cumsum(p_total_profile),
+        label="$\\Sigma P_{\\Sigma\\text{Impurities}}$",
+        color="black",
+    )
+    axis.axhline(
+        y=p_plasma_rad_imps_mw,
+        color="black",
+        linestyle="--",
+        label="$P_{\\text{total}}$",
+    )
+
+    axis.minorticks_on()
+    # Plot a vertical line at the core region radius
+    core_radius = mfile.get("radius_plasma_core_norm", scan=scan)
+
+    # Plot a vertical line at the core region radius
+    axis.axvline(x=core_radius, color="black", linestyle="--", linewidth=1.0, alpha=0.7)
+    # Plot a box in the bottom left with f_{core,reduce} and \rho_{core}
+    axis.text(
+        0.05,
+        0.02,
+        rf"$f_{{\text{{core,reduce}}}}$ =  {1.0}"
+        "\n"
+        rf"$\rho_{{\text{{core}}}}$ =  {core_radius:.3f}",
+        transform=axis.transAxes,
+        fontsize=8,
+        verticalalignment="bottom",
+        bbox=box_style("khaki", alpha=0.8, linewidth=None),
+    )
+
+    cumulative_thermal_energy_mj = np.cumsum(p_total_profile)
+    half_thermal_energy_mj = 0.5 * p_plasma_rad_imps_mw
+    half_thermal_energy_position = np.interp(
+        half_thermal_energy_mj,
+        cumulative_thermal_energy_mj,
+        np.linspace(0, 1, temp_electron_kev.shape[0]),
+    )
+    axis.axhline(
+        y=half_thermal_energy_mj,
+        label="$50\\%\\ P_{\\text{total}}$",
+        color="tab:green",
+        linestyle=":",
+    )
+    axis.axvline(
+        x=half_thermal_energy_position,
+        color="tab:green",
+        linestyle=":",
+    )
+
+    # Ranges
+    # ---
+    axis.set_xlim(0, 1.0)
+    axis.legend(loc="upper left", bbox_to_anchor=(1.0, 1.0), ncol=1)
+    axis.set_yscale("log")
+    axis.yaxis.grid(True, which="both", alpha=0.2)
 
 
 def plot_rad_density_contour(axis: Axes, mfile: MFile, scan: int, impp: str):
@@ -206,197 +446,3 @@ def plot_plasma_pressure_gradient_profiles(axis: plt.Axes, mfile: MFile, scan: i
     axis.grid(True, linestyle="--", alpha=0.5)
     axis.set_xlim(0, 1.025)
     axis.legend()
-
-
-def plot_larmor_radius_profile(axis: plt.Axes, mfile_data: MFile, scan: int):
-    """Plot the Larmor radius profile on the given axis."""
-    radius_plasma_deuteron_larmor_profile = [
-        mfile_data.data[
-            f"radius_plasma_deuteron_toroidal_larmor_isotropic_profile{i}"
-        ].get_scan(scan)
-        for i in range(
-            2 * int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
-        )
-    ]
-
-    radius_plasma_triton_larmor_profile = [
-        mfile_data.data[
-            f"radius_plasma_triton_toroidal_larmor_isotropic_profile{i}"
-        ].get_scan(scan)
-        for i in range(
-            2 * int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
-        )
-    ]
-
-    radius_plasma_deuteron_larmor_profile_mm = [
-        radius * 1e3 for radius in radius_plasma_deuteron_larmor_profile
-    ]
-
-    radius_plasma_triton_larmor_profile_mm = [
-        radius * 1e3 for radius in radius_plasma_triton_larmor_profile
-    ]
-
-    axis.plot(
-        np.linspace(-1, 1, len(radius_plasma_deuteron_larmor_profile_mm)),
-        radius_plasma_deuteron_larmor_profile_mm,
-        color="red",
-        linestyle="-",
-        label=r"$\rho_{Larmor,toroidal,D}$",
-    )
-
-    axis.plot(
-        np.linspace(-1, 1, len(radius_plasma_triton_larmor_profile_mm)),
-        radius_plasma_triton_larmor_profile_mm,
-        color="green",
-        linestyle="-",
-        label=r"$\rho_{Larmor,toroidal,T}$",
-    )
-
-    axis.set_ylabel(r"Larmor Radii [mm]")
-    axis.set_title(r" Toroidal Larmor Radii ($v_{\perp}^2 = 2v_{th}^2$)")
-    axis.set_xlabel("$\\rho \\ [r/a]$")
-    axis.grid(True, which="both", linestyle="--", alpha=0.5)
-    axis.minorticks_on()
-    axis.legend()
-
-
-def plot_cs_radial_stress_profile(
-    axis: plt.Axes,
-    mfile: MFile,
-    scan: int,
-    j_cs: float,
-    b_cs_inner: float,
-):
-    """Plot CS radial stress profile"""
-    r_cs_inner = mfile.get("r_cs_inner", scan=scan)
-    r_cs_outer = mfile.get("r_cs_outer", scan=scan)
-
-    radii = np.linspace(r_cs_inner, r_cs_outer, num=25)
-    stress_values = np.array([
-        CSCoil.calculate_cs_radial_stress(
-            r_stress_point=radius,
-            r_cs_inner=r_cs_inner,
-            r_cs_outer=r_cs_outer,
-            j_cs=j_cs,
-            b_cs_inner=b_cs_inner,
-            f_poisson_cs_structure=constants.POISSON_STEEL,
-        )
-        for radius in radii
-    ])
-
-    axis.plot(
-        radii,
-        stress_values / 1e6,
-        linewidth=2,
-        label="$\\sigma_{r}$,Radial Stress",
-    )
-    max_idx = np.argmax(np.abs(stress_values))
-    max_radius = radii[max_idx]
-    max_stress = stress_values[max_idx] / 1e6
-    axis.axvline(max_radius, color="black", linestyle="--", linewidth=1.0, alpha=0.7)
-    axis.axhline(max_stress, color="black", linestyle="--", linewidth=1.0, alpha=0.7)
-    axis.set_xlabel("Radial Position (m)")
-    axis.set_ylabel("Radial Stress (MPa)")
-    axis.minorticks_on()
-    axis.grid(True, alpha=0.3)
-    axis.set_title("CS Radial Stress at BOP")
-
-
-def plot_cs_radial_stress_contour_profile(
-    axis: plt.Axes,
-    mfile: MFile,
-    scan: int,
-    j_cs: float,
-    b_cs_inner: float,
-    colorbar_axis: plt.Axes | None = None,
-):
-    """Plot CS radial stress contour profile"""
-    r_cs_inner = mfile.get("r_cs_inner", scan=scan)
-    r_cs_outer = mfile.get("r_cs_outer", scan=scan)
-    dz_cs_full = mfile.get("dz_cs_full", scan=scan)
-
-    # Create 2D grid for contour plot: radial and vertical dimensions
-    n_radial = 50
-    radial_grid = np.linspace(r_cs_inner, r_cs_outer, n_radial)
-    height_grid = np.linspace(
-        -dz_cs_full / 2, dz_cs_full / 2, N_CS_STRESS_PROFILE_POINTS
-    )
-
-    # Create meshgrid for filled contour
-    r, z = np.meshgrid(radial_grid, height_grid)
-
-    # Calculate radial stress across the 2D grid
-    stress_data = np.zeros((len(height_grid), n_radial))
-    for i in range(len(height_grid)):
-        for j in range(n_radial):
-            stress_data[i, j] = (
-                CSCoil.calculate_cs_radial_stress(
-                    r_stress_point=radial_grid[j],
-                    r_cs_inner=r_cs_inner,
-                    r_cs_outer=r_cs_outer,
-                    j_cs=j_cs,
-                    b_cs_inner=b_cs_inner,
-                    f_poisson_cs_structure=constants.POISSON_STEEL,
-                )
-                / 1e6
-            )
-
-    # Plot filled contour of stress distribution
-    contour_fill = axis.contourf(r, z, stress_data, levels=15, cmap="RdYlBu")
-    contour_lines = axis.contour(
-        r,
-        z,
-        stress_data,
-        levels=[stress_data.max()],
-        colors="black",
-        linewidths=0.5,
-        alpha=0.4,
-    )
-    axis.clabel(contour_lines, inline=True, fontsize=8)
-
-    # Plot CS outline
-    axis.plot(
-        [r_cs_inner, r_cs_inner],
-        [-dz_cs_full / 2, dz_cs_full / 2],
-        "k-",
-        linewidth=2,
-        label="CS Inner",
-    )
-    axis.plot(
-        [r_cs_outer, r_cs_outer],
-        [-dz_cs_full / 2, dz_cs_full / 2],
-        "k-",
-        linewidth=2,
-        label="CS Outer",
-    )
-    axis.plot(
-        [r_cs_inner, r_cs_outer],
-        [dz_cs_full / 2, dz_cs_full / 2],
-        "k-",
-        linewidth=2,
-    )
-    axis.plot(
-        [r_cs_inner, r_cs_outer],
-        [-dz_cs_full / 2, -dz_cs_full / 2],
-        "k-",
-        linewidth=2,
-    )
-
-    cbar = add_colourbar(contour_fill, axis, colorbar_axis)
-    cbar.set_label("Radial Stress (MPa)")
-
-    axis.set_xlabel("R [m]")
-    axis.set_ylabel("Z [m]")
-    axis.minorticks_on()
-    axis.set_xlim(r_cs_inner * 0.9, r_cs_outer * 1.1)
-    axis.set_ylim((-dz_cs_full / 2) * 1.1, (dz_cs_full / 2) * 1.1)
-    axis.grid(True, alpha=0.3)
-
-
-__all__ = [
-    "plot_cs_radial_stress_contour_profile",
-    "plot_cs_radial_stress_profile",
-    "plot_larmor_radius_profile",
-    "plot_plasma_pressure_gradient_profiles",
-    "plot_rad_density_contour",
-]

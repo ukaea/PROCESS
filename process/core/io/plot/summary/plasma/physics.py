@@ -8,8 +8,9 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 
-from process.core.io.plot.summary.common import box_style
+from process.core.io.plot.summary.common import box_style, setup_axis
 from process.core.io.plot.summary.constants import PLASMA_COLOUR
+from process.core.io.plot.summary.reporting.text import plot_info
 from process.models.build import Build
 from process.models.geometry.plasma import plasma_geometry
 from process.models.physics.physics import BetaNormMaxModel
@@ -18,6 +19,289 @@ from process.models.physics.plasma_geometry import PlasmaShapeModelType
 
 if TYPE_CHECKING:
     from process.core.io.mfile import MFile
+
+
+__all__ = [
+    "plot_density_limit_comparison",
+    "plot_h_threshold_comparison",
+    "plot_magnetic_fields_in_plasma",
+    "plot_max_normalised_beta_comparison",
+    "plot_physics_info",
+    "plot_plasma",
+    "plot_plasma_coloumb_logarithms",
+    "plot_plasma_current_comparison",
+    "plot_plasma_outboard_toroidal_ripple_map",
+    "reaction_plot_grid",
+]
+
+
+def plot_physics_info(axis: plt.Axes, mfile: MFile, scan: int):
+    """Function to plot geometry info
+
+    Parameters
+    ----------
+    axis :
+        axis object to plot to
+    mfile :
+        MFILE
+    scan :
+        scan number to use
+    """
+    axis.text(-0.05, 1, "Physics:", ha="left", va="center")
+    setup_axis(axis, xmin=0, xmax=1, ymin=-16, ymax=1)
+
+    nong = mfile.get("nd_plasma_electron_line", scan=scan) / mfile.get(
+        "nd_plasma_electron_max_array(7)", scan=scan
+    )
+
+    nd_plasma_impurities_vol_avg = mfile.get(
+        "nd_plasma_impurities_vol_avg", scan=scan
+    ) / mfile.get("nd_plasma_electrons_vol_avg", scan=scan)
+
+    tepeak = mfile.get("temp_plasma_electron_on_axis_kev", scan=scan) / mfile.get(
+        "temp_plasma_electron_vol_avg_kev", scan=scan
+    )
+
+    nepeak = mfile.get("nd_plasma_electron_on_axis", scan=scan) / mfile.get(
+        "nd_plasma_electrons_vol_avg", scan=scan
+    )
+
+    # Assume Martin scaling if pthresh is not printed
+    # Accounts for pthresh not being written prior to issue #679 and #680
+    if "p_l_h_threshold_mw" in mfile.data:
+        pthresh = mfile.get("p_l_h_threshold_mw", scan=scan)
+    else:
+        pthresh = mfile.get("l_h_threshold_powers(6)", scan=scan)
+
+    data = [
+        ("p_fusion_total_mw", "Fusion power", "MW"),
+        ("big_q_plasma", "$Q_{p}$", ""),
+        ("plasma_current_ma", "$I_p$", "MA"),
+        ("b_plasma_toroidal_on_axis", "Vacuum $B_T$ at $R_0$", "T"),
+        ("q95", r"$q_{\mathrm{95}}$", ""),
+        ("beta_norm_thermal", r"$\beta_N$, thermal", "% m T MA$^{-1}$"),
+        ("beta_norm_toroidal", r"$\beta_N$, toroidal", "% m T MA$^{-1}$"),
+        ("beta_thermal_poloidal_vol_avg", r"$\beta_P$, thermal", ""),
+        ("beta_poloidal_vol_avg", r"$\beta_P$, total", ""),
+        ("temp_plasma_electron_vol_avg_kev", r"$\langle T_e \rangle$", "keV"),
+        ("nd_plasma_electrons_vol_avg", r"$\langle n_e \rangle$", "m$^{-3}$"),
+        (nong, r"$\langle n_{\mathrm{e,line}} \rangle \ / \ n_G$", ""),
+        (tepeak, r"$T_{e0} \ / \ \langle T_e \rangle$", ""),
+        (nepeak, r"$n_{e0} \ / \ \langle n_{\mathrm{e, vol}} \rangle$", ""),
+        ("n_charge_plasma_effective_vol_avg", r"$Z_{\mathrm{eff}}$", ""),
+        (
+            nd_plasma_impurities_vol_avg,
+            r"$n_Z \ / \  \langle n_{\mathrm{e, vol}} \rangle$",
+            "",
+        ),
+        ("t_energy_confinement", r"$\tau_e$", "s"),
+        ("hfact", "H-factor", ""),
+        (pthresh, "H-mode threshold", "MW"),
+        ("tauelaw", "Scaling law", ""),
+    ]
+
+    plot_info(axis, data, mfile, scan)
+
+
+def plot_h_threshold_comparison(axis: plt.Axes, mfile: MFile, scan: int, u_seed=None):
+    """Function to plot a scatter box plot of L-H threshold power comparisons.
+
+    Parameters
+    ----------
+    axis :
+        Axis object to plot to.
+    mfile :
+         MFILE data object.
+    scan :
+        Scan number to use.
+    u_seed :
+         (Default value = None)
+    """
+    # Data for the box plot
+    data = {
+        "ITER 1996 Nominal": mfile.get("l_h_threshold_powers(1)", scan=scan),
+        "ITER 1996 Upper": mfile.get("l_h_threshold_powers(2)", scan=scan),
+        "ITER 1996 Lower": mfile.get("l_h_threshold_powers(3)", scan=scan),
+        "ITER 1997 (1)": mfile.get("l_h_threshold_powers(4)", scan=scan),
+        "ITER 1997 (2)": mfile.get("l_h_threshold_powers(5)", scan=scan),
+        "Martin Nominal": mfile.get("l_h_threshold_powers(6)", scan=scan),
+        "Martin Upper": mfile.get("l_h_threshold_powers(7)", scan=scan),
+        "Martin Lower": mfile.get("l_h_threshold_powers(8)", scan=scan),
+        "Snipes Nominal": mfile.get("l_h_threshold_powers(9)", scan=scan),
+        "Snipes Upper": mfile.get("l_h_threshold_powers(10)", scan=scan),
+        "Snipes Lower": mfile.get("l_h_threshold_powers(11)", scan=scan),
+        "Snipes Closed Divertor Nominal": mfile.get(
+            "l_h_threshold_powers(12)", scan=scan
+        ),
+        "Snipes Closed Divertor Upper": mfile.get("l_h_threshold_powers(13)", scan=scan),
+        "Snipes Closed Divertor Lower": mfile.get("l_h_threshold_powers(14)", scan=scan),
+        "Hubbard Nominal (I-mode)": mfile.get("l_h_threshold_powers(15)", scan=scan),
+        "Hubbard Lower (I-mode)": mfile.get("l_h_threshold_powers(16)", scan=scan),
+        "Hubbard Upper (I-mode)": mfile.get("l_h_threshold_powers(17)", scan=scan),
+        "Hubbard 2017 (I-mode)": mfile.get("l_h_threshold_powers(18)", scan=scan),
+        "Martin Aspect Corrected Nominal": mfile.get(
+            "l_h_threshold_powers(19)", scan=scan
+        ),
+        "Martin Aspect Corrected Upper": mfile.get(
+            "l_h_threshold_powers(20)", scan=scan
+        ),
+        "Martin Aspect Corrected Lower": mfile.get(
+            "l_h_threshold_powers(21)", scan=scan
+        ),
+    }
+    data_values = list(data.values())
+    # Create the violin plot
+    axis.violinplot(data_values, showextrema=False)
+
+    # Create the box plot
+    axis.boxplot(data_values, showfliers=True, showmeans=True, meanline=True, widths=0.3)
+
+    # Scatter plot for each data point
+    colors = plt.cm.plasma(np.linspace(0, 1, len(data_values)))
+    generator = np.random.default_rng(seed=u_seed)
+    x_values = generator.normal(loc=1, scale=0.01, size=len(data_values))
+    for index, (key, value) in enumerate(data.items()):
+        if "ITER 1996" in key:
+            color = "blue"
+        elif "ITER 1997" in key:
+            color = "cyan"
+        elif "Martin" in key and "Aspect" not in key:
+            color = "green"
+        elif "Snipes" in key and "Closed" not in key:
+            color = "red"
+        elif "Snipes Closed" in key:
+            color = "orange"
+        elif "Martin Aspect" in key:
+            color = "yellow"
+        elif "Hubbard" in key and "2017" not in key:
+            color = "purple"
+        elif "Hubbard 2017" in key:
+            color = "magenta"
+        else:
+            color = colors[index]
+        axis.scatter(x_values[index], value, color=color, label=key, alpha=1.0)
+        axis.legend(loc="upper left", bbox_to_anchor=(-1.1, 1), ncol=2)
+
+    # Calculate average, standard deviation, and median
+    avg_threshold = np.mean(data_values)
+    std_threshold = np.std(data_values)
+    median_threshold = np.median(data_values)
+
+    # Plot average, standard deviation, and median as text
+    axis.text(
+        -0.45,
+        0.15,
+        f"Average: {avg_threshold:.4f}",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+    axis.text(
+        -0.45,
+        0.1,
+        f"Standard Dev: {std_threshold:.4f}",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+    axis.text(
+        -0.45,
+        0.05,
+        f"Median: {median_threshold:.4f}",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+
+    axis.set_title("L-H Threshold ($P_\\text{LH}$) Comparison")
+    axis.set_ylabel("L-H threshold power [MW]")
+    axis.set_xlim(0.5, 1.5)
+    axis.set_xticks([])
+    axis.set_xticklabels([])
+
+    # Add background color
+    axis.set_facecolor("#f0f0f0")
+
+
+def plot_density_limit_comparison(axis: plt.Axes, mfile: MFile, scan: int):
+    """Function to plot a scatter box plot of different density limit comparisons.
+
+    Parameters
+    ----------
+    axis :
+        Axis object to plot to.
+    mfile :
+         MFILE data object.
+    scan :
+        Scan number to use.
+    """
+    old_asdex = mfile.get("nd_plasma_electron_max_array(1)", scan=scan)
+    borrass_iter_i = mfile.get("nd_plasma_electron_max_array(2)", scan=scan)
+    borrass_iter_ii = mfile.get("nd_plasma_electron_max_array(3)", scan=scan)
+    jet_edge_radiation = mfile.get("nd_plasma_electron_max_array(4)", scan=scan)
+    jet_simplified = mfile.get("nd_plasma_electron_max_array(5)", scan=scan)
+    hugill_murakami = mfile.get("nd_plasma_electron_max_array(6)", scan=scan)
+    greenwald = mfile.get("nd_plasma_electron_max_array(7)", scan=scan)
+    asdex_new = mfile.get("nd_plasma_electron_max_array(8)", scan=scan)
+
+    # Data for the box plot
+    data = {
+        "Old ASDEX": old_asdex,
+        "Borrass ITER I": borrass_iter_i,
+        "Borrass ITER II": borrass_iter_ii,
+        "JET Edge Radiation": jet_edge_radiation,
+        "JET Simplified": jet_simplified,
+        "Hugill-Murakami": hugill_murakami,
+        "Greenwald": greenwald,
+        "ASDEX New": asdex_new,
+    }
+    data_values = list(data.values())
+
+    # Create the violin plot
+    axis.violinplot(data_values, showextrema=False)
+
+    # Create the box plot
+    axis.boxplot(data_values, showfliers=True, showmeans=True, meanline=True, widths=0.3)
+
+    # Scatter plot for each data point
+    colors = plt.cm.plasma(np.linspace(0, 1, len(data.values())))
+    for index, (key, value) in enumerate(data.items()):
+        axis.scatter(1, value, color=colors[index], label=key, alpha=1.0)
+    axis.legend(loc="upper left", bbox_to_anchor=(1, 1))
+
+    # Calculate average, standard deviation, and median
+    avg_density_limit = np.mean(data_values)
+    std_density_limit = np.std(data_values)
+    median_density_limit = np.median(data_values)
+
+    # Plot average, standard deviation, and median as text
+    axis.text(
+        1.02,
+        0.2,
+        rf"Average: {avg_density_limit * 1e-20:.4f} $\times 10^{{20}}$",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+    axis.text(
+        1.02,
+        0.15,
+        rf"Standard Dev: {std_density_limit * 1e-20:.4f} $\times 10^{{20}}$",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+    axis.text(
+        1.02,
+        0.1,
+        rf"Median: {median_density_limit * 1e-20:.4f} $\times 10^{{20}}$",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+
+    axis.set_yscale("log")
+    axis.set_title("Density Limit Comparison")
+    axis.set_ylabel(r"Density Limit [$10^{20}$ m$^{-3}$]")
+    axis.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x * 1e-20:.1f}"))
+    axis.set_xlim(0.5, 1.5)
+    axis.set_xticks([])
+    axis.set_xticklabels([])
+    axis.set_facecolor("#f0f0f0")
 
 
 def plot_plasma(
@@ -839,14 +1123,3 @@ def plot_plasma_coloumb_logarithms(axis: plt.Axes, mfile_data: MFile, scan: int)
     axis.grid(True, which="both", linestyle="--", alpha=0.5)
     axis.minorticks_on()
     axis.legend()
-
-
-__all__ = [
-    "plot_magnetic_fields_in_plasma",
-    "plot_max_normalised_beta_comparison",
-    "plot_plasma",
-    "plot_plasma_coloumb_logarithms",
-    "plot_plasma_current_comparison",
-    "plot_plasma_outboard_toroidal_ripple_map",
-    "reaction_plot_grid",
-]

@@ -9,9 +9,16 @@ import numpy as np
 
 from process.core.io.plot.summary.common import setup_axis
 from process.core.io.plot.summary.reporting.text import plot_info
+from process.models.physics.current_drive import ElectronBernstein, ElectronCyclotron
 
 if TYPE_CHECKING:
     from process.core.io.mfile import MFile
+
+__all__ = [
+    "plot_bootstrap_comparison",
+    "plot_current_drive_info",
+    "plot_ebw_ecrh_coupling_graph",
+]
 
 
 def plot_current_drive_info(axis: plt.Axes, mfile: MFile, scan: int):
@@ -196,6 +203,95 @@ def plot_current_drive_info(axis: plt.Axes, mfile: MFile, scan: int):
     plot_info(axis, data, mfile, scan)
 
 
+def plot_ebw_ecrh_coupling_graph(axis: plt.Axes, mfile: MFile, scan: int):
+    """Plot EBW and ECRH coupling efficiency graph"""
+    ebw = ElectronBernstein(plasma_profile=0)
+    ecrg = ElectronCyclotron(plasma_profile=0)
+    b_on_axis = mfile.get("b_plasma_toroidal_on_axis", scan=scan)
+    bs = np.linspace(0.0, b_on_axis + 2.0, 500)
+    # Use a color map for harmonics
+    colors = ["red", "green", "blue"]
+    linestyles = ["-", "--"]  # EBW: solid, ECRH: dashed
+
+    for idx, n_harmonic in enumerate(range(1, 4)):
+        eta_ebw_vals = []
+        # For ECRH, store results for both wave modes (0: O-mode, 1: X-mode)
+        eta_ecrh_vals_omode = []
+        eta_ecrh_vals_xmode = []
+        for b in bs:
+            eta_ebw = ebw.electron_bernstein_freethy(
+                te=mfile.get("temp_plasma_electron_vol_avg_kev", scan=scan),
+                rmajor=mfile.get("rmajor", scan=scan),
+                dene20=mfile.get("nd_plasma_electrons_vol_avg", scan=scan) / 1e20,
+                b_plasma_toroidal_on_axis=b,
+                n_ecrh_harmonic=n_harmonic,
+                xi_ebw=mfile.get("xi_ebw", scan=scan),
+            )
+            eta_ecrh_omode = ecrg.electron_cyclotron_freethy(
+                te=mfile.get("temp_plasma_electron_vol_avg_kev", scan=scan),
+                zeff=mfile.get("n_charge_plasma_effective_vol_avg", scan=scan),
+                rmajor=mfile.get("rmajor", scan=scan),
+                nd_plasma_electrons_vol_avg=mfile.get(
+                    "nd_plasma_electrons_vol_avg", scan=scan
+                ),
+                b_plasma_toroidal_on_axis=b,
+                n_ecrh_harmonic=n_harmonic,
+                i_ecrh_wave_mode=0,  # O-mode
+            )
+            eta_ecrh_xmode = ecrg.electron_cyclotron_freethy(
+                te=mfile.get("temp_plasma_electron_vol_avg_kev", scan=scan),
+                zeff=mfile.get("n_charge_plasma_effective_vol_avg", scan=scan),
+                rmajor=mfile.get("rmajor", scan=scan),
+                nd_plasma_electrons_vol_avg=mfile.get(
+                    "nd_plasma_electrons_vol_avg", scan=scan
+                ),
+                b_plasma_toroidal_on_axis=b,
+                n_ecrh_harmonic=n_harmonic,
+                i_ecrh_wave_mode=1,  # X-mode
+            )
+            eta_ebw_vals.append(eta_ebw)
+            eta_ecrh_vals_omode.append(eta_ecrh_omode)
+            eta_ecrh_vals_xmode.append(eta_ecrh_xmode)
+        # EBW: solid, ECRH O-mode: dashed, ECRH X-mode: dotted, same color for same
+        # harmonic
+        axis.plot(
+            bs,
+            eta_ebw_vals,
+            label=f"EBW (harmonic {n_harmonic})",
+            color=colors[idx],
+            linestyle=linestyles[0],
+        )
+        axis.plot(
+            bs,
+            eta_ecrh_vals_omode,
+            label=f"ECRH O-mode (harmonic {n_harmonic})",
+            color=colors[idx],
+            linestyle="--",
+        )
+        axis.plot(
+            bs,
+            eta_ecrh_vals_xmode,
+            label=f"ECRH X-mode (harmonic {n_harmonic})",
+            color=colors[idx],
+            linestyle=":",
+        )
+    axis.set_xlabel("On axis toroidal B-field [T]")
+    axis.set_ylabel("Current drive efficiency [A/W]")
+    axis.set_title("EBW/ECRH Coupling Efficiency vs Toroidal B-field")
+    axis.legend()
+    axis.grid(True)
+    # Plot a vertical line at the on-axis value of the toroidal B-field
+    b_on_axis = mfile.get("b_plasma_toroidal_on_axis", scan=scan)
+    axis.axvline(
+        b_on_axis,
+        color="black",
+        linestyle="-",
+        linewidth=2.5,
+        label="On-axis $B_T$",
+    )
+    axis.minorticks_on()
+
+
 def plot_bootstrap_comparison(axis: plt.Axes, mfile: MFile, scan: int):
     """Function to plot a scatter box plot of bootstrap current fractions.
 
@@ -271,6 +367,3 @@ def plot_bootstrap_comparison(axis: plt.Axes, mfile: MFile, scan: int):
     axis.set_xticks([])
     axis.set_xticklabels([])
     axis.set_facecolor("#f0f0f0")
-
-
-__all__ = ["plot_bootstrap_comparison", "plot_current_drive_info"]

@@ -6,26 +6,44 @@ from typing import TYPE_CHECKING, Literal
 
 import numpy as np
 
-from process.core.io.plot.summary.common import (
-    box_style,
-    text_layout,
-)
-from process.core.io.plot.summary.geometry.poloidal import (
-    plot_blanket,
-    plot_firstwall,
-)
-from process.core.io.plot.summary.plasma.physics import (
-    plot_plasma,
-)
-from process.core.io.plot.summary.reporting.layouts import (
-    draw_bend,
-)
+from process.core.io.plot.summary.common import box_style, text_layout
+from process.core.io.plot.summary.geometry.poloidal import plot_blanket, plot_firstwall
+from process.core.io.plot.summary.plasma.physics import plot_plasma
+from process.core.io.plot.summary.reporting.layouts import draw_bend
 from process.data_structure.physics_variables import DivertorNumberModels
 
 if TYPE_CHECKING:
     import matplotlib.pyplot as plt
 
     from process.core.io.mfile import MFile
+
+__all__ = ["plot_blkt_pipe_bends", "plot_blkt_structure", "plot_fw_90_deg_pipe_bend"]
+
+
+def plot_fw_90_deg_pipe_bend(ax, m_file, scan: int):
+    """Plot the first wall pipe 90 degree bend on the given axis, with axes in mm.
+
+    Parameters
+    ----------
+    ax :
+
+    m_file :
+
+    scan: int :
+
+    """
+    # Get pipe radius from m_file, fallback to 0.1 m
+    r = m_file.get("radius_fw_channel", scan=scan)
+    elbow_radius = m_file.get("radius_fw_channel_90_bend", scan=scan)
+
+    draw_bend(
+        ax,
+        elbow_radius,
+        np.pi / 2,
+        r,
+        title="First Wall Pipe 90° Bend",
+        alpha=1.0,
+    )
 
 
 def plot_blkt_pipe_bends(fig, m_file, scan: int):
@@ -368,6 +386,3 @@ def plot_blkt_structure(
         **text_layout(fig),
         bbox=box_style("wheat"),
     )
-
-
-__all__ = ["plot_blkt_pipe_bends", "plot_blkt_structure"]

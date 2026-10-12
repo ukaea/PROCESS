@@ -31,6 +31,8 @@ if TYPE_CHECKING:
 
     from process.core.io.mfile import MFile
 
+__all__ = ["plot_detailed_plasma_parameters", "plot_main_plasma_information"]
+
 
 def plasma_main_page(
     axis,
@@ -815,6 +817,3 @@ def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int
     )
 
     axis.axis("off")
-
-
-__all__ = ["plot_detailed_plasma_parameters", "plot_main_plasma_information"]

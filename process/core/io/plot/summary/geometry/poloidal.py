@@ -15,21 +15,11 @@ from process.core.io.plot.summary.constants import (
     SHIELD_COLOUR,
     VESSEL_COLOUR,
 )
-from process.core.io.plot.summary.magnets.pf import (
-    plot_pf_coils,
-)
-from process.core.io.plot.summary.magnets.tf import (
-    plot_tf_coils,
-)
-from process.core.io.plot.summary.plasma.physics import (
-    plot_plasma,
-)
-from process.core.io.plot.summary.radial_build import (
-    cumulative_radial_build,
-)
-from process.core.io.plot.summary.reporting.misc import (
-    plot_centre_cross,
-)
+from process.core.io.plot.summary.magnets.pf import plot_pf_coils
+from process.core.io.plot.summary.magnets.tf import plot_tf_coils
+from process.core.io.plot.summary.plasma.physics import plot_plasma
+from process.core.io.plot.summary.radial_build import cumulative_radial_build
+from process.core.io.plot.summary.reporting.misc import plot_centre_cross
 from process.data_structure.physics_variables import DivertorNumberModels
 from process.models.geometry.blanket import (
     blanket_geometry_double_null,
@@ -51,9 +41,20 @@ from process.models.geometry.vacuum_vessel import (
 
 if TYPE_CHECKING:
     from process.core.io.mfile import MFile
-    from process.core.io.plot.summary.reporting.misc import (
-        RadialBuild,
-    )
+    from process.core.io.plot.summary.reporting.misc import RadialBuild
+
+
+__all__ = [
+    "plot_blanket",
+    "plot_cryostat",
+    "plot_first_wall_poloidal_cross_section",
+    "plot_first_wall_top_down_cross_section",
+    "plot_firstwall",
+    "plot_full_machine_poloidal_cross_section",
+    "plot_shield",
+    "plot_vacuum_vessel_and_divertor",
+    "poloidal_cross_section",
+]
 
 
 def poloidal_cross_section(
@@ -1040,16 +1041,3 @@ def plot_firstwall(
                 color=FIRSTWALL_COLOUR[colour_scheme - 1],
                 lw=0.01,
             )
-
-
-__all__ = [
-    "plot_blanket",
-    "plot_cryostat",
-    "plot_first_wall_poloidal_cross_section",
-    "plot_first_wall_top_down_cross_section",
-    "plot_firstwall",
-    "plot_full_machine_poloidal_cross_section",
-    "plot_shield",
-    "plot_vacuum_vessel_and_divertor",
-    "poloidal_cross_section",
-]

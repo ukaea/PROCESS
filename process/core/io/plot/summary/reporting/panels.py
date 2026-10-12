@@ -10,24 +10,18 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from process.core.io.mfile import MFile, MFileErrorClass
-from process.core.io.plot.summary.common import (
-    box_style,
-    setup_axis,
-)
-from process.core.io.plot.summary.geometry.poloidal import (
-    poloidal_cross_section,
-)
-from process.core.io.plot.summary.plasma.physics import (
-    plot_plasma,
-)
+from process.core.io.plot.summary.common import box_style, setup_axis
+from process.core.io.plot.summary.geometry.poloidal import poloidal_cross_section
+from process.core.io.plot.summary.plasma.physics import plot_plasma
 from process.core.io.plot.summary.reporting.text import plot_info
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.physics_variables import DivertorNumberModels
 
 if TYPE_CHECKING:
-    from process.core.io.plot.summary.reporting.misc import (
-        RadialBuild,
-    )
+    from process.core.io.plot.summary.reporting.misc import RadialBuild
+
+
+__all__ = ["plot_cover_page", "plot_header", "plot_separatrix_power_split"]
 
 
 def plot_header(axis: plt.Axes, mfile: MFile, scan: int):
@@ -526,10 +520,3 @@ def plot_cover_page(
     )
     inset_ax.set_title("")  # Remove the plot title
     inset_ax.axis("off")
-
-
-__all__ = [
-    "plot_cover_page",
-    "plot_header",
-    "plot_separatrix_power_split",
-]

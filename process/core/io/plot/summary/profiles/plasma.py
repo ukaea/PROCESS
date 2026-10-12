@@ -18,6 +18,22 @@ if TYPE_CHECKING:
     from process.core.io.mfile import MFile
 
 
+__all__ = [
+    "plot_beta_profiles",
+    "plot_cumulative_plasma_thermal_energy_profiles",
+    "plot_fusion_rate_contours",
+    "plot_fusion_rate_profiles",
+    "plot_jprofile",
+    "plot_n_profiles",
+    "plot_plasma_effective_charge_profile",
+    "plot_plasma_poloidal_pressure_contours",
+    "plot_plasma_pressure_profiles",
+    "plot_plasma_thermal_energy_profiles",
+    "plot_qprofile",
+    "plot_t_profiles",
+]
+
+
 def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
     """Function to plot density profile
 
@@ -1494,19 +1510,3 @@ def plot_cumulative_plasma_thermal_energy_profiles(axis, m_file: MFile, scan: in
     axis.set_ylabel(
         "Cumulative Thermal Energy [MJ]",
     )
-
-
-__all__ = [
-    "plot_beta_profiles",
-    "plot_cumulative_plasma_thermal_energy_profiles",
-    "plot_fusion_rate_contours",
-    "plot_fusion_rate_profiles",
-    "plot_jprofile",
-    "plot_n_profiles",
-    "plot_plasma_effective_charge_profile",
-    "plot_plasma_poloidal_pressure_contours",
-    "plot_plasma_pressure_profiles",
-    "plot_plasma_thermal_energy_profiles",
-    "plot_qprofile",
-    "plot_t_profiles",
-]

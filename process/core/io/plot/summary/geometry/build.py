@@ -6,9 +6,7 @@ from typing import TYPE_CHECKING, Literal
 
 import numpy as np
 
-from process.core.io.plot.summary.common import (
-    setup_axis,
-)
+from process.core.io.plot.summary.common import setup_axis
 from process.core.io.plot.summary.constants import (
     BLANKET_COLOUR,
     CSCOMPRESSION_COLOUR,
@@ -20,15 +18,16 @@ from process.core.io.plot.summary.constants import (
     THERMAL_SHIELD_COLOUR,
     VESSEL_COLOUR,
 )
-from process.core.io.plot.summary.reporting.text import (
-    plot_info,
-)
+from process.core.io.plot.summary.reporting.text import plot_info
 from process.data_structure.build_variables import TFCSRadialConfiguration
 
 if TYPE_CHECKING:
     import matplotlib.pyplot as plt
 
     from process.core.io.mfile import MFile
+
+
+__all__ = ["plot_geometry_info", "plot_lower_vertical_build", "plot_radial_build"]
 
 
 def plot_geometry_info(axis: plt.Axes, mfile: MFile, scan: int):
@@ -259,7 +258,112 @@ def plot_radial_build(axis: plt.Axes, mfile: MFile, colour_scheme: Literal[1, 2]
     axis.set_xlabel("Radius [m]")
 
 
-__all__ = [
-    "plot_geometry_info",
-    "plot_radial_build",
-]
+def plot_lower_vertical_build(
+    axis: plt.Axes, mfile: MFile, colour_scheme: Literal[1, 2]
+):
+    """Plots the lower vertical build of a fusion device on the given matplotlib axis.
+
+    This function visualizes the different layers/components of the machine's vertical
+    build
+    (such as plasma, first wall, divertor, shield, vacuum vessel, thermal shield, TF
+    coil, etc.)
+    as a vertical stacked bar chart. The thickness of each layer is extracted from the
+    provided `mfile`, and each segment is color-coded and labeled accordingly.
+
+    Parameters
+    ----------
+    axis :
+        The matplotlib axis on which to plot the vertical build.
+    mfile :
+        An object containing the machine build data, with required fields for each
+        vertical component.
+    colour_scheme :
+        Colour scheme index to use for component colors.
+
+
+    Notes
+    -----
+    This function modifies the provided axis in-place and does not return a value.
+    - Components with zero thickness are omitted from the plot.
+    - The legend displays the name and thickness (in meters) of each component.
+    """
+    lower_vertical_variables = [
+        "z_plasma_xpoint_upper",
+        "dz_xpoint_divertor",
+        "dz_divertor",
+        "dz_shld_upper",
+        "dz_vv_upper",
+        "dz_shld_vv_gap",
+        "dz_shld_thermal",
+        "dr_tf_shld_gap",
+        "dr_tf_inboard",
+        "dz_tf_cryostat",
+    ]
+
+    lower_vertical_build = [[mfile.get(rl, scan=-1) for rl in lower_vertical_variables]]
+
+    lower_vertical_build = np.array(lower_vertical_build)
+
+    lower_vertical_build = np.transpose(lower_vertical_build)
+
+    lower_vertical_labels = [
+        "Plasma Height",
+        "Plasma - Divertor Gap",
+        "Divertor",
+        "Shield",
+        "Vacuum Vessel",
+        "Shield - VV Gap",
+        "Thermal shield",
+        "TF Coil - Shield Gap",
+        "TF Coil",
+        "TF Coil - Cryostat gap",
+    ]
+
+    lower_vertical_color = [
+        PLASMA_COLOUR[colour_scheme - 1],
+        "white",
+        "black",
+        SHIELD_COLOUR[colour_scheme - 1],
+        VESSEL_COLOUR[colour_scheme - 1],
+        "white",
+        THERMAL_SHIELD_COLOUR[colour_scheme - 1],
+        "white",
+        (
+            TFC_COLOUR[colour_scheme - 1]
+            if mfile.get("i_tf_sup", scan=-1) != 0
+            else "#b87333"
+        ),
+        "white",
+    ]
+
+    # Remove build parts equal to zero
+    mask = ~(lower_vertical_build[:, 0] == 0.0)  # noqa: RUF069
+    filtered_vertical_build = lower_vertical_build[mask]
+    filtered_labels = [lbl for i, lbl in enumerate(lower_vertical_labels) if mask[i]]
+    filtered_colors = [col for i, col in enumerate(lower_vertical_color) if mask[i]]
+
+    bottom = np.zeros(filtered_vertical_build.shape[1])
+    for kk in range(filtered_vertical_build.shape[0]):
+        axis.bar(
+            np.arange(filtered_vertical_build.shape[1]),
+            -filtered_vertical_build[kk, :],
+            bottom=bottom,
+            width=0.8,
+            label=(
+                f"{filtered_labels[kk]}\n[{lower_vertical_variables[kk]}]\n{filtered_vertical_build[kk][0]:.3f} m"  # noqa: E501
+            ),
+            color=filtered_colors[kk],
+            edgecolor="black",
+            linewidth=0.05,
+        )
+        bottom -= filtered_vertical_build[kk, :]
+
+    axis.set_xticks([])
+    axis.legend(
+        bbox_to_anchor=(0, 0),
+        loc="upper left",
+        ncol=5,
+    )
+    axis.minorticks_on()
+    axis.set_ylabel("Height [m]")
+    axis.title.set_text("Lower Vertical Build")

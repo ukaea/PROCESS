@@ -17,6 +17,8 @@ if TYPE_CHECKING:
 
     from process.core.io.mfile import MFile
 
+__all__ = ["plot_blanket_coolant_properties", "plot_main_power_flow", "plot_power_info"]
+
 
 def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figure):
     """Plots the main power flow diagram for the fusion reactor, including plasma,
@@ -1735,6 +1737,3 @@ def plot_blanket_coolant_properties(fig: plt.Figure, m_file: MFile, scan: int):
             **text_layout(fig, v_align="top"),
             bbox=box_style("wheat"),
         )
-
-
-__all__ = ["plot_blanket_coolant_properties", "plot_main_power_flow", "plot_power_info"]

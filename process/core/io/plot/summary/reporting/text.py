@@ -9,6 +9,8 @@ if TYPE_CHECKING:
 
     from process.core.io.mfile import MFile
 
+__all__ = ["plot_info"]
+
 
 def plot_info(axis: plt.Axes, data, mfile: MFile, scan: int):
     """Function to plot data in written form on a matplotlib plot.
@@ -90,6 +92,3 @@ def plot_info(axis: plt.Axes, data, mfile: MFile, scan: int):
                 ha="left",
                 va="center",
             )
-
-
-__all__ = ["plot_info"]

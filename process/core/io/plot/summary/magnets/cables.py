@@ -14,6 +14,8 @@ from process.core.io.plot.summary.common import box_style, text_layout
 if TYPE_CHECKING:
     from process.core.io.mfile import MFile
 
+__all__ = ["plot_cable_in_conduit_cable", "plot_hts_tape_geometry"]
+
 
 def plot_cable_in_conduit_cable(axis: plt.Axes, fig, mfile: MFile, scan: int):
     """Plots TF coil CICC cable cross-section.
@@ -195,6 +197,3 @@ def plot_hts_tape_geometry(
     axis.ticklabel_format(style="sci", axis="both", scilimits=(0, 0))
     if show_legend:
         axis.legend(loc="upper right")
-
-
-__all__ = ["plot_cable_in_conduit_cable", "plot_hts_tape_geometry"]

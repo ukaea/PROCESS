@@ -4,6 +4,24 @@ from __future__ import annotations
 
 import numpy as np
 
+__all__ = [
+    "BLANKET_COLOUR",
+    "CRYOSTAT_COLOUR",
+    "CSCOMPRESSION_COLOUR",
+    "FIRSTWALL_COLOUR",
+    "NBSHIELD_COLOUR",
+    "PLASMA_COLOUR",
+    "RADIAL_BUILD",
+    "SHIELD_COLOUR",
+    "SOLENOID_COLOUR",
+    "TFC_COLOUR",
+    "THERMAL_SHIELD_COLOUR",
+    "VESSEL_COLOUR",
+    "rtangle",
+    "rtangle2",
+    "vertical_lower",
+]
+
 SOLENOID_COLOUR = ["pink", "#1764ab"]
 CSCOMPRESSION_COLOUR = ["maroon", "#33CCCC"]
 TFC_COLOUR = ["cyan", "#084a91"]
@@ -57,22 +75,3 @@ vertical_lower = [
 
 rtangle = np.pi / 2
 rtangle2 = 2 * rtangle
-
-
-__all__ = [
-    "BLANKET_COLOUR",
-    "CRYOSTAT_COLOUR",
-    "CSCOMPRESSION_COLOUR",
-    "FIRSTWALL_COLOUR",
-    "NBSHIELD_COLOUR",
-    "PLASMA_COLOUR",
-    "RADIAL_BUILD",
-    "SHIELD_COLOUR",
-    "SOLENOID_COLOUR",
-    "TFC_COLOUR",
-    "THERMAL_SHIELD_COLOUR",
-    "VESSEL_COLOUR",
-    "rtangle",
-    "rtangle2",
-    "vertical_lower",
-]

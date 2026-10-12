@@ -14,6 +14,8 @@ from process.models.geometry.pfcoil import pfcoil_geometry
 if TYPE_CHECKING:
     from process.core.io.mfile import MFile
 
+__all__ = ["plot_pf_coils", "plot_pf_dimensions"]
+
 
 def plot_pf_coils(
     axis: plt.Axes,
@@ -274,6 +276,3 @@ def plot_pf_dimensions(
     axis.minorticks_on()
     axis.grid(True, alpha=0.3)
     axis.set_aspect("equal", adjustable="box")
-
-
-__all__ = ["plot_pf_coils", "plot_pf_dimensions"]

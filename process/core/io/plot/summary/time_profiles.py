@@ -14,6 +14,8 @@ if TYPE_CHECKING:
 
     from process.core.io.mfile import MFile
 
+__all__ = ["plot_current_profiles_over_time", "plot_system_power_profiles_over_time"]
+
 
 def plot_current_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int):
     """Plots the current profiles over time for PF circuits, CS coil, and plasma."""
@@ -249,9 +251,3 @@ def plot_system_power_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int
         transform=fig.transFigure,
         bbox=box_style("grey"),
     )
-
-
-__all__ = [
-    "plot_current_profiles_over_time",
-    "plot_system_power_profiles_over_time",
-]

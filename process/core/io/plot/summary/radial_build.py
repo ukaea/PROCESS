@@ -4,10 +4,14 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from process.core.io.plot.summary.constants import RADIAL_BUILD
+from process.core.io.plot.summary.constants import (
+    RADIAL_BUILD,
+)
 
 if TYPE_CHECKING:
     from process.core.io.mfile import MFile
+
+__all__ = ["cumulative_radial_build", "cumulative_radial_build2"]
 
 
 def cumulative_radial_build(section, mfile: MFile, scan: int):
@@ -88,6 +92,3 @@ def cumulative_radial_build2(section, mfile: MFile, scan: int):
             break
     previous = cumulative_build - build
     return (cumulative_build, previous)
-
-
-__all__ = ["cumulative_radial_build", "cumulative_radial_build2"]

@@ -12,6 +12,9 @@ if TYPE_CHECKING:
     from process.core.io.mfile import MFile
 
 
+__all__ = ["plot_equality_constraint_equations", "plot_inequality_constraint_equations"]
+
+
 def plot_equality_constraint_equations(axis: plt.Axes, m_file_data: MFile, scan: int):
     """Plot the equality constraints for a solution and their normalised residuals
 
@@ -276,9 +279,3 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: MFile, scan: in
     axis.set_xticks(np.arange(0, 1.0, 0.1))
     axis.grid(True, axis="x", linestyle="--", alpha=0.3)
     axis.set_xticklabels([])
-
-
-__all__ = [
-    "plot_equality_constraint_equations",
-    "plot_inequality_constraint_equations",
-]

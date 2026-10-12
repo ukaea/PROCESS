@@ -4,177 +4,17 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import matplotlib.pyplot as plt
 import numpy as np
 
-from process.data_structure.physics_variables import (
-    ConfinementTimeModel,
-    OutbordSOLPowerDecayLengthModel,
-)
+from process.data_structure.physics_variables import ConfinementTimeModel
 from process.models.physics.confinement_time import PlasmaConfinementTime
-from process.models.physics.exhaust import calculate_brunner_divertor_power_splits
 
 if TYPE_CHECKING:
+    import matplotlib.pyplot as plt
+
     from process.core.io.mfile import MFile
 
-
-def plot_sol_power_decay_length_comparison(axis: plt.Axes, mfile: MFile, scan: int):
-    """Function to plot a scatter box plot of SOL power decay lengths (λ_q).
-
-    Parameters
-    ----------
-    axis :
-        axis object to plot to
-    mfile :
-        MFILE data object
-    scan :
-        scan number to use
-    """
-    len_plasma_sol_eich13_power_decay_mm = (
-        mfile.get("len_plasma_sol_eich13_power_decay", scan=scan) * 1e3
-    )
-    len_plasma_sol_mast14_power_decay_1_mm = (
-        mfile.get("len_plasma_sol_mast14_power_decay_1", scan=scan) * 1e3
-    )
-    len_plasma_sol_mast14_power_decay_2_mm = (
-        mfile.get("len_plasma_sol_mast14_power_decay_2", scan=scan) * 1e3
-    )
-    len_plasma_sol_eich11_jet_power_decay_mm = (
-        mfile.get("len_plasma_sol_eich11_jet_power_decay", scan=scan) * 1e3
-    )
-    len_plasma_sol_eich11_jet_asdex_power_decay_mm = (
-        mfile.get("len_plasma_sol_eich11_jet_asdex_power_decay", scan=scan) * 1e3
-    )
-    # Data for the box plot
-    data = {
-        f"{OutbordSOLPowerDecayLengthModel.EICH_2013.description}": (
-            len_plasma_sol_eich13_power_decay_mm
-        ),
-        f"{OutbordSOLPowerDecayLengthModel.MAST_2014_1.description}": (
-            len_plasma_sol_mast14_power_decay_1_mm
-        ),
-        f"{OutbordSOLPowerDecayLengthModel.MAST_2014_2.description}": (
-            len_plasma_sol_mast14_power_decay_2_mm
-        ),
-        f"{OutbordSOLPowerDecayLengthModel.EICH_2011_JET.description}": (
-            len_plasma_sol_eich11_jet_power_decay_mm
-        ),
-        f"{OutbordSOLPowerDecayLengthModel.EICH_2011_JET_ASDEX.description}": (
-            len_plasma_sol_eich11_jet_asdex_power_decay_mm
-        ),
-    }
-    data_values = list(data.values())
-
-    # Create the violin plot
-    axis.violinplot(data_values, showextrema=False)
-
-    # Create the box plot
-    axis.boxplot(data_values, showfliers=True, showmeans=True, meanline=True, widths=0.3)
-
-    # Scatter plot for each data point
-    colors = plt.cm.plasma(np.linspace(0, 1, len(data_values)))
-    for index, (key, value) in enumerate(data.items()):
-        axis.scatter(1, value, color=colors[index], label=key, alpha=1.0)
-    axis.legend(loc="upper left", bbox_to_anchor=(1, 1))
-
-    # Calculate average, standard deviation, and median
-    avg_decay_length = np.mean(data_values)
-    std_decay_length = np.std(data_values)
-    median_decay_length = np.median(data_values)
-
-    # Plot average, standard deviation, and median as text
-    axis.text(
-        1.02,
-        0.2,
-        f"Average: {avg_decay_length:.4f}",
-        transform=axis.transAxes,
-        fontsize=9,
-    )
-    axis.text(
-        1.02,
-        0.15,
-        f"Standard Dev: {std_decay_length:.4f}",
-        transform=axis.transAxes,
-        fontsize=9,
-    )
-    axis.text(
-        1.02,
-        0.1,
-        f"Median: {median_decay_length:.4f}",
-        transform=axis.transAxes,
-        fontsize=9,
-    )
-
-    axis.set_title("SOL Power Decay Length ($\\lambda_q$) Comparison")
-    axis.set_ylabel("Power Decay Length [mm]")
-    axis.set_xlim(0.5, 1.5)
-    axis.set_xticks([])
-    axis.set_xticklabels([])
-    axis.set_facecolor("#f0f0f0")
-
-
-def plot_brunner_divertor_power_split_comparison_stackplot(
-    axis: plt.Axes, mfile: MFile, scan: int
-):
-    """Plot Brunner divertor power split fractions as a stack plot over dr_sep."""
-    # Use the case decay length when available; fall back to 1 mm if absent.
-
-    len_plasma_sol_outboard_pd = mfile.get("len_sol_outboard_power_decay", scan=scan)
-    len_plasma_sol_inboard_pd = mfile.get("len_sol_inboard_power_decay", scan=scan)
-    colors = plt.cm.plasma(np.linspace(0.15, 0.85, 4))
-
-    dr_sep_values = np.linspace(
-        -5 * len_plasma_sol_outboard_pd,
-        5 * len_plasma_sol_outboard_pd,
-        200,
-    )
-    f_p_inboard_lower = np.zeros_like(dr_sep_values)
-    f_p_inboard_upper = np.zeros_like(dr_sep_values)
-    f_p_outboard_lower = np.zeros_like(dr_sep_values)
-    f_p_outboard_upper = np.zeros_like(dr_sep_values)
-
-    for idx, dr_sep in enumerate(dr_sep_values):
-        div_power_splits = calculate_brunner_divertor_power_splits(
-            dr_outboard_midplane_sep=dr_sep,
-            len_plasma_sol_outboard_power_decay=len_plasma_sol_outboard_pd,
-            len_plasma_sol_inboard_power_decay=len_plasma_sol_inboard_pd,
-        )
-        f_p_inboard_lower[idx] = div_power_splits.f_p_div_inboard_lower_separatrix
-        f_p_inboard_upper[idx] = div_power_splits.f_p_div_inboard_upper_separatrix
-        f_p_outboard_lower[idx] = div_power_splits.f_p_div_outboard_lower_separatrix
-        f_p_outboard_upper[idx] = div_power_splits.f_p_div_outboard_upper_separatrix
-
-    axis.stackplot(
-        dr_sep_values,
-        f_p_inboard_lower,
-        f_p_inboard_upper,
-        f_p_outboard_lower,
-        f_p_outboard_upper,
-        labels=[
-            "$f_{P,\\mathrm{in,lower}}$",
-            "$f_{P,\\mathrm{in,upper}}$",
-            "$f_{P,\\mathrm{out,lower}}$",
-            "$f_{P,\\mathrm{out,upper}}$",
-        ],
-        colors=colors,
-        alpha=0.9,
-    )
-
-    axis.axvline(
-        mfile.get("dr_plasma_outboard_midplane_separatrix_separation", scan=scan),
-        color="k",
-        linestyle="--",
-        linewidth=1.0,
-        alpha=0.5,
-        label="$\u0394 r_{\\mathrm{sep}}$",
-    )
-    axis.set_ylim(0.0, 1.0)
-    axis.set_xlim(-5 * len_plasma_sol_outboard_pd, 5 * len_plasma_sol_outboard_pd)
-    axis.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.35)
-    axis.set_title("Brunner Divertor Power Split Fractions")
-    axis.set_xlabel("$\\Delta r_{\\mathrm{sep}}$ [m]")
-    axis.set_ylabel("Power split fraction, $f_P$")
-    axis.legend(loc="upper left", fontsize=8)
+__all__ = ["plot_confinement_time_comparison"]
 
 
 def plot_confinement_time_comparison(
@@ -517,10 +357,3 @@ def plot_confinement_time_comparison(
 
     # Add background color
     axis.set_facecolor("#f0f0f0")
-
-
-__all__ = [
-    "plot_brunner_divertor_power_split_comparison_stackplot",
-    "plot_confinement_time_comparison",
-    "plot_sol_power_decay_length_comparison",
-]

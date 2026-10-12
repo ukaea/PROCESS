@@ -22,6 +22,8 @@ if TYPE_CHECKING:
 
     from process.core.io.mfile import MFile
 
+__all__ = ["draw_bend", "plot_upper_vertical_build"]
+
 
 def plot_upper_vertical_build(
     axis: plt.Axes, mfile: MFile, colour_scheme: Literal[1, 2]
@@ -247,6 +249,3 @@ def draw_bend(
         f" {elbow_radius_mm:.2f} mm"
     )
     ax.legend([legend_text], loc="upper right")
-
-
-__all__ = ["draw_bend", "plot_upper_vertical_build"]

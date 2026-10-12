@@ -32,6 +32,22 @@ if TYPE_CHECKING:
     from process.core.io.mfile import MFile
 
 
+__all__ = [
+    "TF_outboard",
+    "plot_corc_cable_geometry",
+    "plot_quench_time_evolution",
+    "plot_resistive_tf_info",
+    "plot_resistive_tf_wp",
+    "plot_superconducting_tf_wp",
+    "plot_tf_cable_in_conduit_turn",
+    "plot_tf_coil_structure",
+    "plot_tf_coils",
+    "plot_tf_corc_cable_summary_box",
+    "plot_tf_croco_turn",
+    "plot_tf_stress",
+]
+
+
 def TF_outboard(axis: plt.Axes, item, n_tf_coils, r3, r4, w, facecolor):
     """Plot outboard TF coils"""
     spacing = 2 * np.pi / n_tf_coils
@@ -3574,19 +3590,3 @@ def plot_quench_time_evolution(
 
     if show:
         plt.show()
-
-
-__all__ = [
-    "TF_outboard",
-    "plot_corc_cable_geometry",
-    "plot_quench_time_evolution",
-    "plot_resistive_tf_info",
-    "plot_resistive_tf_wp",
-    "plot_superconducting_tf_wp",
-    "plot_tf_cable_in_conduit_turn",
-    "plot_tf_coil_structure",
-    "plot_tf_coils",
-    "plot_tf_corc_cable_summary_box",
-    "plot_tf_croco_turn",
-    "plot_tf_stress",
-]

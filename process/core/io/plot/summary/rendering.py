@@ -13,6 +13,9 @@ if TYPE_CHECKING:
     from matplotlib.transforms import Transform
 
 
+__all__ = ["ArrowSpec", "TextPanel", "draw_arrows", "draw_text_panels"]
+
+
 @dataclass(frozen=True)
 class TextPanel:
     """Declarative text panel rendered through a Matplotlib axes."""
@@ -50,11 +53,3 @@ def draw_arrows(axis: Axes, arrows: Iterable[ArrowSpec]) -> list[Annotation]:
         )
         for arrow in arrows
     ]
-
-
-__all__ = [
-    "ArrowSpec",
-    "TextPanel",
-    "draw_arrows",
-    "draw_text_panels",
-]

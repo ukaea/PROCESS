@@ -23,12 +23,8 @@ from process.core.io.plot.summary.constants import (
     VESSEL_COLOUR,
     rtangle,
 )
-from process.core.io.plot.summary.magnets.tf import (
-    TF_outboard,
-)
-from process.core.io.plot.summary.radial_build import (
-    cumulative_radial_build2,
-)
+from process.core.io.plot.summary.magnets.tf import TF_outboard
+from process.core.io.plot.summary.radial_build import cumulative_radial_build2
 from process.models.physics.current_drive import (
     CurrentDriveMethodType,
     CurrentDriveModel,
@@ -37,6 +33,8 @@ from process.models.tfcoil.base import TFConductorModel
 
 if TYPE_CHECKING:
     from process.core.io.mfile import MFile
+
+__all__ = ["arc", "arc_fill", "toroidal_cross_section"]
 
 
 def toroidal_cross_section(
@@ -325,6 +323,3 @@ def arc_fill(axis: plt.Axes, r1, r2, color="pink", theta1=0, theta2=rtangle):
     path = mplPath(verts, closed=True)
     patch = patches.PathPatch(path, facecolor=color, lw=0)
     axis.add_patch(patch)
-
-
-__all__ = ["arc", "arc_fill", "toroidal_cross_section"]

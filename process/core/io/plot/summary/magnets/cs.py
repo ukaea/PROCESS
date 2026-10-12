@@ -18,78 +18,19 @@ if TYPE_CHECKING:
     from process.core.io.mfile import MFile
 
 
+__all__ = [
+    "plot_cs_coil_structure",
+    "plot_cs_turn_structure",
+    "plot_magnetics_info",
+    "plot_pf_cs_plasma_mutual_inductance",
+    "secs_to_hms",
+]
+
+
 def secs_to_hms(s):
     """Convert seconds to 'Hh Mm Ss' string."""
     s = float(s)
     return f"{int(s // 3600)}h {int((s % 3600) // 60)}m {int(s % 60)}s"
-
-
-def plot_physics_info(axis: plt.Axes, mfile: MFile, scan: int):
-    """Function to plot geometry info
-
-    Parameters
-    ----------
-    axis :
-        axis object to plot to
-    mfile :
-        MFILE
-    scan :
-        scan number to use
-    """
-    axis.text(-0.05, 1, "Physics:", ha="left", va="center")
-    setup_axis(axis, xmin=0, xmax=1, ymin=-16, ymax=1)
-
-    nong = mfile.get("nd_plasma_electron_line", scan=scan) / mfile.get(
-        "nd_plasma_electron_max_array(7)", scan=scan
-    )
-
-    nd_plasma_impurities_vol_avg = mfile.get(
-        "nd_plasma_impurities_vol_avg", scan=scan
-    ) / mfile.get("nd_plasma_electrons_vol_avg", scan=scan)
-
-    tepeak = mfile.get("temp_plasma_electron_on_axis_kev", scan=scan) / mfile.get(
-        "temp_plasma_electron_vol_avg_kev", scan=scan
-    )
-
-    nepeak = mfile.get("nd_plasma_electron_on_axis", scan=scan) / mfile.get(
-        "nd_plasma_electrons_vol_avg", scan=scan
-    )
-
-    # Assume Martin scaling if pthresh is not printed
-    # Accounts for pthresh not being written prior to issue #679 and #680
-    if "p_l_h_threshold_mw" in mfile.data:
-        pthresh = mfile.get("p_l_h_threshold_mw", scan=scan)
-    else:
-        pthresh = mfile.get("l_h_threshold_powers(6)", scan=scan)
-
-    data = [
-        ("p_fusion_total_mw", "Fusion power", "MW"),
-        ("big_q_plasma", "$Q_{p}$", ""),
-        ("plasma_current_ma", "$I_p$", "MA"),
-        ("b_plasma_toroidal_on_axis", "Vacuum $B_T$ at $R_0$", "T"),
-        ("q95", r"$q_{\mathrm{95}}$", ""),
-        ("beta_norm_thermal", r"$\beta_N$, thermal", "% m T MA$^{-1}$"),
-        ("beta_norm_toroidal", r"$\beta_N$, toroidal", "% m T MA$^{-1}$"),
-        ("beta_thermal_poloidal_vol_avg", r"$\beta_P$, thermal", ""),
-        ("beta_poloidal_vol_avg", r"$\beta_P$, total", ""),
-        ("temp_plasma_electron_vol_avg_kev", r"$\langle T_e \rangle$", "keV"),
-        ("nd_plasma_electrons_vol_avg", r"$\langle n_e \rangle$", "m$^{-3}$"),
-        (nong, r"$\langle n_{\mathrm{e,line}} \rangle \ / \ n_G$", ""),
-        (tepeak, r"$T_{e0} \ / \ \langle T_e \rangle$", ""),
-        (nepeak, r"$n_{e0} \ / \ \langle n_{\mathrm{e, vol}} \rangle$", ""),
-        ("n_charge_plasma_effective_vol_avg", r"$Z_{\mathrm{eff}}$", ""),
-        (
-            nd_plasma_impurities_vol_avg,
-            r"$n_Z \ / \  \langle n_{\mathrm{e, vol}} \rangle$",
-            "",
-        ),
-        ("t_energy_confinement", r"$\tau_e$", "s"),
-        ("hfact", "H-factor", ""),
-        (pthresh, "H-mode threshold", "MW"),
-        ("tauelaw", "Scaling law", ""),
-    ]
-
-    plot_info(axis, data, mfile, scan)
 
 
 def plot_magnetics_info(axis: plt.Axes, mfile: MFile, scan: int):
@@ -604,13 +545,3 @@ def plot_pf_cs_plasma_mutual_inductance(
                 )
 
     axis.get_figure().colorbar(im, ax=axis, label="Mutual Inductance (H)")
-
-
-__all__ = [
-    "plot_cs_coil_structure",
-    "plot_cs_turn_structure",
-    "plot_magnetics_info",
-    "plot_pf_cs_plasma_mutual_inductance",
-    "plot_physics_info",
-    "secs_to_hms",
-]
