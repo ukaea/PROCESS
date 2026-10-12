@@ -13,6 +13,7 @@ from process.core.io.mfile import MFile, MFileErrorClass
 from process.core.io.plot.summary.common import box_style, setup_axis
 from process.core.io.plot.summary.geometry.poloidal import poloidal_cross_section
 from process.core.io.plot.summary.plasma.physics import plot_plasma
+from process.core.io.plot.summary.rendering import ArrowSpec, draw_arrows
 from process.core.io.plot.summary.reporting.text import plot_info
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.physics_variables import DivertorNumberModels
@@ -305,61 +306,52 @@ def plot_separatrix_power_split(axis: plt.Axes, mfile: MFile, scan: int, colour_
         "shrinkB": 14 * scale_factor,
         "mutation_scale": 12 * scale_factor,
     }
-    axis.annotate(
-        "",
-        xy=outboard_pos,
-        xytext=centre_pos,
-        arrowprops=arrow_props,
-        zorder=1,
-    )
-    axis.annotate(
-        "",
-        xy=inboard_pos,
-        xytext=centre_pos,
-        arrowprops=arrow_props,
-        zorder=1,
-    )
-    axis.annotate(
-        "",
-        xy=lower_outboard_pos,
-        xytext=outboard_pos,
-        arrowprops={
-            **arrow_props,
-            "connectionstyle": "angle3,angleA=0,angleB=-90",
-        },
-        zorder=102,
-    )
-    axis.annotate(
-        "",
-        xy=lower_inboard_pos,
-        xytext=inboard_pos,
-        arrowprops={
-            **arrow_props,
-            "connectionstyle": "angle3,angleA=180,angleB=-90",
-        },
-        zorder=102,
-    )
+
+    arrows = [
+        ArrowSpec(
+            start=centre_pos,
+            end=outboard_pos,
+            options=arrow_props,
+            zorder=1,
+        ),
+        ArrowSpec(
+            start=centre_pos,
+            end=inboard_pos,
+            options=arrow_props,
+            zorder=1,
+        ),
+        ArrowSpec(
+            start=outboard_pos,
+            end=lower_outboard_pos,
+            options=arrow_props | {"connectionstyle": "angle3,angleA=0,angleB=-90"},
+            zorder=102,
+        ),
+        ArrowSpec(
+            start=inboard_pos,
+            end=lower_inboard_pos,
+            options=arrow_props | {"connectionstyle": "angle3,angleA=180,angleB=-90"},
+            zorder=102,
+        ),
+    ]
+
     if is_double_null:
-        axis.annotate(
-            "",
-            xy=upper_outboard_pos,
-            xytext=outboard_pos,
-            arrowprops={
-                **arrow_props,
-                "connectionstyle": "angle3,angleA=0,angleB=90",
-            },
-            zorder=102,
-        )
-        axis.annotate(
-            "",
-            xy=upper_inboard_pos,
-            xytext=inboard_pos,
-            arrowprops={
-                **arrow_props,
-                "connectionstyle": "angle3,angleA=180,angleB=90",
-            },
-            zorder=102,
-        )
+        arrows.extend([
+            ArrowSpec(
+                start=outboard_pos,
+                end=upper_outboard_pos,
+                options=arrow_props
+                | {"connectionstyle": "angle3,angleA=180,angleB=-90"},
+                zorder=102,
+            ),
+            ArrowSpec(
+                start=inboard_pos,
+                end=upper_inboard_pos,
+                options=arrow_props | {"connectionstyle": "angle3,angleA=180,angleB=90"},
+                zorder=102,
+            ),
+        ])
+
+    draw_arrows(axis, arrows)
 
     axis.spines["top"].set_visible(False)
     axis.spines["right"].set_visible(False)

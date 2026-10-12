@@ -32,8 +32,9 @@ class ArrowSpec:
 
     start: tuple[float, float]
     end: tuple[float, float]
-    transform: Transform
+    transform: Transform | None = None
     options: dict[str, Any] = field(default_factory=dict)
+    zorder: float = 1
 
 
 def draw_text_panels(axis: Axes, panels: Iterable[TextPanel]) -> list[Text]:
@@ -48,8 +49,9 @@ def draw_arrows(axis: Axes, arrows: Iterable[ArrowSpec]) -> list[Annotation]:
             "",
             xy=arrow.end,
             xytext=arrow.start,
-            xycoords=arrow.transform,
+            xycoords=arrow.transform or axis.transData,
             arrowprops=arrow.options,
+            zorder=arrow.zorder,
         )
         for arrow in arrows
     ]
