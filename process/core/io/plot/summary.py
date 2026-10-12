@@ -12958,15 +12958,15 @@ def plot_fusion_rate_contours(fig1, fig2, mfile: MFile, scan: int):
 
     def fusrat(name):
         fusrat_dat = [
-            mfile.get(f"fusrat_plasma_{name}_profile{i}", scan=scan)
+            mfile.get(f"fusden_plasma_{name}_profile{i}", scan=scan)
             for i in range(n_plasma_profile_elements)
         ]
         return interp1d_profile(fusrat_dat, mfile, scan)
 
     dt_grid, _r_grid, _z_grid = fusrat("dt")
-    dd_triton_grid, _r_grid, _z_grid = fusrat(" dd_triton ")
-    dd_helion_grid, _r_grid, _z_grid = fusrat(" dd_helion ")
-    dhe3_grid, r_grid, z_grid = fusrat(" dhe3")
+    dd_triton_grid, _r_grid, _z_grid = fusrat("dd_triton")
+    dd_helion_grid, _r_grid, _z_grid = fusrat("dd_helion")
+    dhe3_grid, r_grid, z_grid = fusrat("dhe3")
 
     dt_axes = fig1.add_subplot(121, aspect="equal")
     dd_triton_axes = fig1.add_subplot(122, aspect="equal")
