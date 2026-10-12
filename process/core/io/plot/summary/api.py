@@ -102,6 +102,7 @@ from process.core.io.plot.summary.profiles.plasma import (
     plot_beta_profiles,
     plot_cumulative_plasma_thermal_energy_profiles,
     plot_fusion_rate_contours,
+    plot_fusion_rate_density_profiles,
     plot_fusion_rate_profiles,
     plot_jprofile,
     plot_n_profiles,
@@ -148,6 +149,7 @@ from process.core.io.plot.summary.time_profiles import (
     plot_current_profiles_over_time,
     plot_system_power_profiles_over_time,
 )
+from process.models.physics.current_drive import CurrentDriveModel
 from process.models.physics.plasma_geometry import PlasmaShapeModelType
 from process.models.power import PumpingPowerModelTypes
 from process.models.tfcoil.base import TFConductorModel
@@ -327,11 +329,19 @@ def main_plot(
     plot_line_brem_power_profile(
         _add_page("line_brem_power").add_subplot(121), m_file, scan, imp
     )
-    plot_fusion_rate_profiles(
-        _add_page("fusion_rate").add_subplot(122),
-        pages["fusion_rate"],
+    plot_fusion_rate_density_profiles(
+        _add_page("fusion_rate_density").add_subplot(122),
+        pages["fusion_rate_density"],
         m_file,
         scan,
+    )
+
+    fusion_rate_page = _add_page("fusion_rate")
+    plot_fusion_rate_profiles(
+        fusion_rate_page.add_subplot(121),
+        m_file,
+        scan,
+        zoom_axis=fusion_rate_page.add_subplot(122),
     )
 
     _add_page("rx_1_2"), _add_page("rx_3_4")
@@ -403,7 +413,11 @@ def main_plot(
         ax_thermal_energy_cumulative, m_file, scan
     )
 
-    plot_ebw_ecrh_coupling_graph(_add_page().add_subplot(111), m_file, scan)
+    if CurrentDriveModel(m_file.get("i_hcd_primary", scan=scan)) in {
+        CurrentDriveModel.USER_INPUT_ELECTRON_BERNSTEIN,
+        CurrentDriveModel.FREETHY_ELECTRON_CYCLOTRON,
+    }:
+        plot_ebw_ecrh_coupling_graph(_add_page().add_subplot(111), m_file, scan)
 
     plot_bootstrap_comparison(_add_page("current").add_subplot(221), m_file, scan)
     plot_plasma_current_comparison(pages["current"].add_subplot(224), m_file, scan)
