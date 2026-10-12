@@ -2,8 +2,100 @@
 
 from dataclasses import dataclass, field
 from enum import IntEnum, unique
+from types import DynamicClassAttribute
 
 import numpy as np
+
+
+@unique
+class PlasmaConfinementTransitionModel(IntEnum):
+    """Enum for plasma L -> H and L -> I transition power threshold models."""
+
+    ITER1996_NOMINAL = (1, "ITER-1996 Nominal")
+    ITER1996_UPPER = (2, "ITER-1996 Upper")
+    ITER1996_LOWER = (3, "ITER-1996 Lower")
+    SNIPES1997_ITER = (4, "Snipes 1997 ITER Scaling I")
+    SNIPES1997_KAPPA = (5, "Snipes 1997 ITER Scaling II")
+    MARTIN08_NOMINAL = (6, "Martin 2008 Nominal")
+    MARTIN08_UPPER = (7, "Martin 2008 Upper")
+    MARTIN08_LOWER = (8, "Martin 2008 Lower")
+    SNIPES2000_NOMINAL = (9, "Snipes 2000 Nominal")
+    SNIPES2000_UPPER = (10, "Snipes 2000 Upper")
+    SNIPES2000_LOWER = (11, "Snipes 2000 Lower")
+    SNIPES2000_CLOSED_DIVERTOR_NOMINAL = (12, "Snipes 2000 Closed Divertor Nominal")
+    SNIPES2000_CLOSED_DIVERTOR_UPPER = (13, "Snipes 2000 Closed Divertor Upper")
+    SNIPES2000_CLOSED_DIVERTOR_LOWER = (14, "Snipes 2000 Closed Divertor Lower")
+    HUBBARD2012_NOMINAL = (15, "Hubbard 2012 Nominal")
+    HUBBARD2012_LOWER = (16, "Hubbard 2012 Lower")
+    HUBBARD2012_UPPER = (17, "Hubbard 2012 Upper")
+    HUBBARD2017_I_MODE = (18, "Hubbard 2017 I-Mode")
+    MARTIN08_ASPECT_NOMINAL = (19, "Martin 2008 Aspect Corrected Nominal")
+    MARTIN08_ASPECT_UPPER = (20, "Martin 2008 Aspect Corrected Upper")
+    MARTIN08_ASPECT_LOWER = (21, "Martin 2008 Aspect Corrected Lower")
+
+    def __new__(cls, value: int, full_name: str):
+        """Create a new PlasmaConfinementTransitionModel instance.
+
+        Parameters
+        ----------
+        value : int
+            The integer value of the enum member.
+        full_name : str
+            The full descriptive name of the enum member.
+
+        Returns
+        -------
+        PlasmaConfinementTransitionModel
+            A new instance of PlasmaConfinementTransitionModel.
+        """
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj.full_name = full_name
+        return obj
+
+
+@unique
+class PlasmaCurrentModel(IntEnum):
+    """Enumeration of plasma current scaling models available for calculations.
+
+    Each model represents a different scaling law used to calculate plasma
+    current based on various plasma and machine parameters.
+    """
+
+    PENG_ANALYTIC_FIT = (1, "Peng analytic fit")
+    PENG_DIVERTOR_SCALING = (2, "Peng divertor scaling")
+    ITER_SCALING = (3, "Simple ITER scaling (cylindrical case)")
+    IPDG89_SCALING = (4, "IPDG89 scaling")
+    TODD_EMPIRICAL_SCALING_I = (5, "Todd empirical scaling I")
+    TODD_EMPIRICAL_SCALING_II = (6, "Todd empirical scaling II")
+    CONNOR_HASTIE_MODEL = (7, "Connor-Hastie model")
+    SAUTER_SCALING = (8, "Sauter scaling")
+    FIESTA_ST_SCALING = (9, "FIESTA ST scaling")
+
+    def __new__(cls, value: int, full_name: str):
+        """Create a new PlasmaCurrentModel enum member with value and full_name.
+
+        Parameters
+        ----------
+        value : int
+            The numeric value of the enum member.
+        full_name : str
+            The full name description of the plasma current model.
+
+        Returns
+        -------
+        PlasmaCurrentModel
+            A new enum member with the specified value and full_name.
+        """
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._full_name_ = full_name
+        return obj
+
+    @DynamicClassAttribute
+    def full_name(self):
+        """The full name of the plasma current model."""
+        return self._full_name_
 
 
 @unique
@@ -531,11 +623,11 @@ class PhysicsData:
     alphap: float = 0.0
     """Plasma pressure profile index (⍺ₚ)"""  # noqa: RUF001
 
-    fusden_alpha_total: float = 0.0
-    """Alpha particle production rate per unit volume, from plasma and beams [particles/m³/sec]"""
+    fusden_alpha_total_vol_avg: float = 0.0
+    """Volume-averaged alpha particle production rate per unit volume, from plasma and beams [particles/m³/sec]"""
 
-    fusden_plasma_alpha: float = 0.0
-    """Alpha particle production rate per unit volume, just from plasma [particles/m³/sec]"""
+    fusden_plasma_alpha_vol_avg: float = 0.0
+    """Volume-averaged alpha particle production rate per unit volume, just from plasma [particles/m³/sec]"""
 
     alphat: float = 0.5
     """Plasma temperature profile index (⍺ₜ)"""  # noqa: RUF001
@@ -598,22 +690,43 @@ class PhysicsData:
     """Plasma thermal energy derived from thermal beta"""
 
     e_plasma_thermal_total: float = 0.0
-    """Plasma total stored thermal energy (J)"""
+    """Plasma total stored thermal energy [J]"""
+
+    e_plasma_thermal_total_profile: list[float] = field(default_factory=list)
+    """Plasma total stored thermal energy profile [J]"""
 
     eden_plasma_thermal_vol_avg: float = 0.0
-    """Plasma volume averaged thermal energy density (J/m³)"""
+    """Plasma volume averaged thermal energy density [J/m³]"""
+
+    eden_plasma_thermal_profile: list[float] = field(default_factory=list)
+    """Plasma total thermal energy density profile [J/m³]"""
+
+    e_plasma_thermal_profile: list[float] = field(default_factory=list)
+    """Plasma total stored thermal energy profile [J]"""
 
     e_plasma_electrons_thermal: float = 0.0
-    """Plasma thermal energy in electrons (J)"""
+    """Plasma thermal energy in electrons [J]"""
+
+    eden_plasma_electrons_thermal_profile: list[float] = field(default_factory=list)
+    """Plasma thermal energy density in electrons profile [J/m³]"""
+
+    e_plasma_electrons_thermal_profile: list[float] = field(default_factory=list)
+    """Plasma thermal energy in electrons profile [J]"""
 
     eden_plasma_electrons_thermal_vol_avg: float = 0.0
-    """Plasma volume averaged thermal energy density in electrons (J/m³)"""
+    """Plasma volume averaged thermal energy density in electrons [J/m³]"""
 
     e_plasma_ions_thermal: float = 0.0
-    """Plasma thermal energy in ions (J)"""
+    """Plasma thermal energy in ions [J]"""
+
+    eden_plasma_ions_thermal_profile: list[float] = field(default_factory=list)
+    """Plasma thermal energy density in ions profile [J/m³]"""
+
+    e_plasma_ions_thermal_profile: list[float] = field(default_factory=list)
+    """Plasma thermal energy in ions profile [J]"""
 
     eden_plasma_ions_thermal_vol_avg: float = 0.0
-    """Plasma volume averaged thermal energy density in ions (J/m³)"""
+    """Plasma volume averaged thermal energy density in ions [J/m³]"""
 
     betbm0: float = 1.5
     """leading coefficient for NB beta fraction"""
@@ -799,26 +912,29 @@ class PhysicsData:
     f_plasma_fuel_tritium: float = 0.5
     """Plasma tritium fuel fraction"""
 
-    fusden_total: float = 0.0
-    """fusion reaction rate density, from beams and plasma (reactions/m3/sec)"""
+    fusden_total_vol_avg: float = 0.0
+    """Total volume averaged fusion reaction rate density, from beams and plasma [reactions/m³/sec]"""
 
     fusrat_total: float = 0.0
     """fusion reaction rate, from beams and plasma (reactions/sec)"""
 
-    fusrat_plasma_dt_profile: list[float] = field(default_factory=list)
-    """Profile of D-T fusion reaction rate in plasma, (reactions/sec)"""
+    sigma_v_plasma_dt_vol_avg: float = 0.0
+    """Volume averaged plasma D-T fusion reactivity (〈σv〉ᵥ) [m³/s]"""  # noqa: RUF001
 
-    fusrat_plasma_dd_triton_profile: list[float] = field(default_factory=list)
-    """Profile of D-D fusion reaction rate (tritium branch) in plasma, (reactions/sec)"""
+    fusden_plasma_dt_profile: list[float] = field(default_factory=list)
+    """Profile of D-T fusion reaction rate density in plasma, [reactions/m³/sec]"""
 
-    fusrat_plasma_dd_helion_profile: list[float] = field(default_factory=list)
-    """Profile of D-D fusion reaction rate (helium branch) in plasma, (reactions/sec)"""
+    fusden_plasma_dd_triton_profile: list[float] = field(default_factory=list)
+    """Profile of D-D fusion reaction rate density (tritium branch) in plasma, [reactions/m³/sec]"""
 
-    fusrat_plasma_dhe3_profile: list[float] = field(default_factory=list)
-    """Profile of D-3He fusion reaction rate in plasma, (reactions/sec)"""
+    fusden_plasma_dd_helion_profile: list[float] = field(default_factory=list)
+    """Profile of D-D fusion reaction rate density (helium branch) in plasma, [reactions/m³/sec]"""
 
-    fusden_plasma: float = 0.0
-    """fusion reaction rate, just from plasma (reactions/m3/sec)"""
+    fusden_plasma_dhe3_profile: list[float] = field(default_factory=list)
+    """Profile of D-3He fusion reaction rate density in plasma, [reactions/m³/sec]"""
+
+    fusden_plasma_vol_avg: float = 0.0
+    """Volume averaged fusion reaction rate, just from plasma [reactions/m³/sec]"""
 
     f_c_plasma_non_inductive: float = 1.0
     """fraction of the plasma current produced by non-inductive means (`iteration variable 44`)"""
@@ -962,12 +1078,18 @@ class PhysicsData:
     tbeta: float = 2.0
     """Plasma temperature profile index beta (βₜ)  (`i_plasma_pedestal==1)"""
 
-    temp_plasma_pedestal_kev: float = 1.0
+    temp_plasma_pedestal_electron_kev: float = 1.0
     """Plasma electron temperature of pedestal (Tₑ,pedestal) [keV] (`i_plasma_pedestal==1`)"""
 
-    temp_plasma_separatrix_kev: float = 0.1
+    temp_plasma_separatrix_electron_kev: float = 0.1
     """Plasma electron temperature at separatrix (Tₑ,ₛₑₚ) [keV] (`i_plasma_pedestal==1`) calculated if reinke
     criterion is used (`icc=78`)
+    """
+    temp_plasma_pedestal_ion_kev: float = 1.0
+    """Plasma ion temperature of pedestal (Tᵢ,pedestal) [keV] (`i_plasma_pedestal==1`)"""
+
+    temp_plasma_separatrix_ion_kev: float = 0.1
+    """Plasma ion temperature at separatrix (Tᵢ,ₛₑₚ) [keV] (`i_plasma_pedestal==1`)
     """
 
     i_beta_norm_max: int = 1
@@ -1097,11 +1219,11 @@ class PhysicsData:
     f_dd_branching_trit: float = 0.0
     """branching ratio for DD -> T"""
 
-    pden_plasma_alpha_mw: float = 0.0
-    """Alpha power per volume just from plasma [MW/m3]"""
+    pden_plasma_alpha_vol_avg_mw: float = 0.0
+    """Volume-averaged alpha power per volume just from plasma [MW/m³]"""
 
-    pden_alpha_total_mw: float = 0.0
-    """Alpha power per volume from plasma and beams [MW/m3]"""
+    pden_alpha_total_vol_avg_mw: float = 0.0
+    """Volume-averaged alpha power per volume from plasma and beams [MW/m³]"""
 
     f_pden_alpha_electron_mw: float = 0.0
     """Alpha power per volume to electrons [MW/m3]"""
@@ -1148,8 +1270,14 @@ class PhysicsData:
     p_dd_total_mw: float = 0.0
     """deuterium-deuterium fusion power (MW)"""
 
+    pden_dd_total_vol_avg_mw: float = 0.0
+    """Volume averaged D-D fusion power density [MW/m³]"""
+
     p_dhe3_total_mw: float = 0.0
-    """deuterium-helium3 fusion power (MW)"""
+    """deuterium-helium3 fusion power [MW]"""
+
+    pden_dhe3_total_vol_avg_mw: float = 0.0
+    """Volume averaged D-3He fusion power density [MW/m³]"""
 
     p_plasma_separatrix_mw: float = 0.0
     """power to conducted to the divertor region (MW)"""
@@ -1174,6 +1302,9 @@ class PhysicsData:
 
     p_plasma_dt_mw: float = 0.0
     """Deuterium-tritium fusion power, just from plasma [MW]"""
+
+    pden_plasma_dt_vol_avg_mw: float = 0.0
+    """Volume-averaged deuterium-tritium fusion power per volume just from plasma [MW/m³]"""
 
     p_plasma_outer_rad_mw: float = 0.0
     """radiation power from outer zone (MW)"""
@@ -1226,11 +1357,11 @@ class PhysicsData:
     p_neutron_total_mw: float = 0.0
     """Total neutron fusion power from plasma and beams [MW]"""
 
-    pden_neutron_total_mw: float = 0.0
-    """neutron fusion power per volume from beams and plasma (MW/m3)"""
+    pden_neutron_total_vol_avg_mw: float = 0.0
+    """Volume-averaged total neutron fusion power per volume [MW/m³]"""
 
-    pden_plasma_neutron_mw: float = 0.0
-    """neutron fusion power per volume just from plasma (MW/m3)"""
+    pden_plasma_neutron_vol_avg_mw: float = 0.0
+    """Volume-averaged neutron fusion power per volume just from plasma [MW/m³]"""
 
     p_plasma_ohmic_mw: float = 0.0
     """ohmic heating power (MW)"""
@@ -1256,8 +1387,8 @@ class PhysicsData:
     pradsolmw: float = 0.0
     """radiation power from SoL (MW)"""
 
-    proton_rate_density: float = 0.0
-    """Proton production rate [particles/m3/sec]"""
+    fusden_plasma_protons_vol_avg: float = 0.0
+    """Volume-averaged proton production rate [particles/m³/sec]"""
 
     psolradmw: float = 0.0
     """SOL radiation power (MW) (`stellarator only`)"""
@@ -1769,10 +1900,15 @@ class PhysicsData:
     - =3 MAST 2014 scaling 2
     """
 
-    dt_power_density_plasma: float = 0.0
-    sigmav_dt_average: float = 0.0
-    dhe3_power_density: float = 0.0
-    dd_power_density: float = 0.0
+    f_b_div_outboard_lower_flux_expansion: float = 5.0
+    """Outboard lower divertor flux expansion factor for the divertor targets (fₓ)"""
+
+    len_div_outboard_lower_scarabosio15_power_spreading: float = 0.0
+    """Scarabosio 2015 H-mode power spreading length/factor in the scrape-off layer scaling (S) [m]"""
+
+    len_div_outboard_lower_power_spreading: float = 0.0
+    """Power spreading length/factor at the outboard lower divertor target (S) [m]"""
+
     fusrat: float = 0.0
 
 

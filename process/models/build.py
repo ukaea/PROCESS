@@ -20,7 +20,7 @@ from process.models.physics.current_drive import (
     CurrentDriveMethodType,
     CurrentDriveModel,
 )
-from process.models.tfcoil.base import TFCoilShapeModel
+from process.models.tfcoil.base import TFCoilShapeModel, TFConductorModel
 from process.models.tfcoil.superconducting import SuperconductingTFWPShapeType
 
 logger = logging.getLogger(__name__)
@@ -495,29 +495,30 @@ class Build(Model):
         )
 
         #  Vertical locations of divertor coils
-        if i_single_null == DivertorNumberModels.DOUBLE_NULL:
-            self.data.build.z_tf_top = (
-                self.data.build.z_tf_inside_half + self.data.build.dr_tf_inboard
-            )
-            self.data.build.dz_tf_upper_lower_midplane = 0.0e0
-        else:
-            self.data.build.z_tf_top = (
-                self.data.build.dr_tf_inboard
-                + self.data.build.dr_tf_shld_gap
-                + self.data.build.dz_shld_thermal
-                + self.data.build.dz_shld_vv_gap
-                + self.data.build.dz_vv_upper
-                + self.data.build.dz_shld_upper
-                + self.data.build.dr_shld_blkt_gap
-                + self.data.build.dz_blkt_upper
-                + 0.5e0
-                * (self.data.build.dr_fw_inboard + self.data.build.dr_fw_outboard)
-                + self.data.build.dz_fw_plasma_gap
-                + self.data.build.z_plasma_xpoint_upper
-            )
-            self.data.build.dz_tf_upper_lower_midplane = self.data.build.z_tf_top - (
-                self.data.build.z_tf_inside_half + self.data.build.dr_tf_inboard
-            )
+        match DivertorNumberModels(i_single_null):
+            case DivertorNumberModels.DOUBLE_NULL:
+                self.data.build.z_tf_top = (
+                    self.data.build.z_tf_inside_half + self.data.build.dr_tf_inboard
+                )
+                self.data.build.dz_tf_upper_lower_midplane = 0.0e0
+            case DivertorNumberModels.SINGLE_NULL:
+                self.data.build.z_tf_top = (
+                    self.data.build.dr_tf_inboard
+                    + self.data.build.dr_tf_shld_gap
+                    + self.data.build.dz_shld_thermal
+                    + self.data.build.dz_shld_vv_gap
+                    + self.data.build.dz_vv_upper
+                    + self.data.build.dz_shld_upper
+                    + self.data.build.dr_shld_blkt_gap
+                    + self.data.build.dz_blkt_upper
+                    + 0.5e0
+                    * (self.data.build.dr_fw_inboard + self.data.build.dr_fw_outboard)
+                    + self.data.build.dz_fw_plasma_gap
+                    + self.data.build.z_plasma_xpoint_upper
+                )
+                self.data.build.dz_tf_upper_lower_midplane = self.data.build.z_tf_top - (
+                    self.data.build.z_tf_inside_half + self.data.build.dr_tf_inboard
+                )
 
     def divgeom(self, output: bool):
         """Divertor geometry calculation
@@ -904,6 +905,12 @@ class Build(Model):
                 maximum ripple (m)
             - flag: Applicability flag (0 = OK, non-zero = fitted-range concern)
 
+
+        Raises
+        ------
+        ProcessValueError
+            If the TF coil parameters are not properly defined.
+
         Notes
         -----
         - Fitted coefficients originate from parametric MAGINT runs (M. Kovari, 2014).
@@ -912,35 +919,36 @@ class Build(Model):
         - The routine sets an applicability flag when fitted-range assumptions are
         exceeded.
         """
-        if i_tf_sup == 1:
-            # Minimal inboard WP radius [m]
-            r_wp_min = r_tf_wp_inboard_inner
+        match TFConductorModel(i_tf_sup):
+            case TFConductorModel.SUPERCONDUCTING:
+                # Minimal inboard WP radius [m]
+                r_wp_min = r_tf_wp_inboard_inner
 
-            i_tf_wp_geom = SuperconductingTFWPShapeType(i_tf_wp_geom)
+                match SuperconductingTFWPShapeType(i_tf_wp_geom):
+                    case SuperconductingTFWPShapeType.RECTANGULAR:
+                        r_wp_max = r_wp_min
+                    case SuperconductingTFWPShapeType.DOUBLE_RECTANGULAR:
+                        r_wp_max = r_tf_wp_inboard_centre
+                    case SuperconductingTFWPShapeType.TRAPEZOIDAL:
+                        r_wp_max = r_tf_wp_inboard_outer
 
-            # Rectangular WP
-            if i_tf_wp_geom == SuperconductingTFWPShapeType.RECTANGULAR:
-                r_wp_max = r_wp_min
+                # Calculated maximum toroidal WP toroidal thickness [m]
+                dx_tf_wp_conductor_max = dx_tf_wp_primary_toroidal - 2.0 * (
+                    dx_tf_wp_insulation + dx_tf_wp_insertion_gap
+                )
 
-            # Double rectangle WP
-            elif i_tf_wp_geom == SuperconductingTFWPShapeType.DOUBLE_RECTANGULAR:
-                r_wp_max = r_tf_wp_inboard_centre
-
-            # Trapezoidal WP
-            elif i_tf_wp_geom == SuperconductingTFWPShapeType.TRAPEZOIDAL:
+            # Resistive magnet case
+            case (
+                TFConductorModel.WATER_COOLED_COPPER
+                | TFConductorModel.HELIUM_COOLED_ALUMINIUM
+            ):
+                # Radius used to define the dx_tf_wp_conductor_max [m]
                 r_wp_max = r_tf_wp_inboard_outer
+                # Calculated maximum toroidal WP toroidal thickness [m]
+                dx_tf_wp_conductor_max = 2.0e0 * r_wp_max * np.tan(np.pi / n_tf_coils)
 
-            # Calculated maximum toroidal WP toroidal thickness [m]
-            dx_tf_wp_conductor_max = dx_tf_wp_primary_toroidal - 2.0 * (
-                dx_tf_wp_insulation + dx_tf_wp_insertion_gap
-            )
-
-        # Resistive magnet case
-        else:
-            # Radius used to define the dx_tf_wp_conductor_max [m]
-            r_wp_max = r_tf_wp_inboard_outer
-            # Calculated maximum toroidal WP toroidal thickness [m]
-            dx_tf_wp_conductor_max = 2.0e0 * r_wp_max * np.tan(np.pi / n_tf_coils)
+            case _:
+                raise ProcessValueError("Unsupported TF conductor model.")
 
         flag = 0
         if i_tf_shape == TFCoilShapeModel.PICTURE_FRAME:
@@ -1315,29 +1323,30 @@ class Build(Model):
             "Ripple result may be inaccurate, as the fit has been extrapolated"
         )
 
-        if self.data.build.ripflag == 1:
-            warning_str = (
-                "(TF coil ripple calculation) "
-                "Dimensionless coil width X out of fitted range. %s"
-            )
-            diagnostic = (
-                self.data.tfcoil.dx_tf_wp_primary_toroidal
-                * self.data.tfcoil.n_tf_coils
-                / self.data.physics.rmajor
-            )
-        elif self.data.build.ripflag == 2:
-            warning_str = (
-                "(TF coil ripple calculation) "
-                "No. of TF coils not between 16 and 20 inclusive "
-            )
-            diagnostic = f"{self.data.tfcoil.n_tf_coils=}"
-        else:
-            diagnostic = (
-                self.data.physics.rmajor + self.data.physics.rminor
-            ) / self.data.build.r_tf_outboard_mid
-            warning_str = (
-                "(TF coil ripple calculation) (R+a)/rtot=%s out of fitted range.",
-            )
+        match self.data.build.ripflag:
+            case 1:
+                warning_str = (
+                    "(TF coil ripple calculation) "
+                    "Dimensionless coil width X out of fitted range. %s"
+                )
+                diagnostic = (
+                    self.data.tfcoil.dx_tf_wp_primary_toroidal
+                    * self.data.tfcoil.n_tf_coils
+                    / self.data.physics.rmajor
+                )
+            case 2:
+                warning_str = (
+                    "(TF coil ripple calculation) "
+                    "No. of TF coils not between 16 and 20 inclusive "
+                )
+                diagnostic = f"{self.data.tfcoil.n_tf_coils=}"
+            case _:
+                diagnostic = (
+                    self.data.physics.rmajor + self.data.physics.rminor
+                ) / self.data.build.r_tf_outboard_mid
+                warning_str = (
+                    "(TF coil ripple calculation) (R+a)/rtot=%s out of fitted range.",
+                )
 
         logger.warning(warning_str, diagnostic)
 

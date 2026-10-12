@@ -38,7 +38,7 @@ will produce the following output files in the same directory as the input file:
 
 ```
     my_file_name_MFILE.DAT
-    my_file_name_MFILE.DATSUMMARY.pdf
+    my_file_name_MFILE.DAT.SUMMARY.pdf
     my_file_name_OUT.DAT
     my_file_name_SIG_TF.json
     my_file_name_plotly_sankey.html

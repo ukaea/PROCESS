@@ -3,7 +3,8 @@
 import numpy as np
 import pytest
 
-from process.models.physics.plasma_current import PlasmaCurrent, PlasmaCurrentModel
+from process.data_structure.physics_variables import PlasmaCurrentModel
+from process.models.physics.plasma_current import PlasmaCurrent
 from process.models.physics.plasma_fields import PlasmaFields
 
 

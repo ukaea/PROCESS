@@ -244,7 +244,7 @@ class PlasmaBootstrapCurrent(Model):
                 radius_plasma_pedestal_density_norm=self.data.physics.radius_plasma_pedestal_density_norm,
                 nd_plasma_pedestal_electron=self.data.physics.nd_plasma_pedestal_electron,
                 n_greenwald=self.data.physics.nd_plasma_electron_max_array[6],
-                temp_plasma_pedestal_kev=self.data.physics.temp_plasma_pedestal_kev,
+                temp_plasma_pedestal_electron_kev=self.data.physics.temp_plasma_pedestal_electron_kev,
             )
         )
 
@@ -1203,7 +1203,7 @@ class PlasmaBootstrapCurrent(Model):
         radius_plasma_pedestal_density_norm: float,
         nd_plasma_pedestal_electron: float,
         n_greenwald: float,
-        temp_plasma_pedestal_kev: float,
+        temp_plasma_pedestal_electron_kev: float,
     ) -> float:
         """Calculate the bootstrap fraction using the H-mode scaling from the Sugiyama
         et al formula.
@@ -1232,7 +1232,7 @@ class PlasmaBootstrapCurrent(Model):
             Electron number density at the pedestal [m⁻³].
         n_greenwald : float
             Greenwald density limit [m⁻³].
-        temp_plasma_pedestal_kev : float
+        temp_plasma_pedestal_electron_kev : float
             Electron temperature at the pedestal [keV].
 
         Returns
@@ -1266,7 +1266,7 @@ class PlasmaBootstrapCurrent(Model):
             * (q95 / q0) ** -0.103
             * radius_plasma_pedestal_density_norm**0.367
             * (nd_plasma_pedestal_electron / n_greenwald) ** -0.174
-            * temp_plasma_pedestal_kev**0.0552
+            * temp_plasma_pedestal_electron_kev**0.0552
         )
 
     def output(self):
@@ -1506,10 +1506,7 @@ class SauterBootstrapCurrent(Model):
 
         # Calculate electron and ion temperature profiles
         tempe = plasma_profile.teprofile.profile_y
-        tempi = (
-            self.data.physics.temp_plasma_ion_vol_avg_kev
-            / self.data.physics.temp_plasma_electron_vol_avg_kev
-        ) * tempe
+        tempi = plasma_profile.tiprofile.profile_y
 
         # Flat Zeff profile assumed
         # Return tempi like array object filled with zeff

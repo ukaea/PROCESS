@@ -440,11 +440,11 @@ tbeta = 2.0
 * DESCRIPTION:   Temperature profile index beta
 * JUSTIFICATION: 
 
-temp_plasma_pedestal_kev = 4.199 
+temp_plasma_pedestal_electron_kev = 4.199 
 * DESCRIPTION:   Electron temperature of pedestal (kev)
 * JUSTIFICATION: Initial value - then over written by ieped=1 scaling 
 
-temp_plasma_separatrix_kev = 0.1
+temp_plasma_separatrix_electron_kev = 0.1
 * DESCRIPTION:   Electron temperature at separatrix (kev)
 * JUSTIFICATION: 
 

@@ -42,7 +42,7 @@ def calculate_radiation_powers(
     vol_plasma: float,
     data_structure: DataStructure,
 ) -> RadpwrData:
-    """Calculate the radiation powers in MW/m^3 by calling relevant routines.
+    """Calculate the radiation powers in [MW/m³] by calling relevant routines.
 
     This function computes the radiation power densities for the plasma, including
     impurity radiation and synchrotron radiation. It returns a dataclass containing
@@ -53,52 +53,45 @@ def calculate_radiation_powers(
     plasma_profile : PlasmaProfile
         The parameterized temperature and density profiles of the plasma.
     nd_plasma_electron_on_axis : float
-        Central electron density (m^-3).
+        Central electron density [m⁻³].
     rminor : float
-        Minor radius of the plasma (m).
+        Minor radius of the plasma [m].
     b_plasma_toroidal_on_axis : float
-        Toroidal magnetic field (T).
+        Toroidal magnetic field [T].
     aspect : float
-        Aspect ratio of the plasma.
+        Aspect ratio of the plasma [-].
     alphan : float
-        Alpha parameter for density profile.
+        Alpha parameter for density profile [-].
     alphat : float
-        Alpha parameter for temperature profile.
+        Alpha parameter for temperature profile [-].
     tbeta : float
-        Beta parameter for temperature profile.
+        Beta parameter for temperature profile [-].
     temp_plasma_electron_on_axis_kev : float
-        Central electron temperature (keV).
+        Central electron temperature [keV].
     f_sync_reflect : float
         Fraction of synchrotron radiation reflected.
     rmajor : float
-        Major radius of the plasma (m).
+        Major radius of the plasma [m].
     kappa : float
-        Elongation of the plasma.
+        Elongation of the plasma [-].
     vol_plasma : float
-        Plasma volume (m^3).
+        Plasma volume [m³].
 
     Returns
     -------
     RadpwrData
-        A dataclass containing the following radiation power densities:
-        - pden_plasma_sync_mw (float): Synchrotron radiation power per unit
-          volume (MW/m^3).
-        - pden_plasma_core_rad_mw (float): Total core radiation power per unit
-          volume (MW/m^3).
-        - pden_plasma_outer_rad_mw (float): Edge radiation power per unit
-          volume (MW/m^3).
-        - pden_plasma_rad_mw (float): Total radiation power per unit volume (MW/m^3).
+        A dataclass containing the radiation power densities in [MW/m³].
 
     References
     ----------
-        - F. Albajar, J. Johner, and G. Granata, “Improved calculation of synchrotron
-          radiation losses in realistic tokamak plasmas,” Nuclear Fusion, vol. 41,
-          no. 6, pp. 665-678, Jun. 2001,
-          doi: https://doi.org/10.1088/0029-5515/41/6/301.
+    [1] F. Albajar, J. Johner, and G. Granata, “Improved calculation of synchrotron
+    radiation losses in realistic tokamak plasmas,” Nuclear Fusion, vol. 41,
+    no. 6, pp. 665-678, Jun. 2001,
+    doi: https://doi.org/10.1088/0029-5515/41/6/301.
 
-        - I. Fidone, G Giruzzi, and G. Granata, “Synchrotron radiation loss in tokamaks
-          of arbitrary geometry,” Nuclear Fusion, vol. 41, no. 12, pp. 1755-1758,
-          Dec. 2001, doi: https://doi.org/10.1088/0029-5515/41/12/102.
+    [2] I. Fidone, G Giruzzi, and G. Granata, “Synchrotron radiation loss in tokamaks
+    of arbitrary geometry,” Nuclear Fusion, vol. 41, no. 12, pp. 1755-1758,
+    Dec. 2001, doi: https://doi.org/10.1088/0029-5515/41/12/102.
     """
     imp_rad = impurity.ImpurityRadiation(plasma_profile, data_structure)
     imp_rad.calculate_imprad()
@@ -109,18 +102,18 @@ def calculate_radiation_powers(
 
     # Synchrotron radiation power/volume; assumed to be from core only.
     pden_plasma_sync_mw = psync_albajar_fidone(
-        nd_plasma_electron_on_axis,
-        rminor,
-        b_plasma_toroidal_on_axis,
-        aspect,
-        alphan,
-        alphat,
-        tbeta,
-        temp_plasma_electron_on_axis_kev,
-        f_sync_reflect,
-        rmajor,
-        kappa,
-        vol_plasma,
+        nd_plasma_electron_on_axis=nd_plasma_electron_on_axis,
+        rminor=rminor,
+        b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+        aspect=aspect,
+        alphan=alphan,
+        alphat=alphat,
+        tbeta=tbeta,
+        temp_plasma_electron_on_axis_kev=temp_plasma_electron_on_axis_kev,
+        f_sync_reflect=f_sync_reflect,
+        rmajor=rmajor,
+        kappa=kappa,
+        vol_plasma=vol_plasma,
     )
 
     # Total core radiation power/volume.
@@ -132,10 +125,10 @@ def calculate_radiation_powers(
     pden_plasma_rad_mw = imp_rad.pden_impurity_rad_total_mw + pden_plasma_sync_mw
 
     return RadpwrData(
-        pden_plasma_sync_mw,
-        pden_plasma_core_rad_mw,
-        pden_plasma_outer_rad_mw,
-        pden_plasma_rad_mw,
+        pden_plasma_sync_mw=pden_plasma_sync_mw,
+        pden_plasma_core_rad_mw=pden_plasma_core_rad_mw,
+        pden_plasma_outer_rad_mw=pden_plasma_outer_rad_mw,
+        pden_plasma_rad_mw=pden_plasma_rad_mw,
     )
 
 
@@ -153,7 +146,7 @@ def psync_albajar_fidone(
     kappa: float,
     vol_plasma: float,
 ) -> float:
-    """Calculate the synchrotron radiation power in MW/m^3.
+    """Calculate the synchrotron radiation power in [MW/m³].
 
     This function computes the synchrotron radiation power density for the plasma based
     on the plasma shape, major and minor radii, electron density, and temperature
@@ -162,44 +155,44 @@ def psync_albajar_fidone(
     Parameters
     ----------
     nd_plasma_electron_on_axis : float
-        Central electron density (m^-3).
+        Central electron density [m⁻³].
     rminor : float
-        Minor radius of the plasma (m).
+        Minor radius of the plasma [m].
     b_plasma_toroidal_on_axis : float
-        Toroidal magnetic field (T).
+        Toroidal magnetic field [T].
     aspect : float
-        Aspect ratio of the plasma.
+        Aspect ratio of the plasma [-].
     alphan : float
-        Alpha parameter for density profile.
+        Alpha parameter for density profile [-].
     alphat : float
-        Alpha parameter for temperature profile.
+        Alpha parameter for temperature profile [-].
     tbeta : float
-        Beta parameter for temperature profile.
+        Beta parameter for temperature profile [-].
     temp_plasma_electron_on_axis_kev : float
-        Central electron temperature (keV).
+        Central electron temperature [keV].
     f_sync_reflect : float
-        Fraction of synchrotron radiation reflected.
+        Fraction of synchrotron radiation reflected [-].
     rmajor : float
-        Major radius of the plasma (m).
+        Major radius of the plasma [m].
     kappa : float
-        Elongation of the plasma.
+        Elongation of the plasma [-].
     vol_plasma : float
-        Plasma volume (m^3).
+        Plasma volume [m³].
 
     Returns
     -------
     float
-        Synchrotron radiation power per unit volume (MW/m^3).
+        Synchrotron radiation power per unit volume [MW/m³].
 
     References
     ----------
-    - F. Albajar, J. Johner, and G. Granata, “Improved calculation of synchrotron
-      radiation losses in realistic tokamak plasmas,” Nuclear Fusion, vol. 41, no. 6,
-      pp. 665-678, Jun. 2001, doi: https://doi.org/10.1088/0029-5515/41/6/301.
+    [1] F. Albajar, J. Johner, and G. Granata, “Improved calculation of synchrotron
+    radiation losses in realistic tokamak plasmas,” Nuclear Fusion, vol. 41, no. 6,
+    pp. 665-678, Jun. 2001, doi: https://doi.org/10.1088/0029-5515/41/6/301.
 
-    - I. Fidone, G Giruzzi, and G. Granata, “Synchrotron radiation loss in tokamaks of
-      arbitrary geometry,” Nuclear Fusion, vol. 41, no. 12, pp. 1755-1758, Dec. 2001,
-      doi: https://doi.org/10.1088/0029-5515/41/12/102.
+    [2] I. Fidone, G Giruzzi, and G. Granata, “Synchrotron radiation loss in tokamaks of
+    arbitrary geometry,” Nuclear Fusion, vol. 41, no. 12, pp. 1755-1758, Dec. 2001,
+    doi: https://doi.org/10.1088/0029-5515/41/12/102.
     """
     # Variable names are created to closely match those from the reference papers.
 

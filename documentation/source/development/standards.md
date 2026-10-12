@@ -259,6 +259,14 @@ This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 
 ---------------------
 
+##### Specific Heat Capacities
+
+- Specific heat capacities for materials $[\text{J/kg/K}]$ should start with the `heatcap_` prefix
+- Specific heat capacities at constant volume should start with the `heatcap_vol_` pefix
+- Specific heat capacities at constant pressure should start with the `heatcap_pres_` pefix
+
+---------------------
+
 ##### Pressures
 
 - Pressures should start with the `pres_` prefix
@@ -658,8 +666,10 @@ def function_name(param1: Any, param2: Any) -> Any:
 
     References
     ----------
-    - Reference 1: Description of the reference.
-    - Reference 2: Description of the reference.
+    [1] Description of reference 1. Preferably in IEEE reference format with a 
+    DOI link (if applicable).
+    [2] Description of reference 2. Preferably in IEEE reference format with a 
+    DOI link (if applicable).
     """
 ```
 

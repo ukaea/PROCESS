@@ -82,10 +82,32 @@ class ImpurityRadiationData:
             "W_",
         ])
     )
+    """Labels for impurity species"""
+
+    imp_full_ion_charge: list[int] = field(
+        default_factory=lambda: np.array([
+            1,
+            2,
+            4,
+            6,
+            7,
+            8,
+            10,
+            14,
+            18,
+            26,
+            28,
+            36,
+            54,
+            74,
+        ])
+    )
+    """Full ion charge of impurity species"""
 
     impurity_arr_label: list[str] = field(
         default_factory=lambda: np.full(N_IMPURITIES, "  ")
     )
+    """Array of impurity labels for internal use"""
 
     impurity_arr_z: list[float] = field(default_factory=lambda: np.zeros(N_IMPURITIES))
 

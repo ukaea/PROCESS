@@ -12,7 +12,12 @@ import scipy as sp
 from process.core import constants
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.models.physics.profiles import PlasmaProfileShapeType
+from process.models.physics.profiles import (
+    ElectronDensityProfile,
+    ElectronTemperatureProfile,
+    IonTemperatureProfile,
+    PlasmaProfileShapeType,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -22,23 +27,30 @@ class PlasmaProfile(Model):
     profiles and handles the required physics variables.
     """
 
-    def __init__(self, ne_profile, te_profile):
+    def __init__(
+        self,
+        ne_profile: ElectronDensityProfile,
+        te_profile: ElectronTemperatureProfile,
+        ti_profile: IonTemperatureProfile,
+    ):
         """
         Initialize the PlasmaProfile class.
 
         Args:
-            profile_size (int): The size of the plasma profile.
-            outfile (str): The output file path.
-            neprofile (ElectronDensityProfile): An instance of the ElectronDensityProfile
-            class.
-            teprofile (ElectronTemperatureProfile): An instance of the
+            ne_profile (ElectronDensityProfile): An instance of the
+            ElectronDensityProfile class.
+            te_profile (ElectronTemperatureProfile): An instance of the
             ElectronTemperatureProfile class.
+            ti_profile (IonTemperatureProfile): An instance of the
+            IonTemperatureProfile class.
+
         """
         # Default profile_size = 201, but it's possible to experiment with this value.
         # See `n_plasma_profile_elements`
         self.outfile = constants.NOUT
         self.neprofile = ne_profile
         self.teprofile = te_profile
+        self.tiprofile = ti_profile
 
     def run(self):
         """Subroutine to execute PlasmaProfile functions.
@@ -94,8 +106,10 @@ class PlasmaProfile(Model):
         if (
             self.data.physics.radius_plasma_pedestal_temp_norm != 1.0
             or self.data.physics.radius_plasma_pedestal_density_norm != 1.0
-            or self.data.physics.temp_plasma_pedestal_kev != 0.0
-            or self.data.physics.temp_plasma_separatrix_kev != 0.0
+            or self.data.physics.temp_plasma_pedestal_electron_kev != 0.0
+            or self.data.physics.temp_plasma_separatrix_electron_kev != 0.0
+            or self.data.physics.temp_plasma_pedestal_ion_kev != 0.0
+            or self.data.physics.temp_plasma_separatrix_ion_kev != 0.0
             or self.data.physics.nd_plasma_pedestal_electron != 0.0
             or self.data.physics.nd_plasma_separatrix_electron != 0.0
             or self.data.physics.tbeta != 2.0
@@ -104,16 +118,22 @@ class PlasmaProfile(Model):
                 "Parabolic plasma profiles is used for an L-Mode plasma, "
                 "but the physics variables do not describe an L-Mode plasma. "
                 "'radius_plasma_pedestal_temp_norm', "
-                "'radius_plasma_pedestal_density_norm', 'temp_plasma_pedestal_kev', "
-                "'temp_plasma_separatrix_kev', 'nd_plasma_pedestal_electron', "
+                "'radius_plasma_pedestal_density_norm', "
+                "'temp_plasma_pedestal_electron_kev', "
+                "'temp_plasma_separatrix_electron_kev', "
+                "'temp_plasma_pedestal_ion_kev', "
+                "'temp_plasma_separatrix_ion_kev', "
+                "'nd_plasma_pedestal_electron', "
                 "'nd_plasma_separatrix_electron', "
                 "and 'tbeta' have all been reset to L-Mode appropriate values"
             )
 
             self.data.physics.radius_plasma_pedestal_temp_norm = 1.0e0
             self.data.physics.radius_plasma_pedestal_density_norm = 1.0e0
-            self.data.physics.temp_plasma_pedestal_kev = 0.0e0
-            self.data.physics.temp_plasma_separatrix_kev = 0.0e0
+            self.data.physics.temp_plasma_pedestal_electron_kev = 0.0e0
+            self.data.physics.temp_plasma_separatrix_electron_kev = 0.0e0
+            self.data.physics.temp_plasma_pedestal_ion_kev = 0.0e0
+            self.data.physics.temp_plasma_separatrix_ion_kev = 0.0e0
             self.data.physics.nd_plasma_pedestal_electron = 0.0e0
             self.data.physics.nd_plasma_separatrix_electron = 0.0e0
             self.data.physics.tbeta = 2.0e0
@@ -121,6 +141,7 @@ class PlasmaProfile(Model):
         # Re-calculate core and profile values
         self.teprofile.run()
         self.neprofile.run()
+        self.tiprofile.run()
 
         #  Profile factor; ratio of density-weighted to volume-averaged
         #  temperature
@@ -201,6 +222,7 @@ class PlasmaProfile(Model):
         #  Re-calculate core and profile values
 
         self.teprofile.run()
+        self.tiprofile.run()
         self.neprofile.run()
 
         #  Perform integrations to calculate ratio of density-weighted
@@ -284,11 +306,7 @@ class PlasmaProfile(Model):
         self.data.physics.pres_plasma_ion_total_profile = (
             self.data.physics.nd_plasma_ions_total_vol_avg
             * (self.neprofile.profile_y / self.data.physics.nd_plasma_electrons_vol_avg)
-        ) * (
-            self.teprofile.profile_y
-            * constants.KILOELECTRON_VOLT
-            * self.data.physics.f_temp_plasma_ion_electron
-        )
+        ) * (self.tiprofile.profile_y * constants.KILOELECTRON_VOLT)
 
         # Total pressure profile (Pa)
         self.data.physics.pres_plasma_thermal_total_profile = (
@@ -327,11 +345,7 @@ class PlasmaProfile(Model):
         self.data.physics.pres_plasma_fuel_profile = (
             self.data.physics.nd_plasma_fuel_ions_vol_avg
             * (self.neprofile.profile_y / self.data.physics.nd_plasma_electrons_vol_avg)
-        ) * (
-            self.teprofile.profile_y
-            * constants.KILOELECTRON_VOLT
-            * self.data.physics.f_temp_plasma_ion_electron
-        )
+        ) * (self.tiprofile.profile_y * constants.KILOELECTRON_VOLT)
 
         #  Pressure profile index (only true for a parabolic profile)
         #  N.B. pres_plasma_thermal_on_axis is NOT equal to <p> * (1 + alphap),

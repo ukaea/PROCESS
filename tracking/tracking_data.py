@@ -105,7 +105,7 @@ DEFAULT_TRACKING_VARIABLES = {
     "Physics.triang",
     "Physics.triang95",
     "Physics.p_plasma_inner_rad_mw",
-    "Physics.temp_plasma_separatrix_kev",
+    "Physics.temp_plasma_separatrix_electron_kev",
     "Physics.f_nd_alpha_thermal_electron",
     "Physics.pflux_fw_neutron_mw",
     "Physics.aspect",
@@ -120,7 +120,7 @@ DEFAULT_TRACKING_VARIABLES = {
     "Physics.hfact",
     "Physics.kappa",
     "Physics.p_fusion_total_mw",
-    "Physics.temp_plasma_pedestal_kev",
+    "Physics.temp_plasma_pedestal_electron_kev",
     "Physics.p_plasma_loss_mw",
     "Physics.kappa95",
     "Physics.nd_plasma_pedestal_electron",
@@ -403,7 +403,7 @@ class TrackedData:
         data_time_str = f"{date_str.strip()} - {time_str.strip()}"
         date_time = datetime.datetime.strptime(
             data_time_str, "%d/%m/%Y - %H:%M"
-        ).replace(tzinfo=datetime.timezone.utc)
+        ).replace(tzinfo=datetime.UTC)
 
         tracking_data = json_file_data.get(
             "tracking", []

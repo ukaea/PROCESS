@@ -219,11 +219,12 @@ class Divertor(Model):
         #  Total divertor area
 
         # Single null case
-        if i_single_null == DivertorNumberModels.SINGLE_NULL:
-            areadv = a1 + a2 + a3
-        # Double null case
-        elif i_single_null == DivertorNumberModels.DOUBLE_NULL:
-            areadv = 2.0 * (a1 + a2 + a3)
+        match DivertorNumberModels(i_single_null):
+            case DivertorNumberModels.SINGLE_NULL:
+                areadv = a1 + a2 + a3
+            # Double null case
+            case DivertorNumberModels.DOUBLE_NULL:
+                areadv = 2.0 * (a1 + a2 + a3)
 
         if (
             DivertorHeatLoadModel(self.data.divertor.i_div_heat_load)
