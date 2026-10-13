@@ -524,9 +524,16 @@ class PlasmaReactions(Model):
         pb fusion reaction.
         
         """
-        sigma_v_profile = nevins_reactivity(
-            ion_temperature_profile=self.plasma_profile.tiprofile.profile_y,
-        )
+        if self.data.physics.i_pb_reactivity_model == 1:
+            sigma_v_profile = nevins_reactivity(
+                ion_temperature_profile=self.plasma_profile.tiprofile.profile_y,
+            )
+        elif self.data.physics.i_pb_reactivity_model == 2:
+            sigma_v_profile = tentori_belloni_reactivity(
+                ion_temperature_profile=self.plasma_profile.tiprofile.profile_y,
+            )
+        else:
+            raise ValueError(f"Invalid PB reaction model: {self.data.physics.i_pb_reactivity_model}")
 
         self.data.physics.fusden_plasma_pb_profile = (
             sigma_v_profile
@@ -1049,6 +1056,7 @@ class BeamReactions(Model):
                 self.p_beam_alpha_mw,
             ) = beam_fusion_p_b11(
                 sigmv_pb=self.data.physics.sigma_v_plasma_pb_vol_avg,
+                i_pb_reactivity_model=self.data.physics.i_pb_reactivity_model,
                 ti=self.data.physics.temp_plasma_ion_vol_avg_kev,
                 te=self.data.physics.temp_plasma_electron_vol_avg_kev,
                 vol_plasma=self.data.physics.vol_plasma,
@@ -1093,63 +1101,6 @@ class BoschHaleConstants:
     cc6: float
     cc7: float
 
-
-def fusion_rate_integral(
-    plasma_profile: PlasmaProfile,
-    reaction_constants: BoschHaleConstants,
-    physics_data: PhysicsData,
-) -> np.ndarray:
-    """Evaluate the integrand for the fusion power integration.
-
-    Parameters
-    ----------
-    plasma_profile :
-        Parameterised temperature and density profiles.
-    reaction_constants :
-        Bosch-Hale reaction constants.
-    physics_data: PhysicsData
-        physics dataclass
-
-    Returns
-    -------
-    :
-        np.ndarray: Integrand for the fusion power.
-
-    References
-    ----------
-        - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and
-        thermal reactivities,” Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
-        doi: https://doi.org/10.1088/0029-5515/32/4/i07.
-    """
-    # Since the electron temperature profile is only calculated directly, we scale the
-    # ion temperature profile by the ratio of the volume averaged ion to electron
-    # temperature
-    ion_temperature_profile = (
-        physics_data.temp_plasma_ion_vol_avg_kev
-        / physics_data.temp_plasma_electron_vol_avg_kev
-    ) * plasma_profile.teprofile.profile_y
-
-    # Number of fusion reactions per unit volume per particle volume density (m³/s)
-    if reaction_constants.bg > 0.0:
-        sigv = bosch_hale_reactivity(ion_temperature_profile, reaction_constants)
-    else:
-        sigv = nevins_reactivity(ion_temperature_profile)
-
-    # Integrand for the volume averaged fusion reaction rate sigmav:
-    # sigmav = integral(2 rho (sigv(rho) ni(rho)^2) drho),
-    # divided by the square of the volume-averaged ion density
-    # to retain the dimensions m^3/s (this is multiplied back in later)
-
-    # Set each point in the density profile as a fraction of the volume averaged density
-    density_profile_normalised = (
-        1.0 / physics_data.nd_plasma_electrons_vol_avg
-    ) * plasma_profile.neprofile.profile_y
-
-    # Calculate a volume averaged fusion reaction integral that allows for fusion power
-    # to be scaled with just the volume averaged ion density.
-    return (
-        2.0 * plasma_profile.teprofile.profile_x * sigv * density_profile_normalised**2
-    )
 
 
 def bosch_hale_reactivity(
@@ -1298,6 +1249,87 @@ def nevins_reactivity(
             / (teff_now ** 2)
             * np.nansum(e[1:] * sigma[1:] * np.diff(e) * np.exp(-e[1:] / teff_now))
         )
+        if len_teff == 1:
+            sgmv = sgmv_now
+        else:
+            sgmv[j] = sgmv_now
+    return sgmv
+
+def fsgmpb_tentori_belloni(e):
+    c0 = 197.0
+    c1 = 0.269
+    c2 = 2.54e-4
+    d0 = 346.0
+    d1 = 150.0
+    d2 = -59.9
+    d5 = -0.460
+    a0 = 1.98e6
+    a1 = 3.89e6
+    a2 = 1.36e6
+    a3 = 3.71e6
+    e0 = 640.9
+    e1 = 1211.0
+    e2 = 2340.0
+    e3 = 3294.0
+    de0 = 85.5
+    de1 = 414.0
+    de2 = 221
+    de3 = 351
+    b = 0.381
+    e = e * 1.0e-3  # keV to MeV
+    if e <= 0.400:
+        se = c0 + c1 * e * 1.0e3 + c2 * (e * 1.0e3)**2
+    elif e <= 0.668:
+        e_eff = (e - 0.400) * 10.0
+        se = d0 + d1 * e_eff + d2 * e_eff**2 + d5 * e_eff**5
+    elif e <= 9.76:
+        e_eff = e * 1.0e3
+        se = (
+            b + a0 / ((e_eff - e0)**2 + de0**2)
+            + a1 / ((e_eff - e1)**2 + de1**2)
+            + a2 / ((e_eff - e2)**2 + de2**2)
+            + a3 / ((e_eff - e3)**2 + de3**2)
+        )
+    else:
+        e_eff = 9.76 * 1.0e3
+        se = (
+            b + a0 / ((e_eff - e0)**2 + de0**2)
+            + a1 / ((e_eff - e1)**2 + de1**2)
+            + a2 / ((e_eff - e2)**2 + de2**2)
+            + a3 / ((e_eff - e3)**2 + de3**2)
+        )
+    return se / e * np.exp(-np.sqrt(22.589 / e))
+
+def tentori_belloni_reactivity(
+    ion_temperature_profile: np.ndarray,
+) -> np.ndarray:
+    """Calculate the volumetric fusion reaction rate 〈sigmav〉 (m³/s) for 
+    p-B reaction using the Tentori-Belloni parametrization.
+    """
+    mp = 1.007276466621 * 1.66053906660e-27
+    mb = 11 * mp
+    mr = (mp * mb) / (mp + mb) 
+
+    e = 10 ** np.arange(-2, np.log10(9.76), 0.0005)  # MeV
+
+    sigma = fsgmpb_tentori_belloni(e)
+
+    # analytic integral
+    sgmv = np.zeros_like(ion_temperature_profile)
+    if isinstance(ion_temperature_profile, float):
+        len_teff = 1
+    else:
+        len_teff = len(ion_temperature_profile)
+    for j in range(len_teff):
+        if len_teff == 1:
+            teff_now = ion_temperature_profile
+        else:
+            teff_now = ion_temperature_profile[j]
+        sgmv_now = (
+            np.sqrt(constants.KILOELECTRON_VOLT * teff_now * 8 / (np.pi * mr))
+            / (teff_now ** 2)
+            * np.nansum(e[1:] * sigma[1:] * np.diff(e) * np.exp(-e[1:] * 1.0e3 / teff_now))
+        ) * 1.0e6
         if len_teff == 1:
             sgmv = sgmv_now
         else:
@@ -1652,6 +1684,7 @@ def cal_beam_fusion_sigv(e_beam_kev, tau_slow_beam, e_crit_beam, s0_beam, m_fi, 
 
 def beam_fusion_p_b11(
     sigmv_pb: float,
+    i_pb_reactivity_model: int,
     ti: float,
     te: float,
     vol_plasma: float,
@@ -1667,7 +1700,12 @@ def beam_fusion_p_b11(
     e_beam_kev: float,
 ):
 
-    f_avg = sigmv_pb / nevins_reactivity(ti)
+    if i_pb_reactivity_model == 1:
+        f_avg = sigmv_pb / nevins_reactivity(ti)
+    elif i_pb_reactivity_model == 2:
+        f_avg = sigmv_pb / tentori_belloni_reactivity(ti)
+    else:
+        raise ValueError(f"Invalid PB reaction model: {i_pb_reactivity_model}")
     y = 8.68 * constants.ELECTRON_VOLT # MJ
 
     #
