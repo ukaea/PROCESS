@@ -250,7 +250,7 @@ jobs:
       - name: Download tracking data
         run: git clone git@github.com:timothy-nunn/process-tracking-data.git process-tracking-data
       - name: Download MFILEs
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
         with:
           name: tracked-mfiles
           path: tracking/
@@ -296,12 +296,12 @@ jobs:
           python-version: ${{ env.python-version }}
       - run: git config --global --add safe.directory '*'
       - name: Download STF_TF.json files
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
         with:
           name: sig-tfs
           path: tracking/
       - name: Download MFILEs
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
         with:
           name: tracked-mfiles
           path: tracking/
@@ -312,7 +312,7 @@ jobs:
         run: mv tracking/large_tokamak_nof_MFILE.DAT.SUMMARY.pdf documentation/source/images/plot_summary.pdf
       - run: hatch run docs:build
       - name: Download tracking html
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
         with:
           name: tracking-html
       - run: mv tracking.html site || cp site/404.html site/tracking.html
