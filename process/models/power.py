@@ -345,7 +345,7 @@ class Power(Model):
         #  Bussing losses assume aluminium bussing with 100 A/cm**2
         ic = -1
         n_pf_coil_groups = self.data.pf_coil.n_pf_coil_groups
-        if CSUseModel(self.data.build.iohcl) != CSUseModel.NO_CENTRAL_SOLENOID:
+        if CSUseModel(self.data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID:
             n_pf_coil_groups += 1
 
         # Map PF group to representative circuit index (used for busbar I^2R per circuit)

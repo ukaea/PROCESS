@@ -6,8 +6,8 @@ the central solenoid causes a change in the flux linked to the plasma region, in
 it. `PROCESS` calculates the amount of flux required to produce the plasma current, and also the 
 amount actually available. The code measures the magnetic flux in units of Volt.seconds (= Webers).
 
-Switch `iohcl` controls whether a central solenoid is present. A value of 1 denotes that this coil 
-is present, and should be assigned a non-zero thickness `dr_cs`. A value of `iohcl` = 0 denotes 
+Switch `i_cs_use` controls whether a central solenoid is present. A value of 1 denotes that this coil 
+is present, and should be assigned a non-zero thickness `dr_cs`. A value of `i_cs_use` = 0 denotes 
 that no central solenoid is present, in which case the thickness `dr_cs` should be zero. No PF 
 coils should be located at positions defined by `i_pf_location(j)` = 1 if no central solenoid is present.
 

@@ -153,7 +153,7 @@ class PFCoil(Model):
             self.data.pf_coil.n_cs_pf_coils += self.data.pf_coil.n_pf_coils_in_group[i]
 
         # Add one if an Central Solenoid is present, and make an extra group
-        if CSUseModel(self.data.build.iohcl) != CSUseModel.NO_CENTRAL_SOLENOID:
+        if CSUseModel(self.data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID:
             self.data.pf_coil.n_cs_pf_coils += 1
             self.data.pf_coil.n_pf_coils_in_group[self.data.pf_coil.n_pf_coil_groups] = 1
 
@@ -200,7 +200,7 @@ class PFCoil(Model):
 
         # nfxf is the total no of filaments into which the Central Solenoid is split,
         # if present
-        if CSUseModel(self.data.build.iohcl) == CSUseModel.NO_CENTRAL_SOLENOID:
+        if CSUseModel(self.data.build.i_cs_use) == CSUseModel.NO_CENTRAL_SOLENOID:
             self.data.pf_coil.nfxf = 0
             c_cs_flat_top_end = 0.0e0
         else:
@@ -461,11 +461,11 @@ class PFCoil(Model):
                         case PFLocationTypes.ABOVE_CS:
                             # Do not allow if no central solenoid
                             if (
-                                CSUseModel(self.data.build.iohcl)
+                                CSUseModel(self.data.build.i_cs_use)
                                 == CSUseModel.NO_CENTRAL_SOLENOID
                             ):
                                 raise ProcessValueError(
-                                    "i_pf_location(i) should not be 1 if iohcl=0"
+                                    "i_pf_location(i) should not be 1 if i_cs_use=0"
                                 )
                             # PF coil is stacked on top of the Central Solenoid
                             # This coil is to balance Central Solenoid flux and should
@@ -637,7 +637,7 @@ class PFCoil(Model):
         # Flux swing required from CS coil
         csflux = -(self.data.physics.vs_plasma_ramp_required) - pfflux
 
-        if CSUseModel(self.data.build.iohcl) == CSUseModel.FULL_PULSE:
+        if CSUseModel(self.data.build.i_cs_use) == CSUseModel.FULL_PULSE:
             # Required current change in CS coil
 
             # Proposed new calculation...
@@ -1058,7 +1058,7 @@ class PFCoil(Model):
         )
 
         # Find Central Solenoid information
-        if CSUseModel(self.data.build.iohcl) != CSUseModel.NO_CENTRAL_SOLENOID:
+        if CSUseModel(self.data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID:
             self.cs_coil.ohcalc()
 
         # Summation of weights and current
@@ -1631,7 +1631,7 @@ class PFCoil(Model):
         This routine calculates the volt-second capability of the PF
         coil system.
         """
-        if CSUseModel(self.data.build.iohcl) == CSUseModel.NO_CENTRAL_SOLENOID:
+        if CSUseModel(self.data.build.i_cs_use) == CSUseModel.NO_CENTRAL_SOLENOID:
             # No Central Solenoid
             self.data.pf_coil.nef = self.data.pf_coil.n_pf_cs_plasma_circuits - 1
         else:  # Full pulse
@@ -1657,7 +1657,7 @@ class PFCoil(Model):
             )
 
         # Central Solenoid startup volt-seconds
-        if CSUseModel(self.data.build.iohcl) != CSUseModel.NO_CENTRAL_SOLENOID:
+        if CSUseModel(self.data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID:
             self.data.pf_coil.vsdum[self.data.pf_coil.n_cs_pf_coils - 1, 0] = (
                 self.data.pf_coil.ind_pf_cs_plasma_mutual[
                     self.data.pf_coil.n_pf_cs_plasma_circuits - 1,
@@ -1687,7 +1687,7 @@ class PFCoil(Model):
         )
 
         # Burn volt-seconds
-        if CSUseModel(self.data.build.iohcl) != CSUseModel.NO_CENTRAL_SOLENOID:
+        if CSUseModel(self.data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID:
             self.data.pf_coil.vsdum[self.data.pf_coil.n_cs_pf_coils - 1, 2] = (
                 self.data.pf_coil.ind_pf_cs_plasma_mutual[
                     self.data.pf_coil.n_pf_cs_plasma_circuits - 1,
@@ -1792,7 +1792,7 @@ class PFCoil(Model):
         roh = np.zeros(noh)
         zoh = np.zeros(noh)
 
-        if CSUseModel(self.data.build.iohcl) != CSUseModel.NO_CENTRAL_SOLENOID:
+        if CSUseModel(self.data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID:
             roh[:] = pf_d.r_cs_middle
 
             delzoh = (
@@ -1821,7 +1821,7 @@ class PFCoil(Model):
             rc[i] = rplasma[i]
             zc[i] = zplasma[i]
 
-        if CSUseModel(self.data.build.iohcl) != CSUseModel.NO_CENTRAL_SOLENOID:
+        if CSUseModel(self.data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID:
             xohpl = 0.0
             if self.data.build.dr_cs >= delzoh:
                 deltar = math.sqrt((self.data.build.dr_cs**2 - delzoh**2) / 12.0e0)
@@ -1902,7 +1902,7 @@ class PFCoil(Model):
                     ncoilj - 1, pf_d.n_pf_cs_plasma_circuits - 1
                 ]
 
-        if CSUseModel(self.data.build.iohcl) != CSUseModel.NO_CENTRAL_SOLENOID:
+        if CSUseModel(self.data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID:
             # Central Solenoid self inductance
             a = pf_d.r_cs_middle  # mean radius of coil
             b = 2.0e0 * pf_d.z_pf_coil_upper[pf_d.n_cs_pf_coils - 1]  # length of coil
@@ -1953,7 +1953,7 @@ class PFCoil(Model):
                     )
 
         # PF coil - PF coil inductances
-        if CSUseModel(self.data.build.iohcl) == CSUseModel.NO_CENTRAL_SOLENOID:
+        if CSUseModel(self.data.build.i_cs_use) == CSUseModel.NO_CENTRAL_SOLENOID:
             pf_d.nef = pf_d.n_cs_pf_coils
         else:
             pf_d.nef = pf_d.n_cs_pf_coils - 1
@@ -2009,7 +2009,7 @@ class PFCoil(Model):
                     f"{ig + 1}\t{pf_d.ind_pf_cs_plasma_mutual[:n_pf_cs, ig]}",
                 )
 
-            if CSUseModel(self.data.build.iohcl) != CSUseModel.NO_CENTRAL_SOLENOID:
+            if CSUseModel(self.data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID:
                 op.write(
                     self.outfile,
                     f"CS\t{pf_d.ind_pf_cs_plasma_mutual[:n_pf_cs, n_pf_cs - 2]}",
@@ -2043,10 +2043,10 @@ class PFCoil(Model):
         op.ovarre(
             self.mfile,
             "Existence_of_central_solenoid",
-            "(iohcl)",
-            self.data.build.iohcl,
+            "(i_cs_use)",
+            self.data.build.i_cs_use,
         )
-        if CSUseModel(self.data.build.iohcl) == CSUseModel.NO_CENTRAL_SOLENOID:
+        if CSUseModel(self.data.build.i_cs_use) == CSUseModel.NO_CENTRAL_SOLENOID:
             op.ocmmnt(self.outfile, "No central solenoid included")
             op.oblnkl(self.outfile)
         elif pf_d.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
@@ -2396,7 +2396,7 @@ class PFCoil(Model):
                 pf_d.p_pf_coil_resistive_total_flat_top,
                 "OP ",
             )
-            if CSUseModel(self.data.build.iohcl) != CSUseModel.NO_CENTRAL_SOLENOID:
+            if CSUseModel(self.data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID:
                 op.ovarre(
                     self.outfile,
                     "Central solenoid resistive power (W)",
@@ -2407,7 +2407,7 @@ class PFCoil(Model):
 
         # pf_d.nef is the number of coils excluding the Central Solenoid
         pf_d.nef = pf_d.n_cs_pf_coils
-        if CSUseModel(self.data.build.iohcl) != CSUseModel.NO_CENTRAL_SOLENOID:
+        if CSUseModel(self.data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID:
             pf_d.nef -= 1
 
         op.osubhd(self.outfile, "Geometry of PF coils, central solenoid and plasma:")
@@ -2425,7 +2425,7 @@ class PFCoil(Model):
             for k in range(pf_d.nef)
         ]
 
-        if CSUseModel(self.data.build.iohcl) != CSUseModel.NO_CENTRAL_SOLENOID:
+        if CSUseModel(self.data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID:
             cs_index = pf_d.n_cs_pf_coils - 1
             pf_centre = abs(
                 pf_d.z_pf_coil_upper[cs_index] - pf_d.z_pf_coil_lower[cs_index]
@@ -2517,7 +2517,7 @@ class PFCoil(Model):
             )
         self.tf_pf_collision_detector()
 
-        if CSUseModel(self.data.build.iohcl) != CSUseModel.NO_CENTRAL_SOLENOID:
+        if CSUseModel(self.data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID:
             op.ovarre(
                 self.mfile,
                 "Central solenoid radius (m)",
@@ -2602,7 +2602,7 @@ class PFCoil(Model):
                 ])
 
         # Central Solenoid, if present
-        if CSUseModel(self.data.build.iohcl) != CSUseModel.NO_CENTRAL_SOLENOID:
+        if CSUseModel(self.data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID:
             cs_index = pf_d.n_cs_pf_coils - 1
             cs_peak_j = max(
                 abs(pf_d.j_cs_pulse_start),
@@ -2804,7 +2804,7 @@ class PFCoil(Model):
 
         for k in range(self.data.pf_coil.n_pf_cs_plasma_circuits - 1):
             if (
-                CSUseModel(self.data.build.iohcl) != CSUseModel.NO_CENTRAL_SOLENOID
+                CSUseModel(self.data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID
             ) and (k == self.data.pf_coil.n_pf_cs_plasma_circuits - 2):
                 line = ["CS"]
             else:
@@ -2835,7 +2835,7 @@ class PFCoil(Model):
         rows = []
         for k in range(pf_d.n_pf_cs_plasma_circuits - 1):
             if (
-                CSUseModel(self.data.build.iohcl) != CSUseModel.NO_CENTRAL_SOLENOID
+                CSUseModel(self.data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID
             ) and (k == self.data.pf_coil.n_pf_cs_plasma_circuits - 2):
                 rows.append([
                     "CS",
@@ -2873,7 +2873,7 @@ class PFCoil(Model):
         rows = []
         for k in range(pf_d.n_pf_cs_plasma_circuits - 1):
             if (
-                CSUseModel(self.data.build.iohcl) != CSUseModel.NO_CENTRAL_SOLENOID
+                CSUseModel(self.data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID
             ) and (k == self.data.pf_coil.n_pf_cs_plasma_circuits - 2):
                 rows.append([
                     "CS",
@@ -2935,7 +2935,8 @@ class PFCoil(Model):
                     circuit_name = f"Plasma Time point {jjj} (A)"
                     circuit_var_name = f"(plasmat{jjj})"
                 elif (
-                    CSUseModel(self.data.build.iohcl) != CSUseModel.NO_CENTRAL_SOLENOID
+                    CSUseModel(self.data.build.i_cs_use)
+                    != CSUseModel.NO_CENTRAL_SOLENOID
                 ) and (k == self.data.pf_coil.n_pf_cs_plasma_circuits - 2):
                     circuit_name = f"CS Circuit Time point {jjj} (A)"
                     circuit_var_name = f"(cs t{jjj})"
@@ -4550,7 +4551,7 @@ def peak_b_field_at_pf_coil(
     The calculation includes the effects from all the coils and the plasma.
     """
     if (
-        CSUseModel(data.build.iohcl) != CSUseModel.NO_CENTRAL_SOLENOID
+        CSUseModel(data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID
         and n_coil == data.pf_coil.n_cs_pf_coils
     ):
         # Peak field is to be calculated at the Central Solenoid itself,
@@ -4591,7 +4592,7 @@ def peak_b_field_at_pf_coil(
                 t_b_field_peak=t_b_field_peak,
             )
 
-        if CSUseModel(data.build.iohcl) == CSUseModel.NO_CENTRAL_SOLENOID:
+        if CSUseModel(data.build.i_cs_use) == CSUseModel.NO_CENTRAL_SOLENOID:
             # No Central Solenoid
             kk = 0
         else:
@@ -4721,7 +4722,7 @@ def peak_b_field_at_pf_coil(
     )
 
     # b_pf_coil_peak and bpf2 for the Central Solenoid are calculated in OHCALC
-    if (CSUseModel(data.build.iohcl) != CSUseModel.NO_CENTRAL_SOLENOID) and (
+    if (CSUseModel(data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID) and (
         n_coil == data.pf_coil.n_cs_pf_coils
     ):
         return (

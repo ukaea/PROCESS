@@ -1627,7 +1627,7 @@ class Costs(Model):
 
         #  Non-Central Solenoid coils
 
-        if CSUseModel(self.data.build.iohcl) != CSUseModel.NO_CENTRAL_SOLENOID:
+        if CSUseModel(self.data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID:
             npf = self.data.pf_coil.n_cs_pf_coils - 1
         else:
             npf = self.data.pf_coil.n_cs_pf_coils
@@ -1715,7 +1715,7 @@ class Costs(Model):
 
         #  Central Solenoid
 
-        if CSUseModel(self.data.build.iohcl) == CSUseModel.FULL_PULSE:
+        if CSUseModel(self.data.build.i_cs_use) == CSUseModel.FULL_PULSE:
             #  Superconductor ($/m)
             if self.data.costs.supercond_cost_model == 0:
                 #  Issue #328  Use CS conductor cross-sectional area (m2)
