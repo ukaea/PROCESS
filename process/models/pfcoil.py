@@ -194,8 +194,6 @@ class PFCoil(Model):
         self.data.pf_coil.r_cs_inner = self.data.pf_coil.r_pf_coil_inner[
             self.data.pf_coil.n_cs_pf_coils - 1
         ] = cs_geometry.r_cs_coil_inner
-        self.data.pf_coil.a_cs_poloidal = cs_geometry.a_cs_poloidal
-        self.data.pf_coil.a_cs_toroidal = cs_geometry.a_cs_toroidal
         self.data.pf_coil.dz_cs_full = cs_geometry.dz_cs_full
         self.data.pf_coil.dr_cs_full = cs_geometry.dr_cs_full
 
@@ -3073,10 +3071,6 @@ class CSGeometry:
     """Outer radius of CS coil (m)"""
     r_cs_coil_inner: float
     """Inner radius of CS coil (m)"""
-    a_cs_poloidal: float
-    """Total poloidal cross-sectional area of CS coil (m²)"""
-    a_cs_toroidal: float
-    """Total top-down toroidal cross-sectional area of CS coil (m²)"""
     dz_cs_full: float
     """Full height of CS coil (m)"""
     dr_cs_full: float
@@ -3166,12 +3160,6 @@ class CSCoil(Model):
         # Full radial thickness of CS coil
         dr_cs_full = 2 * r_cs_coil_outer
 
-        # Total poloidal cross-sectional area [m²]
-        a_cs_poloidal = dz_cs_full * dr_cs
-
-        # Total top-down toroidal cross-sectional area [m²]
-        a_cs_toroidal = np.pi * (r_cs_coil_outer**2 - r_cs_coil_inner**2)
-
         return CSGeometry(
             z_cs_coil_upper=z_cs_coil_upper,
             z_cs_coil_lower=z_cs_coil_lower,
@@ -3180,8 +3168,6 @@ class CSCoil(Model):
             z_cs_coil_middle=z_cs_coil_middle,
             r_cs_coil_outer=r_cs_coil_outer,
             r_cs_coil_inner=r_cs_coil_inner,
-            a_cs_poloidal=a_cs_poloidal,
-            a_cs_toroidal=a_cs_toroidal,
             dz_cs_full=dz_cs_full,
             dr_cs_full=dr_cs_full,
         )
@@ -3368,8 +3354,6 @@ class CSCoil(Model):
         self.data.pf_coil.r_cs_inner = self.data.pf_coil.r_pf_coil_inner[
             self.data.pf_coil.n_cs_pf_coils - 1
         ] = cs_geometry.r_cs_coil_inner
-        self.data.pf_coil.a_cs_poloidal = cs_geometry.a_cs_poloidal
-        self.data.pf_coil.a_cs_toroidal = cs_geometry.a_cs_toroidal
         self.data.pf_coil.dz_cs_full = cs_geometry.dz_cs_full
         self.data.pf_coil.dr_cs_full = cs_geometry.dr_cs_full
 

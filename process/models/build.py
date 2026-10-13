@@ -76,6 +76,34 @@ class Build(Model):
             dx_beam_shield=self.data.current_drive.dx_beam_shield,
         )
 
+        self.calculate_cs_area()
+
+    def calculate_cs_area(self):
+        """Calculates the CS cross-sectional areas."""
+        # Central Solenoid mean radius
+        r_cs_middle = self.data.build.dr_cs_bore + (0.5e0 * self.data.build.dr_cs)
+
+        # Scale the CS height relative to TF bore height
+        z_cs_half = (
+            self.data.build.z_tf_inside_half * self.data.pf_coil.f_z_cs_tf_internal
+        )
+
+        dz_cs_full = 2.0e0 * z_cs_half  # Full height of CS coil
+
+        # Radius of outer edge
+        r_cs_coil_outer = r_cs_middle + 0.5e0 * self.data.build.dr_cs
+
+        # Radius of inner edge
+        r_cs_coil_inner = r_cs_coil_outer - self.data.build.dr_cs
+
+        # Total poloidal cross-sectional area [m²]
+        self.data.pf_coil.a_cs_poloidal = dz_cs_full * self.data.build.dr_cs
+
+        # Total top-down toroidal cross-sectional area [m²]
+        self.data.pf_coil.a_cs_toroidal = np.pi * (
+            r_cs_coil_outer**2 - r_cs_coil_inner**2
+        )
+
     @staticmethod
     def calculate_beam_port_size(
         f_radius_beam_tangency_rmajor: float,
