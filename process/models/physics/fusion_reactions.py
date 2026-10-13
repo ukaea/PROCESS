@@ -1276,7 +1276,6 @@ def fsgmpb_tentori_belloni(e):
     de2 = 221
     de3 = 351
     b = 0.381
-    e = e * 1.0e-3  # keV to MeV
     if e <= 0.400:
         se = c0 + c1 * e * 1.0e3 + c2 * (e * 1.0e3)**2
     elif e <= 0.668:
@@ -1298,7 +1297,7 @@ def fsgmpb_tentori_belloni(e):
             + a2 / ((e_eff - e2)**2 + de2**2)
             + a3 / ((e_eff - e3)**2 + de3**2)
         )
-    return se / e * np.exp(-np.sqrt(22.589 / e))
+    return se / e * np.exp(-np.sqrt(22.589 / e)) * 1.0e-28
 
 def tentori_belloni_reactivity(
     ion_temperature_profile: np.ndarray,
@@ -1312,7 +1311,7 @@ def tentori_belloni_reactivity(
 
     e = 10 ** np.arange(-2, np.log10(9.76), 0.0005)  # MeV
 
-    sigma = fsgmpb_tentori_belloni(e)
+    sigma = np.array([fsgmpb_tentori_belloni(ee) for ee in e])
 
     # analytic integral
     sgmv = np.zeros_like(ion_temperature_profile)
