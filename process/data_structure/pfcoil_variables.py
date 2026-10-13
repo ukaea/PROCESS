@@ -15,6 +15,15 @@ class PFConductorModel(IntEnum):
 
     SUPERCONDUCTING = 0
     RESISTIVE = 1
+    
+@unique
+class CSUseModel(IntEnum):
+    """Enumeration for Central Solenoid usage models."""
+
+    NO_CENTRAL_SOLENOID = 0
+    """No central solenoid is present"""
+    FULL_PULSE = 1
+    """Central solenoid is used to drive the plasma current for the full pulse"""
 
 
 N_PF_GROUPS_MAX = 10
