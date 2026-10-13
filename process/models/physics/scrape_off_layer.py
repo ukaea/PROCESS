@@ -680,6 +680,8 @@ class ScrapeOffLayer(Model):
         doi: 10.1016/j.jnucmat.2014.11.076.
 
         """
+        if nd_plasma_separatrix_electron_19 == 0.0:
+            return np.inf
         return (
             0.12e-3
             * p_plasma_separatrix_mw**0.21
