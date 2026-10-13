@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from process.data_structure.pfcoil_variables import CSUseModel
+
 if TYPE_CHECKING:
     from process.core.data_structure.base import DataStructure
 
@@ -23,7 +25,7 @@ def st_init(data: DataStructure):
     # Build quantities
 
     data.build.dr_cs = 0.0
-    data.build.iohcl = 0
+    data.build.iohcl = CSUseModel.NO_CENTRAL_SOLENOID
     data.pf_coil.f_z_cs_tf_internal = 0.0
     data.build.dr_cs_tf_gap = 0.0
     data.build.f_dr_tf_outboard_inboard = 1.0

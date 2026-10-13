@@ -15,7 +15,8 @@ class PFConductorModel(IntEnum):
 
     SUPERCONDUCTING = 0
     RESISTIVE = 1
-    
+
+
 @unique
 class CSUseModel(IntEnum):
     """Enumeration for Central Solenoid usage models."""

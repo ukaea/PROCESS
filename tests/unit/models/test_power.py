@@ -3,6 +3,7 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
+from process.data_structure.pfcoil_variables import CSUseModel
 from process.models.pulse import PulseTimings
 
 
@@ -197,7 +198,7 @@ class PfpwrParam(NamedTuple):
     "pfpwrparam",
     [
         PfpwrParam(
-            iohcl=1,
+            iohcl=CSUseModel.FULL_PULSE,
             poloidalpower=np.zeros(5),
             n_pf_coil_groups=4,
             c_pf_coil_turn=np.array(
@@ -812,7 +813,7 @@ class PfpwrParam(NamedTuple):
             expected_srcktpm=1071.1112934857531,
         ),
         PfpwrParam(
-            iohcl=1,
+            iohcl=CSUseModel.FULL_PULSE,
             poloidalpower=np.array(
                 np.array(
                     (59332953.082890816, 43806300.444207191, 0, 0, -211211992.31967318),

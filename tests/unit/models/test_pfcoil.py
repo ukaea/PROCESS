@@ -16,6 +16,7 @@ from numpy.testing import assert_array_almost_equal
 from process.core import constants
 from process.data_structure.pfcoil_variables import (
     N_PF_COILS_IN_GROUP_MAX,
+    CSUseModel,
     PFConductorModel,
 )
 from process.models.pfcoil import (
@@ -2489,7 +2490,7 @@ class PFCoilParam(NamedTuple):
     "pfcoilparam",
     [
         PFCoilParam(
-            iohcl=1,
+            iohcl=CSUseModel.FULL_PULSE,
             dz_tf_upper_lower_midplane=0.0,
             z_tf_top=4.0,
             z_tf_inside_half=8.8,
@@ -3592,7 +3593,7 @@ def test_peakb(monkeypatch, pfcoil):
     monkeypatch.setattr(pfcoil.data.pf_coil, "xind", np.zeros(64))
     monkeypatch.setattr(pfcoil.data.pf_coil, "bpf2", np.zeros(22))
 
-    monkeypatch.setattr(pfcoil.data.build, "iohcl", 1)
+    monkeypatch.setattr(pfcoil.data.build, "iohcl", CSUseModel.FULL_PULSE)
     monkeypatch.setattr(pfcoil.data.pf_coil, "a_cs_poloidal", 9.0218815014803365874412)
     monkeypatch.setattr(pfcoil.data.build, "z_tf_inside_half", 9.0730900215620327)
     monkeypatch.setattr(pfcoil.data.build, "dr_cs", 0.55242000000000002)
@@ -3882,7 +3883,7 @@ def test_induct(pfcoil, monkeypatch):
     :param monkeypatch: mocking fixture
     :type monkeypatch: _pytest.monkeypatch.MonkeyPatch
     """
-    monkeypatch.setattr(pfcoil.data.build, "iohcl", 1)
+    monkeypatch.setattr(pfcoil.data.build, "iohcl", CSUseModel.FULL_PULSE)
     monkeypatch.setattr(pfcoil.data.build, "dr_cs", 0.55242000000000002)
     monkeypatch.setattr(pfcoil.data.pf_coil, "n_cs_pf_coils", 7)
     monkeypatch.setattr(

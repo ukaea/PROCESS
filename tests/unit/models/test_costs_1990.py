@@ -5,7 +5,7 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.data_structure.pfcoil_variables import PFConductorModel
+from process.data_structure.pfcoil_variables import CSUseModel, PFConductorModel
 from process.data_structure.vacuum_variables import VacuumPumpType
 from process.models.engineering.pumping import CoolantType
 from process.models.superconductors import (
@@ -1927,7 +1927,7 @@ class Acc2222Param(NamedTuple):
     "acc2222param",
     [
         Acc2222Param(
-            iohcl=1,
+            iohcl=CSUseModel.FULL_PULSE,
             uccase=50,
             uccu=75,
             cconshpf=70,
@@ -2118,7 +2118,7 @@ class Acc2222Param(NamedTuple):
             expected_c22224=9.1894413521392071,
         ),
         Acc2222Param(
-            iohcl=1,
+            iohcl=CSUseModel.FULL_PULSE,
             uccase=50,
             uccu=75,
             cconshpf=70,
@@ -2309,7 +2309,7 @@ class Acc2222Param(NamedTuple):
             expected_c22224=9.1894413521392071,
         ),
         Acc2222Param(
-            iohcl=1,
+            iohcl=CSUseModel.FULL_PULSE,
             uccase=50,
             uccu=75,
             cconshpf=70,
