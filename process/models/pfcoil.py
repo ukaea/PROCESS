@@ -122,7 +122,6 @@ class PFCoil(Model):
         brin, bzin, rpts, zpts = np.zeros((4, NPTSMX))
         bfix, bvec = np.zeros((2, lrow1))
         gmat, _, _ = np.zeros((3, lrow1, lcol1), order="F")
-        signn = np.zeros(2)
         aturn = np.zeros(NGC2)
 
         # Toggle switch for i_pf_location()=2 coils above/below midplane
@@ -238,8 +237,6 @@ class PFCoil(Model):
             )
 
         # Scale PF coil locations
-        signn[0] = 1.0e0
-        signn[1] = -1.0e0
         self.data.pf_coil.r_pf_outside_tf_midplane = (
             self.data.superconducting_tfcoil.r_tf_outboard_out
             + self.data.pf_coil.dr_pf_tf_outboard_out_offset
