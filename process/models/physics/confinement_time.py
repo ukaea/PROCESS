@@ -89,51 +89,52 @@ class PlasmaConfinementTime(Model):
         Parameters
         ----------
         m_fuel_amu :
-            Average mass of fuel (amu)
+            Average mass of fuel [amu]
         p_alpha_total_mw :
-            Alpha particle power (MW)
+            Alpha particle power [MW]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         b_plasma_toroidal_on_axis :
-            Toroidal field on axis (T)
+            Toroidal field on axis [T]
         nd_plasma_electrons_vol_avg :
-            Volume averaged electron density (/m3)
+            Volume averaged electron density [/m³]
         nd_plasma_electron_line :
-            Line-averaged electron density (/m3)
+            Line-averaged electron density [/m³]
         eps :
-            Inverse aspect ratio
+            Inverse aspect ratio [-]
         hfact :
-            H factor on energy confinement scalings
+            H factor on energy confinement scalings [-]
         i_confinement_time :
-            Switch for energy confinement scaling to use
+            Switch for energy confinement scaling to use [-]
         i_plasma_ignited :
-            Switch for ignited calculation
+            Switch for ignited calculation [-]
         kappa :
-            Plasma elongation
+            Plasma elongation [-]
         kappa95 :
-            Plasma elongation at 95% surface
+            Plasma elongation at 95% surface [-]
         p_non_alpha_charged_mw :
-            Non-alpha charged particle fusion power (MW)
+            Non-alpha charged particle fusion power [MW]
         p_hcd_injected_total_mw :
-            Auxiliary power to ions and electrons (MW)
+            Auxiliary power to ions and electrons [MW]
         plasma_current :
-            Plasma current (A)
+            Plasma current [A]
         pden_plasma_core_rad_reduced_vol_avg_mw :
-            Total reduced core radiation power (MW/m3)
+            Total reduced core radiation power [MW/m³]
         q95 :
-            Edge safety factor (tokamaks), or rotational transform iotabar (stellarators)
+            Edge safety factor (tokamaks), or rotational transform iotabar
+            (stellarators) [-]
         qstar :
-            Equivalent cylindrical edge safety factor
+            Equivalent cylindrical edge safety factor [-]
         rmajor :
-            Plasma major radius (m)
+            Plasma major radius [m]
         rminor :
-            Plasma minor radius (m)
+            Plasma minor radius [m]
         temp_plasma_electron_density_weighted_kev :
-            Density weighted average electron temperature (keV)
+            Density weighted average electron temperature [keV]
         vol_plasma :
-            Plasma volume (m3)
+            Plasma volume [m³]
         zeff :
-            Plasma effective charge
+            Plasma effective charge [-]
         eden_plasma_electrons_thermal_vol_avg :
             Volume averaged electron thermal energy density [J/m³]
         eden_plasma_ions_thermal_vol_avg :
