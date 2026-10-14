@@ -696,12 +696,14 @@ class PFCoil(Model):
 
                 # Currents at different times:
 
-                # If PF coil currents are computed, not input via ccl0_ma,
-                # cur_pf_group_equilibrium_ma:
-                # Then set ccl0_ma,cur_pf_group_equilibrium_ma from the computed
-                # pf_coil.cur_pf_group_flux_swing_cancellation, pf_coil.cur_pf_group_equilibrium
+                # If PF coil currents are computed, not input via
+                # cur_pf_group_flux_swing_cancellation_ma, cur_pf_group_equilibrium_ma:
+                # Then set cur_pf_group_flux_swing_cancellation_ma,
+                # cur_pf_group_equilibrium_ma from the computed
+                # pf_coil.cur_pf_group_flux_swing_cancellation,
+                # pf_coil.cur_pf_group_equilibrium
                 if self.data.pf_coil.i_pf_current != 0:
-                    self.data.pf_coil.ccl0_ma[nng] = (
+                    self.data.pf_coil.cur_pf_group_flux_swing_cancellation_ma[nng] = (
                         1.0e-6
                         * self.data.pf_coil.cur_pf_group_flux_swing_cancellation[nng]
                     )
@@ -710,10 +712,13 @@ class PFCoil(Model):
                     )
                 else:
                     # Otherwise set
-                    # self.data.pf_coil.cur_pf_group_flux_swing_cancellation,self.data.pf_coil.cur_pf_group_equilibrium
-                    # via the input ccl0_ma and cur_pf_group_equilibrium_ma
+                    # self.data.pf_coil.cur_pf_group_flux_swing_cancellation,
+                    # self.data.pf_coil.cur_pf_group_equilibrium
+                    # via the input cur_pf_group_flux_swing_cancellation_ma
+                    # and cur_pf_group_equilibrium_ma
                     self.data.pf_coil.cur_pf_group_flux_swing_cancellation[nng] = (
-                        1.0e6 * self.data.pf_coil.ccl0_ma[nng]
+                        1.0e6
+                        * self.data.pf_coil.cur_pf_group_flux_swing_cancellation_ma[nng]
                     )
                     self.data.pf_coil.cur_pf_group_equilibrium[nng] = (
                         1.0e6 * self.data.pf_coil.cur_pf_group_equilibrium_ma[nng]

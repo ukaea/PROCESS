@@ -2456,7 +2456,7 @@ class PFCoilParam(NamedTuple):
     i_r_pf_outside_tf_placement: Any = None
     rref: Any = None
     i_pf_current: Any = None
-    ccl0_ma: Any = None
+    cur_pf_group_flux_swing_cancellation_ma: Any = None
     cur_pf_group_equilibrium_ma: Any = None
     kappa: Any = None
     ind_plasma_internal_norm: Any = None
@@ -2529,7 +2529,7 @@ class PFCoilParam(NamedTuple):
             i_r_pf_outside_tf_placement=0,
             rref=np.full(10, 7.0),
             i_pf_current=1,
-            ccl0_ma=np.full(10, 0.0),
+            cur_pf_group_flux_swing_cancellation_ma=np.full(10, 0.0),
             cur_pf_group_equilibrium_ma=np.full(10, 0.0),
             kappa=1.727,
             ind_plasma_internal_norm=1.693,
@@ -2620,7 +2620,7 @@ def test_pfcoil(monkeypatch, pfcoil, pfcoilparam):
         "i_r_pf_outside_tf_placement",
         "rref",
         "i_pf_current",
-        "ccl0_ma",
+        "cur_pf_group_flux_swing_cancellation_ma",
         "cur_pf_group_equilibrium_ma",
         "first_call",
     ]:

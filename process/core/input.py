@@ -979,7 +979,9 @@ INPUT_VARIABLES = {
     "blktmodel": InputVariable("fwbs", int, choices=[0, 1]),
     "blkttype": InputVariable("fwbs", int, choices=[1, 2, 3]),
     "breedmat": InputVariable("fwbs", int, choices=[1, 2, 3]),
-    "ccl0_ma": InputVariable("pf_coil", float, array=True),
+    "cur_pf_group_flux_swing_cancellation_ma": InputVariable(
+        "pf_coil", float, array=True
+    ),
     "cur_pf_group_equilibrium_ma": InputVariable("pf_coil", float, array=True),
     "cfind": InputVariable("costs", float, array=True),
     "i_blkt_coolant_type": InputVariable("fwbs", int, choices=[1, 2]),

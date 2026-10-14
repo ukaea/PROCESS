@@ -1725,7 +1725,7 @@ i_pf_superconductor = 9
 *  center (equilibrium coils)
 * JUSTIFICATION: Not yet set, assuming default
 
-*ccl0_ma =  
+*cur_pf_group_flux_swing_cancellation_ma =  
 * DESCRIPTION:  PF group current array, flux-swing cancellation current (MA)
 * Input if i_pf_current=0, computed otherwise
 * JUSTIFICATION: Not used, no i+pf_current
