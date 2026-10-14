@@ -119,7 +119,6 @@ class PFCoil(Model):
             ),
             order="F",
         )
-        ccls0 = np.zeros(int(N_PF_GROUPS_MAX / 2))
         brin, bzin, rpts, zpts = np.zeros((4, NPTSMX))
         bfix, bvec = np.zeros((2, lrow1))
         gmat, _, _ = np.zeros((3, lrow1, lcol1), order="F")
@@ -595,7 +594,7 @@ class PFCoil(Model):
 
                 self.data.physics.b_plasma_vertical_required = bzin[0]
 
-                _ssqef, ccls0 = self.efc(
+                _ssqef, cur_pf_group_equilibrium_solution = self.efc(
                     npts0,
                     rpts,
                     zpts,
@@ -617,7 +616,7 @@ class PFCoil(Model):
 
                 for ccount in range(ngrp0):
                     self.data.pf_coil.cur_pf_group_equilibrium[pcls0[ccount] - 1] = (
-                        ccls0[ccount]
+                        cur_pf_group_equilibrium_solution[ccount]
                     )
 
         # Flux swing from vertical field
