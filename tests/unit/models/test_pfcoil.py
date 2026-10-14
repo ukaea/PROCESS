@@ -3594,7 +3594,7 @@ def test_peakb(monkeypatch, pfcoil):
         )),
     )
     monkeypatch.setattr(pfcoil.data.pf_coil, "ind_pf_coil_edge_mutual", np.zeros(64))
-    monkeypatch.setattr(pfcoil.data.pf_coil, "bpf2", np.zeros(22))
+    monkeypatch.setattr(pfcoil.data.pf_coil, "b_pf_coil_outer_peak", np.zeros(22))
 
     monkeypatch.setattr(pfcoil.data.build, "i_cs_use", CSUseModel.FULL_PULSE)
     monkeypatch.setattr(pfcoil.data.pf_coil, "a_cs_poloidal", 9.0218815014803365874412)
