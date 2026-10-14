@@ -133,7 +133,8 @@ class PFCoilData:
 
     bpf2: list[float] = field(default_factory=lambda: np.zeros(NGC2))
 
-    vsdum: list[float] = field(default_factory=lambda: np.zeros((NGC2, 3)))
+    vs_pf_cs_circuit: list[float] = field(default_factory=lambda: np.zeros((NGC2, 3)))
+    """Volt-second contribution for each PF/CS circuit at BOP, BOF and EOF [Vs]."""
 
     first_call: bool = True
 
