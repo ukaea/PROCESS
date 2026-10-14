@@ -481,6 +481,7 @@ OBS_VARS = {
     "f_p_div_lower": "f_p_div_lower_separatrix",
     "temp_plasma_pedestal_kev": "temp_plasma_pedestal_electron_kev",
     "temp_plasma_separatrix_kev": "temp_plasma_separatrix_electron_kev",
+    "iohcl": "i_cs_use",
 }
 
 OBS_VARS_HELP = {

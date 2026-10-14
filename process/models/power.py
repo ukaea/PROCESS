@@ -12,7 +12,7 @@ from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure.blanket_variables import BlktModelTypes
-from process.data_structure.pfcoil_variables import NGC2, PFConductorModel
+from process.data_structure.pfcoil_variables import NGC2, CSUseModel, PFConductorModel
 from process.models.pulse import PulseTimings
 
 
@@ -345,7 +345,7 @@ class Power(Model):
         #  Bussing losses assume aluminium bussing with 100 A/cm**2
         ic = -1
         n_pf_coil_groups = self.data.pf_coil.n_pf_coil_groups
-        if self.data.build.iohcl != 0:
+        if CSUseModel(self.data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID:
             n_pf_coil_groups += 1
 
         # Map PF group to representative circuit index (used for busbar I^2R per circuit)

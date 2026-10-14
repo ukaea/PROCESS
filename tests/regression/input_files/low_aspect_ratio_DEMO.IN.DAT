@@ -791,7 +791,7 @@ f_nd_impurity_electrons(14) = 5e-05    *Tungsten
 
 *iteration variables - j_cs_flat_top_end, f_j_cs_start_pulse_end_flat_top and f_a_cs_steel
 
-iohcl    = 1 * Switch for existence of central solenoid;
+i_cs_use    = 1 * Switch for existence of central solenoid;
 * DESCRIPTION:   Switch for existence of central solenoid
 * JUSTIFICATION: Inductive machine - use CS for startup
 

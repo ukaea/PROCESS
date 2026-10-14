@@ -8,7 +8,7 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure.pfcoil_variables import PFConductorModel
+from process.data_structure.pfcoil_variables import CSUseModel, PFConductorModel
 from process.models.tfcoil.base import TFConductorModel
 from process.models.vacuum import VacuumPumpType
 
@@ -1627,7 +1627,7 @@ class Costs(Model):
 
         #  Non-Central Solenoid coils
 
-        if self.data.build.iohcl == 1:
+        if CSUseModel(self.data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID:
             npf = self.data.pf_coil.n_cs_pf_coils - 1
         else:
             npf = self.data.pf_coil.n_cs_pf_coils
@@ -1715,7 +1715,7 @@ class Costs(Model):
 
         #  Central Solenoid
 
-        if self.data.build.iohcl == 1:
+        if CSUseModel(self.data.build.i_cs_use) == CSUseModel.FULL_PULSE:
             #  Superconductor ($/m)
             if self.data.costs.supercond_cost_model == 0:
                 #  Issue #328  Use CS conductor cross-sectional area (m2)
