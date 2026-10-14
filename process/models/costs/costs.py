@@ -9,6 +9,7 @@ from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure.pfcoil_variables import PFConductorModel
+from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil.base import TFConductorModel
 from process.models.vacuum import VacuumPumpType
 
@@ -1648,9 +1649,9 @@ class Costs(Model):
                         )
                         * 1.0e6
                         / self.data.pf_coil.j_pf_coil_wp_peak[i]
-                        * self.data.tfcoil.dcond[
-                            self.data.pf_coil.i_pf_superconductor - 1
-                        ]
+                        * SuperconductorModel(
+                            self.data.pf_coil.i_pf_superconductor
+                        ).material.density
                     )
                 else:
                     costpfsc = 0.0e0
@@ -1728,9 +1729,9 @@ class Costs(Model):
                         / self.data.pf_coil.n_pf_coil_turns[
                             self.data.pf_coil.n_cs_pf_coils - 1
                         ]
-                        * self.data.tfcoil.dcond[
-                            self.data.pf_coil.i_cs_superconductor - 1
-                        ]
+                        * SuperconductorModel(
+                            self.data.pf_coil.i_cs_superconductor
+                        ).material.density
                     )
                 else:
                     costpfsc = 0.0e0

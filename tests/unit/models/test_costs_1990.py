@@ -1908,8 +1908,6 @@ class Acc2222Param(NamedTuple):
 
     fncmass: Any = None
 
-    dcond: Any = None
-
     c22: Any = None
 
     expected_c2222: Any = None
@@ -2103,16 +2101,9 @@ class Acc2222Param(NamedTuple):
             ).transpose(),
             a_cs_cable_space=3.8004675824985918,
             fncmass=310716.52923547616,
-            dcond=np.array(
-                np.array(
-                    (6080, 6080, 6070, 6080, 6080, 8500, 6070, 8500, 8500),
-                    order="F",
-                ),
-                order="F",
-            ).transpose(),
             c22=0,
-            expected_c2222=626.57984594974835,
-            expected_c22221=434.46640986938519,
+            expected_c2222=656.1818171277597,
+            expected_c22221=464.0683810473965,
             expected_c22222=69.02908267696219,
             expected_c22223=113.89491205126185,
             expected_c22224=9.1894413521392071,
@@ -2294,16 +2285,9 @@ class Acc2222Param(NamedTuple):
             ).transpose(),
             a_cs_cable_space=3.8004675824985918,
             fncmass=310716.52923547616,
-            dcond=np.array(
-                np.array(
-                    (6080, 6080, 6070, 6080, 6080, 8500, 6070, 8500, 8500),
-                    order="F",
-                ),
-                order="F",
-            ).transpose(),
             c22=3474.7391916096453,
-            expected_c2222=634.503192513881,
-            expected_c22221=448.04573758127646,
+            expected_c2222=664.5491422744361,
+            expected_c22221=478.0916873418316,
             expected_c22222=71.202561277966055,
             expected_c22223=106.06545230249935,
             expected_c22224=9.1894413521392071,
@@ -2485,13 +2469,6 @@ class Acc2222Param(NamedTuple):
             ).transpose(),
             a_cs_cable_space=3.8004675824985918,
             fncmass=310716.52923547616,
-            dcond=np.array(
-                np.array(
-                    (6080, 6080, 6070, 6080, 6080, 8500, 6070, 8500, 8500),
-                    order="F",
-                ),
-                order="F",
-            ).transpose(),
             c22=3474.7391916096453,
             expected_c2222=2271626.1414324627,
             expected_c22221=2271439.6839775303,
@@ -2594,8 +2571,6 @@ def test_acc2222(acc2222param, monkeypatch, costs):
     )
 
     monkeypatch.setattr(costs.data.structure, "fncmass", acc2222param.fncmass)
-
-    monkeypatch.setattr(costs.data.tfcoil, "dcond", acc2222param.dcond)
 
     monkeypatch.setattr(costs.data.costs, "c22", acc2222param.c22)
 

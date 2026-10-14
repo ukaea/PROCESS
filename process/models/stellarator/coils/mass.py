@@ -2,6 +2,7 @@
 
 from process.core import constants
 from process.core.data_structure.base import DataStructure
+from process.models.superconductors import SuperconductorModel
 
 
 def calculate_coils_mass(
@@ -85,7 +86,7 @@ def superconductor(data: DataStructure):
         * (1.0e0 - data.tfcoil.f_a_tf_turn_cable_space_extra_void)
         * (1.0e0 - data.tfcoil.f_a_tf_turn_cable_copper)
         - data.tfcoil.len_tf_coil * data.tfcoil.a_tf_wp_coolant_channels
-    ) * data.tfcoil.dcond[data.tfcoil.i_tf_sc_mat - 1]
+    ) * SuperconductorModel(data.tfcoil.i_tf_sc_mat).material.density
 
 
 def copper(data: DataStructure):

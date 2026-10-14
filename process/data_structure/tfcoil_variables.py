@@ -154,21 +154,6 @@ class TFData:
     den_tf_coil_case: float = 8000.0
     """density of coil case (kg/m3)"""
 
-    dcond: list[float] = field(
-        default_factory=lambda: np.array([
-            6080.0,
-            6080.0,
-            6070.0,
-            6080.0,
-            6080.0,
-            8500.0,
-            6070.0,
-            8500.0,
-            8500.0,
-        ])
-    )
-    """density of superconductor type given by i_tf_sc_mat/i_cs_superconductor/i_pf_superconductor (kg/m3)"""
-
     den_tf_wp_turn_insulation: float = 1800.0
     """density of conduit + ground-wall insulation (kg/m3)"""
 

@@ -1104,7 +1104,6 @@ INPUT_VARIABLES = {
     "quench_model": InputVariable("tfcoil", str, choices=["exponential", "linear"]),
     "i_fw_coolant_type": InputVariable("fwbs", int, choices=[1, 2]),
     "i_vacuum_pumping": InputVariable("vacuum", str, choices=["old", "simple"]),
-    "dcond": InputVariable("tfcoil", float, array=True),
     "c_pf_coil_turn_peak_input": InputVariable("pf_coil", float, array=True),
     "i_pf_location": InputVariable("pf_coil", int, array=True),
     "n_pf_coils_in_group": InputVariable("pf_coil", int, array=True),
