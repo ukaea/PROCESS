@@ -142,7 +142,8 @@ class PFCoilData:
     """Flux-swing cancellation current in each PF-coil group [A].
     Calculated to cancel the effect of the CS during a flux swing."""
 
-    bpf2: list[float] = field(default_factory=lambda: np.zeros(NGC2))
+    b_pf_coil_outer_peak: list[float] = field(default_factory=lambda: np.zeros(NGC2))
+    """Peak field at outer edge of coil i [T]"""
 
     vs_pf_cs_circuit: list[float] = field(default_factory=lambda: np.zeros((NGC2, 3)))
     """Volt-second contribution for each PF/CS circuit at BOP, BOF and EOF [Vs]."""

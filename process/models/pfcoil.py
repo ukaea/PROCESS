@@ -903,7 +903,7 @@ class PFCoil(Model):
                         n_coil_group=iii + 1,
                         t_b_field_peak=it,
                         data=self.data,
-                    )  # returns b_pf_coil_peak, bpf2
+                    )  # returns b_pf_coil_peak, b_pf_coil_outer_peak
 
                 # Issue 1871.  MDK
                 # Allowable current density (for superconducting coils) for each coil,
@@ -911,7 +911,7 @@ class PFCoil(Model):
                 if self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
                     bmax = max(
                         abs(self.data.pf_coil.b_pf_coil_peak[i]),
-                        abs(self.data.pf_coil.bpf2[i]),
+                        abs(self.data.pf_coil.b_pf_coil_outer_peak[i]),
                     )
 
                     self.data.pf_coil.j_pf_wp_critical[i], _jstrand, jsc, _tmarg = (
@@ -998,7 +998,10 @@ class PFCoil(Model):
 
                 forcepf = (
                     0.5e6
-                    * (self.data.pf_coil.b_pf_coil_peak[i] + self.data.pf_coil.bpf2[i])
+                    * (
+                        self.data.pf_coil.b_pf_coil_peak[i]
+                        + self.data.pf_coil.b_pf_coil_outer_peak[i]
+                    )
                     * abs(self.data.pf_coil.c_pf_cs_coils_peak_ma[i])
                     * self.data.pf_coil.r_pf_coil_middle[i]
                 )
@@ -3553,8 +3556,8 @@ class CSCoil(Model):
             self.data.pf_coil.b_cs_peak_flat_top_end,
             abs(self.data.pf_coil.b_cs_peak_pulse_start),
         )
-        self.data.pf_coil.bpf2[self.data.pf_coil.n_cs_pf_coils - 1] = max(
-            bohco, abs(b_pf_outer_vertical)
+        self.data.pf_coil.b_pf_coil_outer_peak[self.data.pf_coil.n_cs_pf_coils - 1] = (
+            max(bohco, abs(b_pf_outer_vertical))
         )
 
         # Stress ==> cross-sectional area of supporting steel to use
@@ -4781,7 +4784,7 @@ def peak_b_field_at_pf_coil(
         z_test_point=data.pf_coil.z_pf_coil_middle[n_coil - 1],
     )
 
-    # b_pf_coil_peak and bpf2 for the Central Solenoid are calculated in OHCALC
+    # b_pf_coil_peak and b_pf_coil_outer_peak for the Central Solenoid are calculated in OHCALC
     if (CSUseModel(data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID) and (
         n_coil == data.pf_coil.n_cs_pf_coils
     ):
@@ -4796,7 +4799,7 @@ def peak_b_field_at_pf_coil(
     bpfout = math.sqrt(b_pf_outer_radial**2 + b_pf_outer_vertical**2)
     for n in range(data.pf_coil.n_pf_coils_in_group[n_coil_group - 1]):
         data.pf_coil.b_pf_coil_peak[n_coil - 1 + n] = bpfin
-        data.pf_coil.bpf2[n_coil - 1 + n] = bpfout
+        data.pf_coil.b_pf_coil_outer_peak[n_coil - 1 + n] = bpfout
 
     return (
         b_pf_inner_radial,
