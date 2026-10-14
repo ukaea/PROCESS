@@ -1675,25 +1675,28 @@ class PFCoil(Model):
         self.data.pf_coil.vs_pf_coils_total_ramp = 0.0e0
 
         for i in range(n_pf_coil_circuits):
-            self.data.pf_coil.vsdum[i, 0] = (
+            self.data.pf_coil.vs_pf_cs_circuit[i, 0] = (
                 self.data.pf_coil.ind_pf_cs_plasma_mutual[
                     self.data.pf_coil.n_pf_cs_plasma_circuits - 1, i
                 ]
                 * self.data.pf_coil.c_pf_coil_turn[i, 1]
             )
-            self.data.pf_coil.vsdum[i, 1] = (
+            self.data.pf_coil.vs_pf_cs_circuit[i, 1] = (
                 self.data.pf_coil.ind_pf_cs_plasma_mutual[
                     self.data.pf_coil.n_pf_cs_plasma_circuits - 1, i
                 ]
                 * self.data.pf_coil.c_pf_coil_turn[i, 2]
             )
             self.data.pf_coil.vs_pf_coils_total_ramp += (
-                self.data.pf_coil.vsdum[i, 1] - self.data.pf_coil.vsdum[i, 0]
+                self.data.pf_coil.vs_pf_cs_circuit[i, 1]
+                - self.data.pf_coil.vs_pf_cs_circuit[i, 0]
             )
 
         # Central Solenoid startup volt-seconds
         if CSUseModel(self.data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID:
-            self.data.pf_coil.vsdum[self.data.pf_coil.n_cs_pf_coils - 1, 0] = (
+            self.data.pf_coil.vs_pf_cs_circuit[
+                self.data.pf_coil.n_cs_pf_coils - 1, 0
+            ] = (
                 self.data.pf_coil.ind_pf_cs_plasma_mutual[
                     self.data.pf_coil.n_pf_cs_plasma_circuits - 1,
                     self.data.pf_coil.n_pf_cs_plasma_circuits - 2,
@@ -1702,7 +1705,9 @@ class PFCoil(Model):
                     self.data.pf_coil.n_pf_cs_plasma_circuits - 2, 1
                 ]
             )
-            self.data.pf_coil.vsdum[self.data.pf_coil.n_cs_pf_coils - 1, 1] = (
+            self.data.pf_coil.vs_pf_cs_circuit[
+                self.data.pf_coil.n_cs_pf_coils - 1, 1
+            ] = (
                 self.data.pf_coil.ind_pf_cs_plasma_mutual[
                     self.data.pf_coil.n_pf_cs_plasma_circuits - 1,
                     self.data.pf_coil.n_pf_cs_plasma_circuits - 2,
@@ -1712,8 +1717,12 @@ class PFCoil(Model):
                 ]
             )
             self.data.pf_coil.vs_cs_ramp = (
-                self.data.pf_coil.vsdum[self.data.pf_coil.n_cs_pf_coils - 1, 1]
-                - self.data.pf_coil.vsdum[self.data.pf_coil.n_cs_pf_coils - 1, 0]
+                self.data.pf_coil.vs_pf_cs_circuit[
+                    self.data.pf_coil.n_cs_pf_coils - 1, 1
+                ]
+                - self.data.pf_coil.vs_pf_cs_circuit[
+                    self.data.pf_coil.n_cs_pf_coils - 1, 0
+                ]
             )
 
         # Total available volt-seconds for start-up
@@ -1723,7 +1732,9 @@ class PFCoil(Model):
 
         # Burn volt-seconds
         if CSUseModel(self.data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID:
-            self.data.pf_coil.vsdum[self.data.pf_coil.n_cs_pf_coils - 1, 2] = (
+            self.data.pf_coil.vs_pf_cs_circuit[
+                self.data.pf_coil.n_cs_pf_coils - 1, 2
+            ] = (
                 self.data.pf_coil.ind_pf_cs_plasma_mutual[
                     self.data.pf_coil.n_pf_cs_plasma_circuits - 1,
                     self.data.pf_coil.n_pf_cs_plasma_circuits - 2,
@@ -1733,21 +1744,26 @@ class PFCoil(Model):
                 ]
             )
             self.data.pf_coil.vs_cs_burn = (
-                self.data.pf_coil.vsdum[self.data.pf_coil.n_cs_pf_coils - 1, 2]
-                - self.data.pf_coil.vsdum[self.data.pf_coil.n_cs_pf_coils - 1, 1]
+                self.data.pf_coil.vs_pf_cs_circuit[
+                    self.data.pf_coil.n_cs_pf_coils - 1, 2
+                ]
+                - self.data.pf_coil.vs_pf_cs_circuit[
+                    self.data.pf_coil.n_cs_pf_coils - 1, 1
+                ]
             )
 
         # PF volt-seconds during burn
         self.data.pf_coil.vs_pf_coils_total_burn = 0.0e0
         for i in range(n_pf_coil_circuits):
-            self.data.pf_coil.vsdum[i, 2] = (
+            self.data.pf_coil.vs_pf_cs_circuit[i, 2] = (
                 self.data.pf_coil.ind_pf_cs_plasma_mutual[
                     self.data.pf_coil.n_pf_cs_plasma_circuits - 1, i
                 ]
                 * self.data.pf_coil.c_pf_coil_turn[i, 4]
             )
             self.data.pf_coil.vs_pf_coils_total_burn += (
-                self.data.pf_coil.vsdum[i, 2] - self.data.pf_coil.vsdum[i, 1]
+                self.data.pf_coil.vs_pf_cs_circuit[i, 2]
+                - self.data.pf_coil.vs_pf_cs_circuit[i, 1]
             )
 
         self.data.pf_coil.vs_cs_pf_total_burn = (
@@ -2768,17 +2784,17 @@ class PFCoil(Model):
         for k in range(n_pf_coil_circuits):
             rows.append([
                 f"PF {k + 1}",
-                f"{pf.vsdum[k, 0]:.3f}",
-                f"{pf.vsdum[k, 1]:.3f}",
-                f"{pf.vsdum[k, 2]:.3f}",
+                f"{pf.vs_pf_cs_circuit[k, 0]:.3f}",
+                f"{pf.vs_pf_cs_circuit[k, 1]:.3f}",
+                f"{pf.vs_pf_cs_circuit[k, 2]:.3f}",
             ])
 
         n_cs = pf.n_cs_pf_coils - 1
         rows.append([
             "CS coil",
-            f"{pf.vsdum[n_cs, 0]:.3f}",
-            f"{pf.vsdum[n_cs, 1]:.3f}",
-            f"{pf.vsdum[n_cs, 2]:.3f}",
+            f"{pf.vs_pf_cs_circuit[n_cs, 0]:.3f}",
+            f"{pf.vs_pf_cs_circuit[n_cs, 1]:.3f}",
+            f"{pf.vs_pf_cs_circuit[n_cs, 2]:.3f}",
         ])
         op.oblnkl(self.outfile)
         op.write(
