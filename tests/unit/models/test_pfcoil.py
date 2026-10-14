@@ -3593,7 +3593,7 @@ def test_peakb(monkeypatch, pfcoil):
             *np.zeros(50),
         )),
     )
-    monkeypatch.setattr(pfcoil.data.pf_coil, "xind", np.zeros(64))
+    monkeypatch.setattr(pfcoil.data.pf_coil, "ind_pf_coil_edge_mutual", np.zeros(64))
     monkeypatch.setattr(pfcoil.data.pf_coil, "bpf2", np.zeros(22))
 
     monkeypatch.setattr(pfcoil.data.build, "i_cs_use", CSUseModel.FULL_PULSE)

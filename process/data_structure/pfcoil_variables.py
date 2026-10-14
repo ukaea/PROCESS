@@ -106,7 +106,10 @@ class PFCoilData:
     )
     """array of current in filaments in central solenoid"""
 
-    xind: list[float] = field(default_factory=lambda: np.zeros(NFIXMX))
+    ind_pf_coil_edge_mutual: list[float] = field(
+        default_factory=lambda: np.zeros(NFIXMX)
+    )
+    """Mutual inductance between each current loop and a PF-coil edge point [H]."""
 
     r_pf_coil_middle_group_array: list[float] = field(
         default_factory=lambda: np.zeros((N_PF_GROUPS_MAX, N_PF_COILS_IN_GROUP_MAX))
