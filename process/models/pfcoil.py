@@ -693,21 +693,22 @@ class PFCoil(Model):
 
                 # Currents at different times:
 
-                # If PF coil currents are computed, not input via ccl0_ma, ccls_ma:
-                # Then set ccl0_ma,ccls_ma from the computed  pf_coil.ccl0,
-                # pf_coil.cur_pf_group_equilibrium
+                # If PF coil currents are computed, not input via ccl0_ma,
+                # cur_pf_group_equilibrium_ma:
+                # Then set ccl0_ma,cur_pf_group_equilibrium_ma from the computed
+                # pf_coil.ccl0, pf_coil.cur_pf_group_equilibrium
                 if self.data.pf_coil.i_pf_current != 0:
                     self.data.pf_coil.ccl0_ma[nng] = 1.0e-6 * self.data.pf_coil.ccl0[nng]
-                    self.data.pf_coil.ccls_ma[nng] = (
+                    self.data.pf_coil.cur_pf_group_equilibrium_ma[nng] = (
                         1.0e-6 * self.data.pf_coil.cur_pf_group_equilibrium[nng]
                     )
                 else:
                     # Otherwise set
                     # self.data.pf_coil.ccl0,self.data.pf_coil.cur_pf_group_equilibrium
-                    # via the input ccl0_ma and ccls_ma
+                    # via the input ccl0_ma and cur_pf_group_equilibrium_ma
                     self.data.pf_coil.ccl0[nng] = 1.0e6 * self.data.pf_coil.ccl0_ma[nng]
                     self.data.pf_coil.cur_pf_group_equilibrium[nng] = (
-                        1.0e6 * self.data.pf_coil.ccls_ma[nng]
+                        1.0e6 * self.data.pf_coil.cur_pf_group_equilibrium_ma[nng]
                     )
 
                 # Beginning of pulse: t = self.data.times.t_plant_pulse_coil_precharge
