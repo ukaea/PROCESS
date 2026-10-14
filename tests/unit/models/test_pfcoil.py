@@ -77,7 +77,7 @@ class RsidParam(NamedTuple):
     npts: Any = None
     nfix: Any = None
     n_pf_coil_groups: Any = None
-    ccls: Any = None
+    cur_pf_group_equilibrium: Any = None
     bfix: Any = None
     gmat: Any = None
 
@@ -95,7 +95,7 @@ class RsidParam(NamedTuple):
             npts=32,
             nfix=14,
             n_pf_coil_groups=4,
-            ccls=np.array([
+            cur_pf_group_equilibrium=np.array([
                 14742063.826112622,
                 20032681.634901665,
                 580406.62653667293,
@@ -951,7 +951,7 @@ def test_rsid(rsidparam):
         bzin,
         rsidparam.nfix,
         rsidparam.n_pf_coil_groups,
-        rsidparam.ccls,
+        rsidparam.cur_pf_group_equilibrium,
         rsidparam.bfix,
         rsidparam.gmat,
     )
@@ -3014,7 +3014,7 @@ def test_efc(pfcoil, efcparam):
     gmat = np.full([lrow1, lcol1], 0.0, order="F")
     bvec = np.full(lrow1, 0.0)
 
-    ssq, ccls = pfcoil.efc(
+    ssq, cur_pf_group_equilibrium = pfcoil.efc(
         efcparam.npts,
         efcparam.rpts,
         zpts,
@@ -3035,7 +3035,7 @@ def test_efc(pfcoil, efcparam):
     )
 
     assert pytest.approx(ssq) == efcparam.exp_ssq
-    assert ccls[0:4] == pytest.approx(efcparam.exp_ccls)
+    assert cur_pf_group_equilibrium[0:4] == pytest.approx(efcparam.exp_ccls)
 
 
 class MTRXParam(NamedTuple):
@@ -3389,9 +3389,13 @@ def test_solv(pfcoil, skip_if_incompatible_system):
     gmat = np.full((3, 3), 2.0, order="F")
     bvec = np.full(3, 1.0)
 
-    ccls = pfcoil.solv(n_pf_groups_max, n_pf_coil_groups, nrws, gmat, bvec)
+    cur_pf_group_equilibrium = pfcoil.solv(
+        n_pf_groups_max, n_pf_coil_groups, nrws, gmat, bvec
+    )
 
-    assert_array_almost_equal(ccls, np.array([-0.069036, 0.488642, 0.080394]))
+    assert_array_almost_equal(
+        cur_pf_group_equilibrium, np.array([-0.069036, 0.488642, 0.080394])
+    )
 
 
 def test_fixb():
