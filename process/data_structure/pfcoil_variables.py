@@ -52,8 +52,6 @@ NGC2 = NGC + 2
 class PFCoilData:
     """Dataclass holding PF coil variables"""
 
-    nef: int = 0
-
     n_cs_current_filaments_total: int = 0
     """Total number of current filaments in the central solenoid"""
 
