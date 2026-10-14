@@ -1143,7 +1143,7 @@ class PhysicsData:
     - =1 iterate axis values to match volume averages in veqpy geometry
     """
 
-    i_calculate_radiation: int = 1
+    i_calculate_radiation: int = 2
     """p-B11 bremsstrahlung model:
     - =1 volume-averaged temperature and density
     - =2 profile or equilibrium integration
