@@ -56,7 +56,8 @@ class PFCoilData:
 
     nfxf: int = 0
 
-    ricpf: float = 0.0
+    cur_pf_cs_peak_sum_ma: float = 0.0
+    """Sum of peak currents in the PF and CS coils [MA]"""
 
     ssq0: float = 0.0
 
