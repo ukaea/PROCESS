@@ -387,7 +387,10 @@ class PFCoil(Model):
                 bzin[i] = 0.0e0
 
                 # Calculate currents in coils to produce the given field
-            self.data.pf_coil.ssq0, self.data.pf_coil.ccl0 = self.efc(
+            (
+                self.data.pf_coil.ssq0,
+                self.data.pf_coil.cur_pf_group_flux_swing_cancellation,
+            ) = self.efc(
                 npts,
                 rpts,
                 zpts,
@@ -696,24 +699,29 @@ class PFCoil(Model):
                 # If PF coil currents are computed, not input via ccl0_ma,
                 # cur_pf_group_equilibrium_ma:
                 # Then set ccl0_ma,cur_pf_group_equilibrium_ma from the computed
-                # pf_coil.ccl0, pf_coil.cur_pf_group_equilibrium
+                # pf_coil.cur_pf_group_flux_swing_cancellation, pf_coil.cur_pf_group_equilibrium
                 if self.data.pf_coil.i_pf_current != 0:
-                    self.data.pf_coil.ccl0_ma[nng] = 1.0e-6 * self.data.pf_coil.ccl0[nng]
+                    self.data.pf_coil.ccl0_ma[nng] = (
+                        1.0e-6
+                        * self.data.pf_coil.cur_pf_group_flux_swing_cancellation[nng]
+                    )
                     self.data.pf_coil.cur_pf_group_equilibrium_ma[nng] = (
                         1.0e-6 * self.data.pf_coil.cur_pf_group_equilibrium[nng]
                     )
                 else:
                     # Otherwise set
-                    # self.data.pf_coil.ccl0,self.data.pf_coil.cur_pf_group_equilibrium
+                    # self.data.pf_coil.cur_pf_group_flux_swing_cancellation,self.data.pf_coil.cur_pf_group_equilibrium
                     # via the input ccl0_ma and cur_pf_group_equilibrium_ma
-                    self.data.pf_coil.ccl0[nng] = 1.0e6 * self.data.pf_coil.ccl0_ma[nng]
+                    self.data.pf_coil.cur_pf_group_flux_swing_cancellation[nng] = (
+                        1.0e6 * self.data.pf_coil.ccl0_ma[nng]
+                    )
                     self.data.pf_coil.cur_pf_group_equilibrium[nng] = (
                         1.0e6 * self.data.pf_coil.cur_pf_group_equilibrium_ma[nng]
                     )
 
                 # Beginning of pulse: t = self.data.times.t_plant_pulse_coil_precharge
                 self.data.pf_coil.c_pf_cs_coil_pulse_start_ma[ncl] = (
-                    1.0e-6 * self.data.pf_coil.ccl0[nng]
+                    1.0e-6 * self.data.pf_coil.cur_pf_group_flux_swing_cancellation[nng]
                 )
 
                 # Beginning of flat-top:
@@ -722,7 +730,7 @@ class PFCoil(Model):
                 self.data.pf_coil.c_pf_cs_coil_flat_top_ma[ncl] = 1.0e-6 * (
                     self.data.pf_coil.cur_pf_group_equilibrium[nng]
                     - (
-                        self.data.pf_coil.ccl0[nng]
+                        self.data.pf_coil.cur_pf_group_flux_swing_cancellation[nng]
                         * self.data.pf_coil.f_j_cs_start_end_flat_top
                         / self.data.pf_coil.f_j_cs_start_pulse_end_flat_top
                     )
@@ -735,7 +743,7 @@ class PFCoil(Model):
                 self.data.pf_coil.c_pf_cs_coil_pulse_end_ma[ncl] = 1.0e-6 * (
                     self.data.pf_coil.cur_pf_group_equilibrium[nng]
                     - (
-                        self.data.pf_coil.ccl0[nng]
+                        self.data.pf_coil.cur_pf_group_flux_swing_cancellation[nng]
                         * (1.0e0 / self.data.pf_coil.f_j_cs_start_pulse_end_flat_top)
                     )
                 )

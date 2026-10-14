@@ -126,7 +126,10 @@ class PFCoilData:
     )
     """Equilibrium current in each PF-coil group (A). Input when `i_pf_current=0`; calculated otherwise."""
 
-    ccl0: list[float] = field(default_factory=lambda: np.zeros(N_PF_GROUPS_MAX))
+    cur_pf_group_flux_swing_cancellation: list[float] = field(
+        default_factory=lambda: np.zeros(N_PF_GROUPS_MAX)
+    )
+    """Flux-swing cancellation current in each PF-coil group [A]. Calculated to cancel the effect of the CS during a flux swing."""
 
     bpf2: list[float] = field(default_factory=lambda: np.zeros(NGC2))
 
