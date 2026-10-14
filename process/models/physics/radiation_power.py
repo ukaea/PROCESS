@@ -394,10 +394,10 @@ def calculate_power_radiation(
 
         fun1 = lambda rhox: fun(rhox) * rhox
         if i_equilibrium_solve == 0:
-            pden_rad_brem_total = quad(fun1, 0, 1)[0] * 2.0
+            pden_rad_brem_total = quad(fun1, 1.0e-5, 1)[0] * 2.0
             power_rad_brem_core = (
                 2.0 * f_power_rad_brem_core_reduction 
-                * quad(fun1, 0, rho_plasma_core_norm)[0] 
+                * quad(fun1, 1.0e-5, rho_plasma_core_norm)[0] 
                 * vol_plasma
             )
         else:
