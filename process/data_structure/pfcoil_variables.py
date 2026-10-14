@@ -177,10 +177,10 @@ class PFCoilData:
     b_pf_coil_peak: list[float] = field(default_factory=lambda: np.zeros(NGC2))
     """peak field at coil i (T)"""
 
-    ccl0_ma: list[float] = field(default_factory=lambda: np.zeros(N_PF_GROUPS_MAX))
-    """PF group current array, flux-swing cancellation current (MA)
-    Input if i_pf_current=0, computed otherwise
-    """
+    cur_pf_group_flux_swing_cancellation_ma: list[float] = field(
+        default_factory=lambda: np.zeros(N_PF_GROUPS_MAX)
+    )
+    """Flux-swing cancellation current in each PF-coil group [MA]. Calculated to cancel the effect of the CS during a flux swing."""
 
     cur_pf_group_equilibrium_ma: list[float] = field(
         default_factory=lambda: np.zeros(N_PF_GROUPS_MAX)
