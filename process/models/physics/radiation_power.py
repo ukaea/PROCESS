@@ -282,7 +282,7 @@ def brem_gaunt_factor(te, z):
 def calculate_power_bremsstrahlung_radiation(
     f_density_h_isotope_electron: float,
     f_density_he_isotope_electron: float,
-    ndensity_b11_fuel_vol_avg: float,
+    f_ndensity_b11_fuel_electron: float,
     impurity_radiation: ImpurityRadiationData,
     ne: float, 
     te: float,
@@ -305,7 +305,7 @@ def calculate_power_bremsstrahlung_radiation(
     g_he_isotope, _ = brem_gaunt_factor(te, 2.0) 
     g_he_isotope = g_he_isotope * 4.0 * f_density_he_isotope_electron
     g_b11, _ = brem_gaunt_factor(te, 5.0) 
-    g_b11 = g_b11 * 25.0 * ndensity_b11_fuel_vol_avg / ne
+    g_b11 = g_b11 * 25.0 * f_ndensity_b11_fuel_electron
     g_imp = 0.0
     for imp in range(15):
         z_imp = impurity_radiation.impurity_arr_z[imp]
@@ -334,7 +334,7 @@ def calculate_power_radiation(
     i_equilibrium_solve: int,
     f_density_h_isotope_electron: float,
     f_density_he_isotope_electron: float,
-    ndensity_b11_fuel_vol_avg: float,
+    f_ndensity_b11_fuel_electron: float,
     impurity_radiation: ImpurityRadiationData,
     ne_vol_avg: float,
     temp_e_vol_avg: float,
@@ -366,17 +366,17 @@ def calculate_power_radiation(
         # Xie, 2024, using average temperature and average density
         # assume all radiation power is from core
         # only consider bremsstrahlung radiation, no line radiation
-        pden_rad_brem = calculate_power_bremsstrahlung_radiation(
+        pden_rad_brem_total = calculate_power_bremsstrahlung_radiation(
             f_density_h_isotope_electron=f_density_h_isotope_electron,
             f_density_he_isotope_electron=f_density_he_isotope_electron,
-            ndensity_b11_fuel_vol_avg=ndensity_b11_fuel_vol_avg,
+            f_ndensity_b11_fuel_electron=f_ndensity_b11_fuel_electron,
             impurity_radiation=impurity_radiation,
             ne=ne_vol_avg, 
             te=temp_e_vol_avg,
         )
-        pden_plasma_core_rad_mw = pden_rad_brem + pden_plasma_sync_mw
-        pden_plasma_outer_rad_mw = 0.0
-        pden_plasma_rad_mw = pden_rad_brem + pden_plasma_sync_mw
+        pden_plasma_core_rad_mw = pden_rad_brem_total * f_power_rad_brem_core_reduction + pden_plasma_sync_mw
+        pden_plasma_outer_rad_mw = pden_rad_brem_total * (1.0 - f_power_rad_brem_core_reduction)
+        pden_plasma_rad_mw = pden_rad_brem_total + pden_plasma_sync_mw
     
     elif i_calculate_radiation == 2:
         # Xie, 2024, simple integration/equilibrium integration
@@ -386,7 +386,7 @@ def calculate_power_radiation(
         fun = lambda rhox: calculate_power_bremsstrahlung_radiation(
             f_density_h_isotope_electron=f_density_h_isotope_electron,
             f_density_he_isotope_electron=f_density_he_isotope_electron,
-            ndensity_b11_fuel_vol_avg=ndensity_b11_fuel_vol_avg,
+            f_ndensity_b11_fuel_electron=f_ndensity_b11_fuel_electron,
             impurity_radiation=impurity_radiation,
             ne=ne_fun(rhox), 
             te=te_fun(rhox),
@@ -394,15 +394,10 @@ def calculate_power_radiation(
 
         fun1 = lambda rhox: fun(rhox) * rhox
         if i_equilibrium_solve == 0:
-            pden_rad_brem = quad(fun1, 0, 1)[0] * 2.0
+            pden_rad_brem_total = quad(fun1, 0, 1)[0] * 2.0
             power_rad_brem_core = (
                 2.0 * f_power_rad_brem_core_reduction 
                 * quad(fun1, 0, rho_plasma_core_norm)[0] 
-                * vol_plasma
-            )
-            power_rad_brem_edge = (
-                2.0 
-                * quad(fun1, rho_plasma_core_norm, 1)[0] 
                 * vol_plasma
             )
         else:
@@ -411,23 +406,20 @@ def calculate_power_radiation(
             dV = eq.J * eq.R
             integrand = pden * dV
             vol = float(eq.grid.integrate(dV))
-            pden_rad_brem = float(eq.grid.integrate(integrand)) / max(vol, 1.0e-30)
+            pden_rad_brem_total = float(eq.grid.integrate(integrand)) / max(vol, 1.0e-30)
 
             # θ∈[0,2π]、ρ∈[0, ρ_core] 与 ρ∈[ρ_core,1] 分区积分
             rho_core = rho_plasma_core_norm
             mask_core = eq.rho <= rho_core
             integrand_core = np.zeros_like(integrand)
-            integrand_edge = np.zeros_like(integrand)
             integrand_core[mask_core, :] = integrand[mask_core, :]
-            integrand_edge[~mask_core, :] = integrand[~mask_core, :]
             power_rad_brem_core = (
                 f_power_rad_brem_core_reduction
                 * float(eq.grid.integrate(integrand_core))
-            )
-            power_rad_brem_edge = float(eq.grid.integrate(integrand_edge))
+            ) * 2.0 * np.pi
         
         pden_plasma_core_rad_mw = power_rad_brem_core / vol_plasma + pden_plasma_sync_mw
-        pden_plasma_outer_rad_mw = power_rad_brem_edge / vol_plasma
+        pden_plasma_outer_rad_mw = pden_rad_brem_total - power_rad_brem_core / vol_plasma
         pden_plasma_rad_mw = pden_plasma_core_rad_mw + pden_plasma_outer_rad_mw
 
     return RadpwrData(

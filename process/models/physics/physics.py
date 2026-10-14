@@ -457,15 +457,17 @@ class Physics(Model):
             self.data.physics.kappa95 = np.interp(0.95, eq.psin, eq.kappa)
             triang = equilibrium.miller_delta_profile(eq)
             self.data.physics.triang95 = np.interp(0.95, eq.psin, triang)
-            r = eq.R[-1, :]
-            z = eq.Z[-1, :]
+            w = eq.grid.edge_interpolation_weights
+            r = w @ eq.R
+            z = w @ eq.Z
             (_, 
                 self.data.physics.a_plasma_surface_outboard, 
                 self.data.physics.a_plasma_surface, 
-                self.data.physics.len_plasma_poloidal, 
-                self.data.physics.a_plasma_poloidal, 
-                self.data.physics.vol_plasma
+                self.data.physics.len_plasma_poloidal,
+                _, _ 
             ) = self.geometry.cal_integral_geometry(r, z)
+            self.data.physics.a_plasma_poloidal = eq.S[-1]
+            self.data.physics.vol_plasma = eq.V[-1]
 
             self.data.physics.q0 = eq.q[0]
             self.data.physics.q95 = np.interp(0.95, eq.psin, eq.q)
@@ -952,9 +954,10 @@ class Physics(Model):
                 f_density_he_isotope_electron=self.data.impurity_radiation.f_nd_impurity_electron_array[
                     impurity_radiation.element2index("He", self.data)
                 ],
-                ndensity_b11_fuel_vol_avg=(
+                f_ndensity_b11_fuel_electron=(
                     self.data.physics.nd_plasma_fuel_ions_vol_avg 
                     * self.data.physics.f_plasma_fuel_boron11
+                    / self.data.physics.nd_plasma_electrons_vol_avg
                 ),
                 impurity_radiation=self.data.impurity_radiation,
                 ne_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
