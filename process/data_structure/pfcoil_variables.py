@@ -189,8 +189,8 @@ class PFCoilData:
     b_cs_bore_peak: float = 0.0
     """Peak field in central solenoid bore [T]"""
 
-    b_pf_coil_peak: list[float] = field(default_factory=lambda: np.zeros(NGC2))
-    """Peak field at coil i [T]"""
+    b_pf_coil_inner_peak: list[float] = field(default_factory=lambda: np.zeros(NGC2))
+    """Peak field at inner edge of coil i [T]"""
 
     cur_pf_group_flux_swing_cancellation_ma: list[float] = field(
         default_factory=lambda: np.zeros(N_PF_GROUPS_MAX)

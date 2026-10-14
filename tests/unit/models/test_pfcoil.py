@@ -2438,7 +2438,7 @@ class PFCoilParam(NamedTuple):
     dr_pf_tf_outboard_out_offset: Any = None
     rpf2: Any = None
     n_cs_current_filaments: Any = None
-    b_pf_coil_peak: Any = None
+    b_pf_coil_inner_peak: Any = None
     z_pf_coil_lower: Any = None
     f_a_pf_coil_void: Any = None
     zref: Any = None
@@ -2511,7 +2511,7 @@ class PFCoilParam(NamedTuple):
             dr_pf_tf_outboard_out_offset=1.5,
             rpf2=-1.825,
             n_cs_current_filaments=7,
-            b_pf_coil_peak=np.full(22, 0.0),
+            b_pf_coil_inner_peak=np.full(22, 0.0),
             z_pf_coil_lower=np.full(22, 0.0),
             f_a_pf_coil_void=np.full(22, 3.0e-1),
             zref=[3.6, 1.2, 2.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
@@ -2603,7 +2603,7 @@ def test_pfcoil(monkeypatch, pfcoil, pfcoilparam):
         "dr_pf_tf_outboard_out_offset",
         "rpf2",
         "n_cs_current_filaments",
-        "b_pf_coil_peak",
+        "b_pf_coil_inner_peak",
         "z_pf_coil_lower",
         "f_a_pf_coil_void",
         "i_pf_conductor",
@@ -2698,7 +2698,7 @@ class OhCalcParam(NamedTuple):
     rho_pf_coil: Any = None
     f_a_pf_coil_void: Any = None
     c_pf_cs_coils_peak_ma: Any = None
-    b_pf_coil_peak: Any = None
+    b_pf_coil_inner_peak: Any = None
     z_pf_coil_middle: Any = None
     r_pf_coil_outer: Any = None
     r_pf_coil_inner: Any = None
@@ -2751,7 +2751,7 @@ class OhCalcParam(NamedTuple):
             rho_pf_coil=2.8e-8,
             f_a_pf_coil_void=np.full(22, 0.3),
             c_pf_cs_coils_peak_ma=np.full(22, 0.0),
-            b_pf_coil_peak=np.full(22, 0.0),
+            b_pf_coil_inner_peak=np.full(22, 0.0),
             z_pf_coil_middle=np.full(22, 0.0),
             r_pf_coil_outer=np.full(22, 0.0),
             r_pf_coil_inner=np.full(22, 0.0),
@@ -2818,7 +2818,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, cs_coil, ohcalcparam):
         "rho_pf_coil",
         "f_a_pf_coil_void",
         "c_pf_cs_coils_peak_ma",
-        "b_pf_coil_peak",
+        "b_pf_coil_inner_peak",
         "z_pf_coil_middle",
         "r_pf_coil_outer",
         "r_pf_coil_inner",
@@ -2858,7 +2858,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, cs_coil, ohcalcparam):
     cs_coil.ohcalc()
 
     assert (
-        pytest.approx(cs_coil.data.pf_coil.b_pf_coil_peak[4])
+        pytest.approx(cs_coil.data.pf_coil.b_pf_coil_inner_peak[4])
         == ohcalcparam.exp_b_pf_coil_peak
     )
     assert (
@@ -3689,7 +3689,7 @@ def test_peakb(monkeypatch, pfcoil):
     monkeypatch.setattr(pfcoil.data.pf_coil, "j_cs_flat_top_end", 20726000)
     monkeypatch.setattr(pfcoil.data.pf_coil, "n_pf_coil_groups", 4)
     monkeypatch.setattr(
-        pfcoil.data.pf_coil, "b_pf_coil_peak", np.zeros(22, dtype=int)
+        pfcoil.data.pf_coil, "b_pf_coil_inner_peak", np.zeros(22, dtype=int)
     )  # maybe
     monkeypatch.setattr(
         pfcoil.data.pf_coil,
