@@ -565,45 +565,12 @@ def calculate_impurity_radiation_power_density(
 
     # W/m³ = nᵢ * nₑ * L(Z, Tₑ)
     # nᵢ = f_nd_species_electron * nₑ
-    pden_impurity_profile = (
+    return (
         data.impurity_radiation.f_nd_impurity_electron_array[imp_element_index]
         * nd_electron_profile
         * nd_electron_profile
         * power_loss_function
     )
-
-    # less_than_imp_temp_mask = temp_electron_profile_kev values less than impurity
-    # temperature.
-
-    less_than_imp_temp_mask = (
-        temp_electron_profile_kev
-        <= data.impurity_radiation.temp_impurity_keV_array[imp_element_index, 0]
-    )
-    # This is okay because line radiation will dominate at lower temp, and the L(Z,Tₑ)
-    # value at the lowest temperature in the table is likely to be an overestimate of the
-    # radiation loss at lower temperatures, so this is a conservative approach.
-    pden_impurity_profile[less_than_imp_temp_mask] = (
-        data.impurity_radiation.pden_impurity_lz_nd_temp_array[imp_element_index, 0]
-    )
-
-    # greater_than_imp_temp_mask = temp_electron_profile_kev values higher than
-    # impurity temperature.
-    greater_than_imp_temp_mask = (
-        temp_electron_profile_kev
-        >= data.impurity_radiation.temp_impurity_keV_array[
-            imp_element_index,
-            data.impurity_radiation.impurity_arr_len_tab[imp_element_index] - 1,
-        ]
-    )
-    #  This is okay because Bremsstrahlung will dominate at higher temp.
-    pden_impurity_profile[greater_than_imp_temp_mask] = (
-        data.impurity_radiation.pden_impurity_lz_nd_temp_array[
-            imp_element_index,
-            data.impurity_radiation.impurity_arr_len_tab[imp_element_index] - 1,
-        ]
-    )
-
-    return pden_impurity_profile
 
 
 def element2index(element: str, data: DataStructure) -> int:
