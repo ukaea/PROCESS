@@ -19,10 +19,10 @@ from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure.pfcoil_variables import (
     N_PF_COILS_IN_GROUP_MAX,
+    N_PF_FIELD_CONSTRAINT_POINTS_MAX,
     N_PF_GROUPS_MAX,
     NFIXMX,
     NGC2,
-    NPTSMX,
     CSUseModel,
     PFConductorModel,
 )
@@ -105,7 +105,7 @@ class PFCoil(Model):
             If there are errors with PF coils.
             See individual ProcessValueError instances for more details.
         """
-        lrow1 = 2 * NPTSMX + N_PF_GROUPS_MAX
+        lrow1 = 2 * N_PF_FIELD_CONSTRAINT_POINTS_MAX + N_PF_GROUPS_MAX
         lcol1 = N_PF_GROUPS_MAX
 
         pcls0 = np.zeros(N_PF_GROUPS_MAX, dtype=int)
@@ -119,7 +119,7 @@ class PFCoil(Model):
             ),
             order="F",
         )
-        brin, bzin, rpts, zpts = np.zeros((4, NPTSMX))
+        brin, bzin, rpts, zpts = np.zeros((4, N_PF_FIELD_CONSTRAINT_POINTS_MAX))
         bfix, bvec = np.zeros((2, lrow1))
         gmat, _, _ = np.zeros((3, lrow1, lcol1), order="F")
         aturn = np.zeros(NGC2)
@@ -365,11 +365,11 @@ class PFCoil(Model):
         if self.data.pf_coil.j_cs_pulse_start != 0.0e0:  # noqa: RUF069
             # Find currents for plasma initiation to null field across plasma
             npts = 32  # Number of test points across plasma midplane
-            if npts > NPTSMX:
+            if npts > N_PF_FIELD_CONSTRAINT_POINTS_MAX:
                 raise ProcessValueError(
                     "Too many test points npts across plasma midplane",
                     npts=npts,
-                    nptsmx=NPTSMX,
+                    nptsmx=N_PF_FIELD_CONSTRAINT_POINTS_MAX,
                 )
 
             # Position and B-field at each test point

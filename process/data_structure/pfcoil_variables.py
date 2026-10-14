@@ -28,24 +28,25 @@ class CSUseModel(IntEnum):
 
 
 N_PF_GROUPS_MAX = 10
-"""maximum number of groups of PF coils"""
+"""Maximum number of groups of PF coils"""
 
 N_PF_COILS_IN_GROUP_MAX = 2
-"""maximum number of PF coils in a given group"""
+"""Maximum number of PF coils in a given group"""
 
-NPTSMX = 32
-"""maximum number of points across the midplane of the plasma at which the field from
+N_PF_FIELD_CONSTRAINT_POINTS_MAX = 32
+"""Maximum number of points across the midplane of the plasma at which the field from
 the PF coils is fixed
 """
 
 NFIXMX = 64
-"""maximum number of fixed current PF coils"""
+"""Maximum number of fixed current PF coils"""
 
 NGC = N_PF_GROUPS_MAX * N_PF_COILS_IN_GROUP_MAX
-"""maximum total number of coils across all groups"""
+"""Maximum total number of coils across all groups"""
 
 NGC2 = NGC + 2
-"""new variable to include 2 additional circuits: plasma and central solenoid"""
+"""Maximum total number of coils including 2 additional circuits: plasma and central
+solenoid"""
 
 
 @dataclass(slots=True)
