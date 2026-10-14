@@ -198,23 +198,27 @@ class PFCoil(Model):
         self.data.pf_coil.dz_cs_full = cs_geometry.dz_cs_full
         self.data.pf_coil.dr_cs_full = cs_geometry.dr_cs_full
 
-        # nfxf is the total no of filaments into which the Central Solenoid is split,
+        # n_cs_current_filaments_total is the total no of filaments into which the
+        # Central Solenoid is split,
         # if present
         if CSUseModel(self.data.build.i_cs_use) == CSUseModel.NO_CENTRAL_SOLENOID:
-            self.data.pf_coil.nfxf = 0
+            self.data.pf_coil.n_cs_current_filaments_total = 0
             c_cs_flat_top_end = 0.0e0
         else:
-            self.data.pf_coil.nfxf = 2 * self.data.pf_coil.n_cs_current_filaments
+            self.data.pf_coil.n_cs_current_filaments_total = (
+                2 * self.data.pf_coil.n_cs_current_filaments
+            )
 
             # total Central Solenoid current at EOF
             c_cs_flat_top_end = -(
                 self.data.pf_coil.a_cs_poloidal * self.data.pf_coil.j_cs_flat_top_end
             )
 
-            if self.data.pf_coil.nfxf > NFIXMX:
+            if self.data.pf_coil.n_cs_current_filaments_total > NFIXMX:
                 raise ProcessValueError(
-                    "Too many filaments nfxf representing the OH coil",
-                    nfxf=self.data.pf_coil.nfxf,
+                    "Too many filaments n_cs_current_filaments_total representing the "
+                    "OH coil",
+                    n_cs_current_filaments_total=self.data.pf_coil.n_cs_current_filaments_total,
                     nfixmx=NFIXMX,
                 )
 
@@ -231,7 +235,7 @@ class PFCoil(Model):
                 z_cs_inside_half=self.data.pf_coil.dz_cs_full / 2,
                 c_cs_flat_top_end=c_cs_flat_top_end,
                 f_j_cs_start_pulse_end_flat_top=self.data.pf_coil.f_j_cs_start_pulse_end_flat_top,
-                nfxf=self.data.pf_coil.nfxf,
+                n_cs_current_filaments_total=self.data.pf_coil.n_cs_current_filaments_total,
             )
 
         # Scale PF coil locations
@@ -389,7 +393,7 @@ class PFCoil(Model):
                 zpts,
                 brin,
                 bzin,
-                self.data.pf_coil.nfxf,
+                self.data.pf_coil.n_cs_current_filaments_total,
                 self.data.pf_coil.r_pf_cs_current_filaments,
                 self.data.pf_coil.z_pf_cs_current_filaments,
                 self.data.pf_coil.c_pf_cs_current_filaments,
@@ -690,15 +694,17 @@ class PFCoil(Model):
                 # Currents at different times:
 
                 # If PF coil currents are computed, not input via ccl0_ma, ccls_ma:
-                # Then set ccl0_ma,ccls_ma from the computed  pf_coil.ccl0, pf_coil.cur_pf_group_equilibrium
+                # Then set ccl0_ma,ccls_ma from the computed  pf_coil.ccl0,
+                # pf_coil.cur_pf_group_equilibrium
                 if self.data.pf_coil.i_pf_current != 0:
                     self.data.pf_coil.ccl0_ma[nng] = 1.0e-6 * self.data.pf_coil.ccl0[nng]
                     self.data.pf_coil.ccls_ma[nng] = (
                         1.0e-6 * self.data.pf_coil.cur_pf_group_equilibrium[nng]
                     )
                 else:
-                    # Otherwise set self.data.pf_coil.ccl0,self.data.pf_coil.cur_pf_group_equilibrium via
-                    # the input ccl0_ma and ccls_ma
+                    # Otherwise set
+                    # self.data.pf_coil.ccl0,self.data.pf_coil.cur_pf_group_equilibrium
+                    # via the input ccl0_ma and ccls_ma
                     self.data.pf_coil.ccl0[nng] = 1.0e6 * self.data.pf_coil.ccl0_ma[nng]
                     self.data.pf_coil.cur_pf_group_equilibrium[nng] = (
                         1.0e6 * self.data.pf_coil.ccls_ma[nng]
@@ -3278,7 +3284,7 @@ class CSCoil(Model):
         z_cs_inside_half: float,
         c_cs_flat_top_end: float,
         f_j_cs_start_pulse_end_flat_top: float,
-        nfxf: int,
+        n_cs_current_filaments_total: int,
     ) -> tuple[list[float], list[float], list[float]]:
         """Places central solenoid (CS) filaments and assigns their
         positions and currents.
@@ -3302,7 +3308,7 @@ class CSCoil(Model):
             Flat-top end current for the CS.
         f_j_cs_start_pulse_end_flat_top:
             Scaling factor for the CS current at the start of the pulse and flat-top end.
-        nfxf:
+        n_cs_current_filaments_total:
             Number of flux loops or scaling factor for current distribution.
 
         Returns
@@ -3336,7 +3342,9 @@ class CSCoil(Model):
 
             # Assign currents to the filaments
             c_pf_cs_current_filaments[filament] = (
-                -c_cs_flat_top_end / nfxf * f_j_cs_start_pulse_end_flat_top
+                -c_cs_flat_top_end
+                / n_cs_current_filaments_total
+                * f_j_cs_start_pulse_end_flat_top
             )
             c_pf_cs_current_filaments[filament + n_cs_current_filaments] = (
                 c_pf_cs_current_filaments[filament]
@@ -4620,7 +4628,7 @@ def peak_b_field_at_pf_coil(
             )
 
             # Current in each filament representing part of the Central Solenoid
-            for iohc in range(data.pf_coil.nfxf):
+            for iohc in range(data.pf_coil.n_cs_current_filaments_total):
                 data.pf_coil.c_pf_cs_current_filaments[iohc] = (
                     data.pf_coil.f_c_pf_cs_peak_time_array[
                         data.pf_coil.n_cs_pf_coils - 1, t_b_field_peak - 1
@@ -4628,10 +4636,10 @@ def peak_b_field_at_pf_coil(
                     * data.pf_coil.j_cs_flat_top_end
                     * sgn
                     * data.pf_coil.a_cs_poloidal
-                    / data.pf_coil.nfxf
+                    / data.pf_coil.n_cs_current_filaments_total
                 )
 
-            kk = data.pf_coil.nfxf
+            kk = data.pf_coil.n_cs_current_filaments_total
 
     # Non-Central Solenoid coils' contributions
     jj = 0

@@ -3552,7 +3552,7 @@ def test_peakb(monkeypatch, pfcoil):
     """
     # Mock module vars
     np.zeros(64)
-    monkeypatch.setattr(pfcoil.data.pf_coil, "nfxf", 14)
+    monkeypatch.setattr(pfcoil.data.pf_coil, "n_cs_current_filaments_total", 14)
     monkeypatch.setattr(
         pfcoil.data.pf_coil,
         "r_pf_cs_current_filaments",

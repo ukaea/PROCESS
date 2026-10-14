@@ -54,7 +54,8 @@ class PFCoilData:
 
     nef: int = 0
 
-    nfxf: int = 0
+    n_cs_current_filaments_total: int = 0
+    """Total number of current filaments in the central solenoid"""
 
     cur_pf_cs_peak_sum_ma: float = 0.0
     """Sum of peak currents in the PF and CS coils [MA]"""
