@@ -1064,7 +1064,7 @@ class PFCoil(Model):
         # Summation of weights and current
         self.data.pf_coil.m_pf_coil_conductor_total = 0.0e0
         self.data.pf_coil.m_pf_coil_structure_total = 0.0e0
-        self.data.pf_coil.ricpf = 0.0e0
+        self.data.pf_coil.cur_pf_cs_peak_sum_ma = 0.0e0
 
         for i in range(self.data.pf_coil.n_cs_pf_coils):
             self.data.pf_coil.m_pf_coil_conductor_total += (
@@ -1073,7 +1073,9 @@ class PFCoil(Model):
             self.data.pf_coil.m_pf_coil_structure_total += (
                 self.data.pf_coil.m_pf_coil_structure[i]
             )
-            self.data.pf_coil.ricpf += abs(self.data.pf_coil.c_pf_cs_coils_peak_ma[i])
+            self.data.pf_coil.cur_pf_cs_peak_sum_ma += abs(
+                self.data.pf_coil.c_pf_cs_coils_peak_ma[i]
+            )
 
         # Plasma size and shape
         self.data.pf_coil.z_pf_coil_upper[self.data.pf_coil.n_cs_pf_coils] = (
@@ -2634,7 +2636,7 @@ class PFCoil(Model):
 
         rows.append([
             "Total",
-            f"{pf_d.ricpf:.3e}",
+            f"{pf_d.cur_pf_cs_peak_sum_ma:.3e}",
             "",
             "",
             "",
