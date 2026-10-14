@@ -72,7 +72,7 @@ class SuperconductorMaterial(IntEnum):
 
     @DynamicClassAttribute
     def density(self):
-        """The density of the superconductor material."""
+        """The density of the superconductor material. [kg/m³]"""
         return self._density_
 
     @DynamicClassAttribute
