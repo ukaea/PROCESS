@@ -119,7 +119,10 @@ class PFCoilData:
     )
     """2D array of PF coil middle heights, indexed by group and coil in group"""
 
-    ccls: list[float] = field(default_factory=lambda: np.zeros(N_PF_GROUPS_MAX))
+    cur_pf_group_equilibrium: list[float] = field(
+        default_factory=lambda: np.zeros(N_PF_GROUPS_MAX)
+    )
+    """Equilibrium current in each PF-coil group (A). Input when `i_pf_current=0`; calculated otherwise."""
 
     ccl0: list[float] = field(default_factory=lambda: np.zeros(N_PF_GROUPS_MAX))
 
