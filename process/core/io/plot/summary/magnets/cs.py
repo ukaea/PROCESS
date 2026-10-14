@@ -11,7 +11,7 @@ from matplotlib import patches
 from process.core.io.plot.summary.common import box_style, setup_axis, text_layout
 from process.core.io.plot.summary.constants import SOLENOID_COLOUR
 from process.core.io.plot.summary.reporting.text import plot_info
-from process.data_structure.pfcoil_variables import NFIXMX
+from process.data_structure.pfcoil_variables import NFIXMX, CSUseModel
 from process.models.superconductors import SuperconductorModel
 
 if TYPE_CHECKING:
@@ -513,7 +513,7 @@ def plot_pf_cs_plasma_mutual_inductance(
     axis.set_yticks(range(n_pf_cs_plasma_circuits))
     labels = list(range(1, n_pf_cs_plasma_circuits + 1))
 
-    if iohcl == 1:
+    if CSUseModel(iohcl) == CSUseModel.FULL_PULSE:
         labels[-2] = "CS"
     labels[-1] = "Plasma"
     axis.set_xticklabels(labels)
