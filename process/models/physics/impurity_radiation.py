@@ -549,15 +549,27 @@ def calculate_impurity_radiation_power_density(
 
     # Use numpy.interp for linear interpolation in log-log space to find the
     # loss function values for the given temperature profile L(Z, Tₑ).
+    # If the temperature profile is out of the bounds of the data use the last know
+    # value
     power_loss_function = np.exp(
         np.interp(
-            np.log(temp_electron_profile_kev),
-            np.log(
+            x=np.log(temp_electron_profile_kev),
+            xp=np.log(
                 data.impurity_radiation.temp_impurity_keV_array[imp_element_index, :]
             ),
-            np.log(
+            fp=np.log(
                 data.impurity_radiation.pden_impurity_lz_nd_temp_array[
                     imp_element_index, :
+                ]
+            ),
+            left=np.log(
+                data.impurity_radiation.pden_impurity_lz_nd_temp_array[
+                    imp_element_index, 0
+                ]
+            ),
+            right=np.log(
+                data.impurity_radiation.pden_impurity_lz_nd_temp_array[
+                    imp_element_index, -1
                 ]
             ),
         )
