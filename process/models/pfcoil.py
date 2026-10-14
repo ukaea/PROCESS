@@ -4726,23 +4726,29 @@ def peak_b_field_at_pf_coil(
 
     # Calculate the field at the inner and outer edges
     # of the coil of interest
-    data.pf_coil.xind[:kk], b_pf_inner_radial, b_pf_inner_vertical, _psi = (
-        calculate_b_field_at_point(
-            r_current_loop=data.pf_coil.r_pf_cs_current_filaments[:kk],
-            z_current_loop=data.pf_coil.z_pf_cs_current_filaments[:kk],
-            c_current_loop=data.pf_coil.c_pf_cs_current_filaments[:kk],
-            r_test_point=data.pf_coil.r_pf_coil_inner[n_coil - 1],
-            z_test_point=data.pf_coil.z_pf_coil_middle[n_coil - 1],
-        )
+    (
+        data.pf_coil.ind_pf_coil_edge_mutual[:kk],
+        b_pf_inner_radial,
+        b_pf_inner_vertical,
+        _psi,
+    ) = calculate_b_field_at_point(
+        r_current_loop=data.pf_coil.r_pf_cs_current_filaments[:kk],
+        z_current_loop=data.pf_coil.z_pf_cs_current_filaments[:kk],
+        c_current_loop=data.pf_coil.c_pf_cs_current_filaments[:kk],
+        r_test_point=data.pf_coil.r_pf_coil_inner[n_coil - 1],
+        z_test_point=data.pf_coil.z_pf_coil_middle[n_coil - 1],
     )
-    data.pf_coil.xind[:kk], b_pf_outer_radial, b_pf_outer_vertical, _psi = (
-        calculate_b_field_at_point(
-            r_current_loop=data.pf_coil.r_pf_cs_current_filaments[:kk],
-            z_current_loop=data.pf_coil.z_pf_cs_current_filaments[:kk],
-            c_current_loop=data.pf_coil.c_pf_cs_current_filaments[:kk],
-            r_test_point=data.pf_coil.r_pf_coil_outer[n_coil - 1],
-            z_test_point=data.pf_coil.z_pf_coil_middle[n_coil - 1],
-        )
+    (
+        data.pf_coil.ind_pf_coil_edge_mutual[:kk],
+        b_pf_outer_radial,
+        b_pf_outer_vertical,
+        _psi,
+    ) = calculate_b_field_at_point(
+        r_current_loop=data.pf_coil.r_pf_cs_current_filaments[:kk],
+        z_current_loop=data.pf_coil.z_pf_cs_current_filaments[:kk],
+        c_current_loop=data.pf_coil.c_pf_cs_current_filaments[:kk],
+        r_test_point=data.pf_coil.r_pf_coil_outer[n_coil - 1],
+        z_test_point=data.pf_coil.z_pf_coil_middle[n_coil - 1],
     )
 
     # b_pf_coil_peak and bpf2 for the Central Solenoid are calculated in OHCALC
