@@ -20,7 +20,7 @@ epsvmc = 1e-7
 * Inequality constraint tolerance 
 force_vmcon_inequality_tolerance = 1e-6
 
-n_equality_constraints = 3
+n_equality_constraints = 2
 
 * Scan Variables *
 ******************
@@ -31,12 +31,6 @@ sweep = 10.5, 10.4, 10.3, 10.2, 10.1, 10.0
 
 * Constraint Equations - Consistency Equations *
 ************************************************
-
-* Beta consistency *
-*------------------*
-icc = 1
-ixc = 5 * beta_total_vol_avg
-beta_total_vol_avg = 0.03
 
 * Global power balance *
 *----------------------*
