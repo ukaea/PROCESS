@@ -1730,7 +1730,7 @@ i_pf_superconductor = 9
 * Input if i_pf_current=0, computed otherwise
 * JUSTIFICATION: Not used, no i+pf_current
 
-*ccls_ma =  
+*cur_pf_group_equilibrium_ma =  
 * DESCRIPTION:  PF group current array, equilibrium current (MA)
 *Input if i_pf_current=0, computed otherwise
 * JUSTIFICATION: Not used, no i_pf_current.

@@ -179,10 +179,10 @@ class PFCoilData:
     Input if i_pf_current=0, computed otherwise
     """
 
-    ccls_ma: list[float] = field(default_factory=lambda: np.zeros(N_PF_GROUPS_MAX))
-    """PF group current array, equilibrium current (MA)
-    Input if i_pf_current=0, computed otherwise
-    """
+    cur_pf_group_equilibrium_ma: list[float] = field(
+        default_factory=lambda: np.zeros(N_PF_GROUPS_MAX)
+    )
+    """Equilibrium current in each PF-coil group [MA]. Input when `i_pf_current=0`; calculated otherwise."""
 
     j_cs_pulse_start: float = 0.0
     """Central solenoid overall current density at beginning of pulse (A/m2)"""

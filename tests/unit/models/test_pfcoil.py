@@ -2457,7 +2457,7 @@ class PFCoilParam(NamedTuple):
     rref: Any = None
     i_pf_current: Any = None
     ccl0_ma: Any = None
-    ccls_ma: Any = None
+    cur_pf_group_equilibrium_ma: Any = None
     kappa: Any = None
     ind_plasma_internal_norm: Any = None
     itartpf: Any = None
@@ -2530,7 +2530,7 @@ class PFCoilParam(NamedTuple):
             rref=np.full(10, 7.0),
             i_pf_current=1,
             ccl0_ma=np.full(10, 0.0),
-            ccls_ma=np.full(10, 0.0),
+            cur_pf_group_equilibrium_ma=np.full(10, 0.0),
             kappa=1.727,
             ind_plasma_internal_norm=1.693,
             itartpf=0,
@@ -2621,7 +2621,7 @@ def test_pfcoil(monkeypatch, pfcoil, pfcoilparam):
         "rref",
         "i_pf_current",
         "ccl0_ma",
-        "ccls_ma",
+        "cur_pf_group_equilibrium_ma",
         "first_call",
     ]:
         monkeypatch.setattr(pfcoil.data.pf_coil, field, getattr(pfcoilparam, field))
