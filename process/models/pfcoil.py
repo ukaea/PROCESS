@@ -903,14 +903,14 @@ class PFCoil(Model):
                         n_coil_group=iii + 1,
                         t_b_field_peak=it,
                         data=self.data,
-                    )  # returns b_pf_coil_peak, b_pf_coil_outer_peak
+                    )  # returns b_pf_coil_inner_peak, b_pf_coil_outer_peak
 
                 # Issue 1871.  MDK
                 # Allowable current density (for superconducting coils) for each coil,
                 # index i
                 if self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
                     bmax = max(
-                        abs(self.data.pf_coil.b_pf_coil_peak[i]),
+                        abs(self.data.pf_coil.b_pf_coil_inner_peak[i]),
                         abs(self.data.pf_coil.b_pf_coil_outer_peak[i]),
                     )
 
@@ -999,7 +999,7 @@ class PFCoil(Model):
                 forcepf = (
                     0.5e6
                     * (
-                        self.data.pf_coil.b_pf_coil_peak[i]
+                        self.data.pf_coil.b_pf_coil_inner_peak[i]
                         + self.data.pf_coil.b_pf_coil_outer_peak[i]
                     )
                     * abs(self.data.pf_coil.c_pf_cs_coils_peak_ma[i])
@@ -2550,8 +2550,8 @@ class PFCoil(Model):
             op.ovarre(
                 self.mfile,
                 f"PF coil {k + 1} field (T)",
-                f"(b_pf_coil_peak[{k + 1}])",
-                pf_d.b_pf_coil_peak[k],
+                f"(b_pf_coil_inner_peak[{k + 1}])",
+                pf_d.b_pf_coil_inner_peak[k],
             )
         for time in range(6):
             op.ovarre(
@@ -2606,8 +2606,8 @@ class PFCoil(Model):
             op.ovarre(
                 self.mfile,
                 "Central solenoid field (T)",
-                "(b_pf_coil_peak[n_cs_pf_coils-1])",
-                pf_d.b_pf_coil_peak[pf_d.n_cs_pf_coils - 1],
+                "(b_pf_coil_inner_peak[n_cs_pf_coils-1])",
+                pf_d.b_pf_coil_inner_peak[pf_d.n_cs_pf_coils - 1],
             )
 
         op.oblnkl(self.outfile)
@@ -2639,7 +2639,7 @@ class PFCoil(Model):
                     f"{pf_d.j_pf_coil_wp_peak[k] / pf_d.j_pf_wp_critical[k]:.3e}",
                     f"{pf_d.m_pf_coil_conductor[k]:.3e}",
                     f"{pf_d.m_pf_coil_structure[k]:.3e}",
-                    f"{pf_d.b_pf_coil_peak[k]:.3e}",
+                    f"{pf_d.b_pf_coil_inner_peak[k]:.3e}",
                 ])
             else:
                 rows.append([
@@ -2650,7 +2650,7 @@ class PFCoil(Model):
                     "1.0e0",
                     f"{pf_d.m_pf_coil_conductor[k]:.3e}",
                     f"{pf_d.m_pf_coil_structure[k]:.3e}",
-                    f"{pf_d.b_pf_coil_peak[k]:.3e}",
+                    f"{pf_d.b_pf_coil_inner_peak[k]:.3e}",
                 ])
 
         # Central Solenoid, if present
@@ -2670,7 +2670,7 @@ class PFCoil(Model):
                     f"{(cs_peak_j / pf_d.j_pf_wp_critical[cs_index]):.3e}",
                     f"{pf_d.m_pf_coil_conductor[cs_index]:.3e}",
                     f"{pf_d.m_pf_coil_structure[cs_index]:.3e}",
-                    f"{pf_d.b_pf_coil_peak[cs_index]:.3e}",
+                    f"{pf_d.b_pf_coil_inner_peak[cs_index]:.3e}",
                 ])
             else:
                 rows.append([
@@ -2681,7 +2681,7 @@ class PFCoil(Model):
                     "1.0e0",
                     f"{pf_d.m_pf_coil_conductor[cs_index]:.3e}",
                     f"{pf_d.m_pf_coil_structure[cs_index]:.3e}",
-                    f"{pf_d.b_pf_coil_peak[cs_index]:.3e}",
+                    f"{pf_d.b_pf_coil_inner_peak[cs_index]:.3e}",
                 ])
 
         rows.append([
@@ -3552,9 +3552,11 @@ class CSCoil(Model):
         )
 
         # Maximum field values
-        self.data.pf_coil.b_pf_coil_peak[self.data.pf_coil.n_cs_pf_coils - 1] = max(
-            self.data.pf_coil.b_cs_peak_flat_top_end,
-            abs(self.data.pf_coil.b_cs_peak_pulse_start),
+        self.data.pf_coil.b_pf_coil_inner_peak[self.data.pf_coil.n_cs_pf_coils - 1] = (
+            max(
+                self.data.pf_coil.b_cs_peak_flat_top_end,
+                abs(self.data.pf_coil.b_cs_peak_pulse_start),
+            )
         )
         self.data.pf_coil.b_pf_coil_outer_peak[self.data.pf_coil.n_cs_pf_coils - 1] = (
             max(bohco, abs(b_pf_outer_vertical))
@@ -4784,7 +4786,8 @@ def peak_b_field_at_pf_coil(
         z_test_point=data.pf_coil.z_pf_coil_middle[n_coil - 1],
     )
 
-    # b_pf_coil_peak and b_pf_coil_outer_peak for the Central Solenoid are calculated in OHCALC
+    # b_pf_coil_inner_peak and b_pf_coil_outer_peak for the Central Solenoid are
+    # calculated in ohcalc()
     if (CSUseModel(data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID) and (
         n_coil == data.pf_coil.n_cs_pf_coils
     ):
@@ -4798,7 +4801,7 @@ def peak_b_field_at_pf_coil(
     bpfin = math.sqrt(b_pf_inner_radial**2 + b_pf_inner_vertical**2)
     bpfout = math.sqrt(b_pf_outer_radial**2 + b_pf_outer_vertical**2)
     for n in range(data.pf_coil.n_pf_coils_in_group[n_coil_group - 1]):
-        data.pf_coil.b_pf_coil_peak[n_coil - 1 + n] = bpfin
+        data.pf_coil.b_pf_coil_inner_peak[n_coil - 1 + n] = bpfin
         data.pf_coil.b_pf_coil_outer_peak[n_coil - 1 + n] = bpfout
 
     return (
