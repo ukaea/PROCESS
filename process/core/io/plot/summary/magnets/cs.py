@@ -329,7 +329,12 @@ def plot_cs_coil_structure(
         f" {mfile.get('dr_cs_full', scan=scan):.4f} m\nCS poloidal area:"
         f" {mfile.get('a_cs_poloidal', scan=scan):.4f} m$^2$\nCS top-down"
         f" toroidal area: {mfile.get('a_cs_toroidal', scan=scan):.4f}"
-        " m$^2$\n$N_{\\text{turns}}:$"
+        " m$^2$\n"
+        f"CS ratio of outer to inner radius ($\\alpha$): "
+        f"{mfile.get('f_r_cs_outer_inner', scan=scan):.4f}\n"
+        f"CS ratio of solenoid half height to inner radius ($\\beta$): "
+        f"{mfile.get('f_len_cs_upper_inner', scan=scan):.4f}\n"
+        "$N_{\\text{turns}}:$"
         f" {mfile.get('n_pf_coil_turns[n_cs_pf_coils-1]', scan=scan):,.2f}\n$I_{{\\text{{peak}}}}:$"  # noqa: E501
         f" {mfile.get('c_pf_cs_coils_peak_ma[n_cs_pf_coils-1]', scan=scan):.3f}"
         " MA\n$B_{\\text{peak}}:$"
