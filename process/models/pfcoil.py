@@ -1654,15 +1654,13 @@ class PFCoil(Model):
         This routine calculates the volt-second capability of the PF
         coil system.
         """
-        if CSUseModel(self.data.build.i_cs_use) == CSUseModel.NO_CENTRAL_SOLENOID:
-            # No Central Solenoid
-            self.data.pf_coil.nef = self.data.pf_coil.n_pf_cs_plasma_circuits - 1
-        else:  # Full pulse
-            self.data.pf_coil.nef = self.data.pf_coil.n_pf_cs_plasma_circuits - 2
+        n_pf_coil_circuits = self.data.pf_coil.n_pf_cs_plasma_circuits - 1
+        if CSUseModel(self.data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID:
+            n_pf_coil_circuits -= 1
 
         self.data.pf_coil.vs_pf_coils_total_ramp = 0.0e0
 
-        for i in range(self.data.pf_coil.nef):
+        for i in range(n_pf_coil_circuits):
             self.data.pf_coil.vsdum[i, 0] = (
                 self.data.pf_coil.ind_pf_cs_plasma_mutual[
                     self.data.pf_coil.n_pf_cs_plasma_circuits - 1, i
@@ -1727,7 +1725,7 @@ class PFCoil(Model):
 
         # PF volt-seconds during burn
         self.data.pf_coil.vs_pf_coils_total_burn = 0.0e0
-        for i in range(self.data.pf_coil.nef):
+        for i in range(n_pf_coil_circuits):
             self.data.pf_coil.vsdum[i, 2] = (
                 self.data.pf_coil.ind_pf_cs_plasma_mutual[
                     self.data.pf_coil.n_pf_cs_plasma_circuits - 1, i
@@ -1976,13 +1974,12 @@ class PFCoil(Model):
                     )
 
         # PF coil - PF coil inductances
-        if CSUseModel(self.data.build.i_cs_use) == CSUseModel.NO_CENTRAL_SOLENOID:
-            pf_d.nef = pf_d.n_cs_pf_coils
-        else:
-            pf_d.nef = pf_d.n_cs_pf_coils - 1
+        n_pf_coils_excluding_cs = pf_d.n_cs_pf_coils
+        if CSUseModel(self.data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID:
+            n_pf_coils_excluding_cs -= 1
 
-        for i in range(pf_d.nef):
-            for j in range(pf_d.nef - 1):
+        for i in range(n_pf_coils_excluding_cs):
+            for j in range(n_pf_coils_excluding_cs - 1):
                 jj = j + 1 + 1 if j >= i else j + 1
 
                 zc[j] = pf_d.z_pf_coil_middle[jj - 1]
@@ -1997,7 +1994,7 @@ class PFCoil(Model):
                 r_test_point=rp,
                 z_test_point=zp,
             )
-            for k in range(pf_d.nef):
+            for k in range(n_pf_coils_excluding_cs):
                 if k < i:
                     pf_d.ind_pf_cs_plasma_mutual[i, k] = (
                         xc[k] * pf_d.n_pf_coil_turns[k] * pf_d.n_pf_coil_turns[i]
@@ -2026,7 +2023,7 @@ class PFCoil(Model):
         op.oblnkl(self.outfile)
         with np.printoptions(precision=1):
             n_pf_cs = pf_d.n_pf_cs_plasma_circuits
-            for ig in range(pf_d.nef):
+            for ig in range(n_pf_coils_excluding_cs):
                 op.write(
                     self.outfile,
                     f"{ig + 1}\t{pf_d.ind_pf_cs_plasma_mutual[:n_pf_cs, ig]}",
@@ -2428,10 +2425,9 @@ class PFCoil(Model):
                     "OP ",
                 )
 
-        # pf_d.nef is the number of coils excluding the Central Solenoid
-        pf_d.nef = pf_d.n_cs_pf_coils
+        n_pf_coils_excluding_cs = pf_d.n_cs_pf_coils
         if CSUseModel(self.data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID:
-            pf_d.nef -= 1
+            n_pf_coils_excluding_cs -= 1
 
         op.osubhd(self.outfile, "Geometry of PF coils, central solenoid and plasma:")
         op.oblnkl(self.outfile)
@@ -2445,7 +2441,7 @@ class PFCoil(Model):
                 f"{abs(pf_d.z_pf_coil_upper[k] - pf_d.z_pf_coil_lower[k]):.2e}",
                 f"{pf_d.n_pf_coil_turns[k]:.2e}",
             ]
-            for k in range(pf_d.nef)
+            for k in range(n_pf_coils_excluding_cs)
         ]
 
         if CSUseModel(self.data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID:
@@ -2481,7 +2477,7 @@ class PFCoil(Model):
             ),
         )
 
-        for k in range(pf_d.nef):
+        for k in range(n_pf_coils_excluding_cs):
             op.ovarre(
                 self.mfile,
                 f"PF coil {k + 1} radius (m)",
@@ -2600,7 +2596,7 @@ class PFCoil(Model):
         rows = []
 
         # PF coils
-        for k in range(pf_d.nef):
+        for k in range(n_pf_coils_excluding_cs):
             if pf_d.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
                 rows.append([
                     f"PF {k + 1}",
@@ -2752,7 +2748,10 @@ class PFCoil(Model):
         op.oblnkl(self.outfile)
         headers = ["Circuit", "BOP", "BOF", "EOF"]
         rows = []
-        for k in range(pf.nef):
+        n_pf_coil_circuits = pf.n_pf_cs_plasma_circuits - 1
+        if self.data.build.iohcl != 0:
+            n_pf_coil_circuits -= 1
+        for k in range(n_pf_coil_circuits):
             rows.append([
                 f"PF {k + 1}",
                 f"{pf.vsdum[k, 0]:.3f}",

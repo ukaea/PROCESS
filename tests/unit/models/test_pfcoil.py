@@ -64,7 +64,6 @@ def test_init_pfcoil(pfcoil):
     # Test a selection of module variables
     assert pfcoil.data.pf_coil.ssq0 == pytest.approx(0.0)
     assert pfcoil.data.pf_coil.cslimit == 0
-    assert pfcoil.data.pf_coil.nef == 0
 
 
 class RsidParam(NamedTuple):
