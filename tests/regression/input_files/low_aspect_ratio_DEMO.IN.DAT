@@ -48,6 +48,10 @@ icc = 11 * Radial build
 * DESCRIPTION:   Radial Build Consistency
 * JUSTIFICATION: Consistency equations should always be on
 
+icc = 93
+* DESCRIPTION:   Plasma fuel-ion equillibrium
+* JUSTIFICATION: Consistency equations should always be on
+
 icc = 30 
 * DESCRIPTION:   Injection Power Upper Limit
 * JUSTIFICATION: Limit for plasma stability
@@ -291,6 +295,11 @@ ixc = 135
 f_nd_impurity_electrons(13) = 1.5e-04
 * DESCRIPTION:   Xenon Impurity Concentration
 * JUSTIFICATION: Xenon impurity used based on DEMO-2018
+
+ixc = 178
+molflow_plasma_fuelling = 4.5e+21
+* DESCRIPTION:   Plasma fuelling rate
+* JUSTIFICATION: Use to find fuel-ion equillibrium.
 
 *scan_dim = 1
 
