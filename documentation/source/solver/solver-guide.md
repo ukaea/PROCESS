@@ -20,7 +20,7 @@ At the heart of a PROCESS solution is a plasma operating in a self-consistent eq
 The principal plasma state is described by the electron temperature and density,
 
 $$
-\langle T_e \rangle ,\qquad \langle n_e \rangle.
+\langle T_e \rangle ,\qquad \langle n_e \rangle
 $$
 
 To determine these two quantities, two independent governing equations are required.
@@ -49,7 +49,7 @@ For the plasma to remain in a steady operating state, the power supplied to the 
 Schematically,
 
 $$
-P_{\mathrm{heating}} = P_{\mathrm{loss}}.
+P_{\mathrm{heating}} = P_{\mathrm{loss}}
 $$
 
 The heating and loss terms depend on the plasma state and on the selected PROCESS physics models. The power balance therefore provides one relationship between plasma temperature and density.
@@ -65,7 +65,7 @@ Fusion reactions consume fuel ions. To maintain the plasma state, this consumpti
 Schematically,
 
 $$
-\text{fuel supplied} = \text{fuel required to sustain the fusion reaction rate}.
+\text{fuel supplied} = \text{fuel required to sustain the fusion reaction rate}
 $$
 
 PROCESS represents this condition using **constraint 93**.
@@ -88,21 +88,13 @@ PROCESS therefore also defines **inequality constraints**, or **limit equations*
 
 Examples include limits on plasma density, beta, fusion power, neutron wall load, divertor power loading, magnet stresses and burn time.
 
-This gives an important distinction:
+This gives an important distinction between a PROCESS solution, and a _feasible_ PROCESS solution.
 
-$$
-\text{PROCESS solution}
-=
-\text{required equality constraints satisfied}
-$$
+A **PROCESS solution** requires that the governing equality constraints are satisfied.
 
-whereas
+Whereas:
 
-$$
-\text{feasible PROCESS solution}
-=
-\text{solution that also satisfies the required inequality constraints}
-$$
+A **feasible PROCESS solution** must also satisfies the required inequality constraints.
 
 A point may therefore be a valid solution of the PROCESS governing equations while still being infeasible because one or more design limits are violated.
 
@@ -184,7 +176,7 @@ PROCESS solves a nonlinear, coupled constrained problem iteratively. Numerical c
 For equality constraints,
 
 $$
-c_i \approx 0.
+c_i \approx 0
 $$
 
 Numerical convergence should not be confused with feasibility: a converged calculation may still violate one or more inequality constraints.
