@@ -46,7 +46,6 @@ ITERATION_VARIABLES = {
     2: IterationVariable("b_plasma_toroidal_on_axis", "physics", 0.010, 30.00),
     3: IterationVariable("rmajor", "physics", 0.1, 50.00),
     4: IterationVariable("temp_plasma_electron_vol_avg_kev", "physics", 5.0, 150.0),
-    5: IterationVariable("beta_total_vol_avg", "physics", 0.001, 1.0),
     6: IterationVariable("nd_plasma_electrons_vol_avg", "physics", 2.0e19, 1.0e21),
     7: IterationVariable("f_nd_beam_electron", "physics", 1.0e-6, 1.0),
     10: IterationVariable("hfact", "physics", 0.1, 3.0),

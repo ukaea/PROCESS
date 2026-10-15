@@ -17,16 +17,10 @@ i_figure_merit = 1
 * Error tolerance for VMCON
 epsvmc = 1e-7
 
-n_equality_constraints = 3
+n_equality_constraints = 1
 
 * Constraint Equations - Consistency Equations *
 ************************************************
-
-* Beta consistency *
-*------------------*
-icc = 1
-ixc = 5 * beta_total_vol_avg
-beta_total_vol_avg = 0.03
 
 * Global power balance *
 *----------------------*
