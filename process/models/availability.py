@@ -755,7 +755,6 @@ class Availability(Model):
             self.data.tfcoil.temp_tf_superconductor_margin_min,
             self.data.tfcoil.temp_cs_superconductor_margin_min,
         )
-        mag_temp_marg_limit = tmargmin
 
         # Magnet maintenance time (years)
         mag_main_time = 0.5e0
@@ -768,7 +767,7 @@ class Availability(Model):
         # Point at which risk of unplanned unavailability increases
         # conf_mag is the c factor, which determines the temperature margin at which
         # lifetime starts to decline.
-        start_of_risk = mag_temp_marg_limit / self.data.costs.conf_mag
+        start_of_risk = tmargmin / self.data.costs.conf_mag
 
         # Determine if temperature margin is in region with risk of
         # unplanned unavailability
