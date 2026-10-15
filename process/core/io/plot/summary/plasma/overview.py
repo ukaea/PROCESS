@@ -395,9 +395,9 @@ def plot_main_plasma_information(
     add_symbol(axis, "Vs", 0.30, 0.77)
 
     textstr_div = (
-        f"$P_{{\\text{{sep}}}}$: {value('p_plasma_separatrix_mw'):.2f} MW\n"
+        f"$P_{{\\text{{sep}}}}$: {value('p_plasma_separatrix_mw'):.2f} MW\n\n"
         f"$\\frac{{P_{{\\text{{sep}}}}}}{{R}}$: "
-        f"{value('p_plasma_separatrix_rmajor_mw'):.2f} MW/m\n"
+        f"{value('p_plasma_separatrix_rmajor_mw'):.2f} MW/m\n\n"
         f"$\\frac{{P_{{\\text{{sep}}}}B_T}}{{q_{{95}} A R}}$: "
         f"{value('p_div_bt_q_aspect_rmajor_mw'):.2f} MW T/m"
     )
@@ -695,72 +695,24 @@ def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int
 
     light_yellow_box = box_style("lightyellow")
 
-    axis.text(
-        0.05,
-        0.45,
-        textstr_debye,
-        **text_layout(fig, v_align="top"),
-        bbox=light_yellow_box,
-    )
+    add_panel(axis, 0.05, 0.45, 0.185, 0.115, textstr_debye, light_yellow_box)
 
-    axis.text(
-        0.25,
-        0.45,
-        textstr_larmor,
-        **text_layout(fig, v_align="top"),
-        bbox=light_yellow_box,
-    )
+    add_panel(axis, 0.25, 0.45, 0.185, 0.115, textstr_larmor, light_yellow_box)
 
-    axis.text(
-        0.45,
-        0.45,
-        textstr_velocities,
-        **text_layout(fig, v_align="top"),
-        bbox=light_yellow_box,
-    )
+    add_panel(axis, 0.45, 0.45, 0.185, 0.115, textstr_velocities, light_yellow_box)
 
     light_cyan_box = box_style("lightcyan")
-    axis.text(
-        0.05,
-        0.31,
-        textstr_frequencies,
-        **text_layout(fig, v_align="top"),
-        bbox=light_cyan_box,
-    )
+    add_panel(axis, 0.05, 0.31, 0.185, 0.120, textstr_frequencies, light_cyan_box)
 
-    axis.text(
-        0.25,
-        0.31,
-        textstr_coulomb,
-        **text_layout(fig, v_align="top"),
-        bbox=light_cyan_box,
-    )
+    add_panel(axis, 0.25, 0.31, 0.185, 0.120, textstr_coulomb, light_cyan_box)
 
-    axis.text(
-        0.45,
-        0.31,
-        textstr_collision_times,
-        **text_layout(fig, v_align="top"),
-        bbox=light_cyan_box,
-    )
+    add_panel(axis, 0.45, 0.31, 0.185, 0.120, textstr_collision_times, light_cyan_box)
 
     light_green_box = box_style("lightgreen")
 
-    axis.text(
-        0.05,
-        0.17,
-        textstr_collision_freq,
-        **text_layout(fig, v_align="top"),
-        bbox=light_green_box,
-    )
+    add_panel(axis, 0.05, 0.17, 0.185, 0.115, textstr_collision_freq, light_green_box)
 
-    axis.text(
-        0.25,
-        0.17,
-        textstr_mfp,
-        **text_layout(fig, v_align="top"),
-        bbox=light_green_box,
-    )
+    add_panel(axis, 0.25, 0.17, 0.185, 0.115, textstr_mfp, light_green_box)
 
     axis.text(
         0.45,

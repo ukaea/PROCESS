@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import patches
 
-from process.core.io.plot.summary.common import box_style, setup_axis, text_layout
+from process.core.io.plot.summary.common import add_panel, box_style, setup_axis
 from process.core.io.plot.summary.constants import SOLENOID_COLOUR
 from process.core.io.plot.summary.reporting.text import plot_info
 from process.data_structure.pfcoil_variables import NFIXMX, CSUseModel
@@ -164,9 +164,7 @@ def plot_magnetics_info(axis: plt.Axes, mfile: MFile, scan: int):
     plot_info(axis, data, mfile, scan)
 
 
-def plot_cs_coil_structure(
-    axis: plt.Axes, fig, mfile: MFile, scan: int, colour_scheme=1
-):
+def plot_cs_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_scheme=1):
     """Function to plot the coil structure of the CS.
 
     Parameters
@@ -344,13 +342,7 @@ def plot_cs_coil_structure(
         f" {mfile.get('stress_shear_cs_peak', scan=scan) / 1e6:.3f} MPa "
     )
 
-    axis.text(
-        0.5,
-        0.6,
-        textstr_cs,
-        **text_layout(fig),
-        bbox=box_style("lightyellow"),
-    )
+    add_panel(axis, 0.52, 0.88, 0.22, 0.27, textstr_cs, box_style("lightyellow"))
 
     # Plot the current filament points as blue dots and label them
 
@@ -370,7 +362,7 @@ def plot_cs_coil_structure(
     axis.legend()
 
 
-def plot_cs_turn_structure(axis: plt.Axes, fig, mfile: MFile, scan: int):
+def plot_cs_turn_structure(axis: plt.Axes, mfile: MFile, scan: int):
     """Plot the CS turn structure"""
     a_cs_turn = mfile.get("a_cs_turn", scan=scan)
     dz_cs_turn = mfile.get("dz_cs_turn", scan=scan)
@@ -458,13 +450,7 @@ def plot_cs_turn_structure(axis: plt.Axes, fig, mfile: MFile, scan: int):
         f" {f_a_cs_turn_steel:.4f}\n"
     )
 
-    axis.text(
-        0.7,
-        0.375,
-        textstr_turn,
-        **text_layout(fig),
-        bbox=box_style("lightyellow"),
-    )
+    add_panel(axis, 0.74, 0.43, 0.22, 0.18, textstr_turn, box_style("lightyellow"))
 
     axis.set_xlim(-dr_cs_turn * 0.2, dr_cs_turn * 1.2)
     axis.set_ylim(-dz_cs_turn * 0.3, dz_cs_turn * 1.3)
