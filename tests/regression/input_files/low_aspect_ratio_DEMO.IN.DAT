@@ -297,7 +297,7 @@ f_nd_impurity_electrons(13) = 1.5e-04
 * JUSTIFICATION: Xenon impurity used based on DEMO-2018
 
 ixc = 178
-molflow_plasma_fuelling = 4.45548408068305741e+21
+molflow_plasma_fuelling = 4.5e+21
 * DESCRIPTION:   Plasma fuelling rate
 * JUSTIFICATION: Use to find fuel-ion equillibrium.
 
