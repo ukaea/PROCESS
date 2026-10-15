@@ -20,7 +20,7 @@ At the heart of a PROCESS solution is a plasma operating in a self-consistent eq
 The principal plasma state is described by the electron temperature and density,
 
 $$
-T_e,\qquad n_e.
+\langle T_e \rangle ,\qquad \langle n_e \rangle.
 $$
 
 To determine these two quantities, two independent governing equations are required.
