@@ -494,7 +494,7 @@ def plot_pf_cs_plasma_mutual_inductance(
     """
     n_pf_cs_plasma_circuits = int(m_file.get("n_pf_cs_plasma_circuits", scan=scan))
     mutual_inductance = np.zeros((n_pf_cs_plasma_circuits, n_pf_cs_plasma_circuits))
-    iohcl = int(m_file.get("iohcl", scan=scan))
+    i_cs_use = int(m_file.get("i_cs_use", scan=scan))
 
     for coil in range(n_pf_cs_plasma_circuits):
         for circuit in range(n_pf_cs_plasma_circuits):
@@ -513,7 +513,7 @@ def plot_pf_cs_plasma_mutual_inductance(
     axis.set_yticks(range(n_pf_cs_plasma_circuits))
     labels = list(range(1, n_pf_cs_plasma_circuits + 1))
 
-    if CSUseModel(iohcl) == CSUseModel.FULL_PULSE:
+    if CSUseModel(i_cs_use) == CSUseModel.FULL_PULSE:
         labels[-2] = "CS"
     labels[-1] = "Plasma"
     axis.set_xticklabels(labels)

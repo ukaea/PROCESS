@@ -60,15 +60,17 @@ def plot_pf_coils(
             number_of_coils += 1
 
     # Check for Central Solenoid
-    iohcl = (
-        mfile.get("iohcl", scan=scan) if "iohcl" in mfile.data else CSUseModel.FULL_PULSE
+    i_cs_use = (
+        mfile.get("i_cs_use", scan=scan)
+        if "i_cs_use" in mfile.data
+        else CSUseModel.FULL_PULSE
     )
 
     # If Central Solenoid present, ignore last entry in for loop
     # The last entry will be the OH coil in this case
     noc = (
         number_of_coils - 1
-        if CSUseModel(iohcl) == CSUseModel.FULL_PULSE
+        if CSUseModel(i_cs_use) == CSUseModel.FULL_PULSE
         else number_of_coils
     )
 
@@ -152,10 +154,12 @@ def plot_pf_dimensions(
     z_pf_coil_middle = []
     radial_thicknesses = []
     vertical_thicknesses = []
-    iohcl = (
-        mfile.get("iohcl", scan=scan) if "iohcl" in mfile.data else CSUseModel.FULL_PULSE
+    i_cs_use = (
+        mfile.get("i_cs_use", scan=scan)
+        if "i_cs_use" in mfile.data
+        else CSUseModel.FULL_PULSE
     )
-    x = 1 if CSUseModel(iohcl) == CSUseModel.NO_CENTRAL_SOLENOID else 2
+    x = 1 if CSUseModel(i_cs_use) == CSUseModel.NO_CENTRAL_SOLENOID else 2
     for coil in range(int(mfile.get("n_pf_cs_plasma_circuits", scan=scan) - x)):
         r_pf_coil_middle.append(mfile.get(f"r_pf_coil_middle[{coil + 1}]", scan=scan))
         z_pf_coil_middle.append(mfile.get(f"z_pf_coil_middle[{coil + 1}]", scan=scan))
