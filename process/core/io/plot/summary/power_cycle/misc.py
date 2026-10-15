@@ -1652,7 +1652,7 @@ def plot_power_info(axis: plt.Axes, mfile: MFile, scan: int):
         coredescription,
         ped_height,
         ped_pos,
-        ("p_plasma_inner_rad_mw", "Inner zone radiation", "MW"),
+        ("p_plasma_core_rad_reduced_mw", "Inner zone radiation", "MW"),
         ("p_plasma_rad_mw", "Total radiation in LCFS", "MW"),
         ("p_blkt_nuclear_heat_total_mw", "Nuclear heating in blanket", "MW"),
         ("p_shld_nuclear_heat_mw", "Nuclear heating in shield", "MW"),
@@ -1667,8 +1667,8 @@ def plot_power_info(axis: plt.Axes, mfile: MFile, scan: int):
         (
             plant_eff,
             (
-                r"Fusion-to-electric efficiency"
-                r" $\frac{P_{\mathrm{e,net}}}{P_{\mathrm{fus}}}$"
+                r"Fusion-to-electric efficiency "
+                r"$\frac{P_{\mathrm{e,net}}}{P_{\mathrm{fus}}}$"
             ),
             "%",
         ),

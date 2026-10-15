@@ -10,7 +10,6 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 from numba import njit
-from scipy import integrate
 
 from process.core import constants
 from process.core.data_structure.base import DataStructure
@@ -18,6 +17,7 @@ from process.core.exceptions import ProcessError, ProcessValueError
 from process.data_structure.impurity_radiation_variables import (
     N_IMPURITIY_LOSS_FUNCTION_POINTS,
 )
+from process.models.physics.profiles import calculate_vol_avg_of_profile
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -549,15 +549,27 @@ def calculate_impurity_radiation_power_density(
 
     # Use numpy.interp for linear interpolation in log-log space to find the
     # loss function values for the given temperature profile L(Z, Tₑ).
+    # If the temperature profile is out of the bounds of the data use the last know
+    # value
     power_loss_function = np.exp(
         np.interp(
-            np.log(temp_electron_profile_kev),
-            np.log(
+            x=np.log(temp_electron_profile_kev),
+            xp=np.log(
                 data.impurity_radiation.temp_impurity_keV_array[imp_element_index, :]
             ),
-            np.log(
+            fp=np.log(
                 data.impurity_radiation.pden_impurity_lz_nd_temp_array[
                     imp_element_index, :
+                ]
+            ),
+            left=np.log(
+                data.impurity_radiation.pden_impurity_lz_nd_temp_array[
+                    imp_element_index, 0
+                ]
+            ),
+            right=np.log(
+                data.impurity_radiation.pden_impurity_lz_nd_temp_array[
+                    imp_element_index, -1
                 ]
             ),
         )
@@ -565,45 +577,12 @@ def calculate_impurity_radiation_power_density(
 
     # W/m³ = nᵢ * nₑ * L(Z, Tₑ)
     # nᵢ = f_nd_species_electron * nₑ
-    pden_impurity_profile = (
+    return (
         data.impurity_radiation.f_nd_impurity_electron_array[imp_element_index]
         * nd_electron_profile
         * nd_electron_profile
         * power_loss_function
     )
-
-    # less_than_imp_temp_mask = temp_electron_profile_kev values less than impurity
-    # temperature.
-
-    less_than_imp_temp_mask = (
-        temp_electron_profile_kev
-        <= data.impurity_radiation.temp_impurity_keV_array[imp_element_index, 0]
-    )
-    # This is okay because line radiation will dominate at lower temp, and the L(Z,Tₑ)
-    # value at the lowest temperature in the table is likely to be an overestimate of the
-    # radiation loss at lower temperatures, so this is a conservative approach.
-    pden_impurity_profile[less_than_imp_temp_mask] = (
-        data.impurity_radiation.pden_impurity_lz_nd_temp_array[imp_element_index, 0]
-    )
-
-    # greater_than_imp_temp_mask = temp_electron_profile_kev values higher than
-    # impurity temperature.
-    greater_than_imp_temp_mask = (
-        temp_electron_profile_kev
-        >= data.impurity_radiation.temp_impurity_keV_array[
-            imp_element_index,
-            data.impurity_radiation.impurity_arr_len_tab[imp_element_index] - 1,
-        ]
-    )
-    #  This is okay because Bremsstrahlung will dominate at higher temp.
-    pden_impurity_profile[greater_than_imp_temp_mask] = (
-        data.impurity_radiation.pden_impurity_lz_nd_temp_array[
-            imp_element_index,
-            data.impurity_radiation.impurity_arr_len_tab[imp_element_index] - 1,
-        ]
-    )
-
-    return pden_impurity_profile
 
 
 def element2index(element: str, data: DataStructure) -> int:
@@ -642,8 +621,8 @@ def element2index(element: str, data: DataStructure) -> int:
 class ImpurityRadiation:
     """Calculates the impurity radiation losses for given temperature and
     density profiles. The considers the  total impurity radiation from the core
-    (pden_impurity_core_rad_total_mw) and total impurity radiation
-    (pden_impurity_rad_total_mw) [MW/(m³)]. The class is used to sum the impurity
+    (pden_impurity_core_rad_reduced_vol_avg_mw) and total impurity radiation
+    (pden_impurity_rad_total_vol_avg_mw) [MW/(m³)]. The class is used to sum the impurity
     radiation loss from each impurity element to find the total impurity radiation loss.
     """
 
@@ -664,19 +643,28 @@ class ImpurityRadiation:
         self.pden_impurity_radiation_profile = np.zeros(
             self.data.physics.n_plasma_profile_elements
         )
-        self.pden_impurity_rad_profile = np.zeros(
-            self.data.physics.n_plasma_profile_elements
-        )
+        "Profile of the total impurity radiation power density [MW/m³]"
         self.pden_impurity_core_rad_profile = np.zeros(
             self.data.physics.n_plasma_profile_elements
         )
+        "Profile of the impurity radiation power density from the core [MW/m³]"
+        self.pden_impurity_core_rad_reduced_profile = np.zeros(
+            self.data.physics.n_plasma_profile_elements
+        )
+        "Profile of the reduced core impurity radiation power density [MW/m³]"
         self.pden_impurity_rad_edge_profile = np.zeros(
             self.data.physics.n_plasma_profile_elements
         )
+        "Profile of the impurity radiation power density from the edge [MW/m³]"
 
-        self.pden_impurity_rad_total_mw = 0.0
-        self.pden_impurity_core_rad_total_mw = 0.0
-        self.pden_impurity_rad_edge_total_mw = 0.0
+        self.pden_impurity_rad_total_vol_avg_mw = 0.0
+        "Volume-averaged total impurity radiation power density [MW/m³]"
+        self.pden_impurity_core_rad_reduced_vol_avg_mw = 0.0
+        "Volume-averaged reduced core impurity radiation power density [MW/m³]"
+        self.pden_impurity_core_rad_vol_avg_mw = 0.0
+        "Volume-averaged core impurity radiation power density [MW/m³]"
+        self.pden_impurity_rad_edge_vol_avg_mw = 0.0
+        "Volume-averaged edge impurity radiation power density [MW/m³]"
 
     def run(self):
         """ImpurityRadiation model isn't run"""
@@ -709,51 +697,100 @@ class ImpurityRadiation:
             self.pden_impurity_radiation_profile, pden_impurity_radiation_profile
         )
 
-    def calculate_radiation_loss_profiles(self) -> None:
-        """Calculate the Bremsstrahlung (radb), line radiation (radl), total impurity
-        radiation from the core (pden_impurity_core_rad_total_mw) and total impurity
-        radiation  (pden_impurity_rad_total_mw). Update the stored arrays with the
-        values.
-        """
-        pden_impurity_rad_total = (
+    def calculate_radiation_core_edge_profiles(self) -> None:
+        """Calculate the impurity radiation specified core and edge profiles"""
+        # Create the reduced core radiation profile based on the full impurity
+        # radiation profile and the core reduction factor.
+        self.pden_impurity_core_rad_reduced_profile = (
             self.pden_impurity_radiation_profile
-            * self.plasma_profile.neprofile.profile_x
-        )
-        pden_impurity_core_rad_total = self.pden_impurity_radiation_profile * (
-            self.plasma_profile.neprofile.profile_x
-            * create_f_rad_core_profile(
-                rho=self.plasma_profile.neprofile.profile_x,
-                radius_plasma_core_norm=self.data.impurity_radiation.radius_plasma_core_norm,
-                f_p_plasma_core_rad_reduction=self.data.impurity_radiation.f_p_plasma_core_rad_reduction,
+            * (
+                create_f_rad_core_profile(
+                    rho=self.plasma_profile.neprofile.profile_x,
+                    radius_plasma_core_norm=self.data.impurity_radiation.radius_plasma_core_norm,
+                    f_p_plasma_core_rad_reduction=self.data.impurity_radiation.f_p_plasma_core_rad_reduction,
+                )
             )
         )
 
-        self.pden_impurity_rad_profile = np.add(
-            self.pden_impurity_rad_profile, pden_impurity_rad_total
-        )
-        self.pden_impurity_core_rad_profile = np.add(
-            self.pden_impurity_core_rad_profile, pden_impurity_core_rad_total
+        # Create the full core radiation profile without any reduction factor.
+        self.pden_impurity_core_rad_profile = self.pden_impurity_radiation_profile * (
+            create_f_rad_core_profile(
+                rho=self.plasma_profile.neprofile.profile_x,
+                radius_plasma_core_norm=self.data.impurity_radiation.radius_plasma_core_norm,
+                f_p_plasma_core_rad_reduction=1.0,
+            )
         )
 
-    def integrate_radiation_loss_profiles(self) -> None:
-        """Integrate the radiation loss profiles using the Simpson rule.
-        Store the total values for each aspect of impurity radiation loss.
+        # Calculate the edge radiation profile based on the full impurity radiation
+        # profile and the edge region.
+        fradedge_profile = np.zeros_like(self.plasma_profile.neprofile.profile_x)
+        fradedge_profile[
+            (
+                self.plasma_profile.neprofile.profile_x
+                >= self.data.impurity_radiation.radius_plasma_core_norm
+            )
+        ] = 1.0
+        self.pden_impurity_rad_edge_profile = (
+            self.pden_impurity_radiation_profile * fradedge_profile
+        )
+
+    def calculate_vol_avg_radiation_loss_profiles(self) -> None:
+        """Calculate the plasma volume averaged power density for the impurity
+        profiles
+
+        Raises
+        ------
+        ProcessValueError
+            If the sum of core and edge impurity radiation does not match the total
+            volume averaged radiation.
+
         """
-        # 1e-6 converts from W/m^3 to MW/m^3
-        # The factor 2 below and and normalised radius profile_x above may be unexpected,
-        # but are correct:
-        # see github.com/ukaea/PROCESS/issues/3968#issuecomment-3491154712
-        # and github.com/ukaea/PROCESS/issues/3968#issuecomment-4935567006
-        self.pden_impurity_rad_total_mw = 2.0e-6 * integrate.simpson(
-            self.pden_impurity_rad_profile,
-            x=self.plasma_profile.neprofile.profile_x,
-            dx=self.plasma_profile.neprofile.profile_dx,
+        # 1e-6 converts from W/m³ to MW/m³
+
+        self.pden_impurity_rad_total_vol_avg_mw = 1.0e-6 * calculate_vol_avg_of_profile(
+            profile_x=self.plasma_profile.neprofile.profile_x,
+            profile_y=self.pden_impurity_radiation_profile,
+            profile_dx=self.plasma_profile.neprofile.profile_dx,
         )
-        self.pden_impurity_core_rad_total_mw = 2.0e-6 * integrate.simpson(
-            self.pden_impurity_core_rad_profile,
-            x=self.plasma_profile.neprofile.profile_x,
-            dx=self.plasma_profile.neprofile.profile_dx,
+
+        # This volume average is still over the full plasma volume even though its
+        # just for the core
+        self.pden_impurity_core_rad_reduced_vol_avg_mw = (
+            1.0e-6
+            * calculate_vol_avg_of_profile(
+                profile_x=self.plasma_profile.neprofile.profile_x,
+                profile_y=self.pden_impurity_core_rad_reduced_profile,
+                profile_dx=self.plasma_profile.neprofile.profile_dx,
+            )
         )
+
+        # This volume average is still over the full plasma volume even though its
+        # just for the core
+        self.pden_impurity_core_rad_vol_avg_mw = 1.0e-6 * calculate_vol_avg_of_profile(
+            profile_x=self.plasma_profile.neprofile.profile_x,
+            profile_y=self.pden_impurity_core_rad_profile,
+            profile_dx=self.plasma_profile.neprofile.profile_dx,
+        )
+
+        # This volume average is still over the full plasma volume even though its
+        # just for the edge
+        self.pden_impurity_rad_edge_vol_avg_mw = 1.0e-6 * calculate_vol_avg_of_profile(
+            profile_x=self.plasma_profile.neprofile.profile_x,
+            profile_y=self.pden_impurity_rad_edge_profile,
+            profile_dx=self.plasma_profile.neprofile.profile_dx,
+        )
+
+        if not np.isclose(
+            self.pden_impurity_rad_edge_vol_avg_mw
+            + self.pden_impurity_core_rad_vol_avg_mw,
+            self.pden_impurity_rad_total_vol_avg_mw,
+            rtol=1.0e-9,
+            atol=1.0e-12,
+        ):
+            raise ProcessValueError(
+                "The sum of core and edge impurity radiation does not match the total "
+                "volume averaged radiation."
+            )
 
     def calculate_imprad(self) -> None:
         """Call the map function to calculate impurity radiation parameters for each
@@ -761,5 +798,5 @@ class ImpurityRadiation:
         find the total values for radiation loss.
         """
         self.map_imprad_profile()
-        self.calculate_radiation_loss_profiles()
-        self.integrate_radiation_loss_profiles()
+        self.calculate_radiation_core_edge_profiles()
+        self.calculate_vol_avg_radiation_loss_profiles()

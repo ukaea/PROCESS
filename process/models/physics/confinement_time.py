@@ -73,7 +73,7 @@ class PlasmaConfinementTime(Model):
         p_non_alpha_charged_mw: float,
         p_hcd_injected_total_mw: float,
         plasma_current: float,
-        pden_plasma_core_rad_mw: float,
+        pden_plasma_core_rad_reduced_vol_avg_mw: float,
         rmajor: float,
         rminor: float,
         temp_plasma_electron_density_weighted_kev: float,
@@ -89,51 +89,52 @@ class PlasmaConfinementTime(Model):
         Parameters
         ----------
         m_fuel_amu :
-            Average mass of fuel (amu)
+            Average mass of fuel [amu]
         p_alpha_total_mw :
-            Alpha particle power (MW)
+            Alpha particle power [MW]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         b_plasma_toroidal_on_axis :
-            Toroidal field on axis (T)
+            Toroidal field on axis [T]
         nd_plasma_electrons_vol_avg :
-            Volume averaged electron density (/m3)
+            Volume averaged electron density [/m³]
         nd_plasma_electron_line :
-            Line-averaged electron density (/m3)
+            Line-averaged electron density [/m³]
         eps :
-            Inverse aspect ratio
+            Inverse aspect ratio [-]
         hfact :
-            H factor on energy confinement scalings
+            H factor on energy confinement scalings [-]
         i_confinement_time :
-            Switch for energy confinement scaling to use
+            Switch for energy confinement scaling to use [-]
         i_plasma_ignited :
-            Switch for ignited calculation
+            Switch for ignited calculation [-]
         kappa :
-            Plasma elongation
+            Plasma elongation [-]
         kappa95 :
-            Plasma elongation at 95% surface
+            Plasma elongation at 95% surface [-]
         p_non_alpha_charged_mw :
-            Non-alpha charged particle fusion power (MW)
+            Non-alpha charged particle fusion power [MW]
         p_hcd_injected_total_mw :
-            Auxiliary power to ions and electrons (MW)
+            Auxiliary power to ions and electrons [MW]
         plasma_current :
-            Plasma current (A)
-        pden_plasma_core_rad_mw :
-            Total core radiation power (MW/m3)
+            Plasma current [A]
+        pden_plasma_core_rad_reduced_vol_avg_mw :
+            Total reduced core radiation power [MW/m³]
         q95 :
-            Edge safety factor (tokamaks), or rotational transform iotabar (stellarators)
+            Edge safety factor (tokamaks), or rotational transform iotabar
+            (stellarators) [-]
         qstar :
-            Equivalent cylindrical edge safety factor
+            Equivalent cylindrical edge safety factor [-]
         rmajor :
-            Plasma major radius (m)
+            Plasma major radius [m]
         rminor :
-            Plasma minor radius (m)
+            Plasma minor radius [m]
         temp_plasma_electron_density_weighted_kev :
-            Density weighted average electron temperature (keV)
+            Density weighted average electron temperature [keV]
         vol_plasma :
-            Plasma volume (m3)
+            Plasma volume [m³]
         zeff :
-            Plasma effective charge
+            Plasma effective charge [-]
         eden_plasma_electrons_thermal_vol_avg :
             Volume averaged electron thermal energy density [J/m³]
         eden_plasma_ions_thermal_vol_avg :
@@ -169,9 +170,13 @@ class PlasmaConfinementTime(Model):
 
             match model:
                 case ConfinementRadiationLossModel.FULL_RADIATION:
-                    p_plasma_loss_mw -= self.data.physics.pden_plasma_rad_mw * vol_plasma
-                case ConfinementRadiationLossModel.CORE_ONLY:
-                    p_plasma_loss_mw -= pden_plasma_core_rad_mw * vol_plasma
+                    p_plasma_loss_mw -= (
+                        self.data.physics.pden_plasma_rad_vol_avg_mw * vol_plasma
+                    )
+                case ConfinementRadiationLossModel.REDUCED_CORE_ONLY:
+                    p_plasma_loss_mw -= (
+                        pden_plasma_core_rad_reduced_vol_avg_mw * vol_plasma
+                    )
                 case ConfinementRadiationLossModel.NO_RADIATION:
                     pass
                 case _:
@@ -980,15 +985,15 @@ class PlasmaConfinementTime(Model):
         # Calculate H* non-radiation corrected H factor
         # Note: we will assume the IPB-98y2 scaling.
         match ConfinementRadiationLossModel(self.data.physics.i_rad_loss):
-            case ConfinementRadiationLossModel.CORE_ONLY:
+            case ConfinementRadiationLossModel.REDUCED_CORE_ONLY:
                 hstar = (
                     hfact
                     * (
                         p_plasma_loss_mw
                         / (
                             p_plasma_loss_mw
-                            + self.data.physics.pden_plasma_sync_mw * vol_plasma
-                            + self.data.physics.p_plasma_inner_rad_mw
+                            + self.data.physics.pden_plasma_sync_vol_avg_mw * vol_plasma
+                            + self.data.physics.p_plasma_core_rad_reduced_mw
                         )
                     )
                     ** 0.31
@@ -1000,7 +1005,7 @@ class PlasmaConfinementTime(Model):
                         p_plasma_loss_mw
                         / (
                             p_plasma_loss_mw
-                            + self.data.physics.pden_plasma_rad_mw * vol_plasma
+                            + self.data.physics.pden_plasma_rad_vol_avg_mw * vol_plasma
                         )
                     )
                     ** 0.31
@@ -1131,7 +1136,7 @@ class PlasmaConfinementTime(Model):
                 p_non_alpha_charged_mw=self.data.physics.p_non_alpha_charged_mw,
                 p_hcd_injected_total_mw=self.data.current_drive.p_hcd_injected_total_mw,
                 plasma_current=self.data.physics.plasma_current,
-                pden_plasma_core_rad_mw=self.data.physics.pden_plasma_core_rad_mw,
+                pden_plasma_core_rad_reduced_vol_avg_mw=self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw,
                 rmajor=self.data.physics.rmajor,
                 rminor=self.data.physics.rminor,
                 temp_plasma_electron_density_weighted_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
@@ -1167,9 +1172,11 @@ class PlasmaConfinementTime(Model):
             # Include the radiation power if requested
             match ConfinementRadiationLossModel(self.data.physics.i_rad_loss):
                 case ConfinementRadiationLossModel.FULL_RADIATION:
-                    fhz_value += self.data.physics.pden_plasma_rad_mw
-                case ConfinementRadiationLossModel.CORE_ONLY:
-                    fhz_value += self.data.physics.pden_plasma_core_rad_mw
+                    fhz_value += self.data.physics.pden_plasma_rad_vol_avg_mw
+                case ConfinementRadiationLossModel.REDUCED_CORE_ONLY:
+                    fhz_value += (
+                        self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw
+                    )
 
             return fhz_value
 
@@ -1290,12 +1297,12 @@ class PlasmaConfinementTime(Model):
                 self.data.physics.p_plasma_rad_mw,
                 "OP ",
             )
-        elif model == ConfinementRadiationLossModel.CORE_ONLY:
+        elif model == ConfinementRadiationLossModel.REDUCED_CORE_ONLY:
             po.ovarre(
                 self.outfile,
                 "Radiation power subtracted from plasma heating power balance (MW)",
                 "",
-                self.data.physics.p_plasma_inner_rad_mw,
+                self.data.physics.p_plasma_core_rad_reduced_mw,
                 "OP ",
             )
         else:  # NO_RADIATION
@@ -1424,7 +1431,7 @@ class PlasmaConfinementTime(Model):
                 p_non_alpha_charged_mw=self.data.physics.p_non_alpha_charged_mw,
                 p_hcd_injected_total_mw=self.data.current_drive.p_hcd_injected_total_mw,
                 plasma_current=self.data.physics.plasma_current,
-                pden_plasma_core_rad_mw=self.data.physics.pden_plasma_core_rad_mw,
+                pden_plasma_core_rad_reduced_vol_avg_mw=self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw,
                 rmajor=self.data.physics.rmajor,
                 rminor=self.data.physics.rminor,
                 temp_plasma_electron_density_weighted_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
