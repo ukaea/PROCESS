@@ -1939,7 +1939,7 @@ def constraint_equation_92(constraint_registration, data):
     )
 
 
-@ConstraintManager.register_constraint(93, "", "=")
+@ConstraintManager.register_constraint(93, "particles/s", "=")
 def constraint_equation_93(constraint_registration, data):
     """Fuel-ion equilibrium constraint.
 
