@@ -15,7 +15,7 @@ PROCESS uses user-defined **iteration variables** as the degrees of freedom avai
 
 ## PROCESS Solutions
 
-At the heart of a PROCESS solution is a plasma operating in a self-consistent equilibrium state. Its state cannot be chosen arbitrarily: plasma temperature, density, heating, fusion reactions, radiation, transport losses and fuelling are all coupled.
+At the heart of a PROCESS solution is a plasma operating in a self-consistent equilibrium state. Its state cannot be chosen arbitrarily: volume-averaged electron temperature, volume-averaged electron density, heating power, fusion reactions, radiation power, transport losses and fuelling are all coupled.
 
 The principal plasma state is described by the electron temperature and density,
 
