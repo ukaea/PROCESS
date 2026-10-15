@@ -241,7 +241,7 @@ ITERATION_VARIABLES = {
     178: IterationVariable(
         "molflow_plasma_fuelling",
         "physics",
-        1.0e20,
+        1.0e18,
         1.0e23,
     ),
 }
