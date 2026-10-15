@@ -1114,19 +1114,23 @@ def plot_radiation_power_contributions(axis: plt.Axes, mfile: MFile, scan: int):
     axis.axvline(0, color="black", linewidth=0.5)
     axis.legend(
         handles=[
-            mpl.patches.Patch(color=colour_fuel, label="Fuel & ash (Z$\\leq$2)"),
+            mpl.patches.Patch(color=colour_fuel, label="Fuel & ⁴He Ash (Z$\\leq$2)"),
             mpl.patches.Patch(color=colour_imp, label="Impurities (Z>2)"),
             mpl.patches.Patch(color=colour_sync, label="Synchrotron"),
         ],
         loc="lower right",
     )
     axis.text(
-        0.98,
-        0.25,
-        f"Total: {p_total_mw:.2f} MW\n"
-        f"Separatrix fraction: {mfile.get('f_p_plasma_separatrix_rad', scan=scan):.3f}",
+        x=0.5,
+        y=1.1,
+        s=f"Fraction of radiated power due to ions: "
+        f"{mfile.get('f_p_plasma_rad_ions', scan=scan):.3f}\n"
+        f"Radiated power due to impurities (Z>2): "
+        f"{mfile.get('p_plasma_rad_impurities_mw', scan=scan):.3f} MW\n"
+        f"Fraction of radiated power due to impurities (Z>2): "
+        f"{mfile.get('f_p_plasma_rad_impurities', scan=scan):.3f}",
         transform=axis.transAxes,
-        ha="right",
+        ha="center",
         va="bottom",
         fontsize=9,
         bbox={"boxstyle": "round", "facecolor": "white", "alpha": 0.8},
