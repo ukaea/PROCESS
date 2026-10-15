@@ -673,12 +673,6 @@ class TFData:
     temp_cs_superconductor_margin_min: float = 0.0
     """minimum allowable temperature margin : CS (K)"""
 
-    tmargmin: float = 0.0
-    """minimum allowable temperature margin : TFC AND CS (K)"""
-
-    temp_margin: float = 0.0
-    """temperature margin (K)"""
-
     temp_tf_superconductor_margin: float = 0.0
     """TF coil superconductor temperature margin (K)"""
 

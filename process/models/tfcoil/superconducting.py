@@ -2738,6 +2738,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
         self.data.tfcoil.j_tf_str = critical_superconductor_info.j_superconductor
         self.data.tfcoil.j_tf_wp_critical = critical_superconductor_info.j_tf_wp_critical
+
         d_sc_tf.j_tf_superconductor_critical = (
             critical_superconductor_info.j_superconductor_critical
         )
@@ -4526,15 +4527,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         # which should be equal to jcrit(thelium+tmarg)
         #  when we have found the desired value of tmarg
         j_superconductor = f_c_tf_turn_operating_critical * j_superconductor_critical
-
-        # Temperature margin
-        current_sharing_t = superconductors.current_sharing_rebco(
-            b_tf_inboard_peak, j_superconductor
-        )
-        tmarg = current_sharing_t - temp_tf_peak
-        self.data.tfcoil.temp_margin = (
-            tmarg  # Only used in the availability routine - see comment to Issue #527
-        )
 
         return TFSuperconductorLimits(
             j_tf_wp_critical=j_tf_wp_critical,
