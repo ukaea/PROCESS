@@ -403,6 +403,12 @@ class PFCoilData:
     r_cs_outer: float = 0.0
     """Outer radius of the central solenoid (m)"""
 
+    f_r_cs_outer_inner: float = 0.0
+    """Ratio of outer to inner radius of the central solenoid (α)"""  # noqa: RUF001
+
+    f_len_cs_upper_inner: float = 0.0
+    """Ratio of the solenoid half height to its inner radius (β)"""
+
     z_cs_upper: float = 0.0
     """z location of upper end of central solenoid (m)"""
 
