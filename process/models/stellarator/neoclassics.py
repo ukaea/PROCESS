@@ -162,7 +162,9 @@ class Neoclassics(Model):
         )
         self.data.neoclassics.q_flux = self.neoclassics_calc_q_flux()
 
-    def init_profile_values_from_PROCESS(self, rho) -> tuple[np.ndarray, ...]:
+    def init_profile_values_from_PROCESS(
+        self, rho
+    ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         """Initialises the profile_values object from PROCESS' parabolic profiles
 
         Parameters
