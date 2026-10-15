@@ -22,7 +22,7 @@ from rich.progress import track
 from process.core.repository import get_process_root
 logger = logging.getLogger("process")
 
-data_dir = get_process_root / "data"
+data_dir = get_process_root() / "data"
 
 def state_download_size(download_size: int, uncompressed_size: int, units: str):
     """Patch warning to logging"""
