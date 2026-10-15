@@ -8,7 +8,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from process.core import constants
-from process.core.io.plot.summary.common import box_style, text_layout
+from process.core.io.plot.summary.common import (
+    add_panel,
+    add_symbol,
+    box_style,
+    text_layout,
+)
 from process.core.io.plot.summary.plasma.physics import reaction_plot_grid
 from process.core.io.plot.summary.profiles.misc import (
     interp1d_profile,
@@ -831,13 +836,8 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, fig, mfile: MFile, scan: i
         " reactions/m³/s\n"
     )
 
-    axis.text(
-        0.05,
-        0.85,
-        textstr_general,
-        **text_layout(fig),
-        bbox=box_style("lightyellow"),
-    )
+    add_panel(axis, 0.05, 0.85, 0.245, 0.300, textstr_general, box_style("lightyellow"))
+    # add_symbol(axis, "$P_{\\text{inj}}$", 0.92, 0.625)
 
     # ============================================================================
 
@@ -851,22 +851,8 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, fig, mfile: MFile, scan: i
         f" {mfile.get('p_beam_dt_mw', scan=scan):,.2f} MW"
     )
 
-    axis.text(
-        0.05,
-        0.75,
-        textstr_dt,
-        **text_layout(fig),
-        bbox=box_style("lightyellow"),
-    )
-
-    axis.text(
-        0.39,
-        0.79,
-        "$\\text{D - T}$",
-        fontsize=20,
-        verticalalignment="top",
-        transform=fig.transFigure,
-    )
+    add_panel(axis, 0.05, 0.75, 0.245, 0.300, textstr_dt, box_style("lightyellow"))
+    add_symbol(axis, "$\\text{D - T}$", 0.39, 0.79)
 
     # =================================================
 
