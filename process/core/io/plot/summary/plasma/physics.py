@@ -1100,13 +1100,21 @@ def plot_radiation_power_contributions(axis: plt.Axes, mfile: MFile, scan: int):
     labels = [c[0] for c in contributions]
     powers = [c[1] for c in contributions]
     bars = axis.barh(labels, powers, color=[c[2] for c in contributions])
-    axis.bar_label(
+    bar_labels = axis.bar_label(
         bars,
-        labels=[f"{p:.2f} MW ({100.0 * p / p_total_mw:.1f}%)" for p in powers],
+        labels=[f"{p:.2f} MW ({100.0 * p / p_total_mw:.3f}%)" for p in powers],
         padding=3,
         fontsize=8,
     )
-
+    for text in bar_labels:
+        text.set_bbox({
+            "boxstyle": "round,pad=0.2",
+            "facecolor": "white",
+            "edgecolor": "none",
+            "alpha": 1.0,
+        })
+        text.set_zorder(10)
+    axis.axvline(p_total_mw, color="red", linestyle="--", linewidth=0.8)
     axis.set_xlim(0, 1.3 * max(powers, default=1.0))
     axis.set_xlabel(r"$P_{\mathrm{rad}}$ $[\mathrm{MW}]$")
     axis.set_title("Radiation Power Contributions")
