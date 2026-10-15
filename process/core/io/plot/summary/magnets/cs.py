@@ -333,7 +333,7 @@ def plot_cs_coil_structure(
         f" {mfile.get('n_pf_coil_turns[n_cs_pf_coils-1]', scan=scan):,.2f}\n$I_{{\\text{{peak}}}}:$"  # noqa: E501
         f" {mfile.get('c_pf_cs_coils_peak_ma[n_cs_pf_coils-1]', scan=scan):.3f}"
         " MA\n$B_{\\text{peak}}:$"
-        f" {mfile.get('b_pf_coil_peak[n_cs_pf_coils-1]', scan=scan):.3f}"
+        f" {mfile.get('b_pf_coil_inner_peak[n_cs_pf_coils-1]', scan=scan):.3f}"
         " T\n$F_{\\text{z,self,peak}}:$"
         f" {mfile.get('forc_z_cs_self_peak_midplane', scan=scan) / 1e6:.3f}"
         " MN\n$\\sigma_{\\text{z,self,peak}}:$"
