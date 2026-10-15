@@ -39,8 +39,11 @@ icc = 32 * TF coil conduit stress upper limit
 ixc = 4 * temp_plasma_electron_vol_avg_kev
 boundu(4) = 100.0
 ixc = 6 * nd_plasma_electrons_vol_avg
+boundl(6) = 0.5d+20
+boundu(6) = 5.0d+20
 
 *---------------Cs Fatigue Variables---------------*
+
 
 
 *------------------- Costs 1990--------------------*
