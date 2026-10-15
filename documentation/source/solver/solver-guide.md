@@ -170,9 +170,10 @@ The equations are coupled, so iteration variables should not generally be though
 
 ## Figure of Merit
 
-In optimisation mode there may be many feasible solutions. PROCESS selects between them using a **figure of merit**, or objective function.
+In optimisation mode there may be many feasible solutions. PROCESS selects between them using a **figure of merit**, or objective function. A positive value indicates minimisation, while a negative value indicates maximisation. 
 
-The switch `i_figure_merit` selects the objective. A positive value indicates minimisation, while a negative value indicates maximisation.
+!!! Info "Figures of Merit"
+    The full list of valid `i_figure_merit` values is documented in the API reference for [`process.data_structure.numerics.FiguresOfMerit`](../../source/reference/process/data_structure/numerics/#process.data_structure.numerics.FiguresOfMerit).
 
 The optimisation problem can therefore be viewed as finding the feasible PROCESS solution that gives the best value of the selected figure of merit.
 
