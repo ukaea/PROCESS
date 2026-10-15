@@ -1326,7 +1326,7 @@ class PlasmaBootstrapCurrent(Model):
         f32_ei = f_t / (
             1.0
             + (1.0 + 0.6 * f_t) * np.sqrt(nu_estar)
-            + 0.85 * (1 - 0.37 * f_t) * nu_estar / (1.0 + np.sqrt(zmain))
+            + 0.85 * (1 - 0.37 * f_t) * nu_estar * (1.0 + zeff)
         )
         # equation 15b and c
         large_f32_ee = (
@@ -1382,9 +1382,10 @@ class PlasmaBootstrapCurrent(Model):
         b_total2 = br**2 + bz**2 + b_phi**2
 
         denom = eq.grid.integrate(eq.J, axis=1)
+        denom_vol = eq.grid.integrate(eq.J * eq.R, axis=1)
         b2_avg = (
-            eq.grid.integrate(np.asarray(b_total2, dtype=np.float64) * eq.J, axis=1)
-            / np.maximum(denom, 1.0e-30)
+            eq.grid.integrate(np.asarray(b_total2, dtype=np.float64) * eq.J * eq.R, axis=1)
+            / np.maximum(denom_vol, 1.0e-30)
         )
         invr_avg = (
             eq.grid.integrate(np.asarray(1.0 / r, dtype=np.float64) * eq.J, axis=1)
@@ -1392,17 +1393,17 @@ class PlasmaBootstrapCurrent(Model):
         )
 
         psi_rho = eq.psin_r * eq.alpha2
-        j_bs = (
+        jpara_b = (
             -(
                 coef_ne * dlnne_drho
                 + coef_te * dlnte_drho
                 + coef_ti * dlnti_drho
             )
-            / (psi_rho * b2_avg)
+            / psi_rho
             * pres
-            * invr_avg
-            * eq.F**2
+            * eq.F
         )
+        j_bs = jpara_b / b2_avg * invr_avg * eq.F
         j_bs[0] = 0.0
         current_bs = eq.grid.integrate(j_bs[:, None] * eq.J)
         return current_bs / float(eq.Ip)
