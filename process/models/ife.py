@@ -1395,7 +1395,7 @@ class IFE(Model):
             )
         # add in approximation that power plant pulse cycle is same as driver
         # repetition rate. Required variable for availability to run
-        self.data.times.t_plant_pulse_total = self.data.ife.reprat
+        self.data.times.t_plant_pulse_total = 1 / self.data.ife.reprat
 
         # Wall load (assume total fusion power applies)
 
