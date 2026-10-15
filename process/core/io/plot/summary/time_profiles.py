@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
-from process.core.io.plot.summary.common import box_style, get_pulse_timings
+from process.core.io.plot.summary.common import add_panel, box_style, get_pulse_timings
 from process.core.io.plot.summary.magnets.cs import secs_to_hms
 
 if TYPE_CHECKING:
@@ -103,7 +103,7 @@ def plot_current_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int):
     axis.grid(True, linestyle="--", alpha=0.6)
 
 
-def plot_system_power_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int, fig):
+def plot_system_power_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int):
     """Plots the power profiles over time for various systems."""
     pulse_timings = get_pulse_timings(mfile, scan)
 
@@ -205,14 +205,14 @@ def plot_system_power_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int
         f" {mfile.get('e_plant_net_electric_pulse_kwh', scan=scan):,.4f} kWh\n"
     )
 
-    axis.text(
+    add_panel(
+        axis,
         0.075,
-        0.2,
+        0.225,
+        0.34,
+        0.175,
         textstr_energy,
-        fontsize=9,
-        verticalalignment="top",
-        transform=fig.transFigure,
-        bbox=box_style("grey"),
+        box_style("grey"),
     )
 
     # Add energy produced info
@@ -242,12 +242,12 @@ def plot_system_power_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int
         f" ({secs_to_hms(mfile.get('t_plant_pulse_total', scan=scan))})\n"
     )
 
-    axis.text(
-        0.6,
+    add_panel(
+        axis,
+        0.585,
         0.225,
+        0.34,
+        0.175,
         textstr_times,
-        fontsize=9,
-        verticalalignment="top",
-        transform=fig.transFigure,
-        bbox=box_style("grey"),
+        box_style("grey"),
     )

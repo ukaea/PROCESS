@@ -114,6 +114,11 @@ def add_panel(
     text: str,
     style: dict,
     text_x_offset: float = 0.004,
+    fontsize: float = 9,
+    transform=None,
+    text_position=None,
+    linespacing: float = 1.1,
+    text_kwargs=None,
 ):
     """Add one fixed-size box and its unchanged original text."""
     box_expansion = 0.002
@@ -122,30 +127,43 @@ def add_panel(
     expanded_width = width + 2 * box_expansion
     expanded_height = height + 2 * box_expansion
     fig = axis.get_figure()
+    transform = fig.transFigure if transform is None else transform
     patch = FancyBboxPatch(
         (left, bottom),
         expanded_width,
         expanded_height,
         boxstyle="round,pad=0,rounding_size=0.003",
-        transform=fig.transFigure,
+        transform=transform,
         facecolor=style.get("facecolor", "white"),
         edgecolor=style.get("edgecolor", "black"),
-        linewidth=style.get("linewidth", 1.0),
+        linewidth=style.get("linewidth", 1.1),
+        linestyle=style.get("linestyle", "solid"),
         alpha=style.get("alpha", 1.0),
         clip_on=False,
         zorder=20,
     )
     axis.add_patch(patch)
 
+    text_kwargs = text_kwargs or {}
+    for reserved_key in ("color", "clip_on", "zorder", "linespacing"):
+        text_kwargs.pop(reserved_key, None)
+    text_x, text_y = (
+        (x + text_x_offset, top - 0.004) if text_position is None else text_position
+    )
     return axis.text(
-        x + text_x_offset,
-        top - 0.004,
+        text_x,
+        text_y,
         text,
         color="black",
         clip_on=False,
         zorder=21,
-        linespacing=1,
-        **text_layout(fig, v_align="top"),
+        linespacing=linespacing,
+        **{
+            **text_layout(fig, v_align="top"),
+            "fontsize": fontsize,
+            "transform": transform,
+            **text_kwargs,
+        },
     )
 
 
