@@ -144,6 +144,7 @@ def add_panel(
         color="black",
         clip_on=False,
         zorder=21,
+        linespacing=1,
         **text_layout(fig, v_align="top"),
     )
 
