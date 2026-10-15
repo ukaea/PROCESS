@@ -410,7 +410,7 @@ def calculate_power_radiation(
 
             # θ∈[0,2π]、ρ∈[0, ρ_core] 与 ρ∈[ρ_core,1] 分区积分
             rho_core = rho_plasma_core_norm
-            mask_core = eq.rho <= rho_core
+            mask_core = eq.rho < rho_core
             integrand_core = np.zeros_like(integrand)
             integrand_core[mask_core, :] = integrand[mask_core, :]
             power_rad_brem_core = (
