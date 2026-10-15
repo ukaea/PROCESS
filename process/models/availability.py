@@ -737,7 +737,7 @@ class Availability(Model):
         This routine calculates the unplanned unavailability of the magnets,
         using the methodology outlined in the 2014 EUROfusion
         RAMI report.
-        2014 EUROfusion RAMI report, &quot;Availability in PROCESS&quot;
+        2014 EUROfusion RAMI report, "Availability in PROCESS";
 
         Parameters
         ----------
