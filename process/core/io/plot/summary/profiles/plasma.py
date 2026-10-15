@@ -1311,7 +1311,7 @@ def plot_plasma_poloidal_pressure_contours(axis: plt.Axes, mfile: MFile, scan: i
     # Mask points outside the plasma boundary (optional, but grid is inside by
     # construction)
     # Plot filled contour
-    axis.contourf(r_grid, -z_grid, pressure_grid, levels=50, cmap="plasma")
+    axis.contourf(r_grid, z_grid, pressure_grid, levels=50, cmap="plasma")
     c = axis.contourf(r_grid, -z_grid, pressure_grid, levels=50, cmap="plasma")
 
     # Add colorbar for pressure (now in kPa)
