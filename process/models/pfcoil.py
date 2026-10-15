@@ -2778,7 +2778,7 @@ class PFCoil(Model):
         headers = ["Circuit", "BOP", "BOF", "EOF"]
         rows = []
         n_pf_coil_circuits = pf.n_pf_cs_plasma_circuits - 1
-        if self.data.build.iohcl != 0:
+        if CSUseModel(self.data.build.i_cs_use) != CSUseModel.NO_CENTRAL_SOLENOID:
             n_pf_coil_circuits -= 1
         for k in range(n_pf_coil_circuits):
             rows.append([
