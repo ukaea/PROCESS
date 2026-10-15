@@ -2783,8 +2783,8 @@ class OhCalcParam(NamedTuple):
             poisson_steel=3.0e-1,
             a_cs_poloidal=10.3868352,
             a_cs_toroidal=12.2710609,
-            exp_b_pf_coil_peak=13.073958753751993,
-            exp_j_cs_critical_flat_top_end=54101481.7685945,
+            exp_b_pf_coil_peak=13.069711729713154,
+            exp_j_cs_critical_flat_top_end=54154076.702704564,
         )
     ],
 )
