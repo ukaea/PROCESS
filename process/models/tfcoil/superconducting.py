@@ -4552,7 +4552,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         )
         tmarg = current_sharing_t - temp_tf_peak
         self.data.tfcoil.temp_margin = (
-            tmarg  # Only used in the availabilty routine - see comment to Issue #526
+            tmarg  # Only used in the availability routine - see comment to Issue #527
         )
 
         return TFSuperconductorLimits(
