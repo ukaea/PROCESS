@@ -750,7 +750,7 @@ class Availability(Model):
             unplanned unavailability of magnets
         """
         # Magnet temperature margin limit (K)
-        # Use the lower of the two values.  Issue #526
+        # Use the lower of the two values.  Issue #527
         tmargmin = min(
             self.data.tfcoil.temp_tf_superconductor_margin_min,
             self.data.tfcoil.temp_cs_superconductor_margin_min,
