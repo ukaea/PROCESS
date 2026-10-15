@@ -849,7 +849,6 @@ INPUT_VARIABLES = {
     "dx_tf_wp_insulation": InputVariable("tfcoil", float, range=(0.0, 0.1)),
     "life_plant": InputVariable("costs", float, range=(1.0, 100.0)),
     "tmain": InputVariable("costs", float, range=(0.0, 100.0)),
-    "tmargmin": InputVariable("tfcoil", float, range=(0.0, 20.0)),
     "temp_cs_superconductor_margin_min": InputVariable(
         "tfcoil", float, range=(0.0, 20.0)
     ),

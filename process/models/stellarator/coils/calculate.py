@@ -417,7 +417,7 @@ def winding_pack_total_size(
         # jcrit for this bmax:
         jcrit_vector[k] = jcrit_from_material(
             b_max_k[k],
-            data.tfcoil.tftmp + data.tfcoil.tmargmin,
+            data.tfcoil.tftmp + data.tfcoil.temp_tf_superconductor_margin,
             data.tfcoil.i_tf_sc_mat,
             data.tfcoil.bcritsc,
             data.tfcoil.f_a_tf_turn_cable_copper,
