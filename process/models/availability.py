@@ -771,7 +771,7 @@ class Availability(Model):
 
         # Determine if temperature margin is in region with risk of
         # unplanned unavailability
-        if self.data.tfcoil.temp_margin >= start_of_risk:
+        if self.data.tfcoil.temp_tf_superconductor_margin >= start_of_risk:
             u_unplanned_magnets = mag_min_u_unplanned
         else:
             # Linear decrease in expected lifetime when approaching the limit
@@ -781,7 +781,7 @@ class Availability(Model):
                     self.data.costs.t_plant_operational_total_yrs
                     / (start_of_risk - tmargmin)
                 )
-                * (self.data.tfcoil.temp_margin - tmargmin),
+                * (self.data.tfcoil.temp_tf_superconductor_margin - tmargmin),
             )
             u_unplanned_magnets = mag_main_time / (t_life + mag_main_time)
 
