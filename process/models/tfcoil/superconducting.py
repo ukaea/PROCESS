@@ -2239,28 +2239,36 @@ class SuperconductingTFCoil(TFCoil):
 
         j_scale = max(abs(j_superconductor), 1.0)
 
-        def objective(t):
-            residual = superconductors.superconductor_current_density_margin(t[0], *args)
-            return (residual / j_scale) ** 2
+        def residual(t):
+            return superconductors.superconductor_current_density_margin(t, *args)
 
-        result = optimize.minimize(
-            objective,
+        result = optimize.least_squares(
+            lambda t: residual(t[0]) / j_scale,
             x0=[temp_tf_coolant_peak_field],
-            # These are reasonable bounds (near absolute zero, and 80% of crit T at 0
-            # field). They are used to protect against unkludged and NaN results from
-            # some of the superconducting parameterisations
-            bounds=[(1e-3, 0.8 * tc0m)],
-            method="Powell",
-            options={"xtol": 1e-6, "ftol": 1e-10, "maxiter": 100},
+            bounds=([1e-3], [0.999 * tc0m]),
+            method="trf",
+            xtol=1e-9,
+            ftol=None,
+            gtol=None,
+            max_nfev=50,
         )
 
         if not result.success:
-            raise ProcessValueError(result.message)
-
-        if not result.fun <= 1e-12:
             raise ProcessValueError(
-                "Superconductor temperature margin minimum is not sufficiently"
-                f" close to zero: {result.fun}"
+                f"Error in TF temperature margin calculation: {result.message}"
+            )
+
+        normalised_residual = float(result.fun[0])
+        residual_tol = 1e-10
+
+        if (
+            not np.isfinite(normalised_residual)
+            or abs(normalised_residual) > residual_tol
+        ):
+            raise ProcessValueError(
+                "Superconductor temperature margin residual is not sufficiently "
+                f"close to zero: {normalised_residual:.6g} "
+                f"(normalised tolerance: {residual_tol:.6g})"
             )
 
         t_zero_margin = float(result.x[0])
