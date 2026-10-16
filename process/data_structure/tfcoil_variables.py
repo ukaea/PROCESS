@@ -344,8 +344,8 @@ class TFData:
     conditions (A/m²).
     """
 
-    j_tf_str: float = 0.0
-    """j_tf_str : actual superconductor strand current density (A/m²)"""
+    j_tf_wp_temp_margin: float = 0.0
+    """j_tf_wp_temp_margin : allowable TF coil winding pack current density, for specified temperature margin (A/m²)"""
 
     j_crit_str_0: list[float] = field(
         default_factory=lambda: np.array([
