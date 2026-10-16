@@ -10,8 +10,11 @@ from dataclasses import dataclass
 import numpy as np
 
 import process.models.physics.impurity_radiation as impurity
+from process.core import constants
+from process.core import process_output as po
 from process.core.data_structure.base import DataStructure
 from process.core.model import Model
+from process.data_structure.stellarator_variables import StellaratorModel
 from process.models.physics.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
@@ -41,14 +44,15 @@ class PlasmaRadiation(Model):
         plasma_profile: PlasmaProfile,
         data_structure: DataStructure,
     ):
-
+        self.outfile = constants.NOUT
+        self.mfile = constants.MFILE
         self.plasma_profile = plasma_profile
         self.data = data_structure
         self.impurity_rad = impurity.ImpurityRadiation(
             plasma_profile=self.plasma_profile, data_structure=self.data
         )
 
-    def run(self):
+    def run(self) -> None:
         """Run the plasma radiation calculation and update the data structure."""
         radpwrdata = self.calculate_radiation_powers(
             plasma_profile=self.plasma_profile,
@@ -102,8 +106,150 @@ class PlasmaRadiation(Model):
             self.data.physics.pden_plasma_rad_vol_avg_mw * self.data.physics.vol_plasma
         )
 
-    def output(self):
-        pass
+    def output(self) -> None:
+        """Subroutine to output the plasma radiation information"""
+        po.oheadr(self.outfile, "Plasma Radiation (excluding SOL):")
+
+        po.osubhd(self.outfile, "Synchrotron Radiation:")
+
+        po.ovarre(
+            self.outfile,
+            "Plasma total synchrotron radiation power (Pₛₙ) [MW]",
+            "(p_plasma_sync_mw)",
+            self.data.physics.p_plasma_sync_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Plasma volume-averaged synchrotron radiation power density [MW/m³]",
+            "(pden_plasma_sync_vol_avg_mw)",
+            self.data.physics.pden_plasma_sync_vol_avg_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Synchrotron wall reflectivity factor",
+            "(f_sync_reflect)",
+            self.data.physics.f_sync_reflect,
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.osubhd(self.outfile, "Core region:")
+
+        po.ocmmnt(
+            self.outfile, "Note: Only the core region contains the synchrotron radiation"
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Plasma normalised minor radius defining 'core' region (ρᵢₙₙₑᵣ)",
+            "(radius_plasma_core_norm)",
+            self.data.impurity_radiation.radius_plasma_core_norm,
+        )
+        po.ovarre(
+            self.outfile,
+            "Fractional scaling of radiation power along core profile",
+            "(f_p_plasma_core_rad_reduction)",
+            self.data.impurity_radiation.f_p_plasma_core_rad_reduction,
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Plasma reduced core radiation power (Pᵧ,ᵢₙₙₑᵣ) [MW]",
+            "(p_plasma_core_rad_reduced_mw)",
+            self.data.physics.p_plasma_core_rad_reduced_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Plasma core radiation power (Pᵧ,ᵢₙₙₑᵣ) [MW]",
+            "(p_plasma_core_rad_mw)",
+            self.data.physics.p_plasma_core_rad_mw,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(
+            self.outfile,
+            "Note: Volume-averaged quantities are calculated over the whole plasma",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Volume-averaged total reduced core radiation power per volume [MW/m³]",
+            "(pden_plasma_core_rad_reduced_vol_avg_mw)",
+            self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Volume-averaged total core radiation power per volume [MW/m³]",
+            "(pden_plasma_core_rad_vol_avg_mw)",
+            self.data.physics.pden_plasma_core_rad_vol_avg_mw,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.osubhd(self.outfile, "Edge region:")
+        po.ovarre(
+            self.outfile,
+            "Plasma total radiation power from edge region (Pᵧ,ₒᵤₜₑᵣ) [MW] ",
+            "(p_plasma_edge_rad_mw)",
+            self.data.physics.p_plasma_edge_rad_mw,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(
+            self.outfile,
+            "Note: Volume-averaged quantities are calculated over the whole plasma",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Volume-averaged total edge radiation power per volume [MW/m³]",
+            "(pden_plasma_edge_rad_vol_avg_mw)",
+            self.data.physics.pden_plasma_edge_rad_vol_avg_mw,
+            "OP ",
+        )
+
+        if self.data.stellarator.istell != StellaratorModel.DISABLED:
+            po.ovarre(
+                self.outfile,
+                "SOL radiation power as imposed by f_rad (MW)",
+                "(psolradmw)",
+                self.data.physics.psolradmw,
+                "OP ",
+            )
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.osubhd(self.outfile, "Totals:")
+
+        po.ovarre(
+            self.outfile,
+            "Plasma total radiation power from inside last closed flux surface "
+            "(Pᵧ) [MW]",
+            "(p_plasma_rad_mw)",
+            self.data.physics.p_plasma_rad_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Separatrix radiation fraction (fᵧ)",
+            "(f_p_plasma_separatrix_rad)",
+            self.data.physics.f_p_plasma_separatrix_rad,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Plasma total volume-averaged radiation power per unit volume [MW/m³]",
+            "(pden_plasma_rad_vol_avg_mw)",
+            self.data.physics.pden_plasma_rad_vol_avg_mw,
+            "OP ",
+        )
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
 
     def calculate_radiation_powers(
         self,
