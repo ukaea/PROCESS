@@ -791,7 +791,7 @@ class Availability(Model):
         if output:
             po.ocmmnt(self.outfile, "Magnets:")
             po.oblnkl(self.outfile)
-            po.ovarre(
+            po.ovarre(  # This is of questionable interest...
                 self.outfile, "Minimum temperature margin (K)", "(tmargmin)", tmargmin
             )
             po.ovarre(
@@ -803,8 +803,8 @@ class Availability(Model):
             po.ovarre(
                 self.outfile,
                 "Temperature Margin (K)",
-                "(temp_margin)",
-                self.data.tfcoil.temp_margin,
+                "(temp_tf_superconductor_margin_min)",
+                self.data.tfcoil.temp_tf_superconductor_margin,
                 "OP ",
             )
             po.ovarre(
