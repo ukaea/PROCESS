@@ -1908,11 +1908,10 @@ class CurrentDrive(Model):
             # Calculate the dimensionless current drive efficiency for
             # the primary heating method (ζ)
             self.data.current_drive.eta_cd_dimensionless_hcd_primary = self.calculate_dimensionless_current_drive_efficiency(  # noqa: E501
+                eta_cd_hcd=self.data.current_drive.eta_cd_hcd_primary,
                 nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
                 rmajor=self.data.physics.rmajor,
                 temp_plasma_electron_vol_avg_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
-                c_hcd_driven=self.data.current_drive.c_hcd_primary_driven,
-                p_hcd_injected=self.data.current_drive.p_hcd_primary_injected_mw * 1.0e6,
             )
 
             if self.data.current_drive.p_hcd_secondary_injected_mw > 0.0:
@@ -1922,9 +1921,7 @@ class CurrentDrive(Model):
                     nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
                     rmajor=self.data.physics.rmajor,
                     temp_plasma_electron_vol_avg_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
-                    c_hcd_driven=self.data.current_drive.c_hcd_secondary_driven,
-                    p_hcd_injected=self.data.current_drive.p_hcd_secondary_injected_mw
-                    * 1.0e6,
+                    eta_cd_hcd=self.data.current_drive.eta_cd_hcd_secondary,
                 )
 
             # ===========================================================
@@ -2383,11 +2380,10 @@ class CurrentDrive(Model):
 
     @staticmethod
     def calculate_dimensionless_current_drive_efficiency(
+        eta_cd_hcd: float,
         nd_plasma_electrons_vol_avg: float,
         rmajor: float,
         temp_plasma_electron_vol_avg_kev: float,
-        c_hcd_driven: float,
-        p_hcd_injected: float,
     ) -> float:
         """Calculate the dimensionless current drive efficiency, ζ.
 
@@ -2402,10 +2398,8 @@ class CurrentDrive(Model):
             Major radius of the plasma in meters.
         temp_plasma_electron_vol_avg_kev:
             Volume averaged electron temperature in keV.
-        c_hcd_driven:
-            Current driven by the heating and current drive system.
-        p_hcd_injected:
-            Power injected by the heating and current drive system.
+        eta_cd_hcd
+            Absolute current drive efficiency in A/W.
 
         Returns
         -------
@@ -2428,7 +2422,7 @@ class CurrentDrive(Model):
                 (nd_plasma_electrons_vol_avg * rmajor)
                 / (temp_plasma_electron_vol_avg_kev * constants.KILOELECTRON_VOLT)
             )
-            * (c_hcd_driven / p_hcd_injected)
+            * eta_cd_hcd
         )
 
     def output(self):
