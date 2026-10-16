@@ -658,6 +658,12 @@ class ImpurityRadiation:
         """
         self.data = data_structure
         self.plasma_profile = plasma_profile
+        self.reset()
+
+    def reset(self) -> None:
+        """Reset the impurity element selection and all accumulated profiles
+        and volume averages so the instance can be reused between evaluations.
+        """
         self.imp = np.nonzero(
             self.data.impurity_radiation.f_nd_impurity_electron_array > 1.0e-30
         )[0]
@@ -859,6 +865,7 @@ class ImpurityRadiation:
         impurity element. Calculate the radiation loss profiles, and integrate them to
         find the total values for radiation loss.
         """
+        self.reset()
         self.map_imprad_profile()
         self.calculate_radiation_core_edge_profiles()
         self.calculate_vol_avg_radiation_loss_profiles()

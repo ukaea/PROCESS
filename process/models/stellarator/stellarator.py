@@ -2132,7 +2132,6 @@ class Stellarator(Model):
 
         # Calculate radiation power
         radpwr_data = self.physics.plasma_radiation.calculate_radiation_powers(
-            self.plasma_profile,
             self.data.physics.nd_plasma_electron_on_axis,
             self.data.physics.rminor,
             self.data.physics.b_plasma_toroidal_on_axis,
@@ -2145,7 +2144,6 @@ class Stellarator(Model):
             self.data.physics.rmajor,
             self.data.physics.kappa,
             self.data.physics.vol_plasma,
-            self.data,
         )
         self.data.physics.pden_plasma_sync_vol_avg_mw = (
             radpwr_data.pden_plasma_sync_vol_avg_mw
