@@ -11,7 +11,7 @@ from matplotlib import patches
 from matplotlib.patches import Circle, Rectangle
 from matplotlib.path import Path as mplPath
 
-from process.core.io.plot.summary.common import box_style, text_layout
+from process.core.io.plot.summary.common import add_panel, box_style, text_layout
 from process.core.io.plot.summary.constants import (
     TFC_COLOUR,
     THERMAL_SHIELD_COLOUR,
@@ -1296,7 +1296,7 @@ def plot_resistive_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
     )
 
 
-def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
+def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int):
     """Plot info about the resistive TF coils"""
     # Add info about the steel casing surrounding the WP
     textstr_casing = (
@@ -1321,13 +1321,7 @@ def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
         f" {mfile.get('dr_tf_plasma_case', scan=scan):.3f} m\n$A$:"
         f" {mfile.get('a_tf_plasma_case', scan=scan):.3f} $\\mathrm{{m}}^2$"
     )
-    axis.text(
-        0.775,
-        0.925,
-        textstr_casing,
-        **text_layout(fig, v_align="top"),
-        bbox=box_style("grey"),
-    )
+    add_panel(axis, 0.775, 0.925, 0.19, 0.31, textstr_casing, box_style("grey"))
 
     # Add info about the steel casing surrounding the WP
     textstr_wp_insulation = (
@@ -1338,13 +1332,7 @@ def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
         " m\n\n$\\text{Turn Insulation:}$\n$\\Delta r$:"
         f" {mfile.get('dx_tf_turn_insulation', scan=scan):.4f} m"
     )
-    axis.text(
-        0.775,
-        0.62,
-        textstr_wp_insulation,
-        **text_layout(fig, v_align="top"),
-        bbox=box_style("green"),
-    )
+    add_panel(axis, 0.775, 0.62, 0.19, 0.09, textstr_wp_insulation, box_style("green"))
 
     # Add info about the Winding Pack
     textstr_wp = (
@@ -1364,17 +1352,7 @@ def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
         " $\\mathrm{m}^2$\nCoolant area void fraction per turn:"
         f" {mfile.get('fcoolcp', scan=scan):.3f}"
     )
-    axis.text(
-        0.77,
-        0.475,
-        textstr_wp,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        color="white",
-        transform=fig.transFigure,
-        bbox=box_style("blue"),
-    )
+    add_panel(axis, 0.77, 0.475, 0.19, 0.3, textstr_wp, box_style("blue"))
 
     # Add info about the Winding Pack
     textstr_general_info = (
@@ -1383,13 +1361,7 @@ def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
         " energy of all coils:"
         f" {mfile.get('e_tf_magnetic_stored_total_gj', scan=scan):.4f} GJ\n"
     )
-    axis.text(
-        0.55,
-        0.475,
-        textstr_general_info,
-        **text_layout(fig, v_align="top"),
-        bbox=box_style("wheat"),
-    )
+    add_panel(axis, 0.55, 0.475, 0.19, 0.1, textstr_general_info, box_style("wheat"))
 
     # Add info about the Winding Pack
     textstr_cooling = (
@@ -1411,16 +1383,10 @@ def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
         f" {mfile.get('p_tf_joints_resistive', scan=scan):,.2f}"
         " $\\mathrm{W}$\n"
     )
-    axis.text(
-        0.55,
-        0.35,
-        textstr_cooling,
-        **text_layout(fig, v_align="top"),
-        bbox=box_style("wheat"),
-    )
+    add_panel(axis, 0.55, 0.35, 0.19, 0.22, textstr_cooling, box_style("wheat"))
 
 
-def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
+def plot_tf_cable_in_conduit_turn(axis: plt.Axes, mfile: MFile, scan: int):
     """Plots inboard TF coil CICC individual turn structure.
 
     Parameters
@@ -1861,13 +1827,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         f"$\\mathbf{{Turn \\ Insulation:}}$\n\n$\\Delta r:${insulation_thickness:.3e} m"
     )
 
-    axis.text(
-        0.4,
-        0.9,
-        textstr_turn_insulation,
-        **text_layout(fig, v_align="top"),
-        bbox=box_style("red"),
-    )
+    add_panel(axis, 0.40, 0.90, 0.115, 0.075, textstr_turn_insulation, box_style("red"))
 
     # Add info about the steel casing surrounding the WP
     textstr_turn_steel = (
@@ -1875,13 +1835,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         f" m\n$A$: {a_tf_turn_steel:.3e} m$^2$"
     )
 
-    axis.text(
-        0.65,
-        0.9,
-        textstr_turn_steel,
-        **text_layout(fig, v_align="top"),
-        bbox=box_style("grey"),
-    )
+    add_panel(axis, 0.65, 0.90, 0.115, 0.075, textstr_turn_steel, box_style("grey"))
 
     if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.NON_INTEGER:
         # Add info about the steel casing surrounding the WP
@@ -1906,12 +1860,8 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
             f" {a_tf_turn_cable_space_effective:.3e} m$^2$"
         )
 
-    axis.text(
-        0.40,
-        0.7,
-        textstr_turn_cable_space,
-        **text_layout(fig, v_align="top"),
-        bbox=box_style("royalblue"),
+    add_panel(
+        axis, 0.40, 0.67, 0.205, 0.195, textstr_turn_cable_space, box_style("royalblue")
     )
 
     if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.NON_INTEGER:
@@ -1928,13 +1878,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
             f"$\\Delta x$: {turn_height:.3e} m"
         )
 
-    axis.text(
-        0.525,
-        0.9,
-        textstr_turn,
-        **text_layout(fig, v_align="top"),
-        bbox=box_style("wheat"),
-    )
+    add_panel(axis, 0.525, 0.90, 0.115, 0.075, textstr_turn, box_style("wheat"))
 
     # Add info about the steel casing surrounding the WP
     textstr_turn_cooling = (
@@ -1943,13 +1887,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         f" {a_tf_wp_coolant_channels:.4f} m$^2$"
     )
 
-    axis.text(
-        0.45,
-        0.8,
-        textstr_turn_cooling,
-        **text_layout(fig, v_align="top"),
-        bbox=box_style("white"),
-    )
+    add_panel(axis, 0.45, 0.79, 0.19, 0.070, textstr_turn_cooling, box_style("white"))
 
     textstr_superconductor = (
         "$\\mathbf{Superconductor:}$\n\nSuperconductor"
@@ -1980,12 +1918,14 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         f" protection:\n{mfile.get('j_tf_wp_quench_heat_max', scan=scan):.2e}"
         " A/m$^2$\n"
     )
-    axis.text(
-        0.75,
-        0.9,
+    add_panel(
+        axis,
+        0.72,
+        0.90,
+        0.20,
+        0.47,
         textstr_superconductor,
-        **text_layout(fig, v_align="top"),
-        bbox=box_style("#6dd3f7"),  # light blue for superconductors
+        box_style("#6dd3f7"),
     )
 
 

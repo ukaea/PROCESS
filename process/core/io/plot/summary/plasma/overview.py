@@ -5,9 +5,13 @@ from __future__ import annotations
 import textwrap
 from typing import TYPE_CHECKING, Literal
 
-from matplotlib.patches import FancyBboxPatch
-
-from process.core.io.plot.summary.common import box_style, place_plot_image, text_layout
+from process.core.io.plot.summary.common import (
+    add_panel,
+    add_symbol,
+    box_style,
+    place_plot_image,
+    text_layout,
+)
 from process.core.io.plot.summary.plasma.physics import plot_plasma
 from process.data_structure.impurity_radiation_variables import ImpurityRadiationData
 from process.models.geometry.plasma import plasma_geometry
@@ -256,64 +260,6 @@ def plot_main_plasma_information(
     def value(name: str):
         return mfile.get(name, scan=scan)
 
-    def add_panel(
-        x: float,
-        top: float,
-        width: float,
-        height: float,
-        text: str,
-        style: dict,
-        text_x_offset: float = 0.004,
-    ):
-        """Add one fixed-size box and its unchanged original text."""
-        box_expansion = 0.002
-        left = x - box_expansion
-        bottom = top - height - box_expansion
-        expanded_width = width + 2 * box_expansion
-        expanded_height = height + 2 * box_expansion
-
-        patch = FancyBboxPatch(
-            (left, bottom),
-            expanded_width,
-            expanded_height,
-            boxstyle="round,pad=0,rounding_size=0.003",
-            transform=fig.transFigure,
-            facecolor=style.get("facecolor", "white"),
-            edgecolor=style.get("edgecolor", "black"),
-            linewidth=style.get("linewidth", 1.0),
-            alpha=style.get("alpha", 1.0),
-            clip_on=False,
-            zorder=20,
-        )
-        axis.add_patch(patch)
-
-        return axis.text(
-            x + text_x_offset,
-            top - 0.004,
-            text,
-            fontsize=9,
-            color="black",
-            verticalalignment="top",
-            horizontalalignment="left",
-            transform=fig.transFigure,
-            clip_on=False,
-            zorder=21,
-        )
-
-    def add_symbol(panel_name: str, x: float, top: float):
-        """Add a large symbol at its original figure-relative position."""
-        return axis.text(
-            x,
-            top,
-            panel_name,
-            fontsize=23,
-            color="black",
-            verticalalignment="top",
-            transform=fig.transFigure,
-            clip_on=False,
-            zorder=22,
-        )
-
     triang = value("triang")
     kappa = value("kappa")
     rmajor = value("rmajor")
@@ -358,7 +304,7 @@ def plot_main_plasma_information(
         "$L_{\\text{p,poloidal}}$: "
         f"{value('len_plasma_poloidal'):,.3f} $\\mathrm{{m}}$"
     )
-    add_panel(0.365, 0.975, 0.340, 0.110, textstr_plasma, box_style("lightyellow"))
+    add_panel(axis, 0.365, 0.975, 0.340, 0.110, textstr_plasma, box_style("lightyellow"))
 
     i_hcd_primary = value("i_hcd_primary")
     i_hcd_secondary = value("i_hcd_secondary")
@@ -388,6 +334,7 @@ def plot_main_plasma_information(
         f"Current driven by secondary: {value('c_hcd_secondary_driven') / 1e6:.3f} MA"
     )
     add_panel(
+        axis,
         0.730,
         0.675,
         0.245,
@@ -395,7 +342,7 @@ def plot_main_plasma_information(
         textstr_hcd,
         box_style("paleturquoise") | {"edgecolor": "black"},
     )
-    add_symbol("$P_{\\text{inj}}$", 0.92, 0.625)
+    add_symbol(axis, "$P_{\\text{inj}}$", 0.92, 0.625)
 
     beta_component = BetaComponentLimits(value("i_beta_component")).full_name
     beta_norm_model = BetaNormMaxModel(value("i_beta_norm_max")).full_name
@@ -419,8 +366,8 @@ def plot_main_plasma_information(
         f"Maximum normalised beta ({beta_norm_model}), $\\beta_{{\\text{{N,max}}}}$: "
         f"{value('beta_norm_max'):.4f}"
     )
-    add_panel(0.025, 0.975, 0.325, 0.180, textstr_beta, box_style("lightblue"))
-    add_symbol("$\\beta$", 0.27, 0.94)
+    add_panel(axis, 0.025, 0.975, 0.325, 0.180, textstr_beta, box_style("lightblue"))
+    add_symbol(axis, "$\\beta$", 0.27, 0.94)
 
     inductance_model = IndInternalNormModel(
         value("i_ind_plasma_internal_norm")
@@ -442,18 +389,20 @@ def plot_main_plasma_information(
         f"Plasma normalised internal inductance, $l_i$ ({inductance_model}): "
         f"{value('ind_plasma_internal_norm'):.3f}"
     )
-    add_panel(0.025, 0.780, 0.335, 0.195, textstr_volt_second, box_style("lightgreen"))
-    add_symbol("Vs", 0.30, 0.77)
+    add_panel(
+        axis, 0.025, 0.780, 0.335, 0.195, textstr_volt_second, box_style("lightgreen")
+    )
+    add_symbol(axis, "Vs", 0.30, 0.77)
 
     textstr_div = (
-        f"$P_{{\\text{{sep}}}}$: {value('p_plasma_separatrix_mw'):.2f} MW\n"
+        f"$P_{{\\text{{sep}}}}$: {value('p_plasma_separatrix_mw'):.2f} MW\n\n"
         f"$\\frac{{P_{{\\text{{sep}}}}}}{{R}}$: "
-        f"{value('p_plasma_separatrix_rmajor_mw'):.2f} MW/m\n"
+        f"{value('p_plasma_separatrix_rmajor_mw'):.2f} MW/m\n\n"
         f"$\\frac{{P_{{\\text{{sep}}}}B_T}}{{q_{{95}} A R}}$: "
         f"{value('p_div_bt_q_aspect_rmajor_mw'):.2f} MW T/m"
     )
-    add_panel(0.350, 0.120, 0.165, 0.095, textstr_div, box_style("orange"))
-    add_symbol("$P_{\\text{div}}$", 0.45, 0.10)
+    add_panel(axis, 0.350, 0.120, 0.165, 0.095, textstr_div, box_style("orange"))
+    add_symbol(axis, "$P_{\\text{div}}$", 0.45, 0.10)
 
     textstr_confinement = (
         "$\\mathbf{Confinement:}$\n\n"
@@ -470,6 +419,7 @@ def plot_main_plasma_information(
         f"$\\tau_{{\\alpha}}/\\tau_{{e}}$: {value('f_t_alpha_energy_confinement'):.4f}"
     )
     add_panel(
+        axis,
         0.025,
         0.570,
         0.325,
@@ -477,7 +427,7 @@ def plot_main_plasma_information(
         textstr_confinement,
         box_style("gainsboro") | {"edgecolor": "black"},
     )
-    add_symbol("$\\tau_{\\text{e}}$", 0.30, 0.55)
+    add_symbol(axis, "$\\tau_{\\text{e}}$", 0.30, 0.55)
 
     textstr_reactions = (
         "$\\mathbf{Fusion\\ Reactions:}$\n\n"
@@ -492,6 +442,7 @@ def plot_main_plasma_information(
         f"Alpha Power, $P_{{\\alpha}}$: {value('p_alpha_total_mw'):,.2f} MW"
     )
     add_panel(
+        axis,
         0.025,
         0.400,
         0.185,
@@ -512,6 +463,7 @@ def plot_main_plasma_information(
         f"Burn-up fraction: {value('burnup'):.4f}"
     )
     add_panel(
+        axis,
         0.025,
         0.220,
         0.255,
@@ -533,6 +485,7 @@ def plot_main_plasma_information(
         )
     )
     add_panel(
+        axis,
         0.805,
         0.335,
         0.170,
@@ -541,7 +494,7 @@ def plot_main_plasma_information(
         {"boxstyle": "round", "facecolor": "olivedrab", "alpha": 0.7, "linewidth": 2},
         text_x_offset=0.045,
     )
-    add_symbol("$Z$", 0.815, 0.29)
+    add_symbol(axis, "$Z$", 0.815, 0.29)
 
     current_model = PlasmaCurrentModel(value("i_plasma_current")).full_name
     bootstrap_model = BootstrapCurrentFractionModel(
@@ -561,8 +514,8 @@ def plot_main_plasma_information(
         f"  - Auxiliary fraction: {value('f_c_plasma_auxiliary'):.4f}\n"
         f"  - Inductive fraction: {value('f_c_plasma_inductive'):.4f}"
     )
-    add_panel(0.720, 0.975, 0.255, 0.130, textstr_currents, box_style("#C8A2C8"))
-    add_symbol("$I_{\\text{p}}$", 0.93, 0.90)
+    add_panel(axis, 0.720, 0.975, 0.255, 0.130, textstr_currents, box_style("#C8A2C8"))
+    add_symbol(axis, "$I_{\\text{p}}$", 0.93, 0.90)
 
     textstr_fields = (
         "$\\mathbf{Magnetic\\ fields:}$\n\n"
@@ -574,8 +527,8 @@ def plot_main_plasma_information(
         f"Vertical field, $B_{{\\text{{vert}}}}$: "
         f"{value('b_plasma_vertical_required'):.4f} T"
     )
-    add_panel(0.5325, 0.140, 0.2575, 0.115, textstr_fields, box_style("royalblue"))
-    add_symbol("$B$", 0.75, 0.12)
+    add_panel(axis, 0.5325, 0.140, 0.2575, 0.115, textstr_fields, box_style("royalblue"))
+    add_symbol(axis, "$B$", 0.75, 0.12)
 
     textstr_radiation = (
         "$\\mathbf{Radiation:}$\n"
@@ -590,6 +543,7 @@ def plot_main_plasma_information(
         f"Synchrotron wall reflectivity: {value('f_sync_reflect'):.4f}"
     )
     add_panel(
+        axis,
         0.720,
         0.830,
         0.255,
@@ -598,7 +552,7 @@ def plot_main_plasma_information(
         box_style("lavender") | {"edgecolor": "black"},
         text_x_offset=0.032,
     )
-    add_symbol("$\\gamma$", 0.725, 0.78)
+    add_symbol(axis, "$\\gamma$", 0.725, 0.78)
 
     model_name = PlasmaConfinementTransitionModel(value("i_l_h_threshold")).full_name
     if len(model_name) > 20:
@@ -608,7 +562,7 @@ def plot_main_plasma_information(
         f"{model_name}\n\n"
         f"$P_{{\\text{{L-H}}}}$: {value('p_l_h_threshold_mw'):.4f} MW"
     )
-    add_panel(0.220, 0.400, 0.110, 0.080, textstr_lh, box_style("peachpuff"))
+    add_panel(axis, 0.220, 0.400, 0.110, 0.080, textstr_lh, box_style("peachpuff"))
 
     density_model = DensityLimitModel(value("i_density_limit")).full_name
     textstr_density_limit = (
@@ -618,7 +572,7 @@ def plot_main_plasma_information(
         "$\\mathrm{m}^{-3}$\n"
         f"$f_{{\\text{{GW}}}}$: {value('f_nd_plasma_greenwald'):.4f}"
     )
-    add_panel(0.220, 0.310, 0.130, 0.075, textstr_density_limit, box_style("pink"))
+    add_panel(axis, 0.220, 0.310, 0.130, 0.075, textstr_density_limit, box_style("pink"))
 
 
 def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int):
@@ -742,72 +696,24 @@ def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int
 
     light_yellow_box = box_style("lightyellow")
 
-    axis.text(
-        0.05,
-        0.45,
-        textstr_debye,
-        **text_layout(fig, v_align="top"),
-        bbox=light_yellow_box,
-    )
+    add_panel(axis, 0.05, 0.45, 0.185, 0.115, textstr_debye, light_yellow_box)
 
-    axis.text(
-        0.25,
-        0.45,
-        textstr_larmor,
-        **text_layout(fig, v_align="top"),
-        bbox=light_yellow_box,
-    )
+    add_panel(axis, 0.25, 0.45, 0.185, 0.115, textstr_larmor, light_yellow_box)
 
-    axis.text(
-        0.45,
-        0.45,
-        textstr_velocities,
-        **text_layout(fig, v_align="top"),
-        bbox=light_yellow_box,
-    )
+    add_panel(axis, 0.45, 0.45, 0.185, 0.115, textstr_velocities, light_yellow_box)
 
     light_cyan_box = box_style("lightcyan")
-    axis.text(
-        0.05,
-        0.31,
-        textstr_frequencies,
-        **text_layout(fig, v_align="top"),
-        bbox=light_cyan_box,
-    )
+    add_panel(axis, 0.05, 0.31, 0.185, 0.120, textstr_frequencies, light_cyan_box)
 
-    axis.text(
-        0.25,
-        0.31,
-        textstr_coulomb,
-        **text_layout(fig, v_align="top"),
-        bbox=light_cyan_box,
-    )
+    add_panel(axis, 0.25, 0.31, 0.185, 0.120, textstr_coulomb, light_cyan_box)
 
-    axis.text(
-        0.45,
-        0.31,
-        textstr_collision_times,
-        **text_layout(fig, v_align="top"),
-        bbox=light_cyan_box,
-    )
+    add_panel(axis, 0.45, 0.31, 0.185, 0.120, textstr_collision_times, light_cyan_box)
 
     light_green_box = box_style("lightgreen")
 
-    axis.text(
-        0.05,
-        0.17,
-        textstr_collision_freq,
-        **text_layout(fig, v_align="top"),
-        bbox=light_green_box,
-    )
+    add_panel(axis, 0.05, 0.17, 0.185, 0.115, textstr_collision_freq, light_green_box)
 
-    axis.text(
-        0.25,
-        0.17,
-        textstr_mfp,
-        **text_layout(fig, v_align="top"),
-        bbox=light_green_box,
-    )
+    add_panel(axis, 0.25, 0.17, 0.185, 0.115, textstr_mfp, light_green_box)
 
     axis.text(
         0.45,
