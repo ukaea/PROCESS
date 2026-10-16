@@ -1218,27 +1218,6 @@ def check_process(inputs, data):  # noqa: ARG001
                 fsum=fsum,
             )
 
-    # Check that the temperature margins are not overdetermined
-    if data.tfcoil.tmargmin > 0.0001:
-        # This limit has been input and will be applied to both TFC and CS
-        if data.tfcoil.temp_tf_superconductor_margin_min > 0.0001:
-            logger.error(
-                "temp_tf_superconductor_margin_min and tmargmin should not both"
-                " be specified in IN.DAT"
-                " temp_tf_superconductor_margin_min has been ignored",
-                stacklevel=2,
-            )
-        if data.tfcoil.temp_cs_superconductor_margin_min > 0.0001:
-            logger.error(
-                "temp_cs_superconductor_margin_min and tmargmin should not both"
-                " be specified in IN.DAT"
-                " temp_cs_superconductor_margin_min has been ignored",
-                stacklevel=2,
-            )
-
-        data.tfcoil.temp_tf_superconductor_margin_min = data.tfcoil.tmargmin
-        data.tfcoil.temp_cs_superconductor_margin_min = data.tfcoil.tmargmin
-
     if (
         data.physics.tauee_in > 1e-10
         and data.physics.i_confinement_time != ConfinementTimeModel.NSTX_GYRO_BOHM
