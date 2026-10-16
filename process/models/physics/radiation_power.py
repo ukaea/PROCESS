@@ -55,7 +55,6 @@ class PlasmaRadiation(Model):
     def run(self) -> None:
         """Run the plasma radiation calculation and update the data structure."""
         radpwrdata = self.calculate_radiation_powers(
-            plasma_profile=self.plasma_profile,
             nd_plasma_electron_on_axis=self.data.physics.nd_plasma_electron_on_axis,
             rminor=self.data.physics.rminor,
             b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
@@ -68,7 +67,6 @@ class PlasmaRadiation(Model):
             rmajor=self.data.physics.rmajor,
             kappa=self.data.physics.kappa,
             vol_plasma=self.data.physics.vol_plasma,
-            data_structure=self.data,
         )
         self.data.physics.pden_plasma_sync_vol_avg_mw = (
             radpwrdata.pden_plasma_sync_vol_avg_mw
@@ -253,7 +251,6 @@ class PlasmaRadiation(Model):
 
     def calculate_radiation_powers(
         self,
-        plasma_profile: PlasmaProfile,
         nd_plasma_electron_on_axis: float,
         rminor: float,
         b_plasma_toroidal_on_axis: float,
@@ -266,7 +263,6 @@ class PlasmaRadiation(Model):
         rmajor: float,
         kappa: float,
         vol_plasma: float,
-        data_structure: DataStructure,
     ) -> RadpwrData:
         """Calculate the radiation powers in [MW/m³] by calling relevant routines.
 
@@ -276,8 +272,6 @@ class PlasmaRadiation(Model):
 
         Parameters
         ----------
-        plasma_profile : PlasmaProfile
-            The parameterized temperature and density profiles of the plasma.
         nd_plasma_electron_on_axis : float
             Central electron density [m⁻³].
         rminor : float
@@ -319,7 +313,7 @@ class PlasmaRadiation(Model):
         of arbitrary geometry,” Nuclear Fusion, vol. 41, no. 12, pp. 1755-1758,
         Dec. 2001, doi: https://doi.org/10.1088/0029-5515/41/12/102.
         """
-        imp_rad = impurity.ImpurityRadiation(plasma_profile, data_structure)
+        imp_rad = self.impurity_rad
         imp_rad.calculate_imprad()
 
         # Synchrotron radiation power/volume; assumed to be from core only.
