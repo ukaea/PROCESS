@@ -711,57 +711,7 @@ class Physics(Model):
 
         # Calculate radiation power
 
-        radpwrdata = self.plasma_radiation.calculate_radiation_powers(
-            self.plasma_profile,
-            self.data.physics.nd_plasma_electron_on_axis,
-            self.data.physics.rminor,
-            self.data.physics.b_plasma_toroidal_on_axis,
-            self.data.physics.aspect,
-            self.data.physics.alphan,
-            self.data.physics.alphat,
-            self.data.physics.tbeta,
-            self.data.physics.temp_plasma_electron_on_axis_kev,
-            self.data.physics.f_sync_reflect,
-            self.data.physics.rmajor,
-            self.data.physics.kappa,
-            self.data.physics.vol_plasma,
-            self.data,
-        )
-        self.data.physics.pden_plasma_sync_vol_avg_mw = (
-            radpwrdata.pden_plasma_sync_vol_avg_mw
-        )
-        self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw = (
-            radpwrdata.pden_plasma_core_rad_reduced_vol_avg_mw
-        )
-        self.data.physics.pden_plasma_core_rad_vol_avg_mw = (
-            radpwrdata.pden_plasma_core_rad_vol_avg_mw
-        )
-        self.data.physics.pden_plasma_edge_rad_vol_avg_mw = (
-            radpwrdata.pden_plasma_edge_rad_vol_avg_mw
-        )
-        self.data.physics.pden_plasma_rad_vol_avg_mw = (
-            radpwrdata.pden_plasma_rad_vol_avg_mw
-        )
-
-        self.data.physics.p_plasma_sync_mw = (
-            self.data.physics.pden_plasma_sync_vol_avg_mw * self.data.physics.vol_plasma
-        )
-        self.data.physics.p_plasma_core_rad_reduced_mw = (
-            self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw
-            * self.data.physics.vol_plasma
-        )
-
-        self.data.physics.p_plasma_core_rad_mw = (
-            self.data.physics.pden_plasma_core_rad_vol_avg_mw
-            * self.data.physics.vol_plasma
-        )
-        self.data.physics.p_plasma_edge_rad_mw = (
-            self.data.physics.pden_plasma_edge_rad_vol_avg_mw
-            * self.data.physics.vol_plasma
-        )
-        self.data.physics.p_plasma_rad_mw = (
-            self.data.physics.pden_plasma_rad_vol_avg_mw * self.data.physics.vol_plasma
-        )
+        self.plasma_radiation.run()
 
         # Calculate ohmic power
         (
