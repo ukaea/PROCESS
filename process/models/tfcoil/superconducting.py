@@ -3918,25 +3918,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             superconductor_critical_properties.c_turn_cables_critical
         )
 
-        if self.data.tfcoil.i_str_wp == 0:
-            strain = self.data.tfcoil.str_tf_con_res
-        else:
-            strain = self.data.tfcoil.str_wp
-
-        self.data.tfcoil.temp_tf_superconductor_margin = (
-            self.calculate_superconductor_temperature_margin(
-                i_tf_superconductor=self.data.tfcoil.i_tf_sc_mat,
-                j_superconductor=d_sc_tf.j_tf_superconductor,
-                b_tf_inboard_peak=self.data.tfcoil.b_tf_inboard_peak_with_ripple,
-                strain=strain,
-                bc20m=d_sc_tf.b_tf_superconductor_critical_zero_temp_strain,
-                tc0m=d_sc_tf.temp_tf_superconductor_critical_zero_field_strain,
-                c0=1.0e10,
-                temp_tf_coolant_peak_field=self.data.tfcoil.tftmp,
-                data=self.data,
-            )
-        )
-
         match AvailabilityModel(self.data.costs.i_plant_availability):
             # Only calculate temperature margin if required
             case AvailabilityModel.MORRIS | AvailabilityModel.ST:
