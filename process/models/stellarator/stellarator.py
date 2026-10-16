@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING
 import numpy as np
 
 import process.models.physics.fusion_reactions as reactions
-import process.models.physics.radiation_power as physics_funcs
 from process.core import constants
 from process.core import process_output as po
 from process.core.coolprop_interface import FluidProperties
@@ -2132,7 +2131,7 @@ class Stellarator(Model):
         )
 
         # Calculate radiation power
-        radpwr_data = physics_funcs.calculate_radiation_powers(
+        radpwr_data = self.physics.plasma_radiation.calculate_radiation_powers(
             self.plasma_profile,
             self.data.physics.nd_plasma_electron_on_axis,
             self.data.physics.rminor,
