@@ -728,7 +728,8 @@ class ImpurityRadiation:
             p_mw = pden_vol_avg_mw * self.data.physics.vol_plasma
             species_powers[str(label)] = (pden_vol_avg_mw, p_mw)
             setattr(self.data.physics, SPECIES_POWER_ATTRIBUTES[index], p_mw)
-            if index >= 2:  # Exclude hydrogen and helium
+            # Only add the radiation power of impurity species (excluding H and He)
+            if str(label) not in {"H_", "He"}:
                 p_plasma_rad_impurities_mw += p_mw
         self.data.physics.p_plasma_rad_impurities_mw = p_plasma_rad_impurities_mw
         return species_powers
