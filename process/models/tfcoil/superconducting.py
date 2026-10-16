@@ -2248,7 +2248,7 @@ class SuperconductingTFCoil(TFCoil):
             x0=[temp_tf_coolant_peak_field],
             bounds=([1e-3], [0.999 * tc0m]),
             method="trf",
-            xtol=1e-9,
+            xtol=1e-11,
             ftol=None,
             gtol=None,
             max_nfev=50,
@@ -2267,7 +2267,8 @@ class SuperconductingTFCoil(TFCoil):
             or abs(normalised_residual) > residual_tol
         ):
             raise ProcessValueError(
-                "Superconductor temperature margin residual is not sufficiently "
+                "Superconductor current density residual for temperature margin "
+                "calculation is not sufficiently "
                 f"close to zero: {normalised_residual:.6g} "
                 f"(normalised tolerance: {residual_tol:.6g})"
             )
