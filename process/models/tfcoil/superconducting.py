@@ -2863,6 +2863,27 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             * self.data.tfcoil.n_tf_coil_turns
         )
 
+        margin_superconductor_info = self.tf_cable_in_conduit_superconductor_properties(
+            a_tf_turn_cable_space=self.data.tfcoil.a_tf_turn_cable_space_no_void,
+            a_tf_turn=self.data.tfcoil.a_tf_turn,
+            a_tf_turn_cable_space_effective=d_sc_tf.a_tf_turn_cable_space_effective,
+            f_a_tf_turn_cable_space_cooling=d_sc_tf.f_a_tf_turn_cable_space_cooling,
+            b_tf_inboard_peak=self.data.tfcoil.b_tf_inboard_peak_with_ripple,
+            f_a_tf_turn_cable_copper=self.data.tfcoil.f_a_tf_turn_cable_copper,
+            c_tf_turn=self.data.tfcoil.c_tf_turn,
+            j_tf_wp=self.data.tfcoil.j_tf_wp,
+            i_tf_superconductor=self.data.tfcoil.i_tf_sc_mat,
+            f_strain_scale=self.data.tfcoil.fhts,
+            temp_tf_coolant_peak_field=self.data.tfcoil.tftmp
+            + self.data.tfcoil.temp_tf_superconductor_margin_min,
+            bcritsc=self.data.tfcoil.bcritsc,
+            tcritsc=self.data.tfcoil.tcritsc,
+            data=self.data,
+        )
+        self.data.tfcoil.j_tf_wp_temp_margin = (
+            margin_superconductor_info.j_tf_wp_critical
+        )
+
         critical_superconductor_info = (
             self.tf_cable_in_conduit_superconductor_properties(
                 a_tf_turn_cable_space=self.data.tfcoil.a_tf_turn_cable_space_no_void,
@@ -3063,7 +3084,6 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
         # Defaults for models whose current density excludes copper.
         cable_area = a_tf_turn_cable_space_effective
-        bc20m = tc0m = None
 
         match model:
             case (
@@ -3098,7 +3118,9 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
             case SuperconductorModel.BI2212:
                 # This model already accounts for the strand composition.
-                # MC: returns bc20m = None, tc0m = None explicitly now
+                # MC: Comment for reviewers: in this case I imagine it would raise
+                # UnboundLocalError
+                bc20m = tc0m = 0.0
                 cable_area = a_tf_turn_cable_space * conductor_fraction
                 j_strand = j_tf_wp * a_tf_turn / cable_area
 
@@ -3145,14 +3167,14 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             tfcoil.j_crit_str_tf = j_cables_critical
 
         c_turn_cables_critical = j_cables_critical * cable_area
-        operating_fraction = c_tf_turn / c_turn_cables_critical
-        j_superconductor = operating_fraction * j_superconductor_critical
+        f_c_tf_turn_operating_critical = c_tf_turn / c_turn_cables_critical
+        j_superconductor = f_c_tf_turn_operating_critical * j_superconductor_critical
 
-        if operating_fraction <= 0.0:
+        if f_c_tf_turn_operating_critical <= 0.0:
             logger.error(
                 f"""Non-positive Iop/Icrit for TF coil
                 jsc: {j_superconductor}
-                f_c_tf_turn_operating_critical: {operating_fraction}
+                f_c_tf_turn_operating_critical: {f_c_tf_turn_operating_critical}
                 j_superconductor_critical: {j_superconductor_critical}
                 Check conductor dimensions. Cable space area a_tf_turn_cable_space
                 likely gone negative. a_tf_turn_cable_space: {a_tf_turn_cable_space}
@@ -3168,7 +3190,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         return TFSuperconductorLimits(
             j_tf_wp_critical=c_turn_cables_critical / a_tf_turn,
             j_superconductor_critical=j_superconductor_critical,
-            f_c_tf_turn_operating_critical=operating_fraction,
+            f_c_tf_turn_operating_critical=f_c_tf_turn_operating_critical,
             j_superconductor=j_superconductor,
             j_tf_coil_turn=c_tf_turn / a_tf_turn,
             bc20m=bc20m,
