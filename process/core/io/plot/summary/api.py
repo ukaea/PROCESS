@@ -71,6 +71,7 @@ from process.core.io.plot.summary.plasma.physics import (
     plot_physics_info,
     plot_plasma_current_comparison,
     plot_plasma_outboard_toroidal_ripple_map,
+    plot_radiation_power_contributions,
 )
 from process.core.io.plot.summary.plasma.sol import (
     plot_brunner_divertor_power_split_comparison_stackplot,
@@ -328,6 +329,12 @@ def main_plot(
         )
     plot_line_brem_power_profile(
         _add_page("line_brem_power").add_subplot(121), m_file, scan, imp
+    )
+
+    plot_radiation_power_contributions(
+        pages["line_brem_power"].add_subplot(224),
+        m_file,
+        scan,
     )
     plot_fusion_rate_density_profiles(
         _add_page("fusion_rate_density").add_subplot(122),

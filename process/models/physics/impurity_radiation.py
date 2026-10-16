@@ -28,6 +28,25 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
+# Names of the physics power variables, in the same order as `imp_label`
+SPECIES_POWER_ATTRIBUTES = (
+    "p_plasma_rad_hydrogen_mw",
+    "p_plasma_rad_helium_mw",
+    "p_plasma_rad_beryllium_mw",
+    "p_plasma_rad_carbon_mw",
+    "p_plasma_rad_nitrogen_mw",
+    "p_plasma_rad_oxygen_mw",
+    "p_plasma_rad_neon_mw",
+    "p_plasma_rad_silicon_mw",
+    "p_plasma_rad_argon_mw",
+    "p_plasma_rad_iron_mw",
+    "p_plasma_rad_nickel_mw",
+    "p_plasma_rad_krypton_mw",
+    "p_plasma_rad_xenon_mw",
+    "p_plasma_rad_tungsten_mw",
+)
+
+
 def initialise_imprad(data: DataStructure):
     """Initialises the impurity radiation data structure
 
@@ -542,7 +561,10 @@ def calculate_impurity_radiation_power_density(
     -Temperatures outside the range of the L(Z,Tₑ) table are handled by using the
     L(Z,Tₑ) value at the closest temperature in the table,
     """
-    bins = data.impurity_radiation.temp_impurity_keV_array[imp_element_index]
+    table_length = data.impurity_radiation.impurity_arr_len_tab[imp_element_index]
+    bins = data.impurity_radiation.temp_impurity_keV_array[
+        imp_element_index, :table_length
+    ]
     indices = np.digitize(temp_electron_profile_kev, bins)
     indices[indices >= bins.shape[0]] = bins.shape[0] - 1
     indices[indices < 0] = 0
@@ -671,6 +693,46 @@ class ImpurityRadiation:
 
     def output(self):
         """ImpurityRadiation model has no output"""
+
+    def calculate_species_radiation_powers(
+        self,
+    ) -> dict[str, tuple[float, float]]:
+        """Calculate the volume-averaged radiation power density and the total
+        radiation power of every ion species, including those with zero density.
+        Only intended to be run at output.
+
+        Returns
+        -------
+        dict[str, tuple[float, float]]
+            Volume-averaged radiation power density [MW/m³] and total radiation
+            power [MW] (density multiplied by the plasma volume), keyed by the
+            species label.
+        """
+        species_powers = {}
+        p_plasma_rad_impurities_mw = 0.0
+        for index, label in enumerate(self.data.impurity_radiation.imp_label):
+            pden_vol_avg_mw = 0.0
+            if self.data.impurity_radiation.f_nd_impurity_electron_array[index] > 1e-30:
+                pden_profile = calculate_impurity_radiation_power_density(
+                    imp_element_index=index,
+                    nd_electron_profile=self.plasma_profile.neprofile.profile_y,
+                    temp_electron_profile_kev=self.plasma_profile.teprofile.profile_y,
+                    data=self.data,
+                )
+                # 1e-6 converts from W/m³ to MW/m³
+                pden_vol_avg_mw = 1.0e-6 * calculate_vol_avg_of_profile(
+                    profile_x=self.plasma_profile.neprofile.profile_x,
+                    profile_y=pden_profile,
+                    profile_dx=self.plasma_profile.neprofile.profile_dx,
+                )
+            p_mw = pden_vol_avg_mw * self.data.physics.vol_plasma
+            species_powers[str(label)] = (pden_vol_avg_mw, p_mw)
+            setattr(self.data.physics, SPECIES_POWER_ATTRIBUTES[index], p_mw)
+            # Only add the radiation power of impurity species (excluding H and He)
+            if str(label) not in {"H_", "He"}:
+                p_plasma_rad_impurities_mw += p_mw
+        self.data.physics.p_plasma_rad_impurities_mw = p_plasma_rad_impurities_mw
+        return species_powers
 
     def map_imprad_profile(self):
         """Map imprad_profile() over each impurity element index."""
