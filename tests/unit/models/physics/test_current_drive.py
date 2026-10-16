@@ -315,38 +315,36 @@ def test_current_drive_primary_electron_bernstein(current_drive):
 
 @pytest.mark.parametrize(
     (
+        "eta_cd_hcd",
         "nd_plasma_electrons_vol_avg",
         "rmajor",
         "temp_plasma_electron_vol_avg_kev",
-        "c_hcd_driven",
-        "p_hcd_injected",
     ),
     [
-        (1e20, 1.0, 1.0, 1.0, 1.0),
+        (0.05, 1e20, 1.0, 1.0),
     ],
 )
 def test_calculate_dimensionless_current_drive_efficiency_simple(
+    eta_cd_hcd,
     nd_plasma_electrons_vol_avg,
     rmajor,
     temp_plasma_electron_vol_avg_kev,
-    c_hcd_driven,
-    p_hcd_injected,
     current_drive,
 ):
-    cd = current_drive
     expected = (
         (constants.ELECTRON_CHARGE**3 / constants.EPSILON0**2)
         * (
             (nd_plasma_electrons_vol_avg * rmajor)
             / (temp_plasma_electron_vol_avg_kev * constants.KILOELECTRON_VOLT)
         )
-        * (c_hcd_driven / p_hcd_injected)
+        * eta_cd_hcd
     )
-    result = cd.calculate_dimensionless_current_drive_efficiency(
-        nd_plasma_electrons_vol_avg,
-        rmajor,
-        temp_plasma_electron_vol_avg_kev,
-        c_hcd_driven,
-        p_hcd_injected,
+
+    result = current_drive.calculate_dimensionless_current_drive_efficiency(
+        eta_cd_hcd=eta_cd_hcd,
+        nd_plasma_electrons_vol_avg=nd_plasma_electrons_vol_avg,
+        rmajor=rmajor,
+        temp_plasma_electron_vol_avg_kev=temp_plasma_electron_vol_avg_kev,
     )
+
     assert result == pytest.approx(expected, rel=1e-12)
