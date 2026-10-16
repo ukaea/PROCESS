@@ -181,7 +181,7 @@ BASELINE_LIST = [
     "b_tf_inboard_peak_symmetric",
     "iooic",
     "tmarg",
-    "tftmp",
+    "temp_tf_operating",
     "qtarget",
     "qtargetcomplete",
     "totalpowerlost",

@@ -1179,10 +1179,10 @@ def check_process(inputs, data):  # noqa: ARG001
     if (
         SuperconductorModel(data.tfcoil.i_tf_sc_mat).sc_type
         == SuperconductorType.LOW_TEMPERATURE
-        and data.tfcoil.tftmp > 10.0
+        and data.tfcoil.temp_tf_operating > 10.0
     ):
         raise ProcessValidationError(
-            "The LTS conductor temperature (tftmp) has to be lower than 10"
+            "The LTS conductor temperature (temp_tf_operating) has to be lower than 10"
         )
 
     # PF coil resistivity is zero if superconducting
@@ -1310,8 +1310,10 @@ def check_process(inputs, data):  # noqa: ARG001
         )
 
     # Cold end of the cryocooler should be colder than the TF
-    if data.tfcoil.temp_tf_cryo > data.tfcoil.tftmp:
-        raise ProcessValidationError("temp_tf_cryo should be lower than tftmp")
+    if data.tfcoil.temp_tf_cryo > data.tfcoil.temp_tf_operating:
+        raise ProcessValidationError(
+            "temp_tf_cryo should be lower than temp_tf_operating"
+        )
 
     # Cannot use TF coil strain limit if i_str_wp is off:
     if (

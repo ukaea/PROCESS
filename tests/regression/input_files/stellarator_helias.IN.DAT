@@ -233,7 +233,7 @@ runtitle = SQuID
 *-----------------Tfcoil Variables-----------------*
 
 i_tf_sc_mat = 1         * Switch for superconductor material in tf coils (1: ITER Nb3Sn)
-tftmp     = 4.5         * Peak helium coolant temperature in TF coils and PF coils (K)
+temp_tf_operating     = 4.5         * Peak helium coolant temperature in TF coils and PF coils (K)
 tmargmin = 1.5          * Temperature margin for superconductor current density calculation (K)
 temp_tf_cryo = 4.5      * Coil temperature for cryogenic plant power calculation (K)
 dx_tf_turn_general = 0.056                * Dimension conductor area including steel and insulation.
