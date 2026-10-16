@@ -376,7 +376,7 @@ i_tf_sc_mat = 1 * Switch for superconductor material in TF coils;
 ripple_b_tf_plasma_edge_max   = 0.6 * maximum allowable toroidal field ripple amplitude at plasma edge (%)
 t_tf_superconductor_quench   = 17.97282589344206 * fast discharge time for TF coil in event of quench (s) (`iteration variable 56`)
 n_tf_coils     = 16 * Number of TF coils (default = 50 for stellarators); Number of TF coils outer legs for ST
-tftmp    = 4.75 * peak helium coolant temperature in TF coils and PF coils (K)
+temp_tf_operating    = 4.75 * peak helium coolant temperature in TF coils and PF coils (K)
 dr_tf_nose_case   = 0.2816873221155309 * inboard TF coil case outer (non-plasma side) thickness (m) (`iteration variable 57`)
 dr_tf_wp_with_insulation = 0.5153787768966674 * radial thickness of winding pack (m) (issue #514)
 dx_tf_turn_steel = 0.008012110032981922 * TF coil conduit case thickness (m) (`iteration variable 58`)

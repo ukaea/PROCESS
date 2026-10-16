@@ -928,7 +928,7 @@ dia_tf_turn_coolant_channel = 0.010
 * DESCRIPTION:   diameter of He coil in TF winding (m)
 * JUSTIFICATION: 
 
-tftmp = 4.750
+temp_tf_operating = 4.750
 * DESCRIPTION:   Peak helium coolant temperature in tf coils and pf coils (k)
 * JUSTIFICATION: 
 

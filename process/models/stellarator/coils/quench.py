@@ -61,7 +61,7 @@ def calculate_quench_protection(coilcurrent, data: DataStructure):
         t_detect=data.tfcoil.t_tf_quench_detection,
         f_cu=data.tfcoil.f_a_tf_turn_cable_copper,
         f_cond=1 - data.tfcoil.f_a_tf_turn_cable_space_extra_void,
-        temp=data.tfcoil.tftmp,
+        temp=data.tfcoil.temp_tf_operating,
         a_cable=data.tfcoil.a_tf_turn_cable_space_no_void,
         a_turn=data.tfcoil.dx_tf_turn_general**2,
     )
