@@ -49,7 +49,58 @@ class PlasmaRadiation(Model):
         )
 
     def run(self):
-        pass
+        """Run the plasma radiation calculation and update the data structure."""
+        radpwrdata = self.calculate_radiation_powers(
+            plasma_profile=self.plasma_profile,
+            nd_plasma_electron_on_axis=self.data.physics.nd_plasma_electron_on_axis,
+            rminor=self.data.physics.rminor,
+            b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
+            aspect=self.data.physics.aspect,
+            alphan=self.data.physics.alphan,
+            alphat=self.data.physics.alphat,
+            tbeta=self.data.physics.tbeta,
+            temp_plasma_electron_on_axis_kev=self.data.physics.temp_plasma_electron_on_axis_kev,
+            f_sync_reflect=self.data.physics.f_sync_reflect,
+            rmajor=self.data.physics.rmajor,
+            kappa=self.data.physics.kappa,
+            vol_plasma=self.data.physics.vol_plasma,
+            data_structure=self.data,
+        )
+        self.data.physics.pden_plasma_sync_vol_avg_mw = (
+            radpwrdata.pden_plasma_sync_vol_avg_mw
+        )
+        self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw = (
+            radpwrdata.pden_plasma_core_rad_reduced_vol_avg_mw
+        )
+        self.data.physics.pden_plasma_core_rad_vol_avg_mw = (
+            radpwrdata.pden_plasma_core_rad_vol_avg_mw
+        )
+        self.data.physics.pden_plasma_edge_rad_vol_avg_mw = (
+            radpwrdata.pden_plasma_edge_rad_vol_avg_mw
+        )
+        self.data.physics.pden_plasma_rad_vol_avg_mw = (
+            radpwrdata.pden_plasma_rad_vol_avg_mw
+        )
+
+        self.data.physics.p_plasma_sync_mw = (
+            self.data.physics.pden_plasma_sync_vol_avg_mw * self.data.physics.vol_plasma
+        )
+        self.data.physics.p_plasma_core_rad_reduced_mw = (
+            self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw
+            * self.data.physics.vol_plasma
+        )
+
+        self.data.physics.p_plasma_core_rad_mw = (
+            self.data.physics.pden_plasma_core_rad_vol_avg_mw
+            * self.data.physics.vol_plasma
+        )
+        self.data.physics.p_plasma_edge_rad_mw = (
+            self.data.physics.pden_plasma_edge_rad_vol_avg_mw
+            * self.data.physics.vol_plasma
+        )
+        self.data.physics.p_plasma_rad_mw = (
+            self.data.physics.pden_plasma_rad_vol_avg_mw * self.data.physics.vol_plasma
+        )
 
     def output(self):
         pass
