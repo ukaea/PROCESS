@@ -948,8 +948,8 @@ class SuperconductingTFCoil(TFCoil):
         else:
             strain = self.data.tfcoil.str_wp
 
-        self.data.tfcoil.temp_tf_superconductor_margin = (
-            self.calculate_superconductor_temperature_margin(
+        try:
+            temp_margin = self.calculate_superconductor_temperature_margin(
                 i_tf_superconductor=self.data.tfcoil.i_tf_sc_mat,
                 j_superconductor=d_sc_tf.j_tf_superconductor,
                 b_tf_inboard_peak=self.data.tfcoil.b_tf_inboard_peak_with_ripple,
@@ -960,7 +960,18 @@ class SuperconductingTFCoil(TFCoil):
                 temp_tf_coolant_peak_field=self.data.tfcoil.tftmp,
                 data=self.data,
             )
-        )
+        except ProcessValueError:
+            # Non-positive
+            logger.error(
+                "TF coil temperature margin calculation failed. This is either due "
+                "to required current density being above the critical current density,"
+                " or because the superconducting parameterisation returned a nan or "
+                "negative current density.",
+                stacklevel=2,
+            )
+            temp_margin = np.nan
+
+        self.data.tfcoil.temp_tf_superconductor_margin = temp_margin
         po.oheadr(self.outfile, "TF Coils Superconductor Information")
         po.ovarre(
             self.outfile,

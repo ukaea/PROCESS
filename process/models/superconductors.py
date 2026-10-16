@@ -1292,9 +1292,6 @@ def superconductor_current_density_margin(
             f"Unknown superconductor material code: {i_superconductor_type}"
         ) from err
 
-    print(f"{j_superconductor_critical=}")
-    print(f"{j_superconductor=}")
-    print(f"{(j_superconductor_critical - j_superconductor)=}")
     return j_superconductor_critical - j_superconductor
 
 
