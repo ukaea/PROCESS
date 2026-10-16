@@ -358,7 +358,7 @@ eyoung_res_tf_buck = 205.0e9 * Resistive TF magnets bucking cylinder young modul
 ripple_b_tf_plasma_edge_max   = 1.0 * maximum allowable toroidal field ripple amplitude at plasma edge (%)
 i_cp_joints = 0 * Switch for CP demoutable joints type
 n_tf_coils     = 12 * Number of TF coils (default = 50 for stellarators); Number of TF coils outer legs for ST
-tftmp    = 20.0 * peak helium coolant temperature in TF coils and PF coils (K)
+temp_tf_operating    = 20.0 * peak helium coolant temperature in TF coils and PF coils (K)
 dr_tf_nose_case   = 0.1293140904093427 * inboard TF coil case outer (non-plasma side) thickness (m) (`iteration variable 57`)
 dr_tf_wp_with_insulation = 0.6044340543574178 * radial thickness of winding pack (m) (`iteration variable 140`) (issue #514)
 temp_tf_cryo   = 20.0 * coil temperature for cryogenic plant power calculation (K)

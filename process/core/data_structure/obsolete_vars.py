@@ -482,6 +482,7 @@ OBS_VARS = {
     "temp_plasma_pedestal_kev": "temp_plasma_pedestal_electron_kev",
     "temp_plasma_separatrix_kev": "temp_plasma_separatrix_electron_kev",
     "iohcl": "i_cs_use",
+    "tftmp": "temp_tf_operating",
 }
 
 OBS_VARS_HELP = {

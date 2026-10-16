@@ -628,8 +628,8 @@ class TFData:
     tfsao: float = 0.0
     """area of the outboard TF coil legs (m2)"""
 
-    tftmp: float = 4.5
-    """peak helium coolant temperature in TF coils and PF coils (K)"""
+    temp_tf_operating: float = 4.5
+    """Operating temperature of the TF coil [K]"""
 
     dx_tf_inboard_out_toroidal: float = 1.0
     """Inboard leg toroidal thickness at outer edge (m)"""
