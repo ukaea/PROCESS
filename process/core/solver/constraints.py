@@ -1002,15 +1002,15 @@ def constraint_equation_36(constraint_registration, data):
     """Equation for TF coil s/c temperature margin lower limit (SCTF)
     by means of the actual to critical current density
 
-    j_tf_str:
-        actual superconductor strand current density (A/m²)
-    j_crit_str_tf:
-        superconductor strand critical current density under operating
+    j_tf_wp_critical:
+        winding pack critical current density under operating
         conditions (A/m²)
+    j_tf_wp:
+        winding pack current density (A/m²)
     """
-    return geq(
-        data.tfcoil.j_tf_str,
-        data.tfcoil.j_crit_str_tf,
+    return leq(
+        data.tfcoil.j_tf_wp,
+        data.tfcoil.j_tf_wp_critical,
         constraint_registration,
     )
 
