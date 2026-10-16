@@ -487,6 +487,7 @@ OBS_VARS = {
         "temp_tf_superconductor_margin_min",
         "temp_cs_superconductor_margin_min",
     ],
+    "tftmp": "temp_tf_operating",
 }
 
 OBS_VARS_HELP = {
