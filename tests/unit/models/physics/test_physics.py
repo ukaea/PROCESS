@@ -3451,7 +3451,39 @@ def test_calculate_debye_length_parametrized(temp_keV, nd, expected):
     assert result == pytest.approx(expected, rel=1e-12)
 
 
-def test_detailed_physics_run_computes_profiles(monkeypatch, physics, process_models):
+@pytest.mark.parametrize(
+    ("nd_plasma_ions", "expected"),
+    [
+        # n_i = 1e20 m^-3, T_e = 10 keV, ln Lambda = 17, Z = 1 (Braginskii tau_e)
+        (1.0e20, pytest.approx(2.024e-4, rel=1e-3)),
+        # Absent ion species (e.g. tritons in a pure-deuterium plasma):
+        # the collision time is infinite instead of a ZeroDivisionError
+        (0.0, np.inf),
+    ],
+)
+def test_calculate_electron_ion_collision_time(nd_plasma_ions, expected):
+    result = DetailedPhysics.calculate_electron_ion_collision_time(
+        temp_plasma_electron_kev=10.0,
+        nd_plasma_ions=nd_plasma_ions,
+        plasma_coulomb_log_electron_ion=17.0,
+        n_charge_ion=1,
+    )
+    assert result == expected
+
+    # Array inputs give the same values element-wise
+    result_array = DetailedPhysics.calculate_electron_ion_collision_time(
+        temp_plasma_electron_kev=np.array([10.0, 10.0]),
+        nd_plasma_ions=np.array([nd_plasma_ions, nd_plasma_ions]),
+        plasma_coulomb_log_electron_ion=np.array([17.0, 17.0]),
+        n_charge_ion=1,
+    )
+    assert np.all(result_array == expected)
+
+
+@pytest.mark.parametrize("f_plasma_fuel_tritium", [0.5, 0.0])
+def test_detailed_physics_run_computes_profiles(
+    monkeypatch, physics, process_models, f_plasma_fuel_tritium
+):
     # Minimal plasma profile
     plasma = process_models.plasma_profile
     plasma.teprofile.profile_x = np.array([0.0, 0.5, 1.0])
@@ -3489,12 +3521,14 @@ def test_detailed_physics_run_computes_profiles(monkeypatch, physics, process_mo
     monkeypatch.setattr(
         physics.data.physics,
         "f_plasma_fuel_deuterium",
-        0.5,
+        1.0 - f_plasma_fuel_tritium,
     )
+    # f_plasma_fuel_tritium = 0 is a pure-deuterium plasma; the run must not
+    # raise ZeroDivisionError in the electron-triton collision time
     monkeypatch.setattr(
         physics.data.physics,
         "f_plasma_fuel_tritium",
-        0.5,
+        f_plasma_fuel_tritium,
     )
     monkeypatch.setattr(
         physics.data.physics,
