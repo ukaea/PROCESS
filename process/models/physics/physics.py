@@ -1983,6 +1983,7 @@ class Physics(Model):
 
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
+        self.plasma_radiation.output()
 
         po.oblnkl(self.outfile)
         po.ovarre(
