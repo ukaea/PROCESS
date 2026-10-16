@@ -37,7 +37,9 @@ class RadpwrData:
 
 
 class PlasmaRadiation(Model):
-    """Class representing the radiation properties of a plasma."""
+    """Class representing the photon radiation properties of a plasma. Includes line,
+    bremsstrahlung, recombination and synchrotron radiation.
+    """
 
     def __init__(
         self,

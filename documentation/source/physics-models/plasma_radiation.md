@@ -1,4 +1,4 @@
-# Plasma Radiation
+# Plasma Radiation | `PlasmaRadiation()`
 
 ## Overview
 
