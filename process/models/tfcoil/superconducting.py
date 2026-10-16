@@ -3098,6 +3098,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
             case SuperconductorModel.BI2212:
                 # This model already accounts for the strand composition.
+                # MC: returns bc20m = None, tc0m = None explicitly now
                 cable_area = a_tf_turn_cable_space * conductor_fraction
                 j_strand = j_tf_wp * a_tf_turn / cable_area
 
