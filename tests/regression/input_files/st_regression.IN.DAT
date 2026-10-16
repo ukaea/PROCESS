@@ -1330,7 +1330,7 @@ temp_tf_cryo = 20.0
 * DESCRIPTION:   Coil temperature for cryogenic plant power calculation (K)
 * JUSTIFICATION: 
 
-tftmp = 20.0 
+temp_tf_operating = 20.0 
 * DESCRIPTION:   Peak helium coolant temperature in TF coils and PF coils [K]
 * JUSTIFICATION: TF coil joints much easier at 20 K.
 *                We set the temperature at 19.9K for run convergence issues
