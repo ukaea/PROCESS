@@ -149,9 +149,9 @@ def test_protect(protectparam, sctfcoil):
 class SuperconParam(NamedTuple):
     temp_tf_superconductor_margin_min: Any = None
 
-    n_tf_coils: Any = None
+    temp_tf_superconductor_margin: Any = None
 
-    temp_margin: Any = None
+    n_tf_coils: Any = None
 
     dia_tf_turn_coolant_channel: Any = None
 
@@ -213,7 +213,7 @@ class SuperconParam(NamedTuple):
 
     tcritsc: Any = None
 
-    expected_temp_margin: Any = None
+    expected_temp_tf_superconductor_margin: Any = None
 
     expected_j_tf_wp_quench_heat_max: Any = None
 
@@ -242,7 +242,7 @@ class SuperconParam(NamedTuple):
         SuperconParam(
             temp_tf_superconductor_margin_min=1.5,
             n_tf_coils=16,
-            temp_margin=0,
+            temp_tf_superconductor_margin=0,
             dia_tf_turn_coolant_channel=0.010000000000000002,
             c_tf_turn=74026.751437500003,
             b_tf_inboard_peak_with_ripple=12.48976756562082,
@@ -275,7 +275,7 @@ class SuperconParam(NamedTuple):
             detection_time=0.0,
             bcritsc=24,
             tcritsc=16,
-            expected_temp_margin=2.864553846654988,
+            expected_temp_tf_superconductor_margin=2.864553846654988,
             expected_j_tf_wp_quench_heat_max=17213147.288375787,
             expected_j_tf_wp_critical=49719296.722920775,
             expected_vd=9988.2637896807955,
@@ -290,7 +290,7 @@ class SuperconParam(NamedTuple):
         SuperconParam(
             temp_tf_superconductor_margin_min=1.5,
             n_tf_coils=16,
-            temp_margin=2.3431632224075836,
+            temp_tf_superconductor_margin=2.3431632224075836,
             dia_tf_turn_coolant_channel=0.010000000000000002,
             c_tf_turn=74026.751437500003,
             b_tf_inboard_peak_with_ripple=12.48976756562082,
@@ -321,7 +321,7 @@ class SuperconParam(NamedTuple):
             detection_time=0.0,
             bcritsc=24,
             tcritsc=16,
-            expected_temp_margin=2.864553846654988,
+            expected_temp_tf_superconductor_margin=2.864553846654988,
             expected_j_tf_wp_quench_heat_max=17213147.288375787,
             expected_j_tf_wp_critical=49719296.722920775,
             expected_vd=10001.287165953383,
@@ -363,7 +363,9 @@ def test_supercon(superconparam, monkeypatch, cicc_sctfcoil):
     )
 
     monkeypatch.setattr(
-        cicc_sctfcoil.data.tfcoil, "temp_margin", superconparam.temp_margin
+        cicc_sctfcoil.data.tfcoil,
+        "temp_tf_superconductor_margin",
+        superconparam.temp_tf_superconductor_margin,
     )
 
     monkeypatch.setattr(cicc_sctfcoil.data.tfcoil, "rrr_tf_cu", superconparam.cu_rrr)
