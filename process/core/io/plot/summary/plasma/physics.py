@@ -1131,11 +1131,11 @@ def plot_radiation_power_contributions(axis: plt.Axes, mfile: MFile, scan: int):
     axis.text(
         x=0.5,
         y=1.1,
-        s=f"Fraction of radiated power due to ions: "
+        s=f"Fraction of total plasma radiated power due to ion presence: "
         f"{mfile.get('f_p_plasma_rad_ions', scan=scan):.3f}\n"
         f"Radiated power due to impurities (Z>2): "
         f"{mfile.get('p_plasma_rad_impurities_mw', scan=scan):.3f} MW\n"
-        f"Fraction of radiated power due to impurities (Z>2): "
+        f"Fraction of total plasma radiated power due to impurities (Z>2): "
         f"{mfile.get('f_p_plasma_rad_impurities', scan=scan):.3f}",
         transform=axis.transAxes,
         ha="center",
