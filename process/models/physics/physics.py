@@ -12,7 +12,6 @@ import numba as nb
 import numpy as np
 
 import process.models.physics.fusion_reactions as reactions
-import process.models.physics.radiation_power as physics_funcs
 from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
@@ -54,6 +53,7 @@ if TYPE_CHECKING:
     from process.models.physics.plasma_fields import PlasmaFields
     from process.models.physics.plasma_geometry import PlasmaGeom
     from process.models.physics.plasma_profiles import PlasmaProfile
+    from process.models.physics.radiation_power import PlasmaRadiation
     from process.models.physics.scrape_off_layer import ScrapeOffLayer
 
 logger = logging.getLogger(__name__)
@@ -208,6 +208,7 @@ class Physics(Model):
         scrape_off_layer: ScrapeOffLayer,
         plasma_reactions: PlasmaReactions,
         beam_reactions: BeamReactions,
+        plasma_radiation: PlasmaRadiation,
     ):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
@@ -227,6 +228,7 @@ class Physics(Model):
         self.scrape_off_layer = scrape_off_layer
         self.plasma_reactions = plasma_reactions
         self.beam_reactions = beam_reactions
+        self.plasma_radiation = plasma_radiation
 
     def output(self) -> None:
         """Output plasma physics information."""
@@ -709,7 +711,7 @@ class Physics(Model):
 
         # Calculate radiation power
 
-        radpwrdata = physics_funcs.calculate_radiation_powers(
+        radpwrdata = self.plasma_radiation.calculate_radiation_powers(
             self.plasma_profile,
             self.data.physics.nd_plasma_electron_on_axis,
             self.data.physics.rminor,
