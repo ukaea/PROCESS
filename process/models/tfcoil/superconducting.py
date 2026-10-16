@@ -2239,11 +2239,11 @@ class SuperconductingTFCoil(TFCoil):
 
         j_scale = max(abs(j_superconductor), 1.0)
 
-        def residual(t):
-            return superconductors.superconductor_current_density_margin(t, *args)
-
         result = optimize.least_squares(
-            lambda t: residual(t[0]) / j_scale,
+            lambda t: (
+                superconductors.superconductor_current_density_margin(t[0], *args)
+                / j_scale
+            ),
             x0=[temp_tf_coolant_peak_field],
             bounds=([1e-3], [0.999 * tc0m]),
             method="trf",
