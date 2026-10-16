@@ -2246,7 +2246,10 @@ class SuperconductingTFCoil(TFCoil):
         result = optimize.minimize(
             objective,
             x0=[temp_tf_coolant_peak_field],
-            bounds=[(1e-9, tc0m)],
+            # These are reasonable bounds (near absolute zero, and 80% of crit T at 0
+            # field). They are used to protect against unkludged and NaN results from
+            # some of the superconducting parameterisations
+            bounds=[(1e-3, 0.8 * tc0m)],
             method="Powell",
             options={"xtol": 1e-6, "ftol": 1e-10, "maxiter": 100},
         )
@@ -2263,8 +2266,6 @@ class SuperconductingTFCoil(TFCoil):
         t_zero_margin = float(result.x[0])
 
         margin = t_zero_margin - temp_tf_coolant_peak_field
-        # MC: wtf is this? kill it with fire
-        data.tfcoil.temp_margin = margin
 
         if margin <= 0:
             logger.error(
