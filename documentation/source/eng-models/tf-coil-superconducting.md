@@ -241,7 +241,7 @@ Three constraints are relevant to the operating current density $J_{\mbox{op}}$ 
 
 - Temperature margin (`constraint 36`) -- The critical current density $J_{\mbox{crit}}$ falls with 
   the temperature of the superconductor. The temperature margin $\Delta T$ is the difference between the current sharing temperature (at which $J_{\mbox{crit}}$ would be equal to $J_{\mbox{op}}$) and the operating temperature. The minimum allowed $\Delta T$
-can be set using `tmargmin` together with constraint equation 36. Note that if the temperature margin is positive, $J_{\mbox{op}}$ is guaranteed to be lower than \jcrit, and so constraints 33 and 36 need not both be turned on. It is recommended that only one of these two constraints is activated.  
+can be set using `temp_tf_superconductor_margin_min` together with constraint equation 36. Note that if the temperature margin is positive, $J_{\mbox{op}}$ is guaranteed to be lower than \jcrit, and so constraints 33 and 36 need not both be turned on. It is recommended that only one of these two constraints is activated.  
 
 ---------
 
