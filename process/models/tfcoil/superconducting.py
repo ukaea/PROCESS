@@ -961,14 +961,7 @@ class SuperconductingTFCoil(TFCoil):
                 data=self.data,
             )
         except ProcessValueError:
-            # Non-positive
-            logger.error(
-                "TF coil temperature margin calculation failed. This is either due "
-                "to required current density being above the critical current density,"
-                " or because the superconducting parameterisation returned a nan or "
-                "negative current density.",
-                stacklevel=2,
-            )
+            # Non-positive or failed optimisation / j_crit calculation
             temp_margin = np.nan
 
         self.data.tfcoil.temp_tf_superconductor_margin = temp_margin
@@ -2266,9 +2259,9 @@ class SuperconductingTFCoil(TFCoil):
         )
 
         if not result.success:
-            raise ProcessValueError(
-                f"Error in TF temperature margin calculation: {result.message}"
-            )
+            txt = f"Error in TF temperature margin calculation: {result.message}"
+            logger.error(txt)
+            raise ProcessValueError(txt)
 
         normalised_residual = float(result.fun[0])
         residual_tol = 1e-10
@@ -2277,12 +2270,15 @@ class SuperconductingTFCoil(TFCoil):
             not np.isfinite(normalised_residual)
             or abs(normalised_residual) > residual_tol
         ):
-            raise ProcessValueError(
+            txt = (
                 "Superconductor current density residual for temperature margin "
-                "calculation is not sufficiently "
-                f"close to zero: {normalised_residual:.6g} "
+                "calculation is not sufficiently close to zero: "
+                f"{normalised_residual:.6g} "
                 f"(normalised tolerance: {residual_tol:.6g})"
             )
+
+            logger.error(txt)
+            raise ProcessValueError(txt)
 
         t_zero_margin = float(result.x[0])
 
