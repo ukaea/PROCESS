@@ -2237,12 +2237,12 @@ class SuperconductingTFCoil(TFCoil):
                     f"i_tf_superconductor={i_tf_superconductor}"
                 )
 
-        j_scale = max(abs(j_superconductor), 1.0)
+        j_scale = 1.0 / max(abs(j_superconductor), 1.0)
 
         result = optimize.least_squares(
             lambda t: (
-                superconductors.superconductor_current_density_margin(t[0], *args)
-                / j_scale
+                j_scale
+                * superconductors.superconductor_current_density_margin(t[0], *args)
             ),
             x0=[temp_tf_coolant_peak_field],
             bounds=([1e-3], [0.999 * tc0m]),
