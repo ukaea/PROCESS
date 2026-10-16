@@ -483,6 +483,10 @@ OBS_VARS = {
     "temp_plasma_separatrix_kev": "temp_plasma_separatrix_electron_kev",
     "iohcl": "i_cs_use",
     "beta_total_vol_avg": None,
+    "tmargmin": [
+        "temp_tf_superconductor_margin_min",
+        "temp_cs_superconductor_margin_min",
+    ],
 }
 
 OBS_VARS_HELP = {
