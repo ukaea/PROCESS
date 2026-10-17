@@ -1754,6 +1754,22 @@ class Physics(Model):
         ProcessValueError
             If ``i_nd_plasma_protons`` is not 0 or 1, or if ``znfuel`` is negative.
         """
+        if (
+            self.data.physics.f_plasma_fuel_deuterium != 0.0
+            or self.data.physics.f_plasma_fuel_tritium != 0.0
+            or self.data.physics.f_plasma_fuel_helium3 != 0.0
+        ):
+            logger.error(
+                "Invalid value for f_plasma_fuel_deuterium, f_plasma_fuel_tritium, or f_plasma_fuel_helium3. "
+                "Setting these values to 0.0",
+                f_plasma_fuel_deuterium=self.data.physics.f_plasma_fuel_deuterium,
+                f_plasma_fuel_tritium=self.data.physics.f_plasma_fuel_tritium,
+                f_plasma_fuel_helium3=self.data.physics.f_plasma_fuel_helium3,
+            )
+            self.data.physics.f_plasma_fuel_deuterium = 0.0
+            self.data.physics.f_plasma_fuel_tritium = 0.0
+            self.data.physics.f_plasma_fuel_helium3 = 0.0
+        
         # Alpha ash portion
         self.data.physics.nd_plasma_alphas_thermal_vol_avg = (
             self.data.physics.nd_plasma_electrons_vol_avg
