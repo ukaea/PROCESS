@@ -1393,6 +1393,9 @@ class IFE(Model):
             self.data.ife.gain = self.data.physics.p_fusion_total_mw / (
                 1.0e-6 * self.data.ife.pdrive
             )
+        # add in approximation that power plant pulse cycle is same as driver
+        # repetition rate. Required variable for availability to run
+        self.data.times.t_plant_pulse_total = 1 / self.data.ife.reprat
 
         # Wall load (assume total fusion power applies)
 
