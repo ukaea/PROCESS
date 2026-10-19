@@ -1270,6 +1270,7 @@ def superconductor_current_density_margin(
         3: NbTi (Lubell scaling)
         4: ITER Nb₃Sn (alternate)
         5: Western Superconducting Nb₃Sn
+        6: CroCo REBCO
         7: Ginzburg-Landau NbTi
         8: Ginzburg-Landau REBCO
         9: High current density REBCO
@@ -1311,6 +1312,7 @@ def superconductor_current_density_margin(
         5: lambda: western_superconducting_nb3sn(
             temp_superconductor, b_superconductor, strain, bc20m, tc0m
         )[0],
+        6: lambda: jcrit_rebco(temp_superconductor, b_superconductor, bc20m, tc0m)[0],
         7: lambda: gl_nbti(temp_superconductor, b_superconductor, strain, bc20m, tc0m)[
             0
         ],

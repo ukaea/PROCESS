@@ -275,6 +275,9 @@ class SuperconductingTFData:
     a_tf_turn_croco_hastelloy: float = 0.0
     """Area of the Hastelloy in the CroCo cable space of the TF turn (includes tapes and outer tube) (m²)"""
 
+    len_tf_rebco_tape_total: float = 0.0
+    """Total length of REBCO tape in all TF coils (m)"""
+
     t1: float = 0.0
 
     time2: float = 0.0

@@ -1195,6 +1195,7 @@ class SuperconductingTFCoil(TFCoil):
             - 3: NbTi
             - 4: ITER Nb3Sn, user-defined parameters
             - 5: WST Nb3Sn parameterisation
+            - 6: CroCO REBCO parameterisation
             - 7: Durham Ginzburg-Landau Nb-Ti parameterisation
             - 8: Durham Ginzburg-Landau critical surface model for REBCO
             - 9: Hazelton experimental data + Zhai conceptual model for REBCO
@@ -1239,6 +1240,7 @@ class SuperconductingTFCoil(TFCoil):
             SuperconductorModel.OLD_LUBELL_NBTI,
             SuperconductorModel.USER_DEFINED_NB3SN,
             SuperconductorModel.WST_NB3SN,
+            SuperconductorModel.CROCO_REBCO,
             SuperconductorModel.DURHAM_NBTI,
             SuperconductorModel.DURHAM_REBCO,
             SuperconductorModel.HAZELTON_ZHAI_REBCO,
@@ -3968,6 +3970,14 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             superconductor_critical_properties.c_turn_cables_critical
         )
 
+        d_sc_tf.len_tf_rebco_tape_total = (
+            croco_cable_geometry.n_croco_strand_hts_tapes * 
+            N_CROCO_STRANDS_TURN *
+            self.data.tfcoil.n_tf_coil_turns *
+            self.data.tfcoil.n_tf_coils *
+            self.data.tfcoil.len_tf_coil
+        )
+
         if self.data.tfcoil.i_str_wp == 0:
             strain = self.data.tfcoil.str_tf_con_res
         else:
@@ -4820,6 +4830,16 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             "Critical current of CroCo strand (A)",
             "(cur_tf_turn_croco_strand_critical)",
             d_sc_tf.cur_tf_turn_croco_strand_critical,
+            "OP ",
+        )
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "Total information")
+        po.ovarre(
+            self.outfile,
+            "Total length of REBCO tape in all TF coils [m] ",
+            "",
+            d_sc_tf.len_tf_rebco_tape_total,
             "OP ",
         )
 
