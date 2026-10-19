@@ -428,7 +428,7 @@ OBS_VARS = {
     "rebco_thickness": "dx_tf_hts_tape_rebco",
     "tape_thickness": "dx_tf_hts_tape_total",
     "tape_width": "dr_tf_hts_tape",
-    "beta": "beta_total_vol_avg",
+    "beta": None,
     "beta_max": "beta_vol_avg_max",
     "beta_min": "beta_vol_avg_min",
     "f_deuterium": "f_plasma_fuel_deuterium",
@@ -482,6 +482,7 @@ OBS_VARS = {
     "temp_plasma_pedestal_kev": "temp_plasma_pedestal_electron_kev",
     "temp_plasma_separatrix_kev": "temp_plasma_separatrix_electron_kev",
     "iohcl": "i_cs_use",
+    "beta_total_vol_avg": None,
 }
 
 OBS_VARS_HELP = {
