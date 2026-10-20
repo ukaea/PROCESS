@@ -2380,7 +2380,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
     """Cable in Conduit Superconducting TF Coil class."""
 
     def run(self, output: bool = False):
-        """Run the superconducting TF coil model for a CroCo conductor with REBCO tape.
+        """Run the superconducting TF coil model for a CICC conductor.
 
         Parameters
         ----------
