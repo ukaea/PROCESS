@@ -1939,16 +1939,19 @@ def constraint_equation_92(constraint_registration, data):
     )
 
 
-@ConstraintManager.register_constraint(93, "particles/s", "=")
+@ConstraintManager.register_constraint(93, "Z.particles/s", "=")
 def constraint_equation_93(constraint_registration, data):
     """Fuel-ion equilibrium constraint.
 
     Requires the plasma fuelling rate to equal the fuelling rate required
     for fuel-ion equilibrium.
+
+    Note the units of the constraint residual (not either variable)
+    is zetta-particles per second.
     """
     return eq(
-        data.physics.molflow_plasma_fuelling,
-        data.physics.molflow_plasma_fuelling_equilibrium,
+        data.physics.molflow_plasma_fuelling / 10**21,
+        data.physics.molflow_plasma_fuelling_equilibrium / 10**21,
         constraint_registration,
     )
 
