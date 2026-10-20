@@ -138,7 +138,7 @@ DEFAULT_TRACKING_VARIABLES = {
     "HeatTransport.p_plant_electric_net_mw",
     "HeatTransport.eta_turbine",
     "HeatTransport.p_plant_electric_gross_mw",
-    "TFCoil.tftmp",
+    "TFCoil.temp_tf_operating",
     "TFCoil.n_tf_coils",
     "TFCoil.b_tf_inboard_peak_symmetric",
     "PFCoil.vs_cs_pf_total_pulse",
