@@ -39,6 +39,7 @@ from process.data_structure.superconducting_tf_coil_variables import (
 from process.data_structure.tfcoil_variables import TFData
 from process.data_structure.times_variables import TimesData
 from process.data_structure.vacuum_variables import VacuumData
+from process.data_structure.veqpy_runtime import VeqpyRuntime
 from process.data_structure.water_usage_variables import WaterUseData
 
 initialise_later = object()
@@ -90,3 +91,4 @@ class DataStructure:
         for f in fields(self):
             if getattr(self, f.name) is initialise_later:
                 setattr(self, f.name, f.type())
+        self.veqpy = VeqpyRuntime()
