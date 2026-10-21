@@ -337,12 +337,15 @@ class TFData:
     """
 
     j_tf_bus: float = 1.25e6
-    """bussing current density (A/m2)"""
+    """bussing current density (A/m²)"""
 
     j_crit_str_tf: float = 0.0
     """j_crit_str : superconductor strand critical current density under operating
-    conditions (A/m2). Necessary for the cost calculation in $/kAm
+    conditions (A/m²).
     """
+
+    j_tf_wp_temp_margin: float = 0.0
+    """j_tf_wp_temp_margin : allowable TF coil winding pack current density, for specified temperature margin (A/m²)"""
 
     j_crit_str_0: list[float] = field(
         default_factory=lambda: np.array([
@@ -357,18 +360,18 @@ class TFData:
             865652122.9071957,
         ])
     )
-    """j_crit_str_pf_0 : superconductor strand critical current density at 6 T and 4.2 K (A/m2)
+    """j_crit_str_pf_0 : superconductor strand critical current density at 6 T and 4.2 K (A/m²)
     Necessary for the cost calculation in $/kAm
     """
 
     j_tf_wp_critical: float = 0.0
-    """critical current density for winding pack (A/m2)"""
+    """critical current density for winding pack (A/m²)"""
 
     j_tf_wp_quench_heat_max: float = 0.0
-    """allowable TF coil winding pack current density, for dump temperature rise protection (A/m2)"""
+    """allowable TF coil winding pack current density, for dump temperature rise protection (A/m²)"""
 
     j_tf_wp: float = 0.0
-    """winding pack engineering current density (A/m2)"""
+    """winding pack engineering current density (A/m²)"""
 
     j_tf_coil_full_area: float = 0.0
     """Inboard leg mid-plane full coil area current density (A/m²)
@@ -669,12 +672,6 @@ class TFData:
 
     temp_cs_superconductor_margin_min: float = 0.0
     """minimum allowable temperature margin : CS (K)"""
-
-    tmargmin: float = 0.0
-    """minimum allowable temperature margin : TFC AND CS (K)"""
-
-    temp_margin: float = 0.0
-    """temperature margin (K)"""
 
     temp_tf_superconductor_margin: float = 0.0
     """TF coil superconductor temperature margin (K)"""

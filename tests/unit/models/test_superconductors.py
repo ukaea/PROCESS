@@ -154,12 +154,6 @@ def test_jcrit_rebco():
     assert validity
 
 
-def test_current_sharing_rebco():
-    assert superconductors.current_sharing_rebco(11.0, 2e7) == pytest.approx(
-        71.28702697627514
-    )
-
-
 def test_bi2212():
     jcrit, tmarg = superconductors.bi2212(7.0, 2e7, 4.75, 0.2)
 

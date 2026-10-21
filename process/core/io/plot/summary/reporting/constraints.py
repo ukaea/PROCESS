@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -13,6 +14,35 @@ if TYPE_CHECKING:
 
 
 __all__ = ["plot_equality_constraint_equations", "plot_inequality_constraint_equations"]
+
+
+def _var_label_formatting(var_label: str) -> str:
+    """Format normalised-residue variable labels for display.
+
+    If ``var_label`` is a string ending with ``"_normalised_residue"``, the
+    suffix is removed, trailing underscores are stripped, and remaining
+    underscores are replaced with spaces. Underscores appearing within LaTeX
+    expressions delimited by ``$...$`` or ``$$...$$`` are preserved.
+
+    Parameters
+    ----------
+    var_label : str
+        Variable label to format. Non-string values, or strings that do not end
+        with ``"_normalised_residue"``, are returned unchanged.
+
+    Returns
+    -------
+    str
+        The formatted label if applicable, otherwise the original input value.
+    """
+    if isinstance(var_label, str) and var_label.endswith("_normalised_residue"):
+        var_label = var_label.removesuffix("_normalised_residue").rstrip("_")
+        parts = re.split(r"(\$\$.*?\$\$|\$[^$]*\$)", var_label)
+        var_label = "".join(
+            part.replace("_", " ") if i % 2 == 0 else part
+            for i, part in enumerate(parts)
+        )
+    return var_label
 
 
 def plot_equality_constraint_equations(axis: plt.Axes, m_file_data: MFile, scan: int):
@@ -45,6 +75,7 @@ def plot_equality_constraint_equations(axis: plt.Axes, m_file_data: MFile, scan:
 
         # Use the variable name if available, else fallback to "eq_conXXX"
         var_label = con_names.get(n, f"eq_con{n:03d}")
+        var_label = _var_label_formatting(var_label)
 
         # Normalized residual of the constraint
         con_norm_residual = m_file_data.data[f"eq_con{n:03d}"].get_scan(scan)
@@ -52,14 +83,6 @@ def plot_equality_constraint_equations(axis: plt.Axes, m_file_data: MFile, scan:
         # Unit type of the constraint
         con_units_raw = m_file_data.data[f"eq_units_con{n:03d}"].get_scan(scan)
         con_units = str(con_units_raw).strip("'`")
-
-        # Remove '_normalised_residue' from the label if present
-        if isinstance(var_label, str) and var_label.endswith("_normalised_residue"):
-            var_label = var_label.replace("_normalised_residue", "")
-
-            # Remove trailing underscores and replace underscores between words with
-            # spaces
-            var_label = var_label.rstrip("_").replace("_", " ")
 
         # Plot the normalised residual as a bar
         axis.barh(
@@ -143,6 +166,7 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: MFile, scan: in
 
         # Use the variable name if available, else fallback to "ineq_conXXX"
         var_label = con_names.get(n, f"ineq_con{n:03d}")
+        var_label = _var_label_formatting(var_label)
 
         # Normalized residual of the constraint
         con_residual_norm = m_file.data[f"ineq_con{n:03d}"].get_scan(scan)
@@ -166,11 +190,6 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: MFile, scan: in
             linewidth=1.5,
             zorder=0,
         )
-
-        # Remove '_normalised_residue' from the label if present
-        if isinstance(var_label, str) and var_label.endswith("_normalised_residue"):
-            var_label = var_label.replace("_normalised_residue", "")
-            var_label = var_label.rstrip("_").replace("_", " ")
 
         # Calculate the normalised constraint threshold depending if the constraint is an
         # upper
