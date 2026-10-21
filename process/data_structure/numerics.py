@@ -232,10 +232,10 @@ class NumericsData:
             "Plasma injected power (Pₐᵤₓ) upper limit      ",
             "TF coil case stress upper limit  ",
             "TF coil conduit stress upper limit ",
-            "TF coil superconductor critical current density upper limit  ",
+            r"TF coil superconductor $j_{\mathrm{crit}}$ upper limit (ratio) ",
             "TF quench dump voltage upper limit         ",
             "TF quench hotspot current density upper limit         ",
-            "TF coil superconductor temperature margin lower limit ",
+            r"TF coil superconductor $j_{\mathrm{crit}}$ upper limit (T margin) ",
             "HCD normalised current drive efficiency (γ) upper limit        ",  # noqa: RUF001
             "FW coolant temperature rise upper limit ",
             "FW peak temperature limit",
