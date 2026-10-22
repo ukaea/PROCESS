@@ -38,22 +38,6 @@ def fortran_python_scientific(var_value):
     return var_value.replace("D", "e").replace("d", "e")
 
 
-def remove_empty_lines(lines):
-    """Function to remove empty lines from list.
-
-    Parameters
-    ----------
-     lines:
-         list of lines (type=list)
-
-    Returns
-    -------
-    :
-         list of lines with empty lines removed (type=list)
-    """
-    return [line for line in lines if line.strip(" ") != "\n"]
-
-
 def is_title(line):
     """Function to determine if line is title line
 
@@ -958,9 +942,8 @@ class InDat:
         self.filename = filename
         self.start_line = start_line
         self.update_obsolete = update_obsolete
-
-        # Check for obsolete variables and update if requested
-        self.check_obsolete_variables()
+        self.obsolete_variables = ov.OBS_VARS
+        self.obsolete_vars_help_message = ov.OBS_VARS_HELP
 
         # Initialise parameters
         self.in_dat_lines = []
@@ -974,21 +957,44 @@ class InDat:
     def read_in_dat(self):
         """Function to read in 'self.filename' and put data into dictionary
         'self.data'
-
-        Raises
-        ------
-        ProcessValidationError
-            If invalid line in IN.DAT
         """
         # Read in IN.DAT
         with open(self.filename) as indat:
             self.in_dat_lines = indat.readlines()
             self.in_dat_lines = self.in_dat_lines[self.start_line :]
 
-        # Remove empty lines from the file
-        self.in_dat_lines = remove_empty_lines(self.in_dat_lines)
+        # Store data for reporting purposes
+        obs_vars_in_in_dat = []
+        updated_indat_lines = []
+        changes_made = []
+        exceptions = []
 
         for line in self.in_dat_lines:
+            # Check if variable is obsolete
+            var_name, modified_line, modified_line_with_comment, change_made = (
+                self.check_obsolete_variable(line)
+            )
+
+            if self.update_obsolete:
+                if line != modified_line:
+                    # Var is obsolete, use updated line in rest of loop
+                    line = modified_line  # noqa: PLW2901
+                    updated_indat_lines.append(modified_line_with_comment)
+                    changes_made.append(change_made)
+                    obs_vars_in_in_dat.append(var_name)
+                else:
+                    # Var is not obsolete, so line not updated
+                    updated_indat_lines.append(line)
+            # Record obs vars for reporting purposes
+            elif line != modified_line:
+                # The var is obsolete
+                obs_vars_in_in_dat.append(var_name)
+
+            # Need to preserve empty lines for re-writing IN.DAT with
+            # updated_indat_lines, no need to process them further
+            if line.strip(" ") == "\n":
+                continue
+
             # Put everything in lower case
             l_line = line.lower()
 
@@ -1001,9 +1007,48 @@ class InDat:
                 try:
                     # for non-title lines process line and store data.
                     self.process_line(line_type, l_line)
-                except KeyError as err:
-                    msg = f"Unrecognised input:\n{line}"
-                    raise ProcessValidationError(msg) from err
+                except KeyError:
+                    # Add the unrecognised variable to the exceptions list
+                    exceptions.append(l_line.split("=", 1)[0].strip())
+
+        # Report any errors, and update the IN.DAT if `update_obsolete` is True
+        self.in_dat_errors_and_updates(
+            exceptions, obs_vars_in_in_dat, updated_indat_lines, changes_made
+        )
+
+    def in_dat_errors_and_updates(
+        self, exceptions, obs_vars_in_in_dat, updated_indat_lines, changes_made
+    ):
+        """Errors and any requested updates from reading the IN.DAT file.
+
+        If there are obsolete variables in the IN.DAT, either warn the user
+        or update the file if `update_obsolete` is True.
+
+        Warn the user of any unrecognised or duplicate variables.
+
+        Raises
+        ------
+        ProcessValidationError
+            If invalid line in IN.DAT
+        """
+        # If obsolete variables present, update the IN.DAT if `update_obsolete` is True,
+        # otherwise warn the user
+        if len(obs_vars_in_in_dat) > 0:
+            # Update IN.DAT if `update_obsolete` is True
+            if self.update_obsolete:
+                self.update_in_dat(updated_indat_lines, changes_made)
+            # Otherwise report which variables are obsolete and how to fix
+            else:
+                self.report_obsolete_variables(obs_vars_in_in_dat)
+
+        # Inform if no obsolete variables present but `update_obsolete` is True
+        elif len(obs_vars_in_in_dat) == 0 and self.update_obsolete:
+            print("The IN.DAT file does not contain any obsolete variables.")
+
+        # Raise errors for unrecognised variables
+        if len(exceptions) > 0:
+            msg = f"Unrecognised input: \n {exceptions}"
+            raise ProcessValidationError(msg)
 
         # Inform user of duplicate variables
         if len(self.duplicates) > 0:
@@ -1533,125 +1578,92 @@ class InDat:
             # Write parameters
             write_parameters(self.data, output)
 
-    def check_obsolete_variables(self):
-        """Checks the input IN.DAT file for any obsolete variables in the OBS_VARS dict
-        contained within obsolete_variables.py.
-        If obsolete variables are found, and if `update_obsolete` is set to True,
-        they are either removed or replaced by their updated names as specified
-        in the OBS_VARS dictionary.
+    def check_obsolete_variable(self, line):
+        """Checks if a line in the IN.DAT file contains an obsolete variable from
+        the OBS_VARS dict contained within obsolete_variables.py.
+        """
+        change_made = ""
+        modified_line_with_comment = ""
+
+        # If line is not defining a variable, return the line as is
+        if line.startswith("*") or "=" not in line:
+            return "", line, modified_line_with_comment, change_made
+
+        # Extract the variable name before the separator
+        raw_variable_name = line.split("=", 1)[0].strip()
+        # handle cases where the variable name might have parentheses
+        variable_name = (
+            raw_variable_name.split("(", 1)[0]
+            if "(" in raw_variable_name
+            else raw_variable_name
+        )
+
+        # Check if the variable is obsolete and needs replacing
+        if variable_name in self.obsolete_variables:
+            replacement = self.obsolete_variables.get(variable_name)
+
+            # Prepare replacement or removal
+            if replacement is None:
+                # If no replacement is defined, comment out the line
+                modified_line = f"* Obsolete: {line}"
+                change_made = f"Commented out obsolete variable: {variable_name}"
+            else:
+                modified_line = line.replace(variable_name, replacement, 1)
+                modified_line_with_comment = (
+                    f"* Replaced '{variable_name}' with '{replacement}'\n{modified_line}"
+                )
+                change_made = f"Replaced '{variable_name}' with '{replacement}'"
+        # Otherwise return the line as is
+        else:
+            modified_line = line
+        return variable_name, modified_line, modified_line_with_comment, change_made
+
+    def update_in_dat(self, updated_lines, changes_made):
+        """Edit the IN.DAT - if obsolete variables are found, and if `update_obsolete` is
+        True, they are either removed or replaced by their updated names as
+        specified in the OBS_VARS dictionary.
+        """
+        # Write the modified content to the file and print changes in terminal
+        with open(self.filename, "w") as file:
+            file.writelines(updated_lines)
+        print(
+            "The IN.DAT file has been updated to replace or "
+            "comment out obsolete variables."
+        )
+        print("Summary of changes made:")
+        for change in changes_made:
+            print(f" - {change}")
+
+    def report_obsolete_variables(self, obs_vars_in_in_dat):
+        """Report any obsolete variables if `update_obsolete` is set to False.
 
         Raises
         ------
         ValueError
-            If obsolete variables are present in the input file and update_obsolete
-            is False.
+            If any obsolete variables are present that need to be updated or removed
         """
-        obsolete_variables = ov.OBS_VARS
-        obsolete_vars_help_message = ov.OBS_VARS_HELP
-
-        variables_in_in_dat = []
-        modified_lines = []
-        changes_made = []  # To store details of the changes
-
-        with open(self.filename) as file:
-            for line in file:
-                # Skip comment lines or lines without an assignment
-                if line.startswith("*") or "=" not in line:
-                    modified_lines.append(line)
-                    continue
-
-                # Extract the variable name before the separator
-                raw_variable_name = line.split("=", 1)[0].strip()
-                # handle cases where the variable name might have parentheses
-                variable_name = (
-                    raw_variable_name.split("(", 1)[0]
-                    if "(" in raw_variable_name
-                    else raw_variable_name
+        message = (
+            "The IN.DAT file contains obsolete variables "
+            "from the OBS_VARS dictionary. "
+            "The obsolete variables in your IN.DAT file are: "
+            f"{obs_vars_in_in_dat}. "
+            "Use the --update-obsolete flag for this "
+            "to be done automatically. "
+            "Otherwise, replace or remove as follows:"
+        )
+        for obs_var in obs_vars_in_in_dat:
+            replacement = self.obsolete_variables.get(obs_var)
+            if replacement is None:
+                message += (
+                    f"\n\n{obs_var} is an obsolete variable and needs to be removed."
                 )
-
-                # Check if the variable is obsolete and needs replacing
-                if variable_name in obsolete_variables:
-                    replacement = obsolete_variables.get(variable_name)
-                    if self.update_obsolete:
-                        # Prepare replacement or removal
-                        if replacement is None:
-                            # If no replacement is defined, comment out the line
-                            modified_lines.append(f"* Obsolete: {line}")
-                            changes_made.append(
-                                f"Commented out obsolete variable: {variable_name}"
-                            )
-                        else:
-                            if isinstance(replacement, list):
-                                # Raise an error if replacement is a list
-                                replacement_str = ", ".join(replacement)
-                                raise ValueError(
-                                    f"The variable '{variable_name}' is obsolete and "
-                                    "should be replaced by the following variables: "
-                                    f"{replacement_str}. "
-                                    "Please set their values accordingly."
-                                )
-                            # Replace obsolete variable
-                            modified_line = line.replace(variable_name, replacement, 1)
-                            modified_lines.append(
-                                f"* Replaced '{variable_name}' with "
-                                f"'{replacement}'\n{modified_line}"
-                            )
-                            changes_made.append(
-                                f"Replaced '{variable_name}' with '{replacement}'"
-                            )
-                            variables_in_in_dat.append(variable_name)
-                    else:
-                        # If replacement is False, add the line as-is
-                        modified_lines.append(line)
-                        variables_in_in_dat.append(variable_name)
-                else:
-                    modified_lines.append(line)
-
-        obs_vars_in_in_dat = [
-            var for var in variables_in_in_dat if var in obsolete_variables
-        ]
-
-        if obs_vars_in_in_dat:
-            if self.update_obsolete:
-                # If update_obsolete is True, write the modified content to the file
-                with open(self.filename, "w") as file:
-                    file.writelines(modified_lines)
-                print(
-                    "The IN.DAT file has been updated to replace or "
-                    "comment out obsolete variables."
-                )
-                print("Summary of changes made:")
-                for change in changes_made:
-                    print(f" - {change}")
             else:
-                # Only print the report if update_obsolete is False
-                message = (
-                    "The IN.DAT file contains obsolete variables "
-                    "from the OBS_VARS dictionary. "
-                    "The obsolete variables in your IN.DAT file are: "
-                    f"{obs_vars_in_in_dat}. "
-                    "Either remove these or replace them with "
-                    "their updated variable names. "
-                    "Use the --update-obsolete flag for this "
-                    "to be done automatically."
+                message += (
+                    f"\n\n{obs_var} is an obsolete variable "
+                    f"and needs to be replaced by {replacement}."
                 )
-                for obs_var in obs_vars_in_in_dat:
-                    replacement = obsolete_variables.get(obs_var)
-                    if replacement is None:
-                        message += (
-                            f"\n\n{obs_var} is an obsolete variable "
-                            "and needs to be removed."
-                        )
-                    else:
-                        message += (
-                            f"\n\n{obs_var} is an obsolete variable "
-                            f"and needs to be replaced by {replacement}."
-                        )
-                    message += f" {obsolete_vars_help_message.get(obs_var, '')}"
-                raise ValueError(message)
-
-        else:
-            print("The IN.DAT file does not contain any obsolete variables.")
+            message += f" {self.obsolete_vars_help_message.get(obs_var, '')}"
+        raise ValueError(message)
 
     @property
     def number_of_constraints(self):
