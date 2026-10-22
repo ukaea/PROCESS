@@ -401,41 +401,33 @@ def get_parameters(data, use_string_values=True):
                         # parameters separately otherwise its value in a
                         # varyrun remains the same as it is taken from the
                         # default values
-                        if name in data:
-                            value = data[name].value
-                            parameters[module][name] = value
-                        else:
-                            value = data["f_nd_impurity_electrons"].get_value[k]
-                            parameters[module][name] = value
+                        parameters[module][name] = (
+                            data[name].value
+                            if name in data
+                            else data["f_nd_impurity_electrons"].get_value[k]
+                        )
 
                 elif item == "i_process_run_mode":
-                    name = item
-                    i_process_run_mode = {}
                     iop_val = data["i_process_run_mode"].get_value
-                    iop_comment = f"{PROCESSRunMode(iop_val).description}"
-                    i_process_run_mode["value"] = iop_val
-                    i_process_run_mode["comment"] = iop_comment
-                    parameters[module][name] = i_process_run_mode
+                    parameters[module][item] = {
+                        "value": iop_val,
+                        "comment": f"{PROCESSRunMode(iop_val).description}",
+                    }
 
                 elif item == "zref":
-                    for j in range(len(data["zref"].get_value)):
-                        name = f"zref({str(j + 1).zfill(1)})"
-                        value = data["zref"].get_value[j]
-                        parameters[module][name] = value
+                    parameters[module] |= {
+                        f"zref({str(j + 1).zfill(1)})": data["zref"].get_value[j]
+                        for j in range(len(data["zref"].get_value))
+                    }
 
                 else:
-                    parameter = {}
-
                     if use_string_values:
                         # Store the parameter value as a string
                         # (data[item].value is a string)
                         line_value = data[item].value
-                        line_string = ""
                         # if parameter is a list only output values comma separated
                         if isinstance(line_value, list):
-                            for val in line_value:
-                                line_string += str(val) + ", "
-                            line_value = line_string.rstrip(", ")
+                            line_value = ", ".join(map(str, line_value))
 
                     else:
                         # Store the parameter value preserving its type
@@ -443,11 +435,11 @@ def get_parameters(data, use_string_values=True):
                         # e.g. float)
                         line_value = data[item].get_value
 
-                    name = item
-                    parameter["value"] = line_value
-                    parameter["comment"] = data[item].comment.split("\n")[0]
                     # Only use first line of comment to avoid lots of info
-                    parameters[module][name] = parameter
+                    parameters[module][item] = {
+                        "value": line_value,
+                        "comment": data[item].comment.split("\n")[0],
+                    }
 
     return parameters
 
