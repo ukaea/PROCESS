@@ -509,9 +509,8 @@ class ImpurityRadiation:
 
         for species in IonSpecies:
             pden_vol_avg_mw = 0.0
-
             if (
-                self.data.impurity_radiation.f_nd_impurity_electron_array[species.index]
+                self.data.impurity_radiation.f_nd_impurity_electrons[species.index]
                 > 1e-30
             ):
                 pden_profile = calculate_impurity_radiation_power_density(
