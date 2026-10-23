@@ -1188,10 +1188,55 @@ INPUT_VARIABLES = {
 }
 
 
+def _handle_bounds(info, data_structure_obj, variables):
+    """Handle the bounds dictionaries
+
+    Raises
+    ------
+    ProcessValidationError
+        If bounds not specified in correct form of boundl(index) = value
+    """
+    boundl = {}
+    boundu = {}
+    for index, bounds_dict in info.value.items():
+        try:
+            idx = int(index)
+        except ValueError as e:
+            raise ProcessValidationError(
+                "The bounds need to be of the form boundl/u(index) = value"
+            ) from e
+        if "l" in bounds_dict:
+            boundl[idx] = bounds_dict["l"]
+        if "u" in bounds_dict:
+            boundu[idx] = bounds_dict["u"]
+
+    info_boundl = info
+    info_boundl.value = boundl
+    info_boundl.name = "boundl"
+    variables = set_on_datastructure(
+        variable_name="boundl",
+        info=info_boundl,
+        data_structure_obj=data_structure_obj,
+        variables=variables,
+    )
+
+    info_boundu = info
+    info_boundu.value = boundu
+    info_boundu.name = "boundu"
+
+    variables = set_on_datastructure(
+        variable_name="boundu",
+        info=info_boundu,
+        data_structure_obj=data_structure_obj,
+        variables=variables,
+    )
+
+    return variables  # noqa: RET504
+
+
 def parse_input_file(data_structure_obj: DataStructure, in_dat: InDat):
     """Create a dictionary of variables from the input file
     and set the values on the data structure
-    TODO rename to set_data_structre or something?
 
     Parameters
     ----------
@@ -1218,41 +1263,7 @@ def parse_input_file(data_structure_obj: DataStructure, in_dat: InDat):
         # bounds is a dictionary containing upper and lower bounds
         # need to process boundu and boundl separately
         if variable_name == "bounds":
-            boundl = {}
-            boundu = {}
-            for index, bounds_dict in info.value.items():
-                try:
-                    idx = int(index)
-                except ValueError as e:
-                    raise ProcessValidationError(
-                        "The bounds need to be of the form boundl/u(index) = value"
-                    ) from e
-                if "l" in bounds_dict:
-                    boundl[idx] = bounds_dict["l"]
-                if "u" in bounds_dict:
-                    boundu[idx] = bounds_dict["u"]
-            # TODO could change them into arrays here?
-
-            info_boundl = info
-            info_boundl.value = boundl
-            info_boundl.name = "boundl"
-            variables = set_on_datastructure(
-                variable_name="boundl",
-                info=info_boundl,
-                data_structure_obj=data_structure_obj,
-                variables=variables,
-            )
-
-            info_boundu = info
-            info_boundu.value = boundu
-            info_boundu.name = "boundu"
-
-            variables = set_on_datastructure(
-                variable_name="boundu",
-                info=info_boundu,
-                data_structure_obj=data_structure_obj,
-                variables=variables,
-            )
+            variables = _handle_bounds(info, data_structure_obj, variables)
         else:
             variables = set_on_datastructure(
                 variable_name=variable_name,
@@ -1280,7 +1291,6 @@ def set_on_datastructure(variable_name, info, data_structure_obj, variables):
         Dictionary of variables to be updated
     """
     variable_config = copy.copy(INPUT_VARIABLES.get(variable_name))
-
     # string indicates it should be set on the new object data structure
     if isinstance(variable_config.module, str):
         module = data_structure_obj
@@ -1294,7 +1304,6 @@ def set_on_datastructure(variable_name, info, data_structure_obj, variables):
     # If the variable value (after the = sign) contains a ',' or is a list (len > 0)
     # then it defines the whole array so needs to be split down into its elements
     # and the parsed like an array defined as 'my_array(<index>) = <value>'
-
     if "," in variable_value:
         variable_value = list(variable_value.split(","))
     if len(np.shape(variable_value)) > 0 or "," in variable_value:
@@ -1405,6 +1414,7 @@ def validate_variable(
 
     # need to validate bounds separately as they are dictionaries
     if name in {"boundl", "boundu"}:
+        # TODO Can this be combined with the _handle_bounds?
         clean_value = {}
         for i in value:
             clean_value[i] = config.type(value[i])
