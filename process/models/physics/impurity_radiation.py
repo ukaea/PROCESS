@@ -57,12 +57,10 @@ def initialise_imprad(data: DataStructure):
         init_imp_element(
             n_species_index=species,
             name_label=species.label,
-            f_nd_species_electron=(1.0 if species is IonSpecies.HYDROGEN else 0.0),
             len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
             error=0,
             data=data,
         )
-
 
 @dataclasses.dataclass
 class ImpurityDataHeader:
@@ -104,7 +102,7 @@ def read_impurity_file(impurity_file: Path):
         if clean_line[0:3].upper() in {"C  ", "C ", "C", "C--"}:
             continue
 
-        if re.fullmatch(r"[0-9\\.e+\- ]+", clean_line) is not None:
+        if re.fullmatch(r"[0-9\.e+\- ]+", clean_line) is not None:
             header = file_contents[-1]
 
             new_data = clean_line.split(" ")
@@ -121,7 +119,6 @@ def read_impurity_file(impurity_file: Path):
 def init_imp_element(
     n_species_index: int,
     name_label: str,
-    f_nd_species_electron: float,
     len_tab: int,
     error: int,
     data: DataStructure,
@@ -138,8 +135,6 @@ def init_imp_element(
         Position of species in impurity array
     name_label : str
         Species name
-    f_nd_species_electron : float
-        Number density / electron density
     len_tab : int
         Length of temperature and Lz tables
     error : int
@@ -167,11 +162,7 @@ def init_imp_element(
         )
 
     data.impurity_radiation.impurity_arr_label[n_species_index] = name_label
-    data.impurity_radiation.f_nd_impurity_electrons[n_species_index] = (
-        f_nd_species_electron
-    )
     data.impurity_radiation.impurity_arr_len_tab[n_species_index] = len_tab
-
     if len_tab > N_IMPURITIY_LOSS_FUNCTION_POINTS:
         print(
             f"ERROR: len_tab is {len_tab} but has a maximum value of "
@@ -422,7 +413,7 @@ def calculate_impurity_radiation_power_density(
     )
 
     # W/m³ = nᵢ * nₑ * L(Z, Tₑ)
-    # nᵢ = f_nd_species_electron * nₑ
+    # nᵢ = fᵢ * nₑ
     return (
         data.impurity_radiation.f_nd_impurity_electrons[imp_element_index]
         * nd_electron_profile
