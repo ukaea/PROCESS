@@ -104,11 +104,6 @@ class ImpurityRadiationData:
     )
     """Full ion charge of impurity species"""
 
-    impurity_arr_label: list[str] = field(
-        default_factory=lambda: np.full(N_IMPURITIES, "  ")
-    )
-    """Array of impurity labels for internal use"""
-
     impurity_arr_z: list[float] = field(default_factory=lambda: np.zeros(N_IMPURITIES))
 
     m_impurity_amu_array: list[float] = field(
