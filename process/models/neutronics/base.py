@@ -42,7 +42,7 @@ from tabulate import tabulate
 from process.core.exceptions import ProcessValidationError
 from process.models.neutronics.data import N_A, MaterialMacroInfo
 
-NONCONVERGENCE_WARNING_ATOL = 1e-15
+CONVERGENCE_ATOL = 1e-15
 
 mp.prec = 69
 
@@ -743,7 +743,7 @@ class NeutronFluxProfile:
         else:
             source_current_deviation = conditions[0]
             source_current_dev_text = f"{source_current_deviation} m^-2 s^-1"
-        if not np.isclose(source_current_deviation, 0, atol=NONCONVERGENCE_WARNING_ATOL):
+        if not np.isclose(source_current_deviation, 0, atol=CONVERGENCE_ATOL):
             warnings.warn(
                 f"Group {n} neutron current at x=0 != the predetermined "
                 f"value of {self.fluxes[n]}! Instead current deviated by "
@@ -764,7 +764,7 @@ class NeutronFluxProfile:
             else:
                 flux_deviation = conditions[i + 1]
                 flux_dev_text = f"{flux_deviation} m^-2 s^-1"
-            if not np.isclose(flux_deviation, 0, atol=NONCONVERGENCE_WARNING_ATOL):
+            if not np.isclose(flux_deviation, 0, atol=CONVERGENCE_ATOL):
                 warnings.warn(
                     f"Group {n} neutron flux is not continuous at interface"
                     f"[{num_layer + 1}]! Deviated by {flux_dev_text}.",
@@ -778,7 +778,7 @@ class NeutronFluxProfile:
             else:
                 current_deviation = conditions[i + 2]
                 current_dev_text = f"{current_deviation} m^-2 s^-1"
-            if not np.isclose(current_deviation, 0, atol=NONCONVERGENCE_WARNING_ATOL):
+            if not np.isclose(current_deviation, 0, atol=CONVERGENCE_ATOL):
                 # avoid divide by 0 situation
                 warnings.warn(
                     f"Group {n} neutron current is not continuous at interface"
@@ -793,7 +793,7 @@ class NeutronFluxProfile:
         final_flux_deviation = (
             conditions[-1] / final_flux if final_flux else conditions[-1]
         )
-        if not np.isclose(final_flux_deviation, 0, atol=NONCONVERGENCE_WARNING_ATOL):
+        if not np.isclose(final_flux_deviation, 0, atol=CONVERGENCE_ATOL):
             warnings.warn(
                 f"Group {n} neutrons has non-zero flux at the extended "
                 f"boundary! Instead flux = {conditions[-1]} m^-2 s^-1.",
