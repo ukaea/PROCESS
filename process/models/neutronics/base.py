@@ -28,32 +28,39 @@ import functools
 import inspect
 import warnings
 from collections.abc import Callable, Iterable
-from tabulate import tabulate
-from dataclasses import asdict, dataclass
-from itertools import pairwise, cycle
-from mpmath import mp
+from itertools import pairwise, starmap
+from operator import mul
 
+import matplotlib as mpl
 import numpy as np
 from matplotlib import pyplot as plt
-import matplotlib as mpl
+from mpmath import mp
 from numpy import typing as npt
 from scipy import optimize
+from tabulate import tabulate
 
-from process.core.exceptions import ProcessValidationError, ProcessValueError
+from process.core.exceptions import ProcessValidationError
 from process.models.neutronics.data import N_A, MaterialMacroInfo
 
-NONCONVERGENCE_WARNING_ATOL = 1E-15
+NONCONVERGENCE_WARNING_ATOL = 1e-15
 
 mp.prec = 69
+
 
 def mp_func_factory(mp_func, np_func):
     def mp_function(x):
         if np.isscalar(x):
             return mp_func(x)
         return np_func(x)
+
     return mp_function
+
+
 negexp = mp_func_factory(lambda x: mp.exp(-x), lambda x: np.exp(-x))
-exp, cos, sin = [mp_func_factory(*funcs) for funcs in [(mp.exp, np.exp), (mp.cos, np.cos), (mp.sin, np.sin)]]
+exp, cos, sin = list(
+    starmap(mp_func_factory, [(mp.exp, np.exp), (mp.cos, np.cos), (mp.sin, np.sin)])
+)
+
 
 def summarize_values(func):
     """
@@ -91,11 +98,13 @@ def summarize_values(func):
     # Instead of returning a function, we return a descriptor that registers itself later
     return RegisterLater(wrapper_setattr)
 
+
 def mp_zeros(*shape: int):
     return np.array(
-        [mp.mpf(0) for _ in range(functools.reduce(lambda x, y: x*y, shape, 1))],
+        [mp.mpf(0) for _ in range(functools.reduce(mul, shape, 1))],
         dtype=object,
     ).reshape(shape)
+
 
 def convert_to_mpf(array: npt.NDArray) -> npt.NDArray[object]:
     """
@@ -104,10 +113,12 @@ def convert_to_mpf(array: npt.NDArray) -> npt.NDArray[object]:
     new_array = [mp.mpf(i) for i in array.flatten()]
     return np.array(new_array, dtype=object).reshape(array.shape)
 
+
 def mpf(value: float | npt.NDArray) -> mp.mpf | npt.NDArray[object]:
     if np.isscalar(value):
         return mp.mpf(value)
     return np.asarray(value)
+
 
 def gaussian_elim_solve_2x2(
     matr: npt.NDArray[object], vec: npt.NDArray[object]
@@ -296,13 +307,10 @@ class NeutronFluxProfile:
             for n in range(self.n_groups)
         ])
 
-        mat_name_list = [mat.name for mat in self.materials]
         self.extended_boundary = self.layer_x[-1] + extrapolation_length(
             self.materials[-1].diffusion_const
-        ) #  vector
-        self.coefficients = mp_zeros(
-            self.n_layers, self.n_groups, self.n_groups, 2
-        )
+        )  #  vector
+        self.coefficients = mp_zeros(self.n_layers, self.n_groups, self.n_groups, 2)
         self._is_solved = np.zeros(self.n_groups, dtype=bool)
         self.num_iteration = [0 for n in range(self.n_groups)]
         self._optimization_record = [[] for n in range(self.n_groups)]
@@ -324,41 +332,42 @@ class NeutronFluxProfile:
         tables = []
         headers = [f"coef * basis pair {n}" for n in range(self.n_groups)]
         for num_layer in range(self.n_layers):
-
             bases = []
             for n in range(self.n_groups):
                 l2 = self.materials[num_layer].l2[n]
                 if l2 > 0:
                     bases.append((
                         f"exp(-|x|/{np.sqrt(l2):.4g})",
-                        f"exp(|x|/{np.sqrt(l2):.4g})"
+                        f"exp(|x|/{np.sqrt(l2):.4g})",
                     ))
                 else:
                     bases.append((
                         f"cos(|x|/{np.sqrt(-l2):.4g})",
-                        f"sin(|x|/{np.sqrt(-l2):.4g})"
+                        f"sin(|x|/{np.sqrt(-l2):.4g})",
                     ))
 
             content = [[] for _ in range(self.n_groups)]
             for n in range(self.n_groups):
                 content[n].append(f"contributed by group {n} neutrons =")
-                for basis_group, (coef_pair, basis_pair) in enumerate(
-                    zip(self.coefficients[num_layer, n], bases, strict=True)
+                for coef_pair, basis_pair in zip(
+                    self.coefficients[num_layer, n], bases, strict=True
                 ):
                     str_repr = f"{coef_pair[0]:+.7e} * {basis_pair[0]} {coef_pair[1]:+.7e} * {basis_pair[1]}"
                     content[n].append(str_repr)
 
             tables.append(
                 tabulate(
-                    content, headers=[
-                        f"Neutron flux in layer {num_layer}",
-                    ] + headers,
+                    content,
+                    headers=[f"Neutron flux in layer {num_layer}", *headers],
                 )
             )
         return tables
 
     def _groupwise_cs_values_in_layer(
-        self, n: int, num_layer: int, abs_x: float | npt.NDArray[float],
+        self,
+        n: int,
+        num_layer: int,
+        abs_x: float | npt.NDArray[float],
     ) -> npt.NDArray[object]:
         """
         Calculate the num_layer-th layer n-th basis function at the specified
@@ -372,7 +381,10 @@ class NeutronFluxProfile:
         return np.array([cos(abs_x / l), sin(abs_x / l)], dtype=object)
 
     def _groupwise_cs_differential_in_layer(
-        self, n: int, num_layer: int, abs_x: float | npt.NDArray[float],
+        self,
+        n: int,
+        num_layer: int,
+        abs_x: float | npt.NDArray[float],
     ) -> npt.NDArray[object]:
         """
         Differentiate the num_layer-th layer n-th basis function, and evaluate
@@ -386,7 +398,11 @@ class NeutronFluxProfile:
         return np.array([-sin(abs_x / l) / l, cos(abs_x / l) / l], dtype=object)
 
     def _groupwise_cs_definite_integral_in_layer(
-        self, n: int, num_layer: int, x_lower: float, x_upper: float,
+        self,
+        n: int,
+        num_layer: int,
+        x_lower: float,
+        x_upper: float,
     ) -> npt.NDArray[object]:
         """
         Integrate the num_layer-th layer n-th basis function
@@ -395,15 +411,21 @@ class NeutronFluxProfile:
         x_lower, x_upper = mpf(x_lower), mpf(x_upper)
         if self.materials[num_layer].l2[n] > 0:
             l = np.sqrt(self.materials[num_layer].l2[n])  # noqa: E741
-            return np.array([
-                l * negexp(x_upper / l) * mp.expm1((x_upper-x_lower) / l),
-                l * exp(x_lower / l) * mp.expm1((x_upper-x_lower) / l),
-            ], dtype=object)
+            return np.array(
+                [
+                    l * negexp(x_upper / l) * mp.expm1((x_upper - x_lower) / l),
+                    l * exp(x_lower / l) * mp.expm1((x_upper - x_lower) / l),
+                ],
+                dtype=object,
+            )
         l = np.sqrt(-self.materials[num_layer].l2[n])  # noqa: E741
-        return np.array([
-            l * (sin(x_upper / l) - sin(x_lower / l)),
-            l * (cos(x_lower / l) - cos(x_upper / l)),  # reverse sign
-        ], dtype=object)
+        return np.array(
+            [
+                l * (sin(x_upper / l) - sin(x_lower / l)),
+                l * (cos(x_lower / l) - cos(x_upper / l)),  # reverse sign
+            ],
+            dtype=object,
+        )
 
     def _groupwise_flux_curvature_in_layer(
         self, n: int, num_layer: int, abs_x: float
@@ -411,21 +433,20 @@ class NeutronFluxProfile:
         """Second derivative of the group n flux in num_layer at location x."""
         abs_x = mpf(abs_x)
         trig_funcs = []
-        for basis_group, cs_coefs in enumerate(
-            self.coefficients[num_layer, n]
-        ):
+        for basis_group, cs_coefs in enumerate(self.coefficients[num_layer, n]):
             l2 = self.materials[num_layer].l2[basis_group]
             l = np.sqrt(abs(l2))  # noqa: E741
             c, s = (negexp, exp) if l2 > 0 else (cos, sin)
-            trig_funcs.append(
-                cs_coefs @ [c(abs_x / l) / l2, s(abs_x / l) / l2]
-            )
+            trig_funcs.append(cs_coefs @ [c(abs_x / l) / l2, s(abs_x / l) / l2])
         return np.sum(trig_funcs, axis=0)
 
     def _summation_shorthand(
-        self, n: int, num_layer: int,
+        self,
+        n: int,
+        num_layer: int,
         func: Callable[[int, int, float], npt.NDArray[np.float64]],
-        x: float, max_group: int
+        x: float,
+        max_group: int,
     ) -> float:
         """
         A repeating pattern of summation found in the code, so we extract it
@@ -463,11 +484,14 @@ class NeutronFluxProfile:
 
         summation_sequence = [
             coef_pair(basis_group) @ func(basis_group, num_layer, x)
-            for basis_group in range(max_group) if basis_group != n
+            for basis_group in range(max_group)
+            if basis_group != n
         ]
         return np.sum(summation_sequence, axis=-1)
 
-    def _propagate_coefs_to_next_layer(self, n: int, num_layer: int) -> tuple[npt.NDArray, npt.NDArray[np.float64]]:
+    def _propagate_coefs_to_next_layer(
+        self, n: int, num_layer: int
+    ) -> tuple[npt.NDArray, npt.NDArray[np.float64]]:
         """
         Infer this layer's main basis functions' coefficients
         using using the previous layer's basis functions.
@@ -484,7 +508,7 @@ class NeutronFluxProfile:
         """
         xm = self.layer_x[num_layer]
 
-        this_mat, next_mat = self.materials[num_layer: num_layer+2]
+        this_mat, next_mat = self.materials[num_layer : num_layer + 2]
         a_mmn = np.array([
             self._groupwise_cs_values_in_layer(n, num_layer, xm),
             this_mat.diffusion_const[n]
@@ -495,9 +519,7 @@ class NeutronFluxProfile:
             next_mat.diffusion_const[n]
             * self._groupwise_cs_differential_in_layer(n, num_layer + 1, xm),
         ])
-        det_a_lmn = next_mat.diffusion_const[n] / np.sqrt(
-            abs(next_mat.l2[n])
-        )
+        det_a_lmn = next_mat.diffusion_const[n] / np.sqrt(abs(next_mat.l2[n]))
         if next_mat.l2[n] > 0:
             det_a_lmn *= 2
         inv_a_lmn = 1 / det_a_lmn * (a_lmn[::-1, ::-1].T * [[1, -1], [-1, 1]])
@@ -618,10 +640,13 @@ class NeutronFluxProfile:
         y = -(
             self.fluxes[n] / self.materials[0].diffusion_const[n]
         ) - self._summation_shorthand(
-            n, 0, self._groupwise_cs_differential_in_layer, 0.0,
-            self.n_groups if (
-                not self.materials[0].downscatter_only and self.num_iteration[n]
-            ) else n
+            n,
+            0,
+            self._groupwise_cs_differential_in_layer,
+            0.0,
+            self.n_groups
+            if (not self.materials[0].downscatter_only and self.num_iteration[n])
+            else n,
         )
 
         m_list, v_list = self._get_all_propagation_operator(n)
@@ -651,9 +676,9 @@ class NeutronFluxProfile:
             self.n_layers - 1,
             self._groupwise_cs_values_in_layer,
             self.extended_boundary[n],
-            self.n_groups if (
-                not self.materials[0].downscatter_only and self.num_iteration[n]
-            ) else n,
+            self.n_groups
+            if (not self.materials[0].downscatter_only and self.num_iteration[n])
+            else n,
         )
         eqn_32_matrix = np.array([top_row, bot_row])
         eqn_32_vector = np.array([y, z])
@@ -666,13 +691,11 @@ class NeutronFluxProfile:
                 m_list[num_layer] @ self.coefficients[num_layer, n, n]
                 + v_list[num_layer]
             )
-        
-        init_coefs = self.coefficients[:, n, n].flatten()
-        _rms_residual, _residual_n, _vector_n = [], [], []
 
-        def _set_coefficients(
-            input_vector: Iterable[float | mp.mpf]
-        ) -> None:
+        init_coefs = self.coefficients[:, n, n].flatten()
+        rms_residual, residual_n, vector_n = [], [], []
+
+        def _set_coefficients(input_vector: Iterable[float | mp.mpf]) -> None:
             """
             Set the main diagonals coefficients. Force input float vector's
             floats into mpf format.
@@ -681,15 +704,18 @@ class NeutronFluxProfile:
                 self.n_layers, 2
             )
             self._update_off_diag_coefs_of_column_n(n)
+
         scipy_method, scipy_method_accepts_jac = "hybr", True
 
-        def objective(coefficients_vector: npt.NDArray[float | object]) -> tuple[npt.NDArray[float], npt.NDArray]:
+        def objective(
+            coefficients_vector: npt.NDArray[float | object],
+        ) -> tuple[npt.NDArray[float], npt.NDArray]:
             precise_coefficients = convert_to_mpf(coefficients_vector)
             _set_coefficients(precise_coefficients)
             cond, jac = self._groupwise_fitness(n)
-            _vector_n.append(precise_coefficients)
-            _residual_n.append(cond)
-            _rms_residual.append(np.sqrt((cond**2).mean()))
+            vector_n.append(precise_coefficients)
+            residual_n.append(cond)
+            rms_residual.append(np.sqrt((cond**2).mean()))
             if scipy_method_accepts_jac:
                 return (
                     np.asarray(cond, dtype=float),
@@ -701,19 +727,18 @@ class NeutronFluxProfile:
             objective,
             x0=np.asarray(init_coefs, dtype=float),
             jac=scipy_method_accepts_jac,
-            method="hybr",
+            method=scipy_method,
         )
         _set_coefficients(opt_result.x)
         conditions = self._groupwise_fitness(n, jac=False)
         self._optimization_record[n].append(
             CustomOptimizationRecord(
-                self, n, _vector_n, _rms_residual, _residual_n, opt_result
+                self, n, vector_n, rms_residual, residual_n, opt_result
             )
         )
 
-
         if self.fluxes[n]:
-            source_current_deviation = conditions[0]/self.fluxes[n]
+            source_current_deviation = conditions[0] / self.fluxes[n]
             source_current_dev_text = f"{source_current_deviation} %"
         else:
             source_current_deviation = conditions[0]
@@ -732,9 +757,9 @@ class NeutronFluxProfile:
 
             this_flux = self.groupwise_neutron_flux_in_layer(n, num_layer, x)
             if this_flux:
-                flux_deviation = conditions[i + 1] / self.groupwise_neutron_flux_in_layer(
-                    n, num_layer, x
-                )
+                flux_deviation = conditions[
+                    i + 1
+                ] / self.groupwise_neutron_flux_in_layer(n, num_layer, x)
                 flux_dev_text = f"{flux_deviation * 100} %"
             else:
                 flux_deviation = conditions[i + 1]
@@ -765,7 +790,9 @@ class NeutronFluxProfile:
         final_flux = self.groupwise_neutron_flux_in_layer(
             n, self.n_layers - 1, self.interface_x[self.n_layers - 1]
         )
-        final_flux_deviation = conditions[-1] / final_flux if final_flux else conditions[-1]
+        final_flux_deviation = (
+            conditions[-1] / final_flux if final_flux else conditions[-1]
+        )
         if not np.isclose(final_flux_deviation, 0, atol=NONCONVERGENCE_WARNING_ATOL):
             warnings.warn(
                 f"Group {n} neutrons has non-zero flux at the extended "
@@ -777,11 +804,13 @@ class NeutronFluxProfile:
             if (
                 self.groupwise_neutron_flux_in_layer(
                     n, num_layer, self.interface_x[num_layer]
-                ) < 0
+                )
+                < 0
             ) or (
                 self.groupwise_neutron_flux_in_layer(
                     n, num_layer, self.layer_x[num_layer]
-                ) < 0
+                )
+                < 0
             ):
                 warnings.warn(
                     "Negative flux found when solving for "
@@ -823,100 +852,105 @@ class NeutronFluxProfile:
         the same column.)
         """
         for num_layer, mat in enumerate(self.materials):
-            include_upscatter = (not mat.downscatter_only) and self.num_iteration[leakage_basis]
+            include_upscatter = (not mat.downscatter_only) and self.num_iteration[
+                leakage_basis
+            ]
             leakage_into_min_group = 0 if include_upscatter else leakage_basis
 
             for n in range(leakage_into_min_group, self.n_groups):
                 if n != leakage_basis:
                     if include_upscatter:
-                        in_scatter_groups = np.array([
-                            i for i in range(0, self.n_groups) if i != n],
+                        in_scatter_groups = np.array(
+                            [i for i in range(self.n_groups) if i != n],
                             dtype=int,
                         )
                     else:
-                        in_scatter_groups = np.array([
-                            i for i in range(leakage_basis, n) if i != n],
+                        in_scatter_groups = np.array(
+                            [i for i in range(leakage_basis, n) if i != n],
                             dtype=int,
                         )
-                    self.coefficients[num_layer, n, leakage_basis] = np.sum(
-                        mat.sigma_source[in_scatter_groups, n, None]
-                        * self.coefficients[
-                            num_layer, in_scatter_groups, leakage_basis
-                        ],
-                        axis=0,
-                    ) * mat.conversion_factor[n, leakage_basis]
+                    self.coefficients[num_layer, n, leakage_basis] = (
+                        np.sum(
+                            mat.sigma_source[in_scatter_groups, n, None]
+                            * self.coefficients[
+                                num_layer, in_scatter_groups, leakage_basis
+                            ],
+                            axis=0,
+                        )
+                        * mat.conversion_factor[n, leakage_basis]
+                    )
 
     def _groupwise_fitness(
-            self, n: int, jac: bool=True
-        ) -> tuple[npt.NDArray[object], npt.NDArray]:
-            """
-            Calculate how far the current values of coefficients deviates
-            from the 2*n_layers equations, forming a vector with len=
-            2*n_layers. A jacobian of shape (2*n_layers, 2*n_layers)
-            is also produced.
+        self, n: int, jac: bool = True
+    ) -> tuple[npt.NDArray[object], npt.NDArray]:
+        """
+        Calculate how far the current values of coefficients deviates
+        from the 2*n_layers equations, forming a vector with len=
+        2*n_layers. A jacobian of shape (2*n_layers, 2*n_layers)
+        is also produced.
 
-            Parameters
-            ----------
-            n:
-                The group that we want to evaluate the fitness for.
+        Parameters
+        ----------
+        n:
+            The group that we want to evaluate the fitness for.
 
-            Returns
-            -------
-            conditions:
-                A 2*n_layers vector corresponding to the difference between
-                the LHS and RHS of the 2*n_layers equations
-            jacobians:
-                A 2*n_layers x 2*n_layers matrix, row i column j denotes
-                how much steeply does variable j affect condition i. The
-                variables are arranged as self.coefficients[:, n, n].flatten().
-            """
-            conditions = mp_zeros(2 * self.n_layers)
-            jacobians = mp_zeros(2 * self.n_layers, 2 * self.n_layers)
+        Returns
+        -------
+        conditions:
+            A 2*n_layers vector corresponding to the difference between
+            the LHS and RHS of the 2*n_layers equations
+        jacobians:
+            A 2*n_layers x 2*n_layers matrix, row i column j denotes
+            how much steeply does variable j affect condition i. The
+            variables are arranged as self.coefficients[:, n, n].flatten().
+        """
+        conditions = mp_zeros(2 * self.n_layers)
+        jacobians = mp_zeros(2 * self.n_layers, 2 * self.n_layers)
 
-            # Net current at origin equal incident flux on that group.
-            conditions[0] = (
-                self.groupwise_neutron_current_through_interface(n, 0)
-                - self.fluxes[n]
+        # Net current at origin equal incident flux on that group.
+        conditions[0] = (
+            self.groupwise_neutron_current_through_interface(n, 0) - self.fluxes[n]
+        )
+        jacobians[0, :2] = self._groupwise_cs_differential_in_layer(n, 0, 0.0)
+
+        for num_layer in range(self.n_layers - 1):
+            x = self.layer_x[num_layer]
+
+            i = 2 * num_layer
+            # Enforce flux continuity at self.interface[num_layer]
+            conditions[i + 1] = self.groupwise_neutron_flux_in_layer(
+                n, num_layer, x
+            ) - self.groupwise_neutron_flux_in_layer(n, num_layer + 1, x)
+            jacobians[i + 1, i : i + 2] = self._groupwise_cs_values_in_layer(
+                n, num_layer, x
             )
-            jacobians[0, :2] = (
-                self._groupwise_cs_differential_in_layer(
-                    n, 0, 0.0
-                )
+            jacobians[i + 1, i + 2 : i + 4] = -self._groupwise_cs_values_in_layer(
+                n, num_layer + 1, x
             )
 
-            for num_layer in range(self.n_layers - 1):
-                x = self.layer_x[num_layer]
+            # Enforce current continuity at self.interface[num_layer]
+            conditions[i + 2] = self.groupwise_neutron_current_in_layer(
+                n, num_layer, x
+            ) - self.groupwise_neutron_current_in_layer(n, num_layer + 1, x)
+            jacobians[i + 2, i : i + 2] = self._groupwise_cs_differential_in_layer(
+                n, num_layer, x
+            )
+            jacobians[i + 2, i + 2 : i + 4] = -self._groupwise_cs_differential_in_layer(
+                n, num_layer + 1, x
+            )
 
-                i = 2 * num_layer
-                # Enforce flux continuity at self.interface[num_layer]
-                conditions[i + 1] = (
-                    self.groupwise_neutron_flux_in_layer(n, num_layer, x)
-                    - self.groupwise_neutron_flux_in_layer(n, num_layer + 1, x)
-                )
-                jacobians[i + 1, i:i + 2] = self._groupwise_cs_values_in_layer(n, num_layer, x)
-                jacobians[i + 1, i + 2:i + 4] = -self._groupwise_cs_values_in_layer(n, num_layer + 1, x)
-
-                # Enforce current continuity at self.interface[num_layer]
-                conditions[i + 2] = (
-                    self.groupwise_neutron_current_in_layer(n, num_layer, x)
-                    - self.groupwise_neutron_current_in_layer(n, num_layer + 1, x)
-                )
-                jacobians[i + 2, i:i + 2] = self._groupwise_cs_differential_in_layer(n, num_layer, x)
-                jacobians[i + 2, i + 2:i + 4] = -self._groupwise_cs_differential_in_layer(n, num_layer + 1, x)
-
-            # Enforce zero flux at extended boundary
-            conditions[2 * self.n_layers - 1] = self.groupwise_neutron_flux_in_layer(
+        # Enforce zero flux at extended boundary
+        conditions[2 * self.n_layers - 1] = self.groupwise_neutron_flux_in_layer(
+            n, self.n_layers - 1, self.extended_boundary[n]
+        )
+        jacobians[2 * self.n_layers - 1, 2 * self.n_layers - 2 :] = (
+            self._groupwise_cs_values_in_layer(
                 n, self.n_layers - 1, self.extended_boundary[n]
             )
-            jacobians[2 * self.n_layers - 1, 2 * self.n_layers - 2:] = (
-                self._groupwise_cs_values_in_layer(
-                    n, self.n_layers-1, self.extended_boundary[n]
-                )
-            )
-            if jac:
-                return conditions, jacobians
-            return conditions
-
+        )
+        if jac:
+            return conditions, jacobians
+        return conditions
 
     def _check_if_in_layer(
         self, x: npt.NDArray[np.float64], num_layer: int
@@ -1447,9 +1481,7 @@ class NeutronFluxProfile:
             groupwise_function = getattr(self, f"groupwise_{method_name}")
         x_ranges = _generate_x_range(
             self.interface_x.copy(),
-            max(self.extended_boundary)
-            if extend_plot_beyond_boundary
-            else None,
+            max(self.extended_boundary) if extend_plot_beyond_boundary else None,
             min_total_num_points=n_points,
             symmetric=symmetric,
         )
@@ -1587,7 +1619,8 @@ def _generate_x_range(
             yield -layer_x_range[::-1]
         yield layer_x_range
 
-class CustomOptimizationRecord():
+
+class CustomOptimizationRecord:
     """
     A class used to store a custom collection of information about the
     optimization process, and replicate the neutron flux profile that would've
@@ -1598,8 +1631,11 @@ class CustomOptimizationRecord():
     num_opt_steps:
         Number of steps taken by the optimizer.
     """
+
     def __init__(
-        self, parent: NeutronFluxProfile, n: int,
+        self,
+        parent: NeutronFluxProfile,
+        n: int,
         solution_vectors: Iterable[npt.NDArray[float | object]],
         rms_residuals: Iterable[object],
         residuals: Iterable[npt.NDArray[object]],
@@ -1639,17 +1675,19 @@ class CustomOptimizationRecord():
         ax = ax or plt.axes()
         ax.set_title(f"Trajectory of Group {self.n}\nneutron flux optimization")
         ax.set_xlabel("iterations")
-        ax.set_ylabel(f"Root-mean-squares of residuals")
+        ax.set_ylabel("Root-mean-squares of residuals")
         ax.plot(self.rms_residuals, marker="+")
-        if (self.rms_residuals>0).all():
+        if (self.rms_residuals > 0).all():
             ax.set_yscale("log")
         return ax
 
     def plot_groupwise_profile_evolution(
-        self, ax: plt.Axes | None=None,
-        plot_preceeding_groups: bool=True, animate: bool=False
+        self,
+        ax: plt.Axes | None = None,
+        plot_preceeding_groups: bool = True,
+        animate: bool = False,
     ) -> plt.Axes:
-        """ Plot the each of the neutron flux profile found during the gradient
+        """Plot the each of the neutron flux profile found during the gradient
         descend.
 
         Parameters
@@ -1670,15 +1708,14 @@ class CustomOptimizationRecord():
         n = self.n
         parent = self.parent
         base_x = np.array([
-            np.linspace(*parent.interface_x[num_layer:num_layer+2])
+            np.linspace(*parent.interface_x[num_layer : num_layer + 2])
             for num_layer in range(parent.n_layers)
         ])
         flat_base_x = base_x.flatten()
 
         ax = ax or plt.axes()
         ax.set_title(
-            f"The evolution of group {n} neutron flux\n"
-            "during the optimization process"
+            f"The evolution of group {n} neutron flux\nduring the optimization process"
         )
         ax.set_xlabel("Distance from the plasma-fw interface [m]")
         ax.set_ylabel(f"Flux ({UNIT_LOOKUP['flux']})")
@@ -1695,12 +1732,12 @@ class CustomOptimizationRecord():
             _plot_vertical_dotted_line(ax, interface, ylims, symmetric=False)
 
         def rollback_parent_to_get_flux(iteration: int):
-            """Rollback to a certain value of coefficient, and then """
+            """Rollback to a certain value of coefficient, and then"""
             saved_coefficients = parent.coefficients[:, n, n]
-            parent.coefficients[:, n, n] = self.solution_vectors[
-                iteration
-            ].reshape(parent.n_layers, 2)
-            parent._update_off_diag_coefs_of_column_n(n)
+            parent.coefficients[:, n, n] = self.solution_vectors[iteration].reshape(
+                parent.n_layers, 2
+            )
+            parent._update_off_diag_coefs_of_column_n(n)  # noqa: SLF001
             this_flux = []
             for num_layer, xi in enumerate(base_x):
                 this_flux.extend(
@@ -1716,15 +1753,14 @@ class CustomOptimizationRecord():
                 this_flux.extend(
                     parent.groupwise_neutron_flux_in_layer(n, num_layer, xi)
                 )
-            animated_line, = ax.plot(flat_base_x, np.array(this_flux))
+            (animated_line,) = ax.plot(flat_base_x, np.array(this_flux))
             ax.legend()
             for iteration in range(self.num_opt_steps):
                 animated_line.set_data(
-                    flat_base_x, rollback_parent_to_get_flux(iteration),
+                    flat_base_x,
+                    rollback_parent_to_get_flux(iteration),
                 )
-                animated_line.set_label(
-                    f"Step {iteration} of group {self.n} flux"
-                )
+                animated_line.set_label(f"Step {iteration} of group {self.n} flux")
                 ax.legend()
                 ax.set_ylim(ylims)
                 plt.pause(0.8)
@@ -1742,10 +1778,13 @@ class CustomOptimizationRecord():
 
             for iteration in range(self.num_opt_steps):
                 ax.plot(
-                    flat_base_x, rollback_parent_to_get_flux(iteration),
+                    flat_base_x,
+                    rollback_parent_to_get_flux(iteration),
                     color=cmap(norm(iteration)),
                     # ls=next(linestyle_cycle),
-                    label=f"Evolution of group {self.n} flux" if iteration==(self.num_opt_steps-1) else None
+                    label=f"Evolution of group {self.n} flux"
+                    if iteration == (self.num_opt_steps - 1)
+                    else None,
                 )
             ax.set_ylim(ylims)
             ax.legend()
