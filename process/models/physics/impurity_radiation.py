@@ -54,30 +54,22 @@ def initialise_imprad(data: DataStructure):
     """
     errorflag = 0
 
-    f_nd_species_electron = 1.0e0
-
     #  Hydrogen
-
     init_imp_element(
         n_species_index=1,
         name_label=data.impurity_radiation.imp_label[0],
         z=1,
         m_species_amu=constants.M_PROTIUM_AMU,  # 1.00782503223 1H
-        f_nd_species_electron=f_nd_species_electron,
         len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
         data=data,
     )
-
-    f_nd_species_electron = 0.0e0
-
     #  Helium
     init_imp_element(
         n_species_index=2,
         name_label=data.impurity_radiation.imp_label[1],
         z=2,
         m_species_amu=constants.M_HELIUM_AMU,  # 4.002602 (3He,4He) Average mass
-        f_nd_species_electron=f_nd_species_electron,
         len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
         data=data,
@@ -89,7 +81,6 @@ def initialise_imprad(data: DataStructure):
         name_label=data.impurity_radiation.imp_label[2],
         z=4,
         m_species_amu=constants.M_BERYLLIUM_AMU,  # 9.0121831 9Be
-        f_nd_species_electron=f_nd_species_electron,
         len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
         data=data,
@@ -101,7 +92,6 @@ def initialise_imprad(data: DataStructure):
         name_label=data.impurity_radiation.imp_label[3],
         z=6,
         m_species_amu=constants.M_CARBON_AMU,  # 12.0096, (12C,13C,14C) Average mass
-        f_nd_species_electron=f_nd_species_electron,
         len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
         data=data,
@@ -113,7 +103,6 @@ def initialise_imprad(data: DataStructure):
         name_label=data.impurity_radiation.imp_label[4],
         z=7,
         m_species_amu=constants.M_NITROGEN_AMU,  # 14.00643, (14N,15N) Average mass
-        f_nd_species_electron=f_nd_species_electron,
         len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
         data=data,
@@ -125,7 +114,6 @@ def initialise_imprad(data: DataStructure):
         name_label=data.impurity_radiation.imp_label[5],
         z=8,
         m_species_amu=constants.M_OXYGEN_AMU,  # 15.99903, (16O,17O,18O) Average mass
-        f_nd_species_electron=f_nd_species_electron,
         len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
         data=data,
@@ -137,7 +125,6 @@ def initialise_imprad(data: DataStructure):
         name_label=data.impurity_radiation.imp_label[6],
         z=10,
         m_species_amu=constants.M_NEON_AMU,  # 20.1797 (20Ne,21Ne,22Ne) Average mass
-        f_nd_species_electron=f_nd_species_electron,
         len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
         data=data,
@@ -149,7 +136,6 @@ def initialise_imprad(data: DataStructure):
         name_label=data.impurity_radiation.imp_label[7],
         z=14,
         m_species_amu=constants.M_SILICON_AMU,  # 28.084 (28Si,29Si,30Si) Average mass
-        f_nd_species_electron=f_nd_species_electron,
         len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
         data=data,
@@ -161,7 +147,6 @@ def initialise_imprad(data: DataStructure):
         name_label=data.impurity_radiation.imp_label[8],
         z=18,
         m_species_amu=constants.M_ARGON_AMU,  # 39.948 (40Ar,36Ar,38Ar) Average mass
-        f_nd_species_electron=f_nd_species_electron,
         len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
         data=data,
@@ -173,7 +158,6 @@ def initialise_imprad(data: DataStructure):
         name_label=data.impurity_radiation.imp_label[9],
         z=26,
         m_species_amu=constants.M_IRON_AMU,  # 55.845 (56Fe,54Fe,57Fe,58Fe) Average mass
-        f_nd_species_electron=f_nd_species_electron,
         len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
         data=data,
@@ -186,7 +170,6 @@ def initialise_imprad(data: DataStructure):
         z=28,
         # 58.6934 (58Ni,60Ni,61Ni,62Ni,64Ni) Average mass
         m_species_amu=constants.M_NICKEL_AMU,
-        f_nd_species_electron=f_nd_species_electron,
         len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
         data=data,
@@ -199,7 +182,6 @@ def initialise_imprad(data: DataStructure):
         z=36,
         # 83.798 (84Kr,86Kr,82Kr,80Kr,78Kr) Average mass
         m_species_amu=constants.M_KRYPTON_AMU,
-        f_nd_species_electron=f_nd_species_electron,
         len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
         data=data,
@@ -212,7 +194,6 @@ def initialise_imprad(data: DataStructure):
         z=54,
         # 131.293 (132Xe,129Xe,131Xe,134Xe,136Xe) Average mass
         m_species_amu=constants.M_XENON_AMU,
-        f_nd_species_electron=f_nd_species_electron,
         len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
         data=data,
@@ -225,7 +206,6 @@ def initialise_imprad(data: DataStructure):
         z=74,
         # 183.84 (184W,186W,182W,183W,180W) Average mass
         m_species_amu=constants.M_TUNGSTEN_AMU,
-        f_nd_species_electron=f_nd_species_electron,
         len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
         data=data,
@@ -272,7 +252,7 @@ def read_impurity_file(impurity_file: Path):
         if clean_line[0:3].upper() in {"C  ", "C ", "C", "C--"}:
             continue
 
-        if re.fullmatch(r"[0-9\\.e+\- ]+", clean_line) is not None:
+        if re.fullmatch(r"[0-9\.e+\- ]+", clean_line) is not None:
             header = file_contents[-1]
 
             new_data = clean_line.split(" ")
@@ -291,7 +271,6 @@ def init_imp_element(
     name_label: str,
     z: int,
     m_species_amu: float,
-    f_nd_species_electron: float,
     len_tab: int,
     error: int,
     data: DataStructure,
@@ -312,8 +291,6 @@ def init_imp_element(
         Species charge number
     m_species_amu : float
         Species atomic mass [amu]
-    f_nd_species_electron : float
-        Number density / electron density
     len_tab : int
         Length of temperature and Lz tables
     error : int
@@ -342,9 +319,6 @@ def init_imp_element(
 
     data.impurity_radiation.impurity_arr_z[n_species_index - 1] = z
     data.impurity_radiation.m_impurity_amu_array[n_species_index - 1] = m_species_amu
-    data.impurity_radiation.f_nd_impurity_electrons[n_species_index - 1] = (
-        f_nd_species_electron
-    )
     data.impurity_radiation.impurity_arr_len_tab[n_species_index - 1] = len_tab
 
     if len_tab > N_IMPURITIY_LOSS_FUNCTION_POINTS:
@@ -597,7 +571,7 @@ def calculate_impurity_radiation_power_density(
     )
 
     # W/m³ = nᵢ * nₑ * L(Z, Tₑ)
-    # nᵢ = f_nd_species_electron * nₑ
+    # nᵢ = fᵢ * nₑ
     return (
         data.impurity_radiation.f_nd_impurity_electrons[imp_element_index]
         * nd_electron_profile
