@@ -104,7 +104,7 @@ def read_impurity_file(impurity_file: Path):
         if clean_line[0:3].upper() in {"C  ", "C ", "C", "C--"}:
             continue
 
-        if re.fullmatch(r"[0-9\.e+\- ]+", clean_line) is not None:
+        if re.fullmatch(r"[0-9\\.e+\- ]+", clean_line) is not None:
             header = file_contents[-1]
 
             new_data = clean_line.split(" ")
@@ -429,7 +429,6 @@ def calculate_impurity_radiation_power_density(
         * nd_electron_profile
         * power_loss_function
     )
-
 
 class ImpurityRadiation:
     """Calculates the impurity radiation losses for given temperature and
