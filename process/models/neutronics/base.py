@@ -956,16 +956,19 @@ class NeutronFluxProfile:
         self, x: npt.NDArray[np.float64], num_layer: int
     ) -> npt.NDArray[bool]:
         abs_x = abs(x)
+        # Final layer
         if num_layer == (self.n_layers - 1):
             return np.logical_and(
                 self.interface_x[num_layer] <= abs_x,
                 abs_x <= self.interface_x[num_layer + 1],
             )
+        # 1 bigger than the final layer
         if num_layer == self.n_layers:
             return abs_x > self.interface_x[-1]
+        # interface_x[num_layer] <= abs_x <= interface_x[num_layer+1]
         return np.logical_and(
             self.interface_x[num_layer] <= abs_x,
-            abs_x <= self.interface_x[num_layer + 1],
+            abs_x < self.interface_x[num_layer + 1],
         )
 
     @summarize_values
@@ -1445,8 +1448,8 @@ class NeutronFluxProfile:
         ax: plt.Axes | None = None,
         *,
         plot_groups: bool = True,
-        log_y: bool = True,  # TODO: Clean up this function, and enforce symmetric=False, log_y = True by default, use groupwise_neutron_flux_in_layer
-        symmetric: bool = True,
+        log_y: bool = True,
+        symmetric: bool = False,
         extend_plot_beyond_boundary: bool = True,
         n_points: int = 100,
     ):
@@ -1470,6 +1473,8 @@ class NeutronFluxProfile:
         """
         self.solve()
         ax = ax or plt.axes()
+        if log_y:
+            ax.set_yscale("log")
         method_name = f"neutron_{quantity}_in_layer"
         if quantity == "tritium_production":
             method_name = "tritium_production_in_layer"
