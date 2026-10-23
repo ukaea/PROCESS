@@ -948,7 +948,7 @@ class InDat:
 
     def read_in_dat(self):
         """Function to read in 'self.filename' and put data into dictionary
-        'self.data'
+        'self.data'. Also check for obsolete variables.
         """
         # Read in IN.DAT
         with open(self.filename) as indat:
