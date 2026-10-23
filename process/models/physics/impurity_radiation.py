@@ -704,7 +704,7 @@ class ImpurityRadiation:
         p_plasma_rad_impurities_mw = 0.0
         for index, label in enumerate(self.data.impurity_radiation.imp_label):
             pden_vol_avg_mw = 0.0
-            if self.data.impurity_radiation.f_nd_impurity_electron_array[index] > 1e-30:
+            if self.data.impurity_radiation.f_nd_impurity_electrons[index] > 1e-30:
                 pden_profile = calculate_impurity_radiation_power_density(
                     imp_element_index=index,
                     nd_electron_profile=self.plasma_profile.neprofile.profile_y,
