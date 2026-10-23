@@ -272,7 +272,7 @@ def read_impurity_file(impurity_file: Path):
         if clean_line[0:3].upper() in {"C  ", "C ", "C", "C--"}:
             continue
 
-        if re.fullmatch(r"[0-9\.e+\- ]+", clean_line) is not None:
+        if re.fullmatch(r"[0-9\\.e+\- ]+", clean_line) is not None:
             header = file_contents[-1]
 
             new_data = clean_line.split(" ")
@@ -333,14 +333,13 @@ def init_imp_element(
     if error == 1:
         return
 
-    if n_species_index > len(data.impurity_radiation.impurity_arr_label):
+    if n_species_index > len(data.impurity_radiation.imp_label):
         raise ProcessValueError(
             "Illegal impurity number",
             number=n_species_index,
-            max=len(data.impurity_radiation.impurity_arr_label),
+            max=len(data.impurity_radiation.imp_label),
         )
 
-    data.impurity_radiation.impurity_arr_label[n_species_index - 1] = name_label
     data.impurity_radiation.impurity_arr_z[n_species_index - 1] = z
     data.impurity_radiation.m_impurity_amu_array[n_species_index - 1] = m_species_amu
     data.impurity_radiation.f_nd_impurity_electrons[n_species_index - 1] = (
@@ -624,20 +623,13 @@ def element2index(element: str, data: DataStructure) -> int:
     Raises
     ------
     ProcessValueError
-        If the element is not found in impurity_arr_label
+        If the element is not found in imp_label
 
     """
     try:
-        return (
-            data.impurity_radiation.impurity_arr_label
-            .astype(str)
-            .tolist()
-            .index(element)
-        )
+        return data.impurity_radiation.imp_label.astype(str).tolist().index(element)
     except ValueError as e:
-        raise ProcessValueError(
-            f"Element {element} is not found in impurity_arr_label"
-        ) from e
+        raise ProcessValueError(f"Element {element} is not found in imp_label") from e
 
 
 class ImpurityRadiation:
