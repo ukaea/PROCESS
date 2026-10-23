@@ -3155,10 +3155,7 @@ class Physics(Model):
 
         for imp in range(N_IMPURITIES):
             str1 = (
-                self.data.impurity_radiation
-                .impurity_arr_label[imp]
-                .item()
-                .replace("_", "")
+                self.data.impurity_radiation.imp_label[imp].item().replace("_", "")
                 + " concentration"
             )
             str2 = f"(f_nd_impurity_electrons({imp + 1:02}))"
