@@ -367,11 +367,11 @@ class TFCoil(Model):
                 * (1 - (np.cos(np.pi / data.tfcoil.n_tf_coils)))
             )
 
-        # Warn that the value has be forced to a minimum value at some point in
-        # iteration
-        logger.error(
-            "dr_tf_plasma_case too small to accommodate the WP, forced to minimum value"
-        )
+            # Warn that the value has be forced to a minimum value at some point in
+            # iteration
+            logger.error(
+                "dr_tf_plasma_case too small to accommodate the WP, forced to minimum value"
+            )
 
         # ======================================================================
 
@@ -599,8 +599,8 @@ class TFCoil(Model):
                 match itart:
                     case 0:
                         len_tf_coil = 2.0e0 * (
-                            2.0e0 * z_tf_inside_half
-                            + dr_tf_inboard
+                            z_tf_inside_half
+                            + z_tf_top
                             + r_tf_outboard_mid
                             - r_tf_inboard_mid
                         )

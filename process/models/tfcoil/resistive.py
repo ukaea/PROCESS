@@ -419,7 +419,7 @@ class ResistiveTFCoil(TFCoil):
                     + self.data.tfcoil.dx_tf_wp_insulation
                 )
             )
-        )
+        ) / self.data.tfcoil.n_tf_coils
 
         # Reporting negative WP areas issues
         if self.data.superconducting_tfcoil.a_tf_wp_with_insulation < 0.0e0:
