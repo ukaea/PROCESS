@@ -322,13 +322,16 @@ class PlasmaEquilibrium(Model):
         """Iterate axis ne/te until veqpy volume averages match targets.
 
         When ``match_q95`` is True, also adjust ``current`` so edge q95 matches
-        ``q95_target``. For PROCESS ``physics.run`` this must stay False so Ip
-        stays consistent with the rest of the code and scans remain idempotent.
+        ``q95_target``. ``physics.run`` writes that current back and refreshes
+        the cylindrical safety factor, surface poloidal field and internal
+        inductance from the equilibrium geometry. When ``match_q95`` is False
+        the passed current is unchanged.
 
         Returns
         -------
         tuple
-            (ne_axis, te_axis, ne_vol_avg, te_vol_avg, q95, current, eq)
+            (ne_axis, te_axis, ne_vol_avg, te_vol_avg, q95, current,
+            f_temp_plasma_electron_density_vol_avg, eq)
 
         Raises
         ------

@@ -421,6 +421,9 @@ class Physics(Model):
             )
             f_pres_ie = f_nd_ie * f_temp_ie
 
+            match_q95 = (
+                self.data.physics.i_plasma_current != PlasmaCurrentModel.USER_INPUT
+            )
             (
                 _ne_axis,
                 _te_axis,
@@ -438,7 +441,7 @@ class Physics(Model):
                 current=self.data.physics.plasma_current,
                 ne_axis=self.data.physics.nd_plasma_electron_on_axis,
                 te_axis=self.data.physics.temp_plasma_electron_on_axis_kev,
-                match_q95=(self.data.physics.i_plasma_current != PlasmaCurrentModel.USER_INPUT),
+                match_q95=match_q95,
             )
             store_veqpy_equilibrium(
                 self.data,
@@ -473,6 +476,32 @@ class Physics(Model):
             self.data.physics.q0 = eq.q[0]
             self.data.physics.q95 = np.interp(0.95, eq.psin, eq.q)
 
+            # q95-prescribed scalings change Ip inside the solve. The adjusted
+            # current has to be the one used for the rest of this call. Fixed
+            # Ip input is left unchanged.
+            if match_q95:
+                self.data.physics.plasma_current = _current
+
+            self.data.physics.qstar = calculate_cylindrical_safety_factor(
+                rmajor=self.data.physics.rmajor,
+                rminor=self.data.physics.rminor,
+                plasma_current=self.data.physics.plasma_current,
+                b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
+                kappa95=self.data.physics.kappa95,
+                triang95=self.data.physics.triang95,
+            )
+            self.data.physics.b_plasma_surface_poloidal_average = (
+                self.fields.calculate_surface_averaged_poloidal_field(
+                    i_plasma_current=self.data.physics.i_plasma_current,
+                    cur_plasma=self.data.physics.plasma_current,
+                    q95=self.data.physics.q95,
+                    aspect=self.data.physics.aspect,
+                    b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
+                    kappa=self.data.physics.kappa,
+                    triang=self.data.physics.triang,
+                    len_plasma_poloidal=self.data.physics.len_plasma_poloidal,
+                )
+            )
             self.data.physics.ind_plasma_internal_norm = (
                 equilibrium.calculate_ind_plasma_internal_norm(
                     eq=eq,
