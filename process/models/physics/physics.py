@@ -1774,7 +1774,8 @@ class Physics(Model):
         - Total impurity density and total ion density.
         - Carbon, oxygen, and iron-plus-argon electron fractions.
         - Volume-averaged effective charge.
-        - Fraction of alpha energy given to electrons and ions.
+        - Fraction of p-B11 alpha energy given to electrons and ions, from
+          classical slowing down at the mean birth energy.
         - Mean fuel mass from the proton and boron-11 fractions. Beam ions are
           protons.
         - Mean ion mass and mass-weighted effective charge.
@@ -1979,31 +1980,6 @@ class Physics(Model):
 
         # ======================================================================
 
-        # Fraction of alpha energy to ions and electrons
-        # From Max Fenstermacher
-        # (used with electron and ion power balance equations only)
-        # No consideration of pden_non_alpha_charged_mw here...
-
-        # f_temp_plasma_electron_density_vol_avg now calculated in plasma_profiles,
-        # after the very first call of plasma_composition; use old parabolic profile
-        # estimate in this case.
-        if self.data.physics.first_call == 1:
-            pc = (
-                (1.0 + self.data.physics.alphan)
-                * (1.0 + self.data.physics.alphat)
-                / (1.0 + self.data.physics.alphan + self.data.physics.alphat)
-            )
-            self.data.physics.first_call = 0
-        else:
-            pc = self.data.physics.f_temp_plasma_electron_density_vol_avg
-
-        self.data.physics.f_alpha_electron = 0.88155 * np.exp(
-            -self.data.physics.temp_plasma_electron_vol_avg_kev * pc / 67.4036
-        )
-        self.data.physics.f_alpha_ion = 1.0 - self.data.physics.f_alpha_electron
-
-        # ======================================================================
-
         # Average atomic masses of injected fuel species
         self.data.physics.m_fuel_amu = (
             constants.M_BORON11_AMU * self.data.physics.f_plasma_fuel_boron11
@@ -2083,6 +2059,103 @@ class Physics(Model):
                 )
 
         # ======================================================================
+
+        # Fraction of p-B11 alpha energy to electrons and ions.
+        # The reaction energy is shared by three alphas. Slowing down from the
+        # mean birth energy uses the classical electron/ion drag split, with
+        # the critical energy set by the mass-weighted ion charge above.
+        # Used by the electron and ion power balance only.
+        if self.data.physics.f_temp_plasma_electron_density_vol_avg > 0.0:
+            profile_factor = self.data.physics.f_temp_plasma_electron_density_vol_avg
+        else:
+            profile_factor = (
+                (1.0 + self.data.physics.alphan)
+                * (1.0 + self.data.physics.alphat)
+                / (1.0 + self.data.physics.alphan + self.data.physics.alphat)
+            )
+        self.data.physics.f_alpha_electron = self.alpha_electron_energy_fraction_pb(
+            temp_electron_kev=(
+                self.data.physics.temp_plasma_electron_vol_avg_kev * profile_factor
+            ),
+            nd_electron=self.data.physics.nd_plasma_electrons_vol_avg,
+            charge_mass_weighted=(
+                self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg
+            ),
+        )
+        self.data.physics.f_alpha_ion = 1.0 - self.data.physics.f_alpha_electron
+
+        # ======================================================================
+
+    @staticmethod
+    def alpha_electron_energy_fraction_pb(
+        temp_electron_kev: float,
+        nd_electron: float,
+        charge_mass_weighted: float,
+    ) -> float:
+        """Electron share of the mean p-B11 alpha birth energy.
+
+        ``p + 11B`` releases ``PB_ENERGY``, carried by three alpha particles.
+        The fraction deposited on electrons while one alpha slows from the mean
+        birth energy to rest is the classical drag integral. The critical
+        energy is
+
+        ``E_c = A_alpha T_e (0.75 sqrt(pi m_p / m_e) <Z^2/A> lnΛ_i/lnΛ_e)^{2/3}``.
+
+        ``<Z^2/A>`` is ``charge_mass_weighted``. The Coulomb-log ratio uses the
+        same electron and ion-electron logs as ``Physics.run``.
+
+        Parameters
+        ----------
+        temp_electron_kev :
+            Electron temperature used for the critical energy (keV). A
+            density-weighted value should be passed when a profile factor exists.
+        nd_electron :
+            Electron density (m^-3), used only in the Coulomb logarithms.
+        charge_mass_weighted :
+            ``(1/n_e) Σ n_j Z_j^2 / A_j``.
+
+        Returns
+        -------
+        float
+            Fraction of the birth energy given to electrons, in ``[0, 1]``.
+        """
+        if (
+            temp_electron_kev <= 0.0
+            or nd_electron <= 0.0
+            or charge_mass_weighted <= 0.0
+        ):
+            return 0.0
+
+        te_ev = temp_electron_kev * 1.0e3
+        log_density = np.log(nd_electron)
+        log_ee = 31.0 - 0.5 * log_density + np.log(te_ev)
+        log_ie = 31.3 - 0.5 * log_density + np.log(te_ev)
+        if log_ee <= 0.0:
+            coulomb_log_ratio = 1.0
+        else:
+            coulomb_log_ratio = log_ie / log_ee
+
+        me_amu = constants.ELECTRON_MASS / constants.ATOMIC_MASS_UNIT
+        e_alpha_kev = constants.PB_ENERGY / (3.0 * constants.KILOELECTRON_VOLT)
+        e_crit_kev = (
+            temp_electron_kev
+            * constants.M_ALPHA_AMU
+            * (
+                0.75
+                * np.sqrt(np.pi / me_amu)
+                * charge_mass_weighted
+                * coulomb_log_ratio
+            )
+            ** (2.0 / 3.0)
+        )
+        birth_over_crit = np.sqrt(e_alpha_kev / e_crit_kev)
+        ion_bracket = (1.0 / 6.0) * np.log(
+            (1.0 - birth_over_crit + birth_over_crit**2) / (1.0 + birth_over_crit) ** 2
+        ) + (1.0 / np.sqrt(3.0)) * (
+            np.atan((2.0 * birth_over_crit - 1.0) / np.sqrt(3.0)) + np.pi / 6.0
+        )
+        fraction_to_ions = (2.0 / birth_over_crit**2) * ion_bracket
+        return float(np.clip(1.0 - fraction_to_ions, 0.0, 1.0))
 
     @staticmethod
     @nb.njit(cache=True)
