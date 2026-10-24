@@ -1214,6 +1214,7 @@ class Build(Model):
             - bld.dr_fw_plasma_gap_inboard
             - bld.dr_fw_inboard
             - bld.dr_blkt_inboard
+            - bld.dr_shld_blkt_gap
             - bld.dr_shld_inboard
         )
 
@@ -1224,6 +1225,7 @@ class Build(Model):
             + bld.dr_fw_plasma_gap_outboard
             + bld.dr_fw_outboard
             + bld.dr_blkt_outboard
+            + bld.dr_shld_blkt_gap
             + bld.dr_shld_outboard
         )
 
@@ -1236,7 +1238,6 @@ class Build(Model):
         #  Radius to centre of outboard TF coil legs
         bld.r_tf_outboard_mid = (
             bld.r_shld_outboard_outer
-            + bld.dr_shld_blkt_gap
             + bld.dr_vv_outboard
             + bld.gapomin
             + bld.dr_shld_thermal_outboard
@@ -1246,7 +1247,7 @@ class Build(Model):
 
         # TF coil horizontal bore at mid-plane [m]
         bld.dr_tf_inner_bore = (bld.r_tf_outboard_mid - 0.5e0 * bld.dr_tf_outboard) - (
-            bld.r_tf_inboard_mid - 0.5e0 * bld.dr_tf_inboard
+            bld.r_tf_inboard_mid + 0.5e0 * bld.dr_tf_inboard
         )
 
         (
@@ -1280,11 +1281,10 @@ class Build(Model):
                 - bld.r_shld_outboard_outer
                 - bld.dr_shld_thermal_outboard
                 - bld.dr_tf_shld_gap
-                - bld.dr_shld_blkt_gap
             )
             bld.dr_tf_inner_bore = (
                 bld.r_tf_outboard_mid - 0.5e0 * bld.dr_tf_outboard
-            ) - (bld.r_tf_inboard_mid - 0.5e0 * bld.dr_tf_inboard)
+            ) - (bld.r_tf_inboard_mid + 0.5e0 * bld.dr_tf_inboard)
         else:
             bld.dr_shld_vv_gap_outboard = bld.gapomin
 
