@@ -270,8 +270,9 @@ class Physics(Model):
         """
         # Calculate plasma composition
         # Issue #261 Remove old radiation model (imprad_model=0)
-        self.plasma_composition()
-        if self.data.physics.i_fusion_reactions == "p-b11":
+        if self.data.physics.i_fusion_reactions == "d-t-he3":
+            self.plasma_composition()
+        elif self.data.physics.i_fusion_reactions == "p-b11":
             self.plasma_composition_pb()
 
         clear_veqpy_equilibrium_state(self.data)
@@ -4770,7 +4771,7 @@ class PlasmaBeta(Model):
         me = constants.ELECTRON_MASS
 
         temp = ti * 1.0e3
-        # ref: 023 NRL PLASMA FORMULARY, page 34
+        # ref: 2023 NRL PLASMA FORMULARY, page 34
         dlamii = (
             23.0 - np.log(charge_eff * charge_eff / temp) 
             - np.log((ni * charge_eff**2 + ni * charge_eff**2) / temp) * 0.5
@@ -4798,7 +4799,7 @@ class PlasmaBeta(Model):
             + 0.5 * np.log(1 + x0) - 1/6.0 * np.log(1 + x0**3)
             ) * fusden_alpha_total * tau_slow_down * e_crit * 2.0 / 3.0 * constants.KILOELECTRON_VOLT # Pa
 
-        beta_fast_alpha = 2 * constants.RMU0 * pressure / b_total
+        beta_fast_alpha = 2 * constants.RMU0 * pressure / b_total**2
         return beta_fast_alpha
 
 

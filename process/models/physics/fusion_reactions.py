@@ -154,8 +154,8 @@ class PlasmaReactions(Model):
     References
     ----------
     [1] H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections
-    and thermal reactivities,” Nuclear Fusion, vol. 32, no. 4, pp. 611-631,
-    Apr. 1992, doi: https://doi.org/10.1088/0029-5515/32/4/i07.
+          and thermal reactivities,” Nuclear Fusion, vol. 32, no. 4, pp. 611-631,
+          Apr. 1992, doi: https://doi.org/10.1088/0029-5515/32/4/i07.
     """  # noqa: RUF002
 
     def __init__(self, plasma_profile: PlasmaProfile):
@@ -202,8 +202,8 @@ class PlasmaReactions(Model):
         References
         ----------
         [1] H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections
-        and thermal reactivities,” Nuclear Fusion, vol. 32, no. 4, pp. 611-631,
-        Apr. 1992, doi: https://doi.org/10.1088/0029-5515/32/4/i07.
+              and thermal reactivities,” Nuclear Fusion, vol. 32, no. 4, pp. 611-631,
+              Apr. 1992, doi: https://doi.org/10.1088/0029-5515/32/4/i07.
         """
         # Divide by 2 to get the branching ratio for the D-D reaction that produces
         # tritium as the output is just the ratio of the two normalized cross sections
@@ -607,11 +607,12 @@ class PlasmaReactions(Model):
         self.fusion_rates = FusionYieldDensities()
         self.pden_dd_total_vol_avg_mw = 0.0
 
-        self.dt_reaction()
-        self.dhe3_reaction()
-        self.dd_helion_reaction()
-        self.dd_triton_reaction()
-        if self.data.physics.i_fusion_reactions == "p-b11":
+        if self.data.physics.i_fusion_reactions == "d-t-he3":
+            self.dt_reaction()
+            self.dhe3_reaction()
+            self.dd_helion_reaction()
+            self.dd_triton_reaction()
+        elif self.data.physics.i_fusion_reactions == "p-b11":
             self.pb_reaction()
 
     def set_physics_variables(self):
@@ -1134,8 +1135,8 @@ def bosch_hale_reactivity(
     References
     ----------
     [1] H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and
-    thermal reactivities,” Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
-    doi: https://doi.org/10.1088/0029-5515/32/4/i07.
+        thermal reactivities,” Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
+        doi: https://doi.org/10.1088/0029-5515/32/4/i07.
     """  # noqa: RUF002
     theta1 = (
         ion_temperature_profile
