@@ -23,7 +23,7 @@ from process.data_structure.physics_variables import (
     PlasmaIgnitionModel,
 )
 from process.data_structure.stellarator_variables import StellaratorModel
-from process.models.physics import impurity_radiation
+from process.models.physics import impurity_radiation, plasma_profiles
 from process.models.physics.bootstrap_current import BootstrapCurrentFractionModel
 from process.models.physics.current_drive import (
     CurrentDriveMethodType,
@@ -39,6 +39,7 @@ from process.models.physics.profiles import (
     DensityProfilePedestalType,
     PlasmaProfileShapeType,
     calculate_profile_shell_contributions,
+    calculate_vol_avg_of_profile,
 )
 from process.models.physics.plasma_current import PlasmaCurrentModel
 from process.models.pulse import PulseTimings
@@ -165,6 +166,81 @@ def rether(
 
     return conie * (temp_plasma_ion_vol_avg_kev - te) / (te**1.5)
 
+
+def rether_pb(
+    ne,
+    te,
+    ti,
+    n_charge_plasma_effective_mass_weighted_vol_avg,
+    i_equilibrium_solve,
+    eq,
+    rho,
+):
+    """Volume-averaged ion-electron exchange power density for p-B11.
+
+    The local rate is the Spitzer equipartition power. ``<Z^2/A>`` is taken
+    as uniform in radius, so the density factor is ``n_e(rho)^2 <Z^2/A>``.
+    Positive values heat the electrons. Points with non-positive density or
+    electron temperature are omitted, and the local Coulomb logarithm is
+    kept at or above 1.
+
+    Parameters
+    ----------
+    ne :
+        Electron density profile (m⁻³).
+    te :
+        Electron temperature profile (keV).
+    ti :
+        Ion temperature profile (keV).
+    n_charge_plasma_effective_mass_weighted_vol_avg :
+        ``(1/n_e) Σ n_j Z_j² / A_j``, taken as uniform in radius.
+    i_equilibrium_solve :
+        Use the equilibrium Jacobian when this is 1.
+    eq :
+        Equilibrium object. Used only when ``i_equilibrium_solve`` is 1.
+    rho :
+        Normalised radial coordinate of the profiles, spanning 0 to 1.
+
+    Returns
+    -------
+    float
+        Equilibration power per unit volume (MW/m³).
+
+    """
+    ne = np.asarray(ne, dtype=float)
+    te = np.asarray(te, dtype=float)
+    ti = np.asarray(ti, dtype=float)
+    rho = np.asarray(rho, dtype=float)
+    # T in keV, A in amu, power density in MW/m³:
+    # e^4 sqrt(m_e) / ((2π)^{3/2} ε0² m_u sqrt(1 keV) 1e6).
+    coeff = (
+        constants.ELECTRON_CHARGE**4
+        * np.sqrt(constants.ELECTRON_MASS)
+        / (2.0 * np.pi) ** 1.5
+        / constants.EPSILON0**2
+        / constants.ATOMIC_MASS_UNIT
+        / np.sqrt(constants.KILOELECTRON_VOLT)
+        / 1.0e6
+    )
+    power_ie = np.zeros_like(ne)
+    valid = (ne > 0.0) & (te > 0.0)
+    if np.any(valid):
+        dlamie = (
+            31.3 - np.log(ne[valid]) / 2.0 + np.log(te[valid] * 1000.0)
+        )
+        dlamie = np.maximum(dlamie, 1.0)
+        power_ie[valid] = (
+            coeff
+            * ne[valid] ** 2
+            * n_charge_plasma_effective_mass_weighted_vol_avg
+            * dlamie
+            * (ti[valid] - te[valid])
+            / te[valid] ** 1.5
+        )
+
+    if i_equilibrium_solve == 1:
+        return PlasmaEquilibrium.get_volume_average(eq, rho, power_ie)
+    return calculate_vol_avg_of_profile(rho, power_ie)
 
 # -----------------------------------------------------
 # Diamagnetic and Pfirsch-Schlüter Current Calculations
@@ -934,15 +1010,26 @@ class Physics(Model):
 
         # Calculate ion/electron equilibration power
 
-        self.data.physics.pden_ion_electron_equilibration_mw = rether(
-            self.data.physics.alphan,
-            self.data.physics.alphat,
-            self.data.physics.nd_plasma_electrons_vol_avg,
-            self.data.physics.dlamie,
-            self.data.physics.temp_plasma_electron_vol_avg_kev,
-            self.data.physics.temp_plasma_ion_vol_avg_kev,
-            self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg,
-        )
+        if self.data.physics.i_fusion_reactions == "d-t-he3":
+            self.data.physics.pden_ion_electron_equilibration_mw = rether(
+                self.data.physics.alphan,
+                self.data.physics.alphat,
+                self.data.physics.nd_plasma_electrons_vol_avg,
+                self.data.physics.dlamie,
+                self.data.physics.temp_plasma_electron_vol_avg_kev,
+                self.data.physics.temp_plasma_ion_vol_avg_kev,
+                self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg,
+            )
+        elif self.data.physics.i_fusion_reactions == "p-b11":
+            self.data.physics.pden_ion_electron_equilibration_mw = rether_pb(
+                self.plasma_profile.neprofile.profile_y,
+                self.plasma_profile.teprofile.profile_y,
+                self.plasma_profile.tiprofile.profile_y,
+                self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg,
+                self.data.physics.i_equilibrium_solve,
+                self.data.veqpy.equilibrium,
+                self.plasma_profile.neprofile.profile_x,
+            )
 
         # Calculate radiation power
 
