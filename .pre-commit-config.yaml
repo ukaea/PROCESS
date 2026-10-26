@@ -15,17 +15,10 @@ repos:
         args: [--fix]
       - id: ruff-format
 
-  - repo: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
-    rev: 0.2.3
-    hooks:
-      - id: yamlfmt
-        args: [--mapping, '2', --sequence, '4', --offset, '2', --preserve-quotes]
-
   - repo: https://github.com/biomejs/pre-commit
     rev: v2.6.3
     hooks:
       - id: biome-format
-        types: [json]
         args: [--indent-style=space, --indent-width=2, --line-width=89]
 
   - repo: https://github.com/kynan/nbstripout

@@ -234,5 +234,5 @@ plugins:
             show_if_no_docstring: true
             members_order: source
             filters:
-              - '!^_' # Ignore private members starting with underscore
-              - '!log'
+              - "!^_" # Ignore private members starting with underscore
+              - "!log"
