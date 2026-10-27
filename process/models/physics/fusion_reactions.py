@@ -1071,6 +1071,7 @@ class BeamReactions(Model):
                 betbm0=self.data.physics.betbm0,
                 beamfus0=self.data.physics.beamfus0,
                 e_beam_kev=self.data.current_drive.e_beam_kev,
+                i_model=self.data.physics.i_pb_reactivity_model,
             )
             self.p_beam_neutron_mw = 0.0
             self.p_beam_dt_mw = 0.0
@@ -1628,14 +1629,19 @@ def beam_fusion(
 
     return beta_beam, beam_state.nd_beam_hot, p_beam_alpha_mw
 
-def sigv_beam_target_integrand(e_rel, v_th, vb, m_fi, m):
+def sigv_beam_target_integrand(e_rel, v_th, vb, m_fi, m, i_model):
     mu = m_fi * m / (m_fi + m) * constants.ATOMIC_MASS_UNIT # reduced mass (kg)        
     vr = np.sqrt(2.0 * e_rel * constants.KILOELECTRON_VOLT / mu)
     fexp = np.exp(-((vb - vr) / v_th)**2) - np.exp(-((vb + vr) / v_th)**2)
-    sig = fsgmpb(e_rel)
+    if i_model == 1:
+        sig = fsgmpb(e_rel)
+    elif i_model == 2:
+        sig = tentori_belloni_reactivity(e_rel)
+    else:
+        raise ValueError(f"Invalid PB reaction model: {i_model}")
     return sig * fexp * vr * constants.KILOELECTRON_VOLT / mu
 
-def sigv_beam_target(eb, v_th, g, m_fi, m):
+def sigv_beam_target(eb, v_th, g, m_fi, m, i_model):
     vb = np.sqrt(2.0 * eb * constants.KILOELECTRON_VOLT / (m_fi * constants.ATOMIC_MASS_UNIT))
     # 被积函数在 vr≈vb 处呈热速度宽度的尖峰；内层积分值常 ~1e-9，
     # 默认 epsabs(~1e-8) 过大，会触发 IntegrationWarning(roundoff)。
@@ -1649,25 +1655,25 @@ def sigv_beam_target(eb, v_th, g, m_fi, m):
         sigv_beam_target_integrand,
         e_lo,
         e_hi,
-        args=(v_th, vb, m_fi, m),
+        args=(v_th, vb, m_fi, m, i_model),
         epsabs=0.0,
         epsrel=1.0e-8,
         limit=200,
     )[0]
-    sigv += integrate.quad(sigv_beam_target_integrand, 1.0e-5, e_lo, args=(v_th, vb, m_fi, m))[0]
+    sigv += integrate.quad(sigv_beam_target_integrand, 1.0e-5, e_lo, args=(v_th, vb, m_fi, m, i_model))[0]
     if e_hi < 1000.0:
-        sigv += integrate.quad(sigv_beam_target_integrand, e_hi, 1000.0, args=(v_th, vb, m_fi, m))[0]
+        sigv += integrate.quad(sigv_beam_target_integrand, e_hi, 1000.0, args=(v_th, vb, m_fi, m, i_model))[0]
     coef = 1.0 / (v_th * vb * np.sqrt(np.pi))
     return sigv * coef * g(eb)
 
-def cal_beam_fusion_sigv(e_beam_kev, tau_slow_beam, e_crit_beam, s0_beam, m_fi, n_fi, m, temp):
+def cal_beam_fusion_sigv(e_beam_kev, tau_slow_beam, e_crit_beam, s0_beam, m_fi, n_fi, m, temp, i_model):
     """
     积分外层函数得到反应率 <sigma*v>
     """
 
     dedt = lambda e, t, e_crit: -2.0 * e / t * (1.0 + (e_crit / e)**1.5)
-    g_beam = lambda e, t, e_crit, s0: - s0 / dedt(e, t, e_crit) * (e_crit > e) # m^-3 keV^-1
-    g = lambda e: g_beam(e, tau_slow_beam, e_crit_beam, s0_beam)
+    g_beam = lambda e, t, e_crit, e_beam, s0: - s0 / dedt(e, t, e_crit) * (e_beam > e) # m^-3 keV^-1
+    g = lambda e: g_beam(e, tau_slow_beam, e_crit_beam, e_beam_kev, s0_beam)
 
     v_th = np.sqrt(2.0 * temp * constants.KILOELECTRON_VOLT / (m * constants.ATOMIC_MASS_UNIT))
     # 嵌套积分：外层同样避免过紧的绝对容差
@@ -1675,7 +1681,7 @@ def cal_beam_fusion_sigv(e_beam_kev, tau_slow_beam, e_crit_beam, s0_beam, m_fi, 
         sigv_beam_target,
         1.0e-5,
         e_beam_kev,
-        args=(v_th, g, m_fi, m),
+        args=(v_th, g, m_fi, m, i_model),
         epsabs=0.0,
         epsrel=1.0e-6,
         limit=200,
@@ -1698,6 +1704,7 @@ def beam_fusion_p_b11(
     betbm0: float,
     beamfus0: float,
     e_beam_kev: float,
+    i_model: int,
 ):
 
     if i_pb_reactivity_model == 1:
@@ -1706,7 +1713,7 @@ def beam_fusion_p_b11(
         f_avg = sigmv_pb / tentori_belloni_reactivity(ti)
     else:
         raise ValueError(f"Invalid PB reaction model: {i_pb_reactivity_model}")
-    y = 8.68 * constants.ELECTRON_VOLT # MJ
+    y = constants.PB_ENERGY * 1.0e-6 # MJ
 
     #
     const3 = 1000.0 * constants.ELECTRON_VOLT / constants.ATOMIC_MASS_UNIT
@@ -1728,7 +1735,7 @@ def beam_fusion_p_b11(
     v_crit = (
         (
             3.0 * np.sqrt(np.pi) /4.0 * me / constants.ATOMIC_MASS_UNIT 
-            / ne * (charge_eff_mass_weighted * dlamie) / dlamee
+            * (charge_eff_mass_weighted * dlamie) / dlamee
         )**(1.0/3.0) 
         * np.sqrt(2 * te / me * constants.KILOELECTRON_VOLT)
     ) # m/s
@@ -1736,11 +1743,10 @@ def beam_fusion_p_b11(
 
 
     # slowing down time
-    # × (dlamie / dlamee) not included in the formula in the reference
     tau_slow_p = (
         3.0 * (np.sqrt(2.0*np.pi))**3 * constants.EPSILON0**2 
         * (te * constants.KILOELECTRON_VOLT)**1.5 * constants.M_PROTON_AMU        
-        / (np.sqrt(me) * constants.ELECTRON_CHARGE**4 * ne * dlamee) * (dlamie / dlamee)
+        / (np.sqrt(me) * constants.ELECTRON_CHARGE**4 * ne * dlamee)
     ) * constants.ATOMIC_MASS_UNIT
 
     # s0: unit time, unit volume of fast ion production
@@ -1764,14 +1770,16 @@ def beam_fusion_p_b11(
     pressure_p = pressure(v_p_i / v_crit, constants.M_PROTON_AMU, tau_slow_p, s0_p)
 
     sigv_p = cal_beam_fusion_sigv(
-        e_beam_kev, tau_slow_p, e_crit_p, s0_p, constants.M_PROTON_AMU, nd_beam_p, constants.M_BORON11_AMU, ti
+        e_beam_kev, tau_slow_p, e_crit_p, s0_p, 
+        constants.M_PROTON_AMU, nd_beam_p, 
+        constants.M_BORON11_AMU, ti, i_model
     )
 
     sigmv_p = sigv_p * f_avg
 
     reaction_rate_beam = sigmv_p * beamfus0 * nd_fuel_b11 * nd_beam_p
 
-    p_beam_alpha_mw = reaction_rate_beam * y * vol_plasma * beamfus0
+    p_beam_alpha_mw = reaction_rate_beam * y * vol_plasma
     
     beta_beam = betbm0 * 2 * constants.RMU0 * pressure_p / b_total**2
 

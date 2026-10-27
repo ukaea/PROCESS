@@ -932,8 +932,8 @@ class PhysicsData:
     (`i_fusion_reactions='p-b11'`, `i_nd_plasma_protons=1`)
     """
 
-    i_fusion_reactions: str = "dt"
-    """Fusion reaction type: ``dt`` for D-T, ``p-b11`` for proton-boron11"""
+    i_fusion_reactions: str = "d-t-he3"
+    """Fusion reaction type: ``d-t-he3`` for D-T-He3, ``p-b11`` for proton-boron11"""
 
     i_pb_reactivity_model: int = 1
     """PB reaction model: 1=Nevins, 2=Tentori-Belloni"""
