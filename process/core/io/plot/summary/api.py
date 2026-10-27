@@ -579,7 +579,7 @@ def main_plot(
             0.5,
             0.5,
         ])  # Half height, a bit wider, top left
-        plot_superconducting_tf_wp(ax19, m_file, scan, pages["tf_wp"])
+        plot_superconducting_tf_wp(ax19, m_file, scan)
 
         _add_page("cable")
         if (
