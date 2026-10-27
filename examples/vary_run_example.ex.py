@@ -100,6 +100,7 @@
 # %autoreload 2
 
 import os
+import re
 import shutil
 import tempfile
 from pathlib import Path
@@ -108,6 +109,7 @@ from process.core.io.mfile import get_mfile_initial_ixc_values
 from process.core.repository import get_process_root
 from process.main import VaryRun
 
+# %%
 # Path to files
 data_dir = get_process_root() / "../examples/data/"
 conf_file = data_dir / "run_process.conf"
@@ -133,6 +135,21 @@ vary_run.run()
 os.chdir(cwd)
 
 # %%
+# Find the final file created, as this file converges
+# VaryRun will raise an error if it does not find a converging input file
+# within the maximum number of iterations
+path_to_varyrun_files = Path(temp_dir.name)
+
+in_dats_created = [
+    file.name
+    for file in path_to_varyrun_files.iterdir()
+    if re.match(r"([0-9]+)_IN.DAT", file.name) is not None
+]
+
+final_file_prefix = max(name.strip("_IN.DAT") for name in in_dats_created)
+converging_in_dat = final_file_prefix + "_IN.DAT"
+
+# %%
 # Get the initial values from the original input file
 iteration_variable_names, original_iteration_variable_values = (
     get_mfile_initial_ixc_values(input_file, vary_run.data)
@@ -142,13 +159,14 @@ iteration_variable_names, original_iteration_variable_values = (
 # VaryRun always produces a file called IN.DAT in the same directory
 # as the conf file
 _, updated_iteration_variable_values = get_mfile_initial_ixc_values(
-    Path(temp_dir.name) / "2_IN.DAT", vary_run.data
+    path_to_varyrun_files / converging_in_dat, vary_run.data
 )
 
 # %% [markdown]
 # ## Compare iteration variable values
 #
-# `VaryRun` has changed the values of some iteration variables.
+# `VaryRun` has found a converging input file and has changed the initial values of the
+# iteration variables:
 
 # %%
 import pandas as pd
