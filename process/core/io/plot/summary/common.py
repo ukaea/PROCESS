@@ -145,7 +145,7 @@ def add_panel(
     axis.add_patch(patch)
 
     text_kwargs = text_kwargs or {}
-    for reserved_key in ("color", "clip_on", "zorder", "linespacing"):
+    for reserved_key in ("clip_on", "zorder", "linespacing"):
         text_kwargs.pop(reserved_key, None)
     text_x, text_y = (
         (x + text_x_offset, top - 0.004) if text_position is None else text_position
@@ -154,7 +154,6 @@ def add_panel(
         text_x,
         text_y,
         text,
-        color="black",
         clip_on=False,
         zorder=21,
         linespacing=linespacing,
@@ -162,6 +161,7 @@ def add_panel(
             **text_layout(fig, v_align="top"),
             "fontsize": fontsize,
             "transform": transform,
+            "color": "black",
             **text_kwargs,
         },
     )

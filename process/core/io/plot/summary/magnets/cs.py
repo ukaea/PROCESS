@@ -347,7 +347,7 @@ def plot_cs_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_schem
         f" {mfile.get('stress_shear_cs_peak', scan=scan) / 1e6:.3f} MPa "
     )
 
-    add_panel(axis, 0.52, 0.88, 0.22, 0.27, textstr_cs, box_style("lightyellow"))
+    add_panel(axis, 0.52, 0.88, 0.31, 0.3, textstr_cs, box_style("lightyellow"))
 
     # Plot the current filament points as blue dots and label them
 
@@ -455,7 +455,7 @@ def plot_cs_turn_structure(axis: plt.Axes, mfile: MFile, scan: int):
         f" {f_a_cs_turn_steel:.4f}\n"
     )
 
-    add_panel(axis, 0.74, 0.43, 0.22, 0.18, textstr_turn, box_style("lightyellow"))
+    add_panel(axis, 0.74, 0.65, 0.23, 0.18, textstr_turn, box_style("lightyellow"))
 
     axis.set_xlim(-dr_cs_turn * 0.2, dr_cs_turn * 1.2)
     axis.set_ylim(-dz_cs_turn * 0.3, dz_cs_turn * 1.3)

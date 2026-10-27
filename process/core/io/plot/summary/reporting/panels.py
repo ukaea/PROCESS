@@ -485,7 +485,7 @@ def plot_cover_page(
         0.1,
         0.47,
         0.55,
-        0.23,
+        0.24,
         settings_info,
         box_style("#f3e5f5"),
         fontsize=14,
