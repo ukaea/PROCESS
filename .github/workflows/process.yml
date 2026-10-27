@@ -14,7 +14,7 @@ permissions:
   id-token: write
 
 env:
-  python-version: '3.11'
+  python-version: "3.11"
 
 jobs:
   unit-test:
@@ -224,7 +224,6 @@ jobs:
 
             To check what these are, run `hatch run lint:fmt_extra` on your branch and on main
           edit-mode: replace
-
 
   tracking:
     # update tracker to include the MFILEs created by the run-tracking-inputs job
