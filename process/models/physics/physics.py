@@ -242,6 +242,135 @@ def rether_pb(
         return PlasmaEquilibrium.get_volume_average(eq, rho, power_ie)
     return calculate_vol_avg_of_profile(rho, power_ie)
 
+
+def sauter_plasma_resistance(
+    rmajor: float,
+    rminor: float,
+    vol_plasma: float,
+    zeff: float,
+    plasma_res_factor: float,
+    i_equilibrium_solve: int,
+    eq: object | None,
+    rho: np.ndarray | None,
+    ne_profile: np.ndarray | None,
+    te_profile: np.ndarray | None,
+    q0: float,
+    q95: float,
+) -> tuple[float, float]:
+    """Plasma resistance from the Sauter neoclassical conductivity.
+
+    The local quantity is the parallel conductivity. A steady loop voltage is
+    constant on flux surfaces, so the resistance is formed from ``1/<σ>``.
+    Points with non-positive density or electron temperature do not conduct.
+
+    Without an equilibrium, ``q = q0 + (q95 - q0) ρ²`` and the trapped fraction
+    is the Sauter 2002 fit. The Coulomb logarithm uses ``T_e`` in eV, matching
+    the equilibrium bootstrap evaluation.
+
+    Returns
+    -------
+    tuple[float, float]
+        Plasma resistance (ohm) and ``<σ_Spitzer> / <σ_neo>``.
+
+    """
+    if rho is None or ne_profile is None or te_profile is None:
+        raise ProcessValueError(
+            "p-B11 ohmic heating requires electron density and temperature profiles"
+        )
+    if zeff <= 0.0 or vol_plasma <= 0.0:
+        raise ProcessValueError(
+            "p-B11 ohmic heating requires positive Zeff and plasma volume",
+            zeff=zeff,
+            vol_plasma=vol_plasma,
+        )
+
+    rho_in = np.asarray(rho, dtype=float)
+    ne_in = np.asarray(ne_profile, dtype=float)
+    te_in = np.asarray(te_profile, dtype=float)
+    if i_equilibrium_solve == 1:
+        if eq is None:
+            raise ProcessValueError("p-B11 ohmic heating requires an equilibrium")
+        rho_use = np.asarray(eq.rho, dtype=float)
+        ne = np.interp(rho_use, rho_in, ne_in)
+        te = np.interp(rho_use, rho_in, te_in)
+        rc = float(eq.Rc)
+        q_profile = np.asarray(eq.q, dtype=float)
+        f_t = np.clip(np.asarray(eq.ftrap, dtype=float), 1.0e-8, 0.999)
+    else:
+        rho_use = rho_in
+        ne = ne_in
+        te = te_in
+        rc = rmajor
+        eps = np.clip(rho_use * rminor / rc, 0.0, 0.999)
+        # Equation 4 of Sauter 2002; https://doi.org/10.1088/0741-3335/44/9/315.
+        f_t = 1.0 - (1.0 - eps) ** 2 / (
+            (1.0 + 1.46 * np.sqrt(eps)) * np.sqrt(1.0 - eps**2)
+        )
+        f_t = np.clip(f_t, 1.0e-8, 0.999)
+        q_profile = q0 + (q95 - q0) * rho_use**2
+
+    eps_nu = np.maximum(rho_use * rminor / rc, 1.0e-8)
+    q_abs = np.maximum(np.abs(q_profile), 1.0e-6)
+    valid = (ne > 0.0) & (te > 0.0)
+    if not np.any(valid):
+        raise ProcessValueError(
+            "p-B11 ohmic heating has no positive density and temperature"
+        )
+
+    # Sauter 1999: ln Λ_e = 31.3 - ln(√n_e / T_e[eV]).
+    dlame = np.ones_like(ne)
+    dlame[valid] = 31.3 - np.log(np.sqrt(ne[valid]) / te[valid] * 1.0e-3)
+    dlame = np.maximum(dlame, 1.0)
+    te_ev = te * 1000.0
+    charge_factor = 0.58 + 0.74 / (0.76 + zeff)
+    sigma_spitzer = np.zeros_like(ne)
+    sigma_spitzer[valid] = (
+        1.9012e4 * te_ev[valid] ** 1.5 / (zeff * charge_factor * dlame[valid])
+    )
+    nu_estar = np.zeros_like(ne)
+    nu_estar[valid] = (
+        6.921e-18
+        * q_abs[valid]
+        * rc
+        * ne[valid]
+        * zeff
+        * dlame[valid]
+        / (te_ev[valid] ** 2 * eps_nu[valid] ** 1.5)
+    )
+    f33 = f_t / (
+        1.0
+        + (0.55 - 0.1 * f_t) * np.sqrt(nu_estar)
+        + 0.45 * (1.0 - f_t) * nu_estar / zeff**1.5
+    )
+    # Conductivity ratio σ_neo/σ_Spitzer. The fit is zero at full trapping.
+    sigma_ratio = (
+        1.0
+        - (1.0 + 0.36 / zeff) * f33
+        + 0.59 / zeff * f33**2
+        - 0.23 / zeff * f33**3
+    )
+    sigma_neo = sigma_spitzer * np.maximum(sigma_ratio, 1.0e-8)
+
+    if i_equilibrium_solve == 1:
+        sigma_neo_avg = PlasmaEquilibrium.get_volume_average(eq, rho_use, sigma_neo)
+        sigma_spitzer_avg = PlasmaEquilibrium.get_volume_average(
+            eq, rho_use, sigma_spitzer
+        )
+    else:
+        sigma_neo_avg = calculate_vol_avg_of_profile(rho_use, sigma_neo)
+        sigma_spitzer_avg = calculate_vol_avg_of_profile(rho_use, sigma_spitzer)
+    if sigma_neo_avg <= 0.0 or sigma_spitzer_avg <= 0.0:
+        raise ProcessValueError(
+            "p-B11 neoclassical conductivity average is not positive",
+            sigma_neo_avg=sigma_neo_avg,
+        )
+
+    resistance = (
+        plasma_res_factor * (2.0 * np.pi * rmajor) ** 2 / (vol_plasma * sigma_neo_avg)
+    )
+    return resistance, sigma_spitzer_avg / sigma_neo_avg
+
+
 # -----------------------------------------------------
 # Diamagnetic and Pfirsch-Schlüter Current Calculations
 # -----------------------------------------------------
@@ -1121,6 +1250,14 @@ class Physics(Model):
             self.data.physics.n_charge_plasma_effective_vol_avg,
             self.data.physics.plasma_res_factor,
             self.data.physics.aspect,
+            self.data.physics.i_fusion_reactions,
+            self.data.physics.i_equilibrium_solve,
+            self.data.veqpy.equilibrium,
+            self.plasma_profile.neprofile.profile_x,
+            self.plasma_profile.neprofile.profile_y,
+            self.plasma_profile.teprofile.profile_y,
+            self.data.physics.q0,
+            self.data.physics.q95,
         )
 
         # Ratio of fusion to input (injection+ohmic) power
@@ -2375,6 +2512,14 @@ class Physics(Model):
         zeff: float,
         plasma_res_factor: float,
         aspect: float,
+        i_fusion_reactions: str,
+        i_equilibrium_solve: int = 0,
+        eq: object | None = None,
+        rho: np.ndarray | None = None,
+        ne_profile: np.ndarray | None = None,
+        te_profile: np.ndarray | None = None,
+        q0: float = 1.0,
+        q95: float = 1.0,
     ) -> tuple[float, float, float, float]:
         """Calculate the ohmic heating power and related parameters.
 
@@ -2400,6 +2545,23 @@ class Physics(Model):
             plasma resistivity pre-factor
         aspect: float
             aspect ratio
+        i_fusion_reactions : str
+            ``d-t-he3`` uses the IPDG89 resistance. ``p-b11`` uses the Sauter
+            conductivity on the electron profiles.
+        i_equilibrium_solve : int
+            Use the equilibrium Jacobian, q and trapped fraction when this is 1.
+        eq :
+            Equilibrium object. Used only for ``p-b11`` with equilibrium.
+        rho :
+            Normalised radius of ``ne_profile`` and ``te_profile``.
+        ne_profile :
+            Electron density profile (m⁻³).
+        te_profile :
+            Electron temperature profile (keV).
+        q0 : float
+            Axis safety factor, used when no equilibrium is available.
+        q95 : float
+            Safety factor at ρ = 0.95, used when no equilibrium is available.
 
         Returns
         -------
@@ -2415,32 +2577,55 @@ class Physics(Model):
         ----------
         - ITER Physics Design Guidelines
             1989 [IPDG89], N. A. Uckan et al,
+        - O. Sauter, C. Angioni and Y. R. Lin-Liu, Phys. Plasmas 6, 2834 (1999)
 
         """
         # Density weighted electron temperature in 10 keV units
         t10 = temp_plasma_electron_density_weighted_kev / 10.0
 
-        # Plasma resistance, from loop voltage calculation in ITER Physics Design
-        # Guidelines: 1989
-        res_plasma = (
-            plasma_res_factor
-            * 2.15e-9
-            * zeff
-            * rmajor
-            / (kappa95 * rminor**2 * t10**1.5)
-        )
+        if i_fusion_reactions == "d-t-he3":
+            # Plasma resistance, from loop voltage calculation in ITER Physics Design
+            # Guidelines: 1989
+            res_plasma = (
+                plasma_res_factor
+                * 2.15e-9
+                * zeff
+                * rmajor
+                / (kappa95 * rminor**2 * t10**1.5)
+            )
 
-        # Neo-classical resistivity enhancement factor
-        # Taken from ITER Physics Design Guidelines: 1989
-        # The expression is valid for aspect ratios in the range 2.5 to 4.0
+            # Neo-classical resistivity enhancement factor
+            # Taken from ITER Physics Design Guidelines: 1989
+            # The expression is valid for aspect ratios in the range 2.5 to 4.0
 
-        aspect_ratio = rmajor / rminor
-        if 2.5 < aspect_ratio < 4.0:
-            f_res_plasma_neo = 4.3 - 0.6 * aspect_ratio
+            aspect_ratio = rmajor / rminor
+            if 2.5 < aspect_ratio < 4.0:
+                f_res_plasma_neo = 4.3 - 0.6 * aspect_ratio
+            else:
+                f_res_plasma_neo = 1.0
+            res_plasma *= f_res_plasma_neo
+        elif i_fusion_reactions == "p-b11":
+            # Sauter 1999 conductivity. The loop voltage is the same on each
+            # flux surface, so the resistance uses 1/<σ>, not <1/σ>.
+            res_plasma, f_res_plasma_neo = sauter_plasma_resistance(
+                rmajor=rmajor,
+                rminor=rminor,
+                vol_plasma=vol_plasma,
+                zeff=zeff,
+                plasma_res_factor=plasma_res_factor,
+                i_equilibrium_solve=i_equilibrium_solve,
+                eq=eq,
+                rho=rho,
+                ne_profile=ne_profile,
+                te_profile=te_profile,
+                q0=q0,
+                q95=q95,
+            )
         else:
-            f_res_plasma_neo = 1.0
-
-        res_plasma *= f_res_plasma_neo
+            raise ProcessValueError(
+                "Invalid fusion reaction for ohmic heating",
+                i_fusion_reactions=i_fusion_reactions,
+            )
 
         # Check to see if plasma resistance is negative
         # (possible if aspect ratio is too high)

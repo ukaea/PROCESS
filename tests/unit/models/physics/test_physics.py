@@ -2078,6 +2078,7 @@ def test_pohm(pohmparam, monkeypatch, physics):
         zeff=pohmparam.zeff,
         plasma_res_factor=pohmparam.plasma_res_factor,
         aspect=pohmparam.aspect,
+        i_fusion_reactions="d-t-he3",
     )
 
     assert pden_plasma_ohmic_mw == pytest.approx(pohmparam.expected_pden_plasma_ohmic_mw)
