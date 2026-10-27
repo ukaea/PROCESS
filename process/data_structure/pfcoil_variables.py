@@ -28,103 +28,126 @@ class CSUseModel(IntEnum):
 
 
 N_PF_GROUPS_MAX = 10
-"""maximum number of groups of PF coils"""
+"""Maximum number of groups of PF coils"""
 
 N_PF_COILS_IN_GROUP_MAX = 2
-"""maximum number of PF coils in a given group"""
+"""Maximum number of PF coils in a given group"""
 
-NPTSMX = 32
-"""maximum number of points across the midplane of the plasma at which the field from
+N_PF_FIELD_CONSTRAINT_POINTS_MAX = 32
+"""Maximum number of points across the midplane of the plasma at which the field from
 the PF coils is fixed
 """
 
 NFIXMX = 64
-"""maximum number of fixed current PF coils"""
+"""Maximum number of fixed current PF coils"""
 
 NGC = N_PF_GROUPS_MAX * N_PF_COILS_IN_GROUP_MAX
-"""maximum total number of coils across all groups"""
+"""Maximum total number of coils across all groups"""
 
 NGC2 = NGC + 2
-"""new variable to include 2 additional circuits: plasma and central solenoid"""
+"""Maximum total number of coils including 2 additional circuits: plasma and central
+solenoid"""
 
 
 @dataclass(slots=True)
 class PFCoilData:
     """Dataclass holding PF coil variables"""
 
-    nef: int = 0
+    n_cs_current_filaments_total: int = 0
+    """Total number of current filaments in the central solenoid"""
 
-    nfxf: int = 0
-
-    ricpf: float = 0.0
+    cur_pf_cs_peak_sum_ma: float = 0.0
+    """Sum of peak currents in the PF and CS coils [MA]"""
 
     ssq0: float = 0.0
 
     stress_z_cs_self_peak_midplane: float = 0.0
-    """Peak axial stress (z) in central solenoid at midplane due to its own field (when at peak current) (Pa)"""
+    """Peak axial stress (z) in central solenoid at midplane due to its own field
+    (when at peak current) [Pa]"""
 
     stress_z_cs_self_midplane_profile: list[float] = field(
         default_factory=lambda: np.zeros(6)
     )
-    """Axial stress (z) in central solenoid at midplane due to its own field at each time point (Pa)"""
+    """Axial stress (z) in central solenoid at midplane due to its own field at each
+    time point [Pa]"""
 
     stress_z_cs_self_profile: list[float] = field(default_factory=lambda: np.zeros(20))
-    """Vertical profile of axial stress (z) in central solenoid at midplane due to its own field at each time point (Pa)"""
+    """Vertical profile of axial stress (z) in central solenoid at midplane due to its
+    own field at each time point [Pa]"""
 
     stress_hoop_cs_inner: float = 0.0
-    """Hoop stress in central solenoid at inboard edge due to its own field (when at peak current) (Pa)"""
+    """Hoop stress in central solenoid at inboard edge due to its own field
+    (when at peak current) [Pa]"""
 
     stress_hoop_cs_inner_profile: list[float] = field(
         default_factory=lambda: np.zeros(6)
     )
-    """Hoop stress in central solenoid at inboard edge due to its own field at each time point (Pa)"""
+    """Hoop stress in central solenoid at inboard edge due to its own field at each
+    time point [Pa]"""
 
     stress_radial_cs_peak: float = 0.0
-    """Radial stress in central solenoid at midplane due to its own field (when at peak current) (Pa)"""
+    """Radial stress in central solenoid at midplane due to its own field
+    (when at peak current) [Pa]"""
 
     stress_radial_cs_inner: float = 0.0
-    """Radial stress in central solenoid at inboard edge due to its own field (when at peak current) (Pa)"""
+    """Radial stress in central solenoid at inboard edge due to its own field
+    (when at peak current) [Pa]"""
 
     stress_mises_cs_peak: float = 0.0
-    """Von Mises stress in central solenoid at midplane due to its own field (when at peak current) (Pa)"""
+    """Von Mises stress in central solenoid at midplane due to its own field
+    (when at peak current) [Pa]"""
 
     forc_z_cs_self_peak_midplane: float = 0.0
-    """Axial force (z) on central solenoid at midplane due to its own field (when at peak current) (N)"""
+    """Axial force (z) on central solenoid at midplane due to its own field
+    (when at peak current) [N]"""
 
     r_pf_cs_current_filaments: list[float] = field(
         default_factory=lambda: np.zeros(NFIXMX)
     )
-    """array of radial positions of current filaments in central solenoid"""
+    """Array of radial positions of current filaments in central solenoid"""
 
     z_pf_cs_current_filaments: list[float] = field(
         default_factory=lambda: np.zeros(NFIXMX)
     )
-    """array of vertical positions of current filaments in central solenoid"""
+    """Array of vertical positions of current filaments in central solenoid"""
 
     c_pf_cs_current_filaments: list[float] = field(
         default_factory=lambda: np.zeros(NFIXMX)
     )
-    """array of current in filaments in central solenoid"""
+    """Array of current in filaments in central solenoid"""
 
-    xind: list[float] = field(default_factory=lambda: np.zeros(NFIXMX))
+    ind_pf_coil_edge_mutual: list[float] = field(
+        default_factory=lambda: np.zeros(NFIXMX)
+    )
+    """Mutual inductance between each current loop and a PF-coil edge point [H]"""
 
     r_pf_coil_middle_group_array: list[float] = field(
         default_factory=lambda: np.zeros((N_PF_GROUPS_MAX, N_PF_COILS_IN_GROUP_MAX))
     )
-    """2D array of PF coil middle radii, indexed by group and coil in group"""
+    """2D array of PF coil middle radii, indexed by group and coil in group [m]"""
 
     z_pf_coil_middle_group_array: list[float] = field(
         default_factory=lambda: np.zeros((N_PF_GROUPS_MAX, N_PF_COILS_IN_GROUP_MAX))
     )
-    """2D array of PF coil middle heights, indexed by group and coil in group"""
+    """2D array of PF coil middle heights, indexed by group and coil in group [m]"""
 
-    ccls: list[float] = field(default_factory=lambda: np.zeros(N_PF_GROUPS_MAX))
+    cur_pf_group_equilibrium: list[float] = field(
+        default_factory=lambda: np.zeros(N_PF_GROUPS_MAX)
+    )
+    """Equilibrium current in each PF-coil group [A].
+    Input when `i_pf_current=0`; calculated otherwise."""
 
-    ccl0: list[float] = field(default_factory=lambda: np.zeros(N_PF_GROUPS_MAX))
+    cur_pf_group_flux_swing_cancellation: list[float] = field(
+        default_factory=lambda: np.zeros(N_PF_GROUPS_MAX)
+    )
+    """Flux-swing cancellation current in each PF-coil group [A].
+    Calculated to cancel the effect of the CS during a flux swing."""
 
-    bpf2: list[float] = field(default_factory=lambda: np.zeros(NGC2))
+    b_pf_coil_outer_peak: list[float] = field(default_factory=lambda: np.zeros(NGC2))
+    """Peak field at outer edge of coil i [T]"""
 
-    vsdum: list[float] = field(default_factory=lambda: np.zeros((NGC2, 3)))
+    vs_pf_cs_circuit: list[float] = field(default_factory=lambda: np.zeros((NGC2, 3)))
+    """Volt-second contribution for each PF/CS circuit at BOP, BOF and EOF [Vs]."""
 
     first_call: bool = True
 
@@ -133,81 +156,86 @@ class PFCoilData:
     # PF coil variables
 
     alfapf: float = 5e-10
-    """smoothing parameter used in PF coil current calculation at the beginning of pulse (BoP)"""
+    """Smoothing parameter used in PF coil current calculation at the beginning
+    of pulse (BoP)"""
 
     stress_cs_steel_max: float = 4.0e8
-    """Max allowable stress in Central Solenoid structural material (Pa)"""
+    """Max allowable stress in Central Solenoid structural material [Pa]"""
 
     a_cs_toroidal: float = 0.0
-    """Central solenoid top-down toroidal cross-sectional area (m2)"""
+    """Central solenoid top-down toroidal cross-sectional area [m²]"""
 
     a_cs_poloidal: float = 0.0
-    """Central solenoid vertical cross-sectional area (m2)"""
+    """Central solenoid vertical cross-sectional area [m²]"""
 
     a_cs_steel_poloidal: float = 0.0
-    """Central solenoid vertical cross-sectional area of steel (m2)"""
+    """Central solenoid vertical cross-sectional area of steel [m²]"""
 
     a_cs_turn: float = 0.0
-    """Central solenoid (OH) turn cross-sectional area (m2)"""
+    """Central solenoid (OH) turn cross-sectional area [m²]"""
 
     a_cs_cable_space: float = 0.0
-    """central solenoid conductor+void area with area of steel subtracted (m2)"""
+    """Central solenoid conductor+void area with area of steel subtracted [m²]"""
 
     b_cs_self_outer_midplane: float = 0.0
-    """magnetic field at outer edge of central solenoid at midplane due to its own current (T)"""
+    """Magnetic field at outer edge of central solenoid at midplane due to its
+    own current [T]"""
 
     b_cs_peak_flat_top_end: float = 0.0
-    """maximum field in central solenoid at end of flat-top (EoF) (T)"""
+    """Maximum field in central solenoid at end of flat-top (EoF) [T]"""
 
     b_cs_peak_pulse_start: float = 0.0
-    """maximum field in central solenoid at beginning of pulse (T)"""
+    """Maximum field in central solenoid at beginning of pulse [T]"""
 
     b_cs_bore_peak: float = 0.0
-    """peak field in central solenoid bore (T)"""
+    """Peak field in central solenoid bore [T]"""
 
-    b_pf_coil_peak: list[float] = field(default_factory=lambda: np.zeros(NGC2))
-    """peak field at coil i (T)"""
+    b_pf_coil_inner_peak: list[float] = field(default_factory=lambda: np.zeros(NGC2))
+    """Peak field at inner edge of coil i [T]"""
 
-    ccl0_ma: list[float] = field(default_factory=lambda: np.zeros(N_PF_GROUPS_MAX))
-    """PF group current array, flux-swing cancellation current (MA)
-    Input if i_pf_current=0, computed otherwise
-    """
+    cur_pf_group_flux_swing_cancellation_ma: list[float] = field(
+        default_factory=lambda: np.zeros(N_PF_GROUPS_MAX)
+    )
+    """Flux-swing cancellation current in each PF-coil group [MA]. Calculated to cancel
+    the effect of the CS during a flux swing."""
 
-    ccls_ma: list[float] = field(default_factory=lambda: np.zeros(N_PF_GROUPS_MAX))
-    """PF group current array, equilibrium current (MA)
-    Input if i_pf_current=0, computed otherwise
-    """
+    cur_pf_group_equilibrium_ma: list[float] = field(
+        default_factory=lambda: np.zeros(N_PF_GROUPS_MAX)
+    )
+    """Equilibrium current in each PF-coil group [MA]. Input when `i_pf_current=0`;
+    calculated otherwise."""
 
     j_cs_pulse_start: float = 0.0
-    """Central solenoid overall current density at beginning of pulse (A/m2)"""
+    """Central solenoid overall current density at beginning of pulse [A/m²]"""
 
     j_cs_flat_top_end: float = 1.85e7
-    """Central solenoid overall current density at end of flat-top (A/m2) (`iteration variable 37`) (`sweep variable 62`)"""
+    """Central solenoid overall current density at end of flat-top [A/m²]
+    (`iteration variable 37`) (`sweep variable 62`)"""
 
     c_pf_coil_turn: list[float] = field(default_factory=lambda: np.zeros((NGC2, 6)))
-    """current per turn in coil i at time j (A)"""
+    """Current per turn in coil i at time j [A]"""
 
     c_pf_coil_turn_peak_input: list[float] = field(
         default_factory=lambda: np.full(NGC2, 4.0e4)
     )
-    """peak current per turn input for PF coil i (A)"""
+    """Peak current per turn input for PF coil i [A]"""
 
     c_pf_cs_coil_pulse_start_ma: list[float] = field(
         default_factory=lambda: np.zeros(NGC2)
     )
-    """PF coil current array, at beginning of pulse (MA)
+    """PF coil current array, at beginning of pulse [MA]
     Indexed by coil number, not group number
     """
 
     c_pf_cs_coil_flat_top_ma: list[float] = field(default_factory=lambda: np.zeros(NGC2))
-    """PF coil current array, at flat top (MA)
+    """PF coil current array, at flat top [MA]
     Indexed by coil number, not group number
     """
 
     c_pf_cs_coil_pulse_end_ma: list[float] = field(
         default_factory=lambda: np.zeros(NGC2)
     )
-    """PF coil current array, at end of pulse (MA)
+    """PF coil current array, at end of pulse [MA]
     Indexed by coil number, not group number
     """
 
@@ -215,18 +243,20 @@ class PFCoilData:
     """Efficiency of transfer of PF stored energy into or out of storage."""
 
     f_j_cs_start_end_flat_top: float = 0.0
-    """ratio of central solenoid overall current density at beginning of flat-top / end of flat-top"""
+    """Ratio of central solenoid overall current density at beginning of
+    flat-top / end of flat-top"""
 
     f_j_cs_start_pulse_end_flat_top: float = 0.9
-    """ratio of central solenoid overall current density at beginning of pulse / end of flat-top
+    """Ratio of central solenoid overall current density at beginning of
+    pulse / end of flat-top
     (`iteration variable 41`)
     """
 
     fcuohsu: float = 0.7
-    """copper fraction of strand in central solenoid"""
+    """Copper fraction of strand in central solenoid [-]"""
 
     fcupfsu: float = 0.69
-    """copper fraction of cable conductor (PF coils)"""
+    """Copper fraction of cable conductor (PF coils) [-]"""
 
     i_pf_location: list[int] = field(
         default_factory=lambda: np.array([2, 2, 3, 0, 0, 0, 0, 0, 0, 0])
@@ -245,7 +275,7 @@ class PFCoilData:
     """
 
     itr_sum: float = 0.0
-    """total sum of I x turns x radius for all PF coils and CS (Am)"""
+    """Total sum of I x turns x radius for all PF coils and CS [Am]"""
 
     i_cs_superconductor: int = 1
     """switch for superconductor material in central solenoid:
@@ -278,13 +308,13 @@ class PFCoilData:
     """
 
     j_crit_str_cs: float = 0.0
-    """superconductor strand critical current density under operating
-    conditions in central solenoid (A/m2). Necessary for the cost calculation in $/kA m
+    """Superconductor strand critical current density under operating
+    conditions in central solenoid [A/m²]. Necessary for the cost calculation in $/kA m
     """
 
     j_crit_str_pf: float = 0.0
-    """superconductor strand critical current density under operating
-    conditions in PF coils (A/m2). Necessary for the cost calculation in $/kA m
+    """Superconductor strand critical current density under operating
+    conditions in PF coils [A/m²]. Necessary for the cost calculation in $/kA m
     """
 
     i_pf_current: int = 1
@@ -304,35 +334,35 @@ class PFCoilData:
     """
 
     j_cs_conductor_critical_pulse_start: float = 0.0
-    """central solenoid superconductor critical current density (A/m2) at beginning-of-pulse"""
+    """Central solenoid superconductor critical current density [A/m²] at beginning-of-pulse"""
 
     j_cs_conductor_critical_flat_top_end: float = 0.0
-    """central solenoid superconductor critical current density (A/m2) at end-of-flattop"""
+    """Central solenoid superconductor critical current density [A/m²] at end-of-flattop"""
 
     jcableoh_bop: float = 0.0
-    """central solenoid cable critical current density (A/m2) at beginning-of-pulse"""
+    """Central solenoid cable critical current density [A/m²] at beginning-of-pulse"""
 
     jcableoh_eof: float = 0.0
-    """central solenoid cable critical current density (A/m2) at end-of-flattop"""
+    """Central solenoid cable critical current density [A/m²] at end-of-flattop"""
 
     n_pf_cs_plasma_circuits: int = 0
-    """number of PF circuits (including central solenoid and plasma)"""
+    """Number of PF circuits (including central solenoid and plasma)"""
 
     n_pf_coils_in_group: list[int] = field(
         default_factory=lambda: np.array([1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0])
     )
-    """number of PF coils in group j"""
+    """Number of PF coils in group j"""
 
     n_cs_current_filaments: int = 7
-    """number of filaments the top and bottom of the central solenoid should be broken
+    """Number of filaments the top and bottom of the central solenoid should be broken
     into during scaling (5 - 10 is good)
     """
 
     n_pf_coil_groups: int = 3
-    """number of groups of PF coils. Symmetric coil pairs should all be in the same group"""
+    """Number of groups of PF coils. Symmetric coil pairs should all be in the same group"""
 
     n_cs_pf_coils: int = 0
-    """number of PF coils (excluding the central solenoid) + 1"""
+    """Number of PF coils (excluding the central solenoid) + 1"""
 
     f_z_cs_tf_internal: float = 0.71
     """Central solenoid height / TF coil internal height"""
@@ -346,7 +376,7 @@ class PFCoilData:
     """
 
     pfcaseth: list[float] = field(default_factory=lambda: np.zeros(NGC2))
-    """steel case thickness for PF coil i (m)"""
+    """Steel case thickness for PF coil i (m)"""
 
     rho_pf_coil: float = 2.5e-8
     """PF coil resistivity (if i_pf_conductor=1/RESISTIVE) (Ohm-m)"""
@@ -357,51 +387,51 @@ class PFCoilData:
     """
 
     m_pf_coil_max: float = 0.0
-    """mass of heaviest PF coil (tonnes)"""
+    """Mass of heaviest PF coil [tonnes]"""
 
     r_pf_coil_outer_max: float = 0.0
-    """radius of largest PF coil (m)"""
+    """Radius of largest PF coil [m]"""
 
     p_pf_electric_supplies_mw: float = 0.0
-    """Total mean wall plug power dissipated in PFC and CS power supplies (MW) (issue #713)"""
+    """Total mean wall plug power dissipated in PFC and CS power supplies [MW] (issue #713)"""
 
     p_cs_resistive_flat_top: float = 0.0
-    """central solenoid resistive power during flattop (W)"""
+    """Central solenoid resistive power during flattop [W]"""
 
     p_pf_coil_resistive_total_flat_top: float = 0.0
-    """total PF coil resistive losses during flattop (W)"""
+    """Total PF coil resistive losses during flattop [W]"""
 
     r_pf_coil_inner: list[float] = field(default_factory=lambda: np.zeros(NGC2))
-    """inner radius of coil i (m)"""
+    """Inner radius of coil i [m]"""
 
     r_pf_coil_outer: list[float] = field(default_factory=lambda: np.zeros(NGC2))
-    """outer radius of coil i (m)"""
+    """Outer radius of coil i [m]"""
 
     c_pf_cs_coils_peak_ma: list[float] = field(default_factory=lambda: np.zeros(NGC2))
-    """peak current in coil i (MA-turns)"""
+    """Peak current in coil i [MA-turns]"""
 
     j_pf_coil_wp_peak: list[float] = field(default_factory=lambda: np.full(NGC2, 3.0e7))
-    """average winding pack current density of PF coil i (A/m2) at time of peak
+    """Average winding pack current density of PF coil i [A/m²] at time of peak
     current in that coil (calculated for `i_pf_location=1` coils)
     """
 
     j_cs_critical_flat_top_end: float = 0.0
-    """allowable central solenoid current density at end of flat-top (A/m2)"""
+    """Allowable central solenoid current density at end of flat-top [A/m²]"""
 
     j_cs_critical_pulse_start: float = 0.0
-    """allowable central solenoid current density at beginning of pulse (A/m2)"""
+    """Allowable central solenoid current density at beginning of pulse [A/m²]"""
 
     j_pf_wp_critical: list[float] = field(default_factory=lambda: np.zeros(NGC2))
-    """allowable winding pack current density of PF coil i (A/m2)"""
+    """Allowable winding pack current density of PF coil i [A/m²]"""
 
     r_cs_middle: float = 0.0
-    """radius to the centre of the central solenoid (m)"""
+    """Radius to the centre of the central solenoid [m]"""
 
     r_cs_inner: float = 0.0
-    """Inner radius of the central solenoid (m)"""
+    """Inner radius of the central solenoid [m]"""
 
     r_cs_outer: float = 0.0
-    """Outer radius of the central solenoid (m)"""
+    """Outer radius of the central solenoid [m]"""
 
     f_r_cs_outer_inner: float = 0.0
     """Ratio of outer to inner radius of the central solenoid (α)"""  # noqa: RUF001
@@ -410,31 +440,31 @@ class PFCoilData:
     """Ratio of the solenoid half height to its inner radius (β)"""
 
     z_cs_upper: float = 0.0
-    """z location of upper end of central solenoid (m)"""
+    """Z location of upper end of central solenoid [m]"""
 
     z_cs_lower: float = 0.0
-    """z location of lower end of central solenoid (m)"""
+    """Z location of lower end of central solenoid [m]"""
 
     z_cs_middle: float = 0.0
-    """z location of middle of central solenoid (m)"""
+    """Z location of middle of central solenoid [m]"""
 
     dz_cs_full: float = 0.0
-    """Full height of the central solenoid (m)"""
+    """Full height of the central solenoid [m]"""
 
     dr_pf_tf_outboard_out_offset: float = 1.5
-    """radial distance (m) from outboard TF coil leg to centre of `i_pf_location=3` PF coils"""
+    """Radial distance [m] from outboard TF coil leg to centre of `i_pf_location=3` PF coils"""
 
     r_pf_coil_middle: list[float] = field(default_factory=lambda: np.zeros(NGC2))
-    """radius of PF coil i (m)"""
+    """Radius of PF coil i [m]"""
 
     dr_pf_cs_middle_offset: float = 0.0
-    """offset (m) of radial position of `i_pf_location=1` PF coils from being directly above
-    the central solenoid
+    """Offset of radial position of `i_pf_location=1` PF coils from being directly above
+    the central solenoid [m]
     """
 
     rpf2: float = -1.63
-    """offset (m) of radial position of `i_pf_location=2` PF coils from being at
-    rmajor (offset = rpf2*triang*rminor)
+    """Offset of radial position of `i_pf_location=2` PF coils from being at
+    rmajor [m] (offset = rpf2*triang*rminor)
     """
 
     rref: list[float] = field(default_factory=lambda: np.full(N_PF_GROUPS_MAX, 7.0))
@@ -451,85 +481,86 @@ class PFCoilData:
     """Peak achieved shear stress (Tresca criterion) in central solenoid [MPa]"""
 
     sigpfcalw: float = 500.0
-    """maximum permissible tensile stress (MPa) in steel coil cases for superconducting
+    """Maximum permissible tensile stress [MPa] in steel coil cases for superconducting
     PF coils (`i_pf_conductor=0`)
     """
 
     sigpfcf: float = 1.0
-    """fraction of JxB hoop force supported by steel case for superconducting PF coils (`i_pf_conductor=0`)"""
+    """Fraction of JxB hoop force supported by steel case for superconducting PF coils (`i_pf_conductor=0`)"""
 
     ind_pf_cs_plasma_mutual: list[float] = field(
         default_factory=lambda: np.zeros((NGC2, NGC2))
     )
-    """mutual inductance matrix (H)"""
+    """Mutual inductance matrix [H]"""
 
     temp_cs_superconductor_margin: float = 0.0
-    """Central solenoid temperature margin (K)"""
+    """Central solenoid temperature margin [K]"""
 
     temp_cs_superconductor_operating: float = 4.75
-    """Central solenoid operating temperature (K)"""
+    """Central solenoid operating temperature [K]"""
 
     n_pf_coil_turns: list[float] = field(default_factory=lambda: np.zeros(NGC2))
-    """number of turns in PF coil i"""
+    """Number of turns in PF coil i"""
 
     f_a_pf_coil_void: list[float] = field(default_factory=lambda: np.full(NGC2, 0.3))
-    """winding pack void fraction of PF coil i for coolant"""
+    """Winding pack void fraction of PF coil i for coolant"""
 
     f_a_cs_void: float = 0.3
-    """void fraction of central solenoid conductor for coolant"""
+    """Void fraction of central solenoid conductor for coolant"""
 
     vs_cs_pf_total_burn: float = 0.0
-    """total flux swing available for burn (Wb)"""
+    """Total flux swing available for burn [Wb]"""
 
     vs_pf_coils_total_burn: float = 0.0
-    """flux swing from PF coils for burn (Wb)"""
+    """Flux swing from PF coils for burn [Wb]"""
 
     vs_pf_coils_total_ramp: float = 0.0
-    """flux swing from PF coils for startup (Wb)"""
+    """Flux swing from PF coils for startup [Wb]"""
 
     vs_pf_coils_total_pulse: float = 0.0
-    """total flux swing from PF coils (Wb)"""
+    """Total flux swing from PF coils [Wb]"""
 
     vs_cs_total_pulse: float = 0.0
-    """total flux swing from the central solenoid (Wb)"""
+    """Total flux swing from the central solenoid [Wb]"""
 
     vs_cs_burn: float = 0.0
-    """central solenoid flux swing for burn (Wb)"""
+    """Central solenoid flux swing for burn [Wb]"""
 
     vs_cs_ramp: float = 0.0
-    """central solenoid flux swing for startup (Wb)"""
+    """Central solenoid flux swing for startup [Wb]"""
 
     vs_cs_pf_total_ramp: float = 0.0
-    """total flux swing for startup (`constraint eqn 51` to enforce vs_cs_pf_total_ramp=vs_plasma_res_ramp+vs_plasma_ind_ramp) (Wb)"""
+    """Total flux swing for startup (`constraint eqn 51` to enforce
+    vs_cs_pf_total_ramp=vs_plasma_res_ramp+vs_plasma_ind_ramp) [Wb]"""
 
     vs_cs_pf_total_pulse: float = 0.0
-    """total flux swing for pulse (Wb)"""
+    """Total flux swing for pulse [Wb]"""
 
     f_c_pf_cs_peak_time_array: list[float] = field(
         default_factory=lambda: np.zeros((NGC2, 6))
     )
-    """PF, CS coil current relative to peak current at time points 1 to 6"""
+    """PF, CS coil current relative to peak current at time points 1 to 6 [-]"""
 
     m_pf_coil_conductor_total: float = 0.0
-    """total mass of the PF coil conductor (kg)"""
+    """Total mass of the PF coil conductor [kg]"""
 
     m_pf_coil_structure_total: float = 0.0
-    """total mass of the PF coil structure (kg)"""
+    """Total mass of the PF coil structure [kg]"""
 
     m_pf_coil_conductor: list[float] = field(default_factory=lambda: np.zeros(NGC2))
-    """conductor mass for PF coil i (kg)"""
+    """Conductor mass for PF coil i [kg]"""
 
     m_pf_coil_structure: list[float] = field(default_factory=lambda: np.zeros(NGC2))
-    """structure mass for PF coil i (kg)"""
+    """Structure mass for PF coil i [kg]"""
 
     z_pf_coil_upper: list[float] = field(default_factory=lambda: np.zeros(NGC2))
-    """upper point of PF coil i (m)"""
+    """Upper point of PF coil i [m]"""
 
     z_pf_coil_lower: list[float] = field(default_factory=lambda: np.zeros(NGC2))
-    """lower point of PF coil i (m)"""
+    """Lower point of PF coil i [m]"""
 
     z_pf_coil_middle: list[float] = field(default_factory=lambda: np.zeros(NGC2))
-    """z (height) location of PF coil i (m)"""
+    """Z (height) location of PF coil i [m]"""
 
     zref: list[float] = field(
         default_factory=lambda: np.array([
@@ -552,34 +583,34 @@ class PFCoilData:
     edge of TF coil (remember that PF coils for STs lie
     within the TF coil)
     - for groups j with i_pf_location(j) = 3; zref(j) = ratio of
-    height of coil group j to plasma minor radius</UL>
+    height of coil group j to plasma minor radius
     - for groups j with i_pf_location(j) = 4; zref(j) = ratio of
-    height of coil group j to plasma minor radius</UL>
+    height of coil group j to plasma minor radius
     """
 
     b_cs_limit_max: float = 13.0
     """Central solenoid max field limit [T]"""
 
     f_dr_dz_cs_turn: float = 70.0 / 22.0
-    """Ratio of CS coil turn conduit length to depth"""
+    """Ratio of CS coil turn conduit length to depth [-]"""
 
     dr_cs_turn: float = 0.0
-    """Length of CS coil turn conduit"""
+    """Length of CS coil turn conduit [m]"""
 
     dr_cs_full: float = 0.0
-    """Full radial thickness of the central solenoid (m)"""
+    """Full radial thickness of the central solenoid [m]"""
 
     dz_cs_turn: float = 0.0
-    """Depth/width of CS coil turn conduit"""
+    """Depth/width of CS coil turn conduit [m]"""
 
     radius_cs_turn_corners: float = 3.0e-3
-    """Radius of curvature of CS coil turn corners (m)"""
+    """Radius of curvature of CS coil turn corners [m]"""
 
     radius_cs_turn_cable_space: float = 0.0
-    """Length of CS coil turn conduit length"""
+    """Length of CS coil turn conduit length [m]"""
 
     r_pf_outside_tf_midplane: float = 0.0
-    """ Radial position of PF coil at the midplane."""
+    """Radial position of PF coil at the midplane [m]."""
 
 
 CREATE_DICTS_FROM_DATACLASS = PFCoilData

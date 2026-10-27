@@ -64,7 +64,6 @@ def test_init_pfcoil(pfcoil):
     # Test a selection of module variables
     assert pfcoil.data.pf_coil.ssq0 == pytest.approx(0.0)
     assert pfcoil.data.pf_coil.cslimit == 0
-    assert pfcoil.data.pf_coil.nef == 0
 
 
 class RsidParam(NamedTuple):
@@ -77,7 +76,7 @@ class RsidParam(NamedTuple):
     npts: Any = None
     nfix: Any = None
     n_pf_coil_groups: Any = None
-    ccls: Any = None
+    cur_pf_group_equilibrium: Any = None
     bfix: Any = None
     gmat: Any = None
 
@@ -95,7 +94,7 @@ class RsidParam(NamedTuple):
             npts=32,
             nfix=14,
             n_pf_coil_groups=4,
-            ccls=np.array([
+            cur_pf_group_equilibrium=np.array([
                 14742063.826112622,
                 20032681.634901665,
                 580406.62653667293,
@@ -951,7 +950,7 @@ def test_rsid(rsidparam):
         bzin,
         rsidparam.nfix,
         rsidparam.n_pf_coil_groups,
-        rsidparam.ccls,
+        rsidparam.cur_pf_group_equilibrium,
         rsidparam.bfix,
         rsidparam.gmat,
     )
@@ -2435,7 +2434,7 @@ class PFCoilParam(NamedTuple):
     dr_pf_tf_outboard_out_offset: Any = None
     rpf2: Any = None
     n_cs_current_filaments: Any = None
-    b_pf_coil_peak: Any = None
+    b_pf_coil_inner_peak: Any = None
     z_pf_coil_lower: Any = None
     f_a_pf_coil_void: Any = None
     zref: Any = None
@@ -2453,8 +2452,8 @@ class PFCoilParam(NamedTuple):
     i_r_pf_outside_tf_placement: Any = None
     rref: Any = None
     i_pf_current: Any = None
-    ccl0_ma: Any = None
-    ccls_ma: Any = None
+    cur_pf_group_flux_swing_cancellation_ma: Any = None
+    cur_pf_group_equilibrium_ma: Any = None
     kappa: Any = None
     ind_plasma_internal_norm: Any = None
     itartpf: Any = None
@@ -2508,7 +2507,7 @@ class PFCoilParam(NamedTuple):
             dr_pf_tf_outboard_out_offset=1.5,
             rpf2=-1.825,
             n_cs_current_filaments=7,
-            b_pf_coil_peak=np.full(22, 0.0),
+            b_pf_coil_inner_peak=np.full(22, 0.0),
             z_pf_coil_lower=np.full(22, 0.0),
             f_a_pf_coil_void=np.full(22, 3.0e-1),
             zref=[3.6, 1.2, 2.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
@@ -2526,8 +2525,8 @@ class PFCoilParam(NamedTuple):
             i_r_pf_outside_tf_placement=0,
             rref=np.full(10, 7.0),
             i_pf_current=1,
-            ccl0_ma=np.full(10, 0.0),
-            ccls_ma=np.full(10, 0.0),
+            cur_pf_group_flux_swing_cancellation_ma=np.full(10, 0.0),
+            cur_pf_group_equilibrium_ma=np.full(10, 0.0),
             kappa=1.727,
             ind_plasma_internal_norm=1.693,
             itartpf=0,
@@ -2600,7 +2599,7 @@ def test_pfcoil(monkeypatch, pfcoil, pfcoilparam):
         "dr_pf_tf_outboard_out_offset",
         "rpf2",
         "n_cs_current_filaments",
-        "b_pf_coil_peak",
+        "b_pf_coil_inner_peak",
         "z_pf_coil_lower",
         "f_a_pf_coil_void",
         "i_pf_conductor",
@@ -2617,8 +2616,8 @@ def test_pfcoil(monkeypatch, pfcoil, pfcoilparam):
         "i_r_pf_outside_tf_placement",
         "rref",
         "i_pf_current",
-        "ccl0_ma",
-        "ccls_ma",
+        "cur_pf_group_flux_swing_cancellation_ma",
+        "cur_pf_group_equilibrium_ma",
         "first_call",
     ]:
         monkeypatch.setattr(pfcoil.data.pf_coil, field, getattr(pfcoilparam, field))
@@ -2695,7 +2694,7 @@ class OhCalcParam(NamedTuple):
     rho_pf_coil: Any = None
     f_a_pf_coil_void: Any = None
     c_pf_cs_coils_peak_ma: Any = None
-    b_pf_coil_peak: Any = None
+    b_pf_coil_inner_peak: Any = None
     z_pf_coil_middle: Any = None
     r_pf_coil_outer: Any = None
     r_pf_coil_inner: Any = None
@@ -2748,7 +2747,7 @@ class OhCalcParam(NamedTuple):
             rho_pf_coil=2.8e-8,
             f_a_pf_coil_void=np.full(22, 0.3),
             c_pf_cs_coils_peak_ma=np.full(22, 0.0),
-            b_pf_coil_peak=np.full(22, 0.0),
+            b_pf_coil_inner_peak=np.full(22, 0.0),
             z_pf_coil_middle=np.full(22, 0.0),
             r_pf_coil_outer=np.full(22, 0.0),
             r_pf_coil_inner=np.full(22, 0.0),
@@ -2815,7 +2814,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, cs_coil, ohcalcparam):
         "rho_pf_coil",
         "f_a_pf_coil_void",
         "c_pf_cs_coils_peak_ma",
-        "b_pf_coil_peak",
+        "b_pf_coil_inner_peak",
         "z_pf_coil_middle",
         "r_pf_coil_outer",
         "r_pf_coil_inner",
@@ -2855,7 +2854,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, cs_coil, ohcalcparam):
     cs_coil.ohcalc()
 
     assert (
-        pytest.approx(cs_coil.data.pf_coil.b_pf_coil_peak[4])
+        pytest.approx(cs_coil.data.pf_coil.b_pf_coil_inner_peak[4])
         == ohcalcparam.exp_b_pf_coil_peak
     )
     assert (
@@ -3010,7 +3009,7 @@ def test_efc(pfcoil, efcparam):
     gmat = np.full([lrow1, lcol1], 0.0, order="F")
     bvec = np.full(lrow1, 0.0)
 
-    ssq, ccls = pfcoil.efc(
+    ssq, cur_pf_group_equilibrium = pfcoil.efc(
         efcparam.npts,
         efcparam.rpts,
         zpts,
@@ -3031,7 +3030,7 @@ def test_efc(pfcoil, efcparam):
     )
 
     assert pytest.approx(ssq) == efcparam.exp_ssq
-    assert ccls[0:4] == pytest.approx(efcparam.exp_ccls)
+    assert cur_pf_group_equilibrium[0:4] == pytest.approx(efcparam.exp_ccls)
 
 
 class MTRXParam(NamedTuple):
@@ -3385,9 +3384,13 @@ def test_solv(pfcoil, skip_if_incompatible_system):
     gmat = np.full((3, 3), 2.0, order="F")
     bvec = np.full(3, 1.0)
 
-    ccls = pfcoil.solv(n_pf_groups_max, n_pf_coil_groups, nrws, gmat, bvec)
+    cur_pf_group_equilibrium = pfcoil.solv(
+        n_pf_groups_max, n_pf_coil_groups, nrws, gmat, bvec
+    )
 
-    assert_array_almost_equal(ccls, np.array([-0.069036, 0.488642, 0.080394]))
+    assert_array_almost_equal(
+        cur_pf_group_equilibrium, np.array([-0.069036, 0.488642, 0.080394])
+    )
 
 
 def test_fixb():
@@ -3544,7 +3547,7 @@ def test_peakb(monkeypatch, pfcoil):
     """
     # Mock module vars
     np.zeros(64)
-    monkeypatch.setattr(pfcoil.data.pf_coil, "nfxf", 14)
+    monkeypatch.setattr(pfcoil.data.pf_coil, "n_cs_current_filaments_total", 14)
     monkeypatch.setattr(
         pfcoil.data.pf_coil,
         "r_pf_cs_current_filaments",
@@ -3586,8 +3589,8 @@ def test_peakb(monkeypatch, pfcoil):
             *np.zeros(50),
         )),
     )
-    monkeypatch.setattr(pfcoil.data.pf_coil, "xind", np.zeros(64))
-    monkeypatch.setattr(pfcoil.data.pf_coil, "bpf2", np.zeros(22))
+    monkeypatch.setattr(pfcoil.data.pf_coil, "ind_pf_coil_edge_mutual", np.zeros(64))
+    monkeypatch.setattr(pfcoil.data.pf_coil, "b_pf_coil_outer_peak", np.zeros(22))
 
     monkeypatch.setattr(pfcoil.data.build, "i_cs_use", CSUseModel.FULL_PULSE)
     monkeypatch.setattr(pfcoil.data.pf_coil, "a_cs_poloidal", 9.0218815014803365874412)
@@ -3682,7 +3685,7 @@ def test_peakb(monkeypatch, pfcoil):
     monkeypatch.setattr(pfcoil.data.pf_coil, "j_cs_flat_top_end", 20726000)
     monkeypatch.setattr(pfcoil.data.pf_coil, "n_pf_coil_groups", 4)
     monkeypatch.setattr(
-        pfcoil.data.pf_coil, "b_pf_coil_peak", np.zeros(22, dtype=int)
+        pfcoil.data.pf_coil, "b_pf_coil_inner_peak", np.zeros(22, dtype=int)
     )  # maybe
     monkeypatch.setattr(
         pfcoil.data.pf_coil,
