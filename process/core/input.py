@@ -1251,9 +1251,8 @@ def parse_input_file(data_structure_obj: DataStructure, in_dat: InDat):
         If bounds are not of the correct form of boundl(index) = value
 
     """
-    # These get incremented when reading the file, so need
-    # to ensure they are 0 before we parse the file
-    # TODO check if is this still necessary
+    # These need to be set to zero so the iteration variables are not counted multiple
+    # times (this would otherwise occur when using get_mfile_initial_ixc_values())
     data_structure_obj.numerics.n_iteration_variables = 0
     data_structure_obj.numerics.n_constraints = 0
 
