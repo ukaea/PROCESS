@@ -160,6 +160,11 @@ var_dicts = {
     "triang": VariableMetadata(
         latex=r"$\delta_\mathrm{sep}$", description="Triangularity", units=""
     ),
+    "n_lcfs_points": VariableMetadata(
+        latex=r"$N_{\mathrm{LCFS}}$",
+        description="Number of LCFS (R, Z) points",
+        units="",
+    ),
     "f_a_tf_coil_inboard_steel": VariableMetadata(
         latex=r"f_\mathrm{steel}^\mathrm{TF}", description="TF steel fraction", units=""
     ),
