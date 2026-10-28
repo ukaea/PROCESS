@@ -42,6 +42,19 @@ def test_warn_up_elastic_scatter():
         mat._set_sigma([1.0, 2.0], [[0.5, 0.5], [1.0, 1.0]])  # noqa: SLF001
         NeutronFluxProfile(1.0, [0.1], [mat])
 
+def test_wrong_x_coordinates():
+    mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C": 1.0}, 999)
+    mat._set_sigma([1.0, 2.0], [[0.5, 0.4], [0.3, 0.2]])  # noqa: SLF001
+    with pytest.raises(ValueError):
+        NeutronFluxProfile(1.0, [-0.1], [mat])
+    with pytest.raises(ValueError):
+        NeutronFluxProfile(1.0, [0.1, 0.1], [mat, mat])
+
+def test_wrong_num_mats():
+    mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C": 1.0}, 999)
+    mat._set_sigma([1.0, 2.0], [[0.5, 0.4], [0.3, 0.2]])  # noqa: SLF001
+    with pytest.raises(ProcessValidationError):
+        NeutronFluxProfile(1.0, [0.4, 0.8], [mat])
 
 def test_has_local_fluxes():
     """Test that the groupwise decorator has worked on the local fluxes methods."""
