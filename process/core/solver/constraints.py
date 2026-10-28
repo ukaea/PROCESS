@@ -289,7 +289,7 @@ def constraint_equation_1(constraint_registration, data):
     )
 
 
-@ConstraintManager.register_constraint(2, "MW", "=")
+@ConstraintManager.register_constraint(2, "MW", "=", scale=1e-2)
 def constraint_equation_2(constraint_registration, data):
     """
     Global plasma power balance equation [MW]
@@ -593,7 +593,7 @@ def constraint_equation_12(constraint_registration, data):
     )
 
 
-@ConstraintManager.register_constraint(13, "sec", ">=")
+@ConstraintManager.register_constraint(13, "sec", ">=", scale=1e-3)
 def constraint_equation_13(constraint_registration, data):
     """Equation for burn time lower limit
 
@@ -644,7 +644,7 @@ def constraint_equation_15(constraint_registration, data):
     )
 
 
-@ConstraintManager.register_constraint(16, "MW", ">=")
+@ConstraintManager.register_constraint(16, "MW", ">=", scale=1e-3)
 def constraint_equation_16(constraint_registration, data):
     """Equation for net electric power lower limit
 
@@ -788,7 +788,7 @@ def constraint_equation_23(constraint_registration, data):
     )
 
 
-@ConstraintManager.register_constraint(24, "", "<=")
+@ConstraintManager.register_constraint(24, "", "<=", scale=1e2)
 def constraint_equation_24(constraint_registration, data):
     """Equation for beta upper limit
 
@@ -950,7 +950,7 @@ def constraint_equation_30(constraint_registration, data):
     )
 
 
-@ConstraintManager.register_constraint(31, "Pa", "<=")
+@ConstraintManager.register_constraint(31, "Pa", "<=", scale=1e-6)
 def constraint_equation_31(constraint_registration, data):
     """Equation for TF coil case stress upper limit (SCTF)
 
@@ -966,7 +966,7 @@ def constraint_equation_31(constraint_registration, data):
     )
 
 
-@ConstraintManager.register_constraint(32, "Pa", "<=")
+@ConstraintManager.register_constraint(32, "Pa", "<=", scale=1e-6)
 def constraint_equation_32(constraint_registration, data):
     """Equation for TF coil conduit stress upper limit (SCTF)
 
@@ -982,7 +982,7 @@ def constraint_equation_32(constraint_registration, data):
     )
 
 
-@ConstraintManager.register_constraint(33, "A/m²", "<=")
+@ConstraintManager.register_constraint(33, "A/m²", "<=", scale=1e-6)
 def constraint_equation_33(constraint_registration, data):
     """Equation for TF coil operating/critical J upper limit (SCTF)
 
@@ -1016,7 +1016,7 @@ def constraint_equation_34(constraint_registration, data):
     )
 
 
-@ConstraintManager.register_constraint(35, "A/m²", "<=")
+@ConstraintManager.register_constraint(35, "A/m²", "<=", scale=1e-6)
 def constraint_equation_35(constraint_registration, data):
     """Equation for TF coil J_wp/J_prot upper limit (SCTF)
 
@@ -1461,7 +1461,7 @@ def constraint_equation_64(constraint_registration, data):
     )
 
 
-@ConstraintManager.register_constraint(65, "Pa", "<=")
+@ConstraintManager.register_constraint(65, "Pa", "<=", scale=1e-6)
 def constraint_equation_65(constraint_registration, data):
     """Upper limit on stress of the vacuum vessel that occurs when the TF coil quenches.
 
@@ -1549,7 +1549,7 @@ def constraint_equation_68(constraint_registration, data):
     )
 
 
-@ConstraintManager.register_constraint(72, "Pa", "<=")
+@ConstraintManager.register_constraint(72, "Pa", "<=", scale=1e-6)
 def constraint_equation_72(constraint_registration, data):
     """Upper limit on Central Solenoid Tresca yield stress
 
@@ -1912,7 +1912,7 @@ def constraint_equation_89(constraint_registration, data):
     )
 
 
-@ConstraintManager.register_constraint(90, "", ">=")
+@ConstraintManager.register_constraint(90, "", ">=", scale=1e-3)
 def constraint_equation_90(constraint_registration, data):
     """Lower limit for CS coil stress load cycles
 
