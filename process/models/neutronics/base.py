@@ -67,6 +67,12 @@ def summarize_values(func):
     Keep groupwise_func unchanged, but create a new method under a similar name
     (but with the prefix "groupwise_" removed) which outputs the sum of every
     groupwise value.
+
+    Raises
+    ------
+    ValueError
+        If the decorated method is not a groupwise method, then this decorator
+        shouldn't be applied.
     """
     summary_method_name = func.__name__[10:]
     # confirm this is a groupwise method
@@ -317,7 +323,7 @@ class NeutronFluxProfile:
 
         self.extended_boundary = self.layer_x[-1] + extrapolation_length(
             self.materials[-1].diffusion_const
-        )  #  vector
+        )  # vector
         self.coefficients = mp_zeros(self.n_layers, self.n_groups, self.n_groups, 2)
         self._is_solved = np.zeros(self.n_groups, dtype=bool)
         self.num_iteration = [0 for n in range(self.n_groups)]
@@ -360,7 +366,10 @@ class NeutronFluxProfile:
                 for coef_pair, basis_pair in zip(
                     self.coefficients[num_layer, n], bases, strict=True
                 ):
-                    str_repr = f"{coef_pair[0]:+.7e} * {basis_pair[0]} {coef_pair[1]:+.7e} * {basis_pair[1]}"
+                    str_repr = (
+                        f"{coef_pair[0]:+.7e} * {basis_pair[0]} "
+                        f"{coef_pair[1]:+.7e} * {basis_pair[1]}"
+                    )
                     content[n].append(str_repr)
 
             tables.append(
@@ -506,6 +515,10 @@ class NeutronFluxProfile:
 
         Parameters
         ----------
+        n:
+            neutron group number that we'd like the coefficients to be propagated.
+        num_layer:
+            The material layer index of the current layer.
 
         Returns
         -------
@@ -613,6 +626,11 @@ class NeutronFluxProfile:
             The index of the neutron group whose constants are being solved.
             The allowed range of values = range(0, self.n_groups). Therefore,
             n=0 shows the reaction rate for group 1, n=1 for group 2, etc.
+
+        Raises
+        ------
+        ValueError
+            Incorrect group number provided (0 <= n < self.n_groups).
         """
         if n not in range(self.n_groups):
             raise ValueError(
@@ -853,8 +871,9 @@ class NeutronFluxProfile:
         self.coefficients:
             the number of inscatter_group neutrons in the shape
             of group basis_group's basis.
-        Note
-        ----
+
+        Notes
+        -----
         Updating a coef on the main diagonal will affect the values of its
         entire column (in-scatter from that basis STAYS in that basis, i.e.
         the same column.)
@@ -1056,8 +1075,6 @@ class NeutronFluxProfile:
             The index of the neutron group whose heating is being evaluated.
             n <= n_groups - 1.
             Therefore n=0 shows the heating for group 1, n=1 for group 2, etc.
-        num_layer:
-            The index of the layer that we want to get the neutron heating for.
         x:
             The position where the neutron heating has to be evaluated.
 
@@ -1093,9 +1110,6 @@ class NeutronFluxProfile:
             The index of the neutron group whose tritium production rate is
             being evaluated. n <= n_groups - 1. Therefore n=0 shows the tritium
             production rate for group 1, n=1 for group 2, etc.
-        num_layer:
-            The index of the layer that we want to get the volumetric tritium
-            production rate for.
         x:
             The position where the volumetric tritium production rate has to
             be evaluated.
@@ -1318,7 +1332,8 @@ class NeutronFluxProfile:
         Parameters
         ----------
         n:
-            The index of the neutron group that we want the current for. n <= n_groups - 1.
+            The index of the neutron group that we want the current for.
+            n <= n_groups - 1.
             Therefore n=0 shows the neutron current for group 1, n=1 for group 2, etc.
         n_interface:
             The index of the interface that we want the net neutron current
@@ -1346,10 +1361,12 @@ class NeutronFluxProfile:
     def groupwise_neutron_current_escaped(self, n: int) -> float:
         """
         Neutron current escaped from the breeding zone to outside the reactor.
+
         Parameters
         ----------
         n:
-            The index of the neutron group that we want the current for. n <= n_groups - 1.
+            The index of the neutron group that we want the current for.
+            n <= n_groups - 1.
             Therefore n=0 shows the neutron current for group 1, n=1 for group 2, etc.
 
         Returns
@@ -1406,8 +1423,8 @@ class NeutronFluxProfile:
             * self.groupwise_integrated_flux_in_layer(n, num_layer)
         )
 
-    # Do NOT add a summarize_values decorator, as you can't add cross-sections
-    # from different groups together without first multiplying by flux to get reaction rate.
+    # Do NOT add a summarize_values decorator, as you can't add cross-sections from
+    # different groups together without first multiplying by flux to get reaction rate.
     def groupwise_linear_heating_density_in_layer(
         self,
         n: int,
@@ -1434,11 +1451,13 @@ class NeutronFluxProfile:
     def get_output_unit(cls, method: Callable) -> str | None:
         """
         Check a method's outputted quantity's unit
+
         Parameters
         ----------
         method:
             A method whose name we shall be inspecting and comparing against
             UNIT_LOOKUP.
+
         Returns
         -------
         :
@@ -1570,7 +1589,6 @@ def _plot_vertical_dotted_line(ax, x, ylims, *, symmetric: bool = True):
     if symmetric:
         ax.plot([-x, -x], ylims, color="black", ls="--", zorder=-1)
     ax.plot([x, x], ylims, color="black", ls="--", zorder=-1)
-    return
 
 
 def _generate_x_range(
@@ -1587,16 +1605,18 @@ def _generate_x_range(
     interface_x:
         The x-coordinates of each interface. It should be all-positive, and
         ascending only.
-    extended_boundary:
-        extended boundary
+    extension_to_be_plotted:
+        A user-inputted x-coordinate, which must be extended beyond the current
+        boundary.
     min_total_num_points:
-        Approximate number of points to be plotted. Increase this number to increase the resolution
+        Approximate number of points to be plotted. Increase this number to
+        increase the resolution.
     symmetric:
         Whether to return two copies (one negative, one positive) of x-ranges
         per layer.
 
     Yields
-    -------
+    ------
     :
         A generator of x-coordinates used for plotting, each of which falls
         within the limit of the xmin and xmax of that layer, forming a total
@@ -1607,6 +1627,13 @@ def _generate_x_range(
         out_x_range[2] and out_x_range[3] are for the negative and positive
         sides of the second layer respectively.
         Otherwise, the number of numpy arrays in the list = n_layers.
+
+    Raises
+    ------
+    ValueError
+        Simple check to make sure that the user has entered an x-coordinate which
+        does extend beyond the current model's boundary as the value of
+        `extension_to_be_plotted`.
     """
     full_x_range = np.linspace(
         interface_x.min(), interface_x.max(), min_total_num_points
@@ -1672,7 +1699,7 @@ class CustomOptimizationRecord:
         residuals:
             A list of all of the residuals, before they were root-mean-squared.
             Shape: [num_opt_steps, 2 * parent.n_layers]
-        results:
+        result:
             The scipy.optimize.OptimizeResult object produced by the optimizer
             directly.
         """
@@ -1684,7 +1711,19 @@ class CustomOptimizationRecord:
         self.num_opt_steps = len(self.solution_vectors)
         self.result = result
 
-    def plot_rms_residuals(self, ax: plt.Axes | None = None):
+    def plot_rms_residuals(self, ax: plt.Axes | None = None) -> plt.Axes:
+        """Plot the root mean squared values of the residuals as a descent plot.
+
+        Parameters
+        ----------
+        ax:
+            The axes object to plot on. [Optional]
+
+        Returns
+        -------
+        ax:
+            The axes object that the rms residual descent record was plotted upon.
+        """
         ax = ax or plt.axes()
         ax.set_title(f"Trajectory of Group {self.n}\nneutron flux optimization")
         ax.set_xlabel("iterations")
@@ -1750,7 +1789,7 @@ class CustomOptimizationRecord:
             parent.coefficients[:, n, n] = self.solution_vectors[iteration].reshape(
                 parent.n_layers, 2
             )
-            parent._update_off_diag_coefs_of_column_n(n)  # noqa: SLF001
+            parent._update_off_diag_coefs_of_column_n(n)
             this_flux = []
             for num_layer, xi in enumerate(base_x):
                 this_flux.extend(
@@ -1821,5 +1860,5 @@ def multiply_2_2_matrices(*matrices):
     """
     seed_matrix = np.identity(2)
     for matrix in matrices:
-        seed_matrix = seed_matrix @ matrix
+        seed_matrix @= matrix
     return seed_matrix
