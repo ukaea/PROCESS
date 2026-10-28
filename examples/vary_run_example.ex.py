@@ -181,4 +181,4 @@ df = pd.DataFrame({
 df
 
 # %%
-# temp_dir.cleanup()
+temp_dir.cleanup()
