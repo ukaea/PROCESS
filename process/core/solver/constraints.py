@@ -46,6 +46,12 @@ class ConstraintRegistration:
     """The type of constraint (<=, >=, ==). Only used for writing output diagnostics,
     this does not impact the calculations.
     """
+    scale: float
+    """The scale of the constraint.
+
+    I.e. what the constraint is multiplied by to convert it to be order unity when passed
+    to the solver.
+    """
 
 
 @dataclass
@@ -100,7 +106,12 @@ class ConstraintManager:
 
     @classmethod
     def register_constraint(
-        cls, name: Hashable, units: str, symbol: ConstraintSymbolType
+        cls,
+        name: Hashable,
+        units: str,
+        symbol: ConstraintSymbolType,
+        *,
+        scale: float = 1.0,
     ) -> Callable[[], Callable[[], ConstraintResult]]:
         """A decorator to add a constraint equation with metadata to the registry.
 
@@ -115,6 +126,9 @@ class ConstraintManager:
             the units of the constraint written to the output files
         symbol : str
             the symbol of the constraint written to the output files
+        scale : float
+            a factor that the constraint value and bound is multiplied by before being
+            sent to the solver
 
         """
 
@@ -122,7 +136,7 @@ class ConstraintManager:
             if name in cls._constraint_registry:
                 raise ValueError(f"Constraint {name} already exists.")
             cls._constraint_registry[name] = ConstraintRegistration(
-                name, func, units, symbol
+                name, func, units, symbol, scale
             )
 
             return func
@@ -147,7 +161,9 @@ class ConstraintManager:
         return cls._constraint_registry.get(name)
 
     @classmethod
-    def evaluate_constraint(cls, name: Hashable, data: DataStructure):
+    def evaluate_constraint(
+        cls, name: Hashable, data: DataStructure, *, with_scale: bool = True
+    ):
         """Evaluates a constraint with a given name.
 
         Parameters
@@ -174,9 +190,27 @@ class ConstraintManager:
             error_msg = f"Constraint '{name}' cannot be found."
             raise ProcessError(error_msg)
 
+        if not with_scale:
+            registration = ConstraintRegistration(**{
+                **asdict(registration),
+                "scale": 1.0,
+            })
+
         return registration.constraint_equation(registration, data)
 
 
+def _apply_scale(func):
+    """Scales the value and bound before passing them on to the constraint function."""
+
+    def _wrapper(value: float, bound: float, registration: ConstraintRegistration):
+        v = value * registration.scale
+        b = bound * registration.scale
+        return func(v, b, registration)
+
+    return _wrapper
+
+
+@_apply_scale
 def leq(value: float, bound: float, registration: ConstraintRegistration):
     """The equation `value <= bound`."""
     residual = value - bound
@@ -190,6 +224,7 @@ def leq(value: float, bound: float, registration: ConstraintRegistration):
     )
 
 
+@_apply_scale
 def geq(value: float, bound: float, registration: ConstraintRegistration):
     """The equation `value >= bound`."""
     residual = bound - value
@@ -203,6 +238,7 @@ def geq(value: float, bound: float, registration: ConstraintRegistration):
     )
 
 
+@_apply_scale
 def eq(value: float, bound: float, registration: ConstraintRegistration):
     """The equation `value = bound`."""
     residual = value - bound
@@ -407,7 +443,7 @@ def constraint_equation_4(constraint_registration, data):
     return eq(pnumerator, pdenom, constraint_registration)
 
 
-@ConstraintManager.register_constraint(5, "/m³", "<=")
+@ConstraintManager.register_constraint(5, "/m³", "<=", scale=1e-20)
 def constraint_equation_5(constraint_registration, data):
     """Equation for electron density upper limit
 
@@ -1721,7 +1757,7 @@ def constraint_equation_80(constraint_registration, data):
     )
 
 
-@ConstraintManager.register_constraint(81, "/m³", ">=")
+@ConstraintManager.register_constraint(81, "/m³", ">=", scale=1e-20)
 def constraint_equation_81(constraint_registration, data):
     """Lower limit to ensure central density is larger that the pedestal one
 
@@ -1939,24 +1975,21 @@ def constraint_equation_92(constraint_registration, data):
     )
 
 
-@ConstraintManager.register_constraint(93, "Z.particles/s", "=")
+@ConstraintManager.register_constraint(93, "particles/s", "=", scale=1e-21)
 def constraint_equation_93(constraint_registration, data):
     """Fuel-ion equilibrium constraint.
 
     Requires the plasma fuelling rate to equal the fuelling rate required
     for fuel-ion equilibrium.
-
-    Note the units of the constraint residual (not either variable)
-    is zetta-particles per second.
     """
     return eq(
-        data.physics.molflow_plasma_fuelling / 10**21,
-        data.physics.molflow_plasma_fuelling_equilibrium / 10**21,
+        data.physics.molflow_plasma_fuelling,
+        data.physics.molflow_plasma_fuelling_equilibrium,
         constraint_registration,
     )
 
 
-def constraint_eqns(m: int, ieqn: int, data: DataStructure):
+def constraint_eqns(m: int, ieqn: int, data: DataStructure, *, with_scale: bool = True):
     """Evaluates the constraints given the current state of PROCESS.
 
     Parameters
@@ -1969,6 +2002,8 @@ def constraint_eqns(m: int, ieqn: int, data: DataStructure):
     data:
         DataStructure object to provide data to evaluate the constraints
         NOTE: this is only for getting data, not setting it
+    with_scale:
+        If False, the data is not multiplied by the scale before the calculation.
 
     Raises
     ------
@@ -1986,7 +2021,9 @@ def constraint_eqns(m: int, ieqn: int, data: DataStructure):
 
     for i in range(i1, i2):
         constraint_id = data.numerics.icc[i]
-        result = ConstraintManager.evaluate_constraint(constraint_id, data)
+        result = ConstraintManager.evaluate_constraint(
+            constraint_id, data, with_scale=with_scale
+        )
 
         tmp_cc, tmp_con, tmp_err = (
             result.normalised_residual,
@@ -2024,7 +2061,10 @@ def constraints_output(data: DataStructure, solver_name: str):
     )
 
     con1, con2, err, _, lab = constraint_eqns(
-        nums.n_equality_constraints + nums.n_inequality_constraints, -1, data
+        nums.n_equality_constraints + nums.n_inequality_constraints,
+        -1,
+        data,
+        with_scale=False,
     )
 
     # Write equality constraints to mfile
@@ -2085,7 +2125,9 @@ def constraints_output(data: DataStructure, solver_name: str):
             nums.n_equality_constraints + nums.n_inequality_constraints,
         ):
             name = nums.lablcc[nums.icc[i] - 1]
-            constraint = ConstraintManager.evaluate_constraint(int(nums.icc[i]), data)
+            constraint = ConstraintManager.evaluate_constraint(
+                int(nums.icc[i]), data, with_scale=False
+            )
 
             inequality_constraint_table.append([
                 name,
