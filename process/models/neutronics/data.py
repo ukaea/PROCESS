@@ -50,6 +50,7 @@ def elem_to_isotopic_comp(composition: dict[str, float]) -> dict[str, float]:
     """
     Convert an element composition dictionary into an isotope composition
     dictionary using NATURAL_ABUNDANCE.
+
     Parameters
     ----------
     composition:
@@ -71,6 +72,7 @@ def elem_to_isotopic_comp(composition: dict[str, float]) -> dict[str, float]:
 
 def get_avg_atomic_mass(composition: dict[str, float]) -> float:
     """Calculate the average atomic mass number.
+
     Parameters
     ----------
     composition:
@@ -527,7 +529,6 @@ def scattering_weight_matrix(
         The lower triangle must be all zeros.
         np.sum(axis=1) == np.ones(len(group_structure)-1).
     """
-
     alpha = _get_alpha(atomic_mass)
     n_groups = len(group_structure) - 1
     matrix = np.zeros([n_groups, n_groups], dtype=float)
@@ -740,7 +741,6 @@ def get_diffusion_coefficient_and_length(
         Duderstadt and Hamilton.
         unit: [m^2]
     """
-
     transport_xs = total_xs - 2 / (3 * avg_atomic_mass) * scattering_xs
     diffusion_const = 1 / 3 / transport_xs
     diffusion_len_2 = diffusion_const / (total_xs - scattering_xs - in_source_xs)
@@ -870,7 +870,6 @@ class MaterialMacroInfo:
 
         self._populated = True
         self._populate_conversion_factor()
-        return
 
     def _populate_conversion_factor(self):
         """
@@ -903,10 +902,10 @@ class MaterialMacroInfo:
                     "neutron flux profile.",
                     stacklevel=2,
                 )
-        self.conversion_factor[mask] = np.multiply.outer(
-            self._l2, self._l2
-        )[mask]/(l2_diff * self._diffusion_const).T[mask]
-        return
+        self.conversion_factor[mask] = (
+            np.multiply.outer(self._l2, self._l2)[mask]
+            / (l2_diff * self._diffusion_const).T[mask]
+        )
 
     def _add_data_from_single_record(
         self, xs_data: ExtractedNuclearData, partial_number_density: float
@@ -952,11 +951,10 @@ class MaterialMacroInfo:
                         natural_abundance * elem_frac * self.number_density,
                     )
         self._confirm_sigma()
-        return
 
     @property
     def sigma_t(self) -> npt.NDArray[np.float64]:
-        """total macroscopic cross-section, 1D array of len = n."""
+        """Total macroscopic cross-section, 1D array of len = n."""
         if not self._populated:
             raise ValueError("Empty cross-section data!")
         return self._sigma_total
@@ -1169,4 +1167,3 @@ def populate_from_nuclear_data_library(
 
     for mat in mat_list:
         mat.populate_from_data_library(data_extracted)
-    return
