@@ -269,14 +269,22 @@ class NeutronFluxProfile:
         downscatter_only:
             A boolean to denote if all materials here only allow for
             downscattering.
+
+        Raises
+        ------
+        ValueError
+            layer_x values must be a strictly increasing sequence, such that
+            each layer has valid non-zero thickness.
+        ProcessValidationError
+            The length of self.materials must match the length of
         """
         # layers
         self.layer_x = np.array(layer_x).ravel()
-        if not (np.diff(self.layer_x) > 0).all():
+        self.interface_x = np.array([0.0, *self.layer_x])
+        if not (np.diff(self.interface_x) > 0).all():
             raise ValueError("Model cannot have non-positive layer thicknesses.")
 
         self.layer_x.flags.writeable = False
-        self.interface_x = np.array([0.0, *self.layer_x])
         self.interface_x.flags.writeable = False
 
         self.materials = tuple(materials)
