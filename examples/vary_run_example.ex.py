@@ -146,8 +146,8 @@ in_dats_created = [
     if re.match(r"([0-9]+)_IN.DAT", file.name) is not None
 ]
 
-final_file_prefix = max(name.strip("_IN.DAT") for name in in_dats_created)
-converging_in_dat = final_file_prefix + "_IN.DAT"
+final_file_prefix = max(int(name.strip("_IN.DAT")) for name in in_dats_created)
+converging_in_dat = str(final_file_prefix) + "_IN.DAT"
 
 # %%
 # Get the initial values from the original input file
@@ -181,4 +181,4 @@ df = pd.DataFrame({
 df
 
 # %%
-temp_dir.cleanup()
+# temp_dir.cleanup()
