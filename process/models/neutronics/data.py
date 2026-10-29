@@ -86,6 +86,8 @@ def get_avg_atomic_mass(composition: dict[str, float]) -> float:
 
 
 class ENDFRecord(ABC):
+    """An abstract base class of an ENDF record."""
+
     @abstractmethod
     def get_xs(
         self, mt: int, group_structure: npt.NDArray[np.float64]
@@ -98,6 +100,8 @@ class ENDFRecord(ABC):
 
 @dataclass
 class MTTreeNode:
+    """Node of an MT tree"""
+
     reaction_name: str
     main_number: int
     constituents: tuple[int]
@@ -113,7 +117,8 @@ class MTTreeNode:
         Parameters
         ----------
         endf_record:
-            an instance of a class with the method with a signature of (self, group_structure)
+            An instance of a class with the method with a signature of
+            (self, group_structure).
         group_structure:
             A 1D array of numbers representing the group boundaries, from high
             energy to low energy (low lethargy to high lethargy).
@@ -122,6 +127,10 @@ class MTTreeNode:
         -------
         xs:
             formatted to the correct group structure.
+
+        Raises
+        ------
+        ValueError
         """
         main_xs = endf_record.get_xs(self.main_number, group_structure)
         constituent_xs = np.sum(
@@ -145,6 +154,8 @@ class MTTreeNode:
 
 
 class MTResolutionRule:
+    """Records what MT rule is a subset of what other MT rule."""
+
     def __init__(
         self,
         mt_tuple: tuple[MTTreeNode],
@@ -165,7 +176,8 @@ class MTResolutionRule:
         Parameters
         ----------
         endf_record:
-            an instance of a class with the method with a signature of (self, group_structure)
+            an instance of a class with the method with a signature of
+            (self, group_structure)
         group_structure:
             A 1D array of numbers representing the group boundaries, from high
             energy to low energy (low lethargy to high lethargy).
@@ -259,6 +271,13 @@ def calculate_mean_energy_and_incident_bin(
     incident_neutron_group:
         The group index (n) of the neutron group whose energy range
         includes the incident (monoenergetic) plasma neutron's energy.
+
+    Raises
+    ------
+    ValueError
+        Raised when the group_structure is not strictly increasing and covers
+        the incident neutron energies, leading to over-/under-counting of
+        incident neutron groups.
     """
     high, low = group_structure[:-1], group_structure[1:]
     weighted_mean = (high - low) / (np.log(high) - np.log(low))
@@ -487,6 +506,10 @@ def read_elem_and_mass(iso_name: str) -> tuple[str, str]:
 
 
 def is_natural(iso_name: str):
+    """
+    Check whether an isotope is referring to the natural mass fraction for that
+    element. This is denoted by a 0 in the "isotope"'s mass number.
+    """
     _element, mass = read_elem_and_mass(iso_name)
     return mass == "0"
 
@@ -521,8 +544,8 @@ def scattering_weight_matrix(
     Returns
     -------
     :
-        An upper triangular matrix, where the i-th row contains the normalized weights for
-        scattering down from the i-th bin to the j-th bin. The main-diagonal contains
+        An upper triangular matrix, where the i-th row contains the normalized weights
+        for scattering down from the i-th bin to the j-th bin. The main-diagonal contains
         the self-scattering cross-section.
         e.g. [2,1] would be the fraction of elastic scattering reactions that causes
         neutrons from group 3 to scatter into group 2.
@@ -553,7 +576,7 @@ def scattering_weight_matrix(
     return matrix
 
 
-def _split_into_energy_limits(
+def _split_into_energy_limits(  # noqa: PLR0911
     alpha,
     in_group: tuple[float, float],
     out_group: tuple[float, float] | None = None,
@@ -748,6 +771,8 @@ def get_diffusion_coefficient_and_length(
 
 
 class MaterialMacroInfo:
+    """Record the cross-sections about a material, and allow it to be used."""
+
     def __init__(
         self,
         group_structure: npt.NDArray[np.float64],
@@ -782,6 +807,11 @@ class MaterialMacroInfo:
         incident_neutron_group:
             The neutron group index which contains the neutron's initial energy when it
             first exit the plasma.
+
+        Raises
+        ------
+        ValueError
+            Incorrect group structure.
         """
         self.group_structure = np.asarray(group_structure)
         if (np.diff(self.group_structure) >= 0).any():
@@ -795,7 +825,7 @@ class MaterialMacroInfo:
         if (self.group_structure <= 0).any():
             warnings.warn("Zero energy (inf. lethargy) not allowed.", stacklevel=2)
             self.group_structure = np.clip(self.group_structure, 1e-9 * EV_TO_J, np.inf)
-        # flux incident on the first wall at the highest energy, then is expected to down-scatter.
+        # flux incident on the first wall at the highest energy, then down-scatter.
         self.init_neutron_energy = init_neutron_energy
         self.group_energy, self.incident_neutron_group = (
             calculate_mean_energy_and_incident_bin(
@@ -824,6 +854,7 @@ class MaterialMacroInfo:
             )
 
     def __repr__(self):
+        """__repr__ magic method."""
         return super().__repr__().replace(" at ", f" '{self.name}' at ")
 
     def _set_sigma(self, sigma_t, sigma_s, sigma_in=None, sigma_triton=None) -> None:
@@ -873,7 +904,7 @@ class MaterialMacroInfo:
 
     def _populate_conversion_factor(self):
         """
-        This conversion factor is used exclusively by the NeutronFluxProfile
+        Conversion factor is used exclusively by the NeutronFluxProfile
         object to infer the off-diagonal coefficients' values when the main-
         diagonal coefficients for each layer is updated, using
         conversion_factor = 1/(1/l2[n] - 1/l2[g]) * 1/diffusion_const
@@ -954,7 +985,13 @@ class MaterialMacroInfo:
 
     @property
     def sigma_t(self) -> npt.NDArray[np.float64]:
-        """Total macroscopic cross-section, 1D array of len = n."""
+        """Total macroscopic cross-section, 1D array of len = n.
+
+        Raises
+        ------
+        ValueError
+            If user tries to accesss sigma_t before it has been populated.
+        """
         if not self._populated:
             raise ValueError("Empty cross-section data!")
         return self._sigma_total
@@ -970,6 +1007,11 @@ class MaterialMacroInfo:
 
         e.g. [0,3] would be the cross-section for group 4 neutrons scattered-in
         from group 1 neutrons.
+
+        Raises
+        ------
+        ValueError
+            If user tries to accesss sigma_s before it has been populated.
         """
         if not self._populated:
             raise ValueError("Empty cross-section data!")
@@ -985,6 +1027,11 @@ class MaterialMacroInfo:
 
         e.g. [0,3] would be the cross-section for the proudction of group 4
         neutrons due to n,2n and fission reactions caused by group 1 neutrons.
+
+        Raises
+        ------
+        ValueError
+            If user tries to accesss sigma_in before it has been populated.
         """
         if not self._populated:
             raise ValueError("Empty cross-section data!")
@@ -997,6 +1044,11 @@ class MaterialMacroInfo:
         (including within the same group) or by (n,2n) reactions.
         phi * sigma_source = total number of neutrons outputted due to these
         reactions.
+
+        Raises
+        ------
+        ValueError
+            If user tries to accesss sigma_source before it has been populated.
         """
         if not self._populated:
             raise ValueError("Empty cross-section data!")
@@ -1004,6 +1056,15 @@ class MaterialMacroInfo:
 
     @property
     def sigma_triton(self) -> npt.NDArray[np.float64]:
+        """
+        Cross-section for the production of tritons, multiplied by the number
+        of tritons produced.
+
+        Raises
+        ------
+        ValueError
+            If user tries to accesss sigma_triton before it has been populated.
+        """
         if not self._populated:
             raise ValueError("Empty cross-section data!")
         return self._sigma_triton
@@ -1023,6 +1084,11 @@ class MaterialMacroInfo:
         """
         The diffusion coefficient as given by Reactor Analysis, Duderstadt and Hamilton.
         unit: [m]
+
+        Raises
+        ------
+        ValueError
+            If user tries to accesss diffusion_const before it has been populated.
         """
         if not self._populated:
             raise ValueError("Empty diffusion constant data!")
@@ -1033,6 +1099,11 @@ class MaterialMacroInfo:
         """
         The square of the characteristic diffusion length as given by Reactor Analysis,
         Duderstadt and Hamilton.
+
+        Raises
+        ------
+        ValueError
+            If user tries to accesss l2 (l-squared) before it has been populated.
         """
         if not self._populated:
             raise ValueError("Empty diffusion length data!")
@@ -1055,6 +1126,7 @@ class MaterialMacroInfo:
 
     @property
     def element_set(self):
+        """The entire set of elements present in this material"""
         if not hasattr(self, "_element_set"):
             self._element_set = set(self.elements.keys())
         return self._element_set
@@ -1119,9 +1191,11 @@ def populate_from_nuclear_data_library(
         A function to make the ExtractedNuclearData when given an endf_record
         Path.
 
-    Returns
-    -------
-    :
+    Raises
+    ------
+    RuntimeError
+        If any of the required element or isotopes are missing from the nuclear
+        data library provided.
     """
     # scrape for all isotopes required.
     required_element_set, required_isotope_set = accumulate_data_requirements(mat_list)
