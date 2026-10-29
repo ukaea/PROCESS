@@ -130,7 +130,13 @@ def gaussian_elim_solve_2x2(
     matr: npt.NDArray[object], vec: npt.NDArray[object]
 ) -> npt.NDArray[object]:
     """Manually solves a 2x2 system of simultaneous equations using
-    Gaussian elimination. matrccepts a long-double"""
+    Gaussian elimination. matrccepts a long-double.
+
+    Raises
+    ------
+    LinAlgError
+        Raised when matrix is singular.
+    """
     matr = convert_to_mpf(matr)
     vec = convert_to_mpf(vec)
 
