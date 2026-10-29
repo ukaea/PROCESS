@@ -47,6 +47,16 @@ def _icc_additional_actions(_name, value: list[int], _config, data: DataStructur
         data.numerics.n_constraints += 1
 
 
+def _bounds_additional_actions(name, value: list[int], _config, data: DataStructure):
+    # Need to set unspecified bounds to their default values instead of the unrealistic
+    # values used as placeholders - the unspecified bounds are ±9e99
+    for i, v in enumerate(value):
+        if name == "boundl" and v == -9e99:  # noqa: RUF069
+            value[i] = data.numerics.boundl[i]
+        if name == "boundu" and v == 9e99:  # noqa: RUF069
+            value[i] = data.numerics.boundu[i]
+
+
 @dataclass(slots=True)
 class InputVariable:
     """A variable to be parsed from the input file."""
@@ -145,8 +155,12 @@ INPUT_VARIABLES = {
     "runtitle": InputVariable("globals", str),
     "i_process_run_mode": InputVariable("numerics", int, choices=[1, -2]),
     "epsvmc": InputVariable("numerics", float, range=(0.0, 1.0)),
-    "boundl": InputVariable("numerics", float),
-    "boundu": InputVariable("numerics", float),
+    "boundl": InputVariable(
+        "numerics", float, array=True, additional_actions=_bounds_additional_actions
+    ),
+    "boundu": InputVariable(
+        "numerics", float, array=True, additional_actions=_bounds_additional_actions
+    ),
     "epsfcn": InputVariable("numerics", float, range=(0.0, 1.0)),
     "maxcal": InputVariable("globals", int, range=(0, 10000)),
     "i_figure_merit": InputVariable("numerics", int),
@@ -1188,52 +1202,6 @@ INPUT_VARIABLES = {
 }
 
 
-def _handle_bounds(info, data_structure_obj, variables):
-    """Handle the bounds dictionaries
-
-    Raises
-    ------
-    ProcessValidationError
-        If bounds not specified in correct form of boundl(index) = value
-    """
-    boundl = {}
-    boundu = {}
-    for index, bounds_dict in info.value.items():
-        try:
-            idx = int(index)
-        except ValueError as e:
-            raise ProcessValidationError(
-                "The bounds need to be of the form boundl/u(index) = value"
-            ) from e
-        if "l" in bounds_dict:
-            boundl[idx] = bounds_dict["l"]
-        if "u" in bounds_dict:
-            boundu[idx] = bounds_dict["u"]
-
-    info_boundl = info
-    info_boundl.value = boundl
-    info_boundl.name = "boundl"
-    variables = set_on_datastructure(
-        variable_name="boundl",
-        info=info_boundl,
-        data_structure_obj=data_structure_obj,
-        variables=variables,
-    )
-
-    info_boundu = info
-    info_boundu.value = boundu
-    info_boundu.name = "boundu"
-
-    variables = set_on_datastructure(
-        variable_name="boundu",
-        info=info_boundu,
-        data_structure_obj=data_structure_obj,
-        variables=variables,
-    )
-
-    return variables  # noqa: RET504
-
-
 def parse_input_file(data_structure_obj: DataStructure, in_dat: InDat):
     """Create a dictionary of variables from the input file
     and set the values on the data structure
@@ -1259,17 +1227,16 @@ def parse_input_file(data_structure_obj: DataStructure, in_dat: InDat):
     variables = {}
 
     for variable_name, info in in_dat.data.items():
-        # bounds is a dictionary containing upper and lower bounds
-        # need to process boundu and boundl separately
+        # the upper and lower bounds already exist as boundu and
+        # boundl arrays, so no need to process the bounds dictionary
         if variable_name == "bounds":
-            variables = _handle_bounds(info, data_structure_obj, variables)
-        else:
-            variables = set_on_datastructure(
-                variable_name=variable_name,
-                info=info,
-                data_structure_obj=data_structure_obj,
-                variables=variables,
-            )
+            continue
+        variables = set_on_datastructure(
+            variable_name=variable_name,
+            info=info,
+            data_structure_obj=data_structure_obj,
+            variables=variables,
+        )
 
     return variables
 
@@ -1323,20 +1290,23 @@ def set_on_datastructure(variable_name, info, data_structure_obj, variables):
             variable_config,
         )
 
+    # perform any additional actions before setting values on the data structure
+    if variable_config.additional_actions is not None:
+        # intentionally passing the variable name as in the input file,
+        # not the module target name.
+        variable_config.additional_actions(
+            variable_name,
+            clean_variable_value,
+            variable_config,
+            data_structure_obj,
+        )
+
     # check if the target name in the module is different to the variable name
     # in the input file
     variable_name_in_module = variable_config.target_name or variable_name
 
     if variable_config.set_variable:
-        if variable_name in {"boundl", "boundu"}:
-            for key in clean_variable_value:
-                set_array_variable(
-                    variable_name_in_module,
-                    clean_variable_value[key],
-                    key,
-                    variable_config,
-                )
-        elif isinstance(clean_variable_value, list):
+        if isinstance(clean_variable_value, list):
             for idx, value in enumerate(clean_variable_value, start=1):
                 set_array_variable(
                     variable_name_in_module,
@@ -1348,16 +1318,6 @@ def set_on_datastructure(variable_name, info, data_structure_obj, variables):
             set_scalar_variable(
                 variable_name_in_module, clean_variable_value, variable_config
             )
-
-    if variable_config.additional_actions is not None:
-        # intentionally passing the variable name as in the input file,
-        # not the module target name.
-        variable_config.additional_actions(
-            variable_name,
-            clean_variable_value,
-            variable_config,
-            data_structure_obj,
-        )
 
         # add the variable to a dictionary indexed by the variable name
         # (in the input file)
@@ -1410,14 +1370,6 @@ def validate_variable(
 
     if config.type in {float, int} and isinstance(value, str):
         value = value.lower().replace("d", "e")
-
-    # need to validate bounds separately as they are dictionaries
-    if name in {"boundl", "boundu"}:
-        # TODO Can this be combined with the _handle_bounds?
-        clean_value = {}
-        for i in value:
-            clean_value[i] = config.type(value[i])
-        return clean_value
 
     try:
         clean_value = config.type(value)

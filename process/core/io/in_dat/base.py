@@ -11,15 +11,18 @@ Notes
 """
 
 import ast
+import copy
 import sys
 from re import sub
+
+import numpy as np
 
 from process.core.data_structure import obsolete_vars as ov
 from process.core.data_structure.dicts import get_dicts
 from process.core.exceptions import ProcessValidationError
 from process.core.solver.constraints import ConstraintManager
 from process.core.solver.iteration_variables import ITERATION_VARIABLES
-from process.data_structure.numerics import PROCESSRunMode
+from process.data_structure.numerics import N_ITERATION_VARIABLES_MAX, PROCESSRunMode
 
 
 def fortran_python_scientific(var_value):
@@ -1007,6 +1010,21 @@ class InDat:
         self.in_dat_errors_and_updates(
             exceptions, obs_vars_in_in_dat, updated_indat_lines, changes_made
         )
+
+        # Split bounds dict into boundu and boundl arrays
+        # Set so all unspecified values are unrealistic
+        # parse_input_file will update these with default bounds
+        self.data["boundl"] = copy.copy(self.data["bounds"])
+        self.data["boundu"] = copy.copy(self.data["bounds"])
+        self.data["boundl"].value = np.full((N_ITERATION_VARIABLES_MAX), -9e99)
+        self.data["boundu"].value = np.full((N_ITERATION_VARIABLES_MAX), 9e99)
+
+        for itv_index, bounds in self.data["bounds"].value.items():
+            if "l" in bounds:
+                # -1 to index correct element
+                self.data["boundl"].value[int(itv_index) - 1] = bounds["l"]
+            if "u" in bounds:
+                self.data["boundu"].value[int(itv_index) - 1] = bounds["u"]
 
     def in_dat_errors_and_updates(
         self, exceptions, obs_vars_in_in_dat, updated_indat_lines, changes_made
