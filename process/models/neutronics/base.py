@@ -1872,7 +1872,9 @@ def multiply_2_2_matrices(*matrices):
     matrix:
         A 2x2 matrix
     """
-    seed_matrix = np.identity(2)
+    seed_matrix = mp_zeros(2, 2)
+    seed_matrix[0,0] += mp.mpf(1)
+    seed_matrix[1,1] += mp.mpf(1)
     for matrix in matrices:
         seed_matrix @= matrix
     return seed_matrix
