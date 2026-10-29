@@ -634,53 +634,9 @@ class NeutronFluxProfile:
         # bottom row enforces flux = 0 at the extended boundary.
         self._init_solve_group_n(n)
 
-        init_coefs = self.coefficients[:, n, n].flatten()
-        _rms_residual, _residual_n, _vector_n = [], [], []
+        self._optimization_record[n].append(self._iterate_solve_group_n(n))
 
-        def _set_coefficients(
-            input_vector: Iterable[float | np.double | np.longdouble],
-        ) -> None:
-            """
-            Set the main diagonals coefficients. Force input float vector's
-            floats into np.longdouble format if necessary.
-            """
-            self.coefficients[:, n, n] = np.asarray(
-                input_vector, dtype=np.longdouble
-            ).reshape(self.n_layers, 2)
-            self._update_off_diag_coefs_of_column_n(n)
-
-        scipy_method, scipy_method_accepts_jac = "hybr", True
-
-        def objective(
-            coefficients_vector: npt.NDArray[float | np.longdouble],
-        ) -> tuple[npt.NDArray[float], npt.NDArray]:
-            precise_coefficients = np.asarray(coefficients_vector, dtype=np.longdouble)
-            _set_coefficients(precise_coefficients)
-            cond, jac = self._groupwise_fitness(n)
-            _vector_n.append(precise_coefficients)
-            _residual_n.append(cond)
-            _rms_residual.append(np.sqrt((cond**2).mean()))
-            if scipy_method_accepts_jac:
-                return (
-                    np.asarray(cond, dtype=float),
-                    np.asarray(jac, dtype=float),
-                )
-            return np.asarray(cond, dtype=float)
-
-        opt_result = optimize.root(
-            objective,
-            x0=np.asarray(init_coefs, dtype=float),
-            jac=scipy_method_accepts_jac,
-            method=scipy_method,
-        )
-        _set_coefficients(opt_result.x)
         conditions = self._groupwise_fitness(n, jac=False)
-        self._optimization_record[n].append(
-            CustomOptimizationRecord(
-                self, n, _vector_n, _rms_residual, _residual_n, opt_result
-            )
-        )
-
         if self.fluxes[n]:
             source_current_deviation = conditions[0] / self.fluxes[n]
             source_current_dev_text = f"{source_current_deviation} %"
@@ -834,6 +790,72 @@ class NeutronFluxProfile:
                 m_list[num_layer] @ self.coefficients[num_layer, n, n]
                 + v_list[num_layer]
             )
+        self._update_off_diag_coefs_of_column_n(n)
+
+    def _iterate_solve_group_n(
+        self, n, scipy_method: str = "hybr", scipy_method_accepts_jac: bool = True
+    ) -> CustomOptimizationRecord:
+        """
+        Approach the true solution of the linear equations iteratively, using
+        scipy's root search (`scipy.optimize.root`). The existing
+        self.coefficients[:, n, n] would be used as the starting guess.
+
+        Parameters
+        ----------
+        n:
+            The index of the neutron group whose constants are being solved.
+        scipy_method:
+            The name of the root search algorithm, to be parsed by scipy.optimize.root.
+        scipy_method_accepts_jac:
+            Wether the scipy_method algorithm accepts jacobian or not.
+
+        Returns
+        -------
+        :
+            CustomOptimizationRecord
+        """
+        _rms_residual, _residual_n, _vector_n = [], [], []
+        init_coefs = self.coefficients[:, n, n].flatten()
+
+        def _set_coefficients(
+            input_vector: Iterable[float | np.double | np.longdouble],
+        ) -> None:
+            """
+            Set the main diagonals coefficients. Force input float vector's
+            floats into np.longdouble format if necessary.
+            """
+            self.coefficients[:, n, n] = np.asarray(
+                input_vector, dtype=np.longdouble
+            ).reshape(self.n_layers, 2)
+            self._update_off_diag_coefs_of_column_n(n)
+
+        def objective(
+            coefficients_vector: npt.NDArray[float | np.longdouble],
+        ) -> tuple[npt.NDArray[float], npt.NDArray]:
+            precise_coefficients = np.asarray(coefficients_vector, dtype=np.longdouble)
+            _set_coefficients(precise_coefficients)
+            cond, jac = self._groupwise_fitness(n)
+            _vector_n.append(precise_coefficients)
+            _residual_n.append(cond)
+            _rms_residual.append(np.sqrt((cond**2).mean()))
+            if scipy_method_accepts_jac:
+                return (
+                    np.asarray(cond, dtype=float),
+                    np.asarray(jac, dtype=float),
+                )
+            return np.asarray(cond, dtype=float)
+
+        opt_result = optimize.root(
+            objective,
+            x0=np.asarray(init_coefs, dtype=float),
+            jac=scipy_method_accepts_jac,
+            method=scipy_method,
+        )
+        _set_coefficients(opt_result.x)
+
+        return CustomOptimizationRecord(
+            self, n, _vector_n, _rms_residual, _residual_n, opt_result
+        )
 
     def _update_off_diag_coefs_of_column_n(self, leakage_basis: int) -> None:
         """
