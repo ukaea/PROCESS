@@ -13,49 +13,51 @@ MIN_E = 1 / 40 * EV_TO_J
 
 
 def test_group_structure_0_energy():
-    with pytest.warns():
-        mat = MaterialMacroInfo([1.0, 0.0], 1.0, {"C": 1.0}, 0.99)
-        mat._set_sigma([1.0], [[1.0]])
+    with pytest.warns(UserWarning, match="Zero energy"):
+        MaterialMacroInfo([1.0, 0.0], 1.0, {"C": 1.0}, 0.99)
 
 
 def test_group_structure_too_short():
     with pytest.raises(IndexError):
-        mat = MaterialMacroInfo([1.0], 1.0, {"C": 1.0}, 0.99)
-        mat._set_sigma([1.0], [[1.0]])
+        MaterialMacroInfo([1.0], 1.0, {"C": 1.0}, 0.99)
 
 
 def test_sigma_s_incorrect_shape():
+    mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C": 1.0}, 999)
     with pytest.raises(ProcessValidationError):
-        mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C": 1.0}, 999)
         mat._set_sigma([1.0, 2.0], [1.0, 1.0])
 
 
 def test_sigma_s_too_large():
+    mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C": 1.0}, 999)
     with pytest.raises(ProcessValidationError):
-        mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C": 1.0}, 999)
         mat._set_sigma([1.0, 2.0], [[1.0, 1.0], [1.0, 1.0]])
 
 
 def test_warn_up_elastic_scatter():
+    mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C": 1.0}, 999)
+    mat._set_sigma([1.0, 2.0], [[0.5, 0.5], [1.0, 1.0]])
     with pytest.raises(NotImplementedError):
-        mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C": 1.0}, 999)
-        mat._set_sigma([1.0, 2.0], [[0.5, 0.5], [1.0, 1.0]])
         NeutronFluxProfile(1.0, [0.1], [mat])
 
 
 def test_wrong_x_coordinates():
     mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C": 1.0}, 999)
     mat._set_sigma([1.0, 2.0], [[0.5, 0.4], [0.3, 0.2]])
-    with pytest.raises(ValueError):
+    with pytest.raises(
+        ValueError, match="Model cannot have non-positive layer thicknesses"
+    ):
         NeutronFluxProfile(1.0, [-0.1], [mat])
-    with pytest.raises(ValueError):
+    with pytest.raises(
+        ValueError, match="Model cannot have non-positive layer thicknesses"
+    ):
         NeutronFluxProfile(1.0, [0.1, 0.1], [mat, mat])
 
 
 def test_wrong_num_mats():
     mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C": 1.0}, 999)
     mat._set_sigma([1.0, 2.0], [[0.5, 0.4], [0.3, 0.2]])
-    with pytest.raises(ProcessValidationError):
+    with pytest.raises(ProcessValidationError, match="must match the number"):
         NeutronFluxProfile(1.0, [0.4, 0.8], [mat])
 
 
@@ -189,12 +191,12 @@ def test_same_l_in_2_groups_warns():
     sigma_fw_s = 1 / mfp_fw_s  # [1/m]
     x_fw = 5.72 * 0.01
     fw_material = MaterialMacroInfo(dummy, 1.0, {"Te": 1.0}, name="fw")
-    with pytest.warns(UserWarning):
+    with pytest.warns(
+        UserWarning, match="Group 0 and group 1 has the same neutron diffusion lengths,"
+    ):
         fw_material._set_sigma(
             [sigma_fw_t, sigma_fw_t], [[sigma_fw_s, sigma_fw_s], [0.0, sigma_fw_s]]
         )
-        incoming_flux = 100.0
-        NeutronFluxProfile(incoming_flux, [x_fw], [fw_material])
 
 
 @pytest.mark.filterwarnings(
