@@ -194,7 +194,7 @@ def test_same_l_in_2_groups_warns():
             [sigma_fw_t, sigma_fw_t], [[sigma_fw_s, sigma_fw_s], [0.0, sigma_fw_s]]
         )
         incoming_flux = 100.0
-        neutron_profile = NeutronFluxProfile(incoming_flux, [x_fw], [fw_material])
+        NeutronFluxProfile(incoming_flux, [x_fw], [fw_material])
 
 
 @pytest.mark.filterwarnings(
