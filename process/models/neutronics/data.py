@@ -923,9 +923,9 @@ class MaterialMacroInfo:
         mask = ~np.isclose(
             np.broadcast_to(self._l2, [self.n_groups, self.n_groups]),
             np.broadcast_to(self._l2[:, None], [self.n_groups, self.n_groups]),
-            atol=0.0
+            atol=0.0,
         )
-        for n, basis_group in zip(*np.where(~mask)):
+        for n, basis_group in zip(*np.where(~mask), strict=True):
             if n < basis_group:
                 warnings.warn(
                     f"Group {n} and group {basis_group} has the same neutron "

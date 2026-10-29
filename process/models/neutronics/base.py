@@ -96,6 +96,7 @@ def gaussian_elim_solve_2x2(
 ) -> npt.NDArray[np.longdouble]:
     """Manually solves a 2x2 system of simultaneous equations using
     Gaussian elimination.
+
     Parameters
     ----------
     matr:
@@ -298,7 +299,6 @@ class NeutronFluxProfile:
             for n in range(self.n_groups)
         ])
 
-        mat_name_list = [mat.name for mat in self.materials]
         self.extended_boundary = self.layer_x[-1] + extrapolation_length(
             self.materials[-1].diffusion_const
         )  # vector
@@ -344,8 +344,8 @@ class NeutronFluxProfile:
             content = [[] for _ in range(self.n_groups)]
             for n in range(self.n_groups):
                 content[n].append(f"contributed by group {n} neutrons =")
-                for basis_group, (coef_pair, basis_pair) in enumerate(
-                    zip(self.coefficients[num_layer, n], bases, strict=True)
+                for coef_pair, basis_pair in zip(
+                    self.coefficients[num_layer, n], bases, strict=True
                 ):
                     str_repr = (
                         f"{coef_pair[0]:+.7e} * {basis_pair[0]} "
@@ -356,10 +356,7 @@ class NeutronFluxProfile:
             tables.append(
                 tabulate(
                     content,
-                    headers=[
-                        f"Neutron flux in layer {num_layer}",
-                    ]
-                    + headers,
+                    headers=[f"Neutron flux in layer {num_layer}", *headers],
                 )
             )
         return tables
@@ -723,7 +720,7 @@ class NeutronFluxProfile:
             objective,
             x0=np.asarray(init_coefs, dtype=float),
             jac=scipy_method_accepts_jac,
-            method="hybr",
+            method=scipy_method,
         )
         _set_coefficients(opt_result.x)
         conditions = self._groupwise_fitness(n, jac=False)
