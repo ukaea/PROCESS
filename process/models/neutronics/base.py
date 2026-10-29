@@ -24,12 +24,17 @@ This retains maintainability without having to refer to the paper.
 academic publications)
 """
 
+from __future__ import annotations
+
 import functools
 import inspect
 import warnings
-from collections.abc import Callable, Iterable
 from itertools import pairwise, starmap
 from operator import mul
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Callable, Iterable
 
 import matplotlib as mpl
 import numpy as np
