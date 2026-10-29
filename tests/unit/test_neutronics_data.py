@@ -26,7 +26,7 @@ def fraction_of_speed_of_light(ratio_of_ke_to_re):
 
 
 @pytest.mark.parametrize(
-    "kinetic_energy_to_rest_energy_ratio, speed_of_light_fraction_expected",
+    ("kinetic_energy_to_rest_energy_ratio", "speed_of_light_fraction_expected"),
     [
         (0.0, 0.0),
         (1.0, 0.86603),
@@ -47,7 +47,7 @@ def test_relativistic_energy_to_speed(
 
 
 @pytest.mark.parametrize(
-    "group_structure, atomic_mass",
+    ("group_structure", "atomic_mass"),
     [
         (np.cumsum(100 ** abs(rng.normal(size=5)))[::-1], rng.random() * 200),
         (np.cumsum(100 ** abs(rng.normal(size=10)))[::-1], rng.random() * 239),
