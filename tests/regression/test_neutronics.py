@@ -273,7 +273,9 @@ def test_fission_plot():
     nu_sigma_bz_f = g * (sigma_bz_t - sigma_bz_s)
     bz_material = MaterialMacroInfo(dummy, 1.0, {"Lu": 1.0}, name="bz")
     bz_material.avg_atomic_mass = a_bz
-    bz_material._set_sigma([sigma_bz_t], [[sigma_bz_s]], [[nu_sigma_bz_f]])
+    bz_material._set_sigma(
+        [sigma_bz_t], [[sigma_bz_s]], [[nu_sigma_bz_f]], sigma_triton=[0.1]
+    )
 
     x_fw, x_bz = 5.72 * 0.01, 85 * 0.01
     incoming_flux = 41
