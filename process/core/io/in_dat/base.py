@@ -952,6 +952,12 @@ class InDat:
     def read_in_dat(self):
         """Function to read in 'self.filename' and put data into dictionary
         'self.data'. Also check for obsolete variables.
+
+        Raises
+        ------
+        ProcessValidationError
+            If bounds are not of the correct form of boundl/u(index) = value
+
         """
         # Read in IN.DAT
         with open(self.filename) as indat:
@@ -1021,10 +1027,20 @@ class InDat:
 
         for itv_index, bounds in self.data["bounds"].value.items():
             if "l" in bounds:
-                # -1 to index correct element
-                self.data["boundl"].value[int(itv_index) - 1] = bounds["l"]
+                # NOTE -1 to index correct element
+                try:
+                    self.data["boundl"].value[int(itv_index) - 1] = bounds["l"]
+                except ValueError as e:
+                    raise ProcessValidationError(
+                        "The bounds need to be of the form boundl(index) = value"
+                    ) from e
             if "u" in bounds:
-                self.data["boundu"].value[int(itv_index) - 1] = bounds["u"]
+                try:
+                    self.data["boundu"].value[int(itv_index) - 1] = bounds["u"]
+                except ValueError as e:
+                    raise ProcessValidationError(
+                        "The bounds need to be of the form boundu(index) = value"
+                    ) from e
 
     def in_dat_errors_and_updates(
         self, exceptions, obs_vars_in_in_dat, updated_indat_lines, changes_made
