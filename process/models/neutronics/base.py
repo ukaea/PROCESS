@@ -95,7 +95,18 @@ def gaussian_elim_solve_2x2(
     matr: npt.NDArray[np.longdouble], vec: npt.NDArray[np.longdouble]
 ) -> npt.NDArray[np.longdouble]:
     """Manually solves a 2x2 system of simultaneous equations using
-    Gaussian elimination. matrccepts a long-double
+    Gaussian elimination.
+    Parameters
+    ----------
+    matr:
+        A 2x2 matrix of np.longdouble.
+    vec:
+        A 2x1 vector of np.longdouble.
+
+    Raises
+    ------
+    LinAlgError
+        Raised when matrix is singular.
     """
     matr = np.asarray(matr, dtype=np.longdouble).copy()
     vec = np.asarray(vec, dtype=np.longdouble).copy()
