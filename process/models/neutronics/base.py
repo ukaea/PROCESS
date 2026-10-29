@@ -48,6 +48,10 @@ mp.prec = 69
 
 
 def mp_func_factory(mp_func, np_func):
+    """Make a function that switches between mpmath version and the numpy
+    version depending on whether a scalar or vector value is inputted.
+    """
+
     def mp_function(x):
         if np.isscalar(x):
             return mp_func(x)
@@ -106,6 +110,7 @@ def summarize_values(func):
 
 
 def mp_zeros(*shape: int):
+    """Create a numpy array that is all mp.mpf(0)."""
     return np.array(
         [mp.mpf(0) for _ in range(functools.reduce(mul, shape, 1))],
         dtype=object,
@@ -121,6 +126,9 @@ def convert_to_mpf(array: npt.NDArray) -> npt.NDArray[object]:
 
 
 def mpf(value: float | npt.NDArray) -> mp.mpf | npt.NDArray[object]:
+    """
+    Shorthand for converting a scalar to mpf but leave any numpy array as is.
+    """
     if np.isscalar(value):
         return mp.mpf(value)
     return np.asarray(value)
