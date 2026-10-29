@@ -1813,10 +1813,12 @@ class CustomOptimizationRecord:
         return ax
 
 
-def multiply_2_2_matrices(*matrices):
+def multiply_2_2_matrices(
+    *matrices: Iterable[npt.NDArray[np.longdouble]],
+) -> npt.NDArray[np.longdouble]:
     """
     Multiply a chain of 2x2 matrices from the left (smallest index) to the
-    right.
+    right, each of which is expected
 
     Parameters
     ----------
@@ -1828,7 +1830,7 @@ def multiply_2_2_matrices(*matrices):
     matrix:
         A 2x2 matrix
     """
-    seed_matrix = np.identity(2)
+    seed_matrix = np.identity(2, dtype=np.longdouble)
     for matrix in matrices:
         seed_matrix @= matrix
     return seed_matrix
