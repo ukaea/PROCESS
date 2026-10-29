@@ -676,61 +676,7 @@ class NeutronFluxProfile:
         # Determine coefficients[0, n, n] by boundary conditions:
         # top row enforces current at (x=0) = source current,
         # bottom row enforces flux = 0 at the extended boundary.
-        top_row = self._groupwise_cs_differential_in_layer(n, 0, 0)
-        y = -(
-            self.fluxes[n] / self.materials[0].diffusion_const[n]
-        ) - self._summation_shorthand(
-            n,
-            0,
-            self._groupwise_cs_differential_in_layer,
-            0.0,
-            self.n_groups
-            if (not self.materials[0].downscatter_only and self.num_iteration[n])
-            else n,
-        )
-
-        m_list, v_list = self._get_all_propagation_operator(n)
-        affine_transform_matrix_stack = multiply_2_2_matrices(*m_list[::-1])
-        affine_transformed_column_vector = np.sum(
-            [
-                multiply_2_2_matrices(*m_list[:k:-1]) @ v_list[k]
-                for k in range(self.n_layers - 1)
-            ]
-            or [[0, 0]],
-            axis=0,
-        )
-
-        bot_row = (
-            self._groupwise_cs_values_in_layer(
-                n, self.n_layers - 1, self.extended_boundary[n]
-            )
-            @ affine_transform_matrix_stack
-        )
-        z = -(
-            self._groupwise_cs_values_in_layer(
-                n, self.n_layers - 1, self.extended_boundary[n]
-            )
-            @ affine_transformed_column_vector
-        ) - self._summation_shorthand(
-            n,
-            self.n_layers - 1,
-            self._groupwise_cs_values_in_layer,
-            self.extended_boundary[n],
-            self.n_groups
-            if (not self.materials[0].downscatter_only and self.num_iteration[n])
-            else n,
-        )
-        eqn_32_matrix = np.array([top_row, bot_row])
-        eqn_32_vector = np.array([y, z])
-        self.coefficients[0, n, n] = gaussian_elim_solve_2x2(
-            eqn_32_matrix, eqn_32_vector
-        )
-
-        for num_layer in range(self.n_layers - 1):
-            self.coefficients[num_layer + 1, n, n] = (
-                m_list[num_layer] @ self.coefficients[num_layer, n, n]
-                + v_list[num_layer]
-            )
+        self._init_solve_group_n(n)
 
         init_coefs = self.coefficients[:, n, n].flatten()
         rms_residual, residual_n, vector_n = [], [], []
@@ -865,6 +811,71 @@ class NeutronFluxProfile:
         else:
             self._is_solved[n] = True
         return
+
+    def _init_solve_group_n(self, n) -> None:
+        """
+        Initial solve (by solving the set of linear equation through
+        Gaussian elimination alone) of the coefficients of group n.
+
+        Parameters
+        ----------
+        n:
+            The index of the neutron group whose constants are being solved.
+        """
+        top_row = self._groupwise_cs_differential_in_layer(n, 0, 0)
+        y = -(
+            self.fluxes[n] / self.materials[0].diffusion_const[n]
+        ) - self._summation_shorthand(
+            n,
+            0,
+            self._groupwise_cs_differential_in_layer,
+            0.0,
+            self.n_groups
+            if (not self.materials[0].downscatter_only and self.num_iteration[n])
+            else n,
+        )
+
+        m_list, v_list = self._get_all_propagation_operator(n)
+        affine_transform_matrix_stack = multiply_2_2_matrices(*m_list[::-1])
+        affine_transformed_column_vector = np.sum(
+            [
+                multiply_2_2_matrices(*m_list[:k:-1]) @ v_list[k]
+                for k in range(self.n_layers - 1)
+            ]
+            or [[0, 0]],
+            axis=0,
+        )
+
+        bot_row = (
+            self._groupwise_cs_values_in_layer(
+                n, self.n_layers - 1, self.extended_boundary[n]
+            )
+            @ affine_transform_matrix_stack
+        )
+        z = -(
+            self._groupwise_cs_values_in_layer(
+                n, self.n_layers - 1, self.extended_boundary[n]
+            )
+            @ affine_transformed_column_vector
+        ) - self._summation_shorthand(
+            n,
+            self.n_layers - 1,
+            self._groupwise_cs_values_in_layer,
+            self.extended_boundary[n],
+            self.n_groups
+            if (not self.materials[0].downscatter_only and self.num_iteration[n])
+            else n,
+        )
+        eqn_32_matrix = np.array([top_row, bot_row])
+        eqn_32_vector = np.array([y, z])
+        self.coefficients[0, n, n] = gaussian_elim_solve_2x2(
+            eqn_32_matrix, eqn_32_vector
+        )
+        for num_layer in range(self.n_layers - 1):
+            self.coefficients[num_layer + 1, n, n] = (
+                m_list[num_layer] @ self.coefficients[num_layer, n, n]
+                + v_list[num_layer]
+            )
 
     def _update_off_diag_coefs_of_column_n(self, leakage_basis: int) -> None:
         """
