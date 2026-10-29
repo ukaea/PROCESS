@@ -15,46 +15,49 @@ MIN_E = 1 / 40 * EV_TO_J
 def test_group_structure_0_energy():
     with pytest.warns():
         mat = MaterialMacroInfo([1.0, 0.0], 1.0, {"C": 1.0}, 0.99)
-        mat._set_sigma([1.0], [[1.0]])  # noqa: SLF001
+        mat._set_sigma([1.0], [[1.0]])
 
 
 def test_group_structure_too_short():
     with pytest.raises(IndexError):
         mat = MaterialMacroInfo([1.0], 1.0, {"C": 1.0}, 0.99)
-        mat._set_sigma([1.0], [[1.0]])  # noqa: SLF001
+        mat._set_sigma([1.0], [[1.0]])
 
 
 def test_sigma_s_incorrect_shape():
     with pytest.raises(ProcessValidationError):
         mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C": 1.0}, 999)
-        mat._set_sigma([1.0, 2.0], [1.0, 1.0])  # noqa: SLF001
+        mat._set_sigma([1.0, 2.0], [1.0, 1.0])
 
 
 def test_sigma_s_too_large():
     with pytest.raises(ProcessValidationError):
         mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C": 1.0}, 999)
-        mat._set_sigma([1.0, 2.0], [[1.0, 1.0], [1.0, 1.0]])  # noqa: SLF001
+        mat._set_sigma([1.0, 2.0], [[1.0, 1.0], [1.0, 1.0]])
 
 
 def test_warn_up_elastic_scatter():
     with pytest.raises(NotImplementedError):
         mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C": 1.0}, 999)
-        mat._set_sigma([1.0, 2.0], [[0.5, 0.5], [1.0, 1.0]])  # noqa: SLF001
+        mat._set_sigma([1.0, 2.0], [[0.5, 0.5], [1.0, 1.0]])
         NeutronFluxProfile(1.0, [0.1], [mat])
+
 
 def test_wrong_x_coordinates():
     mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C": 1.0}, 999)
-    mat._set_sigma([1.0, 2.0], [[0.5, 0.4], [0.3, 0.2]])  # noqa: SLF001
+    mat._set_sigma([1.0, 2.0], [[0.5, 0.4], [0.3, 0.2]])
     with pytest.raises(ValueError):
         NeutronFluxProfile(1.0, [-0.1], [mat])
     with pytest.raises(ValueError):
         NeutronFluxProfile(1.0, [0.1, 0.1], [mat, mat])
 
+
 def test_wrong_num_mats():
     mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C": 1.0}, 999)
-    mat._set_sigma([1.0, 2.0], [[0.5, 0.4], [0.3, 0.2]])  # noqa: SLF001
+    mat._set_sigma([1.0, 2.0], [[0.5, 0.4], [0.3, 0.2]])
     with pytest.raises(ProcessValidationError):
         NeutronFluxProfile(1.0, [0.4, 0.8], [mat])
+
 
 def test_has_local_fluxes():
     """Test that the groupwise decorator has worked on the local fluxes methods."""
@@ -158,7 +161,7 @@ def _diffusion_equation_in_layer(test_profile, n, num_layer, x):
     """
     diffusion_out = test_profile.materials[num_layer].diffusion_const[
         n
-    ] * test_profile._groupwise_flux_curvature_in_layer(n, num_layer, x)  # noqa: SLF001
+    ] * test_profile._groupwise_flux_curvature_in_layer(n, num_layer, x)
     total_removal = test_profile.materials[num_layer].sigma_t[
         n
     ] * test_profile.groupwise_neutron_flux_in_layer(n, num_layer, x)
@@ -187,7 +190,7 @@ def test_same_l_in_2_groups_warns():
     x_fw = 5.72 * 0.01
     fw_material = MaterialMacroInfo(dummy, 1.0, {"Te": 1.0}, name="fw")
     with pytest.warns(UserWarning):
-        fw_material._set_sigma(  # noqa: SLF001
+        fw_material._set_sigma(
             [sigma_fw_t, sigma_fw_t], [[sigma_fw_s, sigma_fw_s], [0.0, sigma_fw_s]]
         )
         incoming_flux = 100.0
@@ -208,7 +211,7 @@ def test_same_l_in_2_groups_calculate_flux():
     sigma_fw_s = 1 / mfp_fw_s  # [1/m]
     x_fw = 5.72 * 0.01
     fw_material = MaterialMacroInfo(dummy, 1.0, {"Te": 1.0}, name="fw")
-    fw_material._set_sigma(  # noqa: SLF001
+    fw_material._set_sigma(
         [sigma_fw_t, sigma_fw_t], [[sigma_fw_s, sigma_fw_s], [0.0, sigma_fw_s]]
     )
     incoming_flux = 100.0
