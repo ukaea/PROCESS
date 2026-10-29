@@ -43,11 +43,11 @@ def groupwise_diffusion_terms(
     )
     in_scatter_max_group = test_profile.n_groups if include_upscatter else n + 1
     for num_layer in range(test_profile.n_layers + 1):
-        if test_profile._check_if_in_layer(x, num_layer):  # noqa: SLF001
+        if test_profile._check_if_in_layer(x, num_layer):
             mat = test_profile.materials[num_layer]
             return DiffusionEqTerms(
                 -mat.diffusion_const[n]
-                * test_profile._groupwise_flux_curvature_in_layer(n, num_layer, x),  # noqa: SLF001
+                * test_profile._groupwise_flux_curvature_in_layer(n, num_layer, x),
                 mat.sigma_t[n]
                 * test_profile.groupwise_neutron_flux_in_layer(n, num_layer, x),
                 [
@@ -92,7 +92,7 @@ def test_1_group_1_layer():
     a_fw = 52
     fw_material = MaterialMacroInfo(dummy, 1.0, {"Te": 1.0}, name="fw")
     fw_material.avg_atomic_mass = a_fw
-    fw_material._set_sigma([sigma_fw_t], [[sigma_fw_s]])  # noqa: SLF001
+    fw_material._set_sigma([sigma_fw_t], [[sigma_fw_s]])
 
     mfp_bz_s = 97 * 0.01  # [m]
     mfp_bz_t = 35.8 * 0.01  # [m]
@@ -101,7 +101,7 @@ def test_1_group_1_layer():
     a_bz = 71
     bz_material = MaterialMacroInfo(dummy, 1.0, {"Lu": 1.0}, name="bz")
     bz_material.avg_atomic_mass = a_bz
-    bz_material._set_sigma([sigma_bz_t], [[sigma_bz_s]])  # noqa: SLF001
+    bz_material._set_sigma([sigma_bz_t], [[sigma_bz_s]])
 
     x_fw, x_bz = 5.72 * 0.01, 85 * 0.01
     incoming_flux = 41
@@ -170,7 +170,7 @@ def test_1_group_2_layer_with_fission():
     a_fw = 52
     fw_material = MaterialMacroInfo(dummy, 1.0, {"Te": 1.0}, name="fw")
     fw_material.avg_atomic_mass = a_fw
-    fw_material._set_sigma([sigma_fw_t], [[sigma_fw_s]])  # noqa: SLF001
+    fw_material._set_sigma([sigma_fw_t], [[sigma_fw_s]])
 
     mfp_bz_s = 97 * 0.01  # [m]
     mfp_bz_t = 35.8 * 0.01  # [m]
@@ -182,7 +182,7 @@ def test_1_group_2_layer_with_fission():
     nu_sigma_bz_f = g * (sigma_bz_t - sigma_bz_s)
     bz_material = MaterialMacroInfo(dummy, 1.0, {"Lu": 1.0}, name="bz")
     bz_material.avg_atomic_mass = a_bz
-    bz_material._set_sigma([sigma_bz_t], [[sigma_bz_s]], [[nu_sigma_bz_f]])  # noqa: SLF001
+    bz_material._set_sigma([sigma_bz_t], [[sigma_bz_s]], [[nu_sigma_bz_f]])
 
     x_fw, x_bz = 5.72 * 0.01, 85 * 0.01
     incoming_flux = 41
@@ -264,7 +264,7 @@ def test_fission_plot():
     a_fw = 52
     fw_material = MaterialMacroInfo(dummy, 1.0, {"Te": 1.0}, name="fw")
     fw_material.avg_atomic_mass = a_fw
-    fw_material._set_sigma([sigma_fw_t], [[sigma_fw_s]])  # noqa: SLF001
+    fw_material._set_sigma([sigma_fw_t], [[sigma_fw_s]])
 
     mfp_bz_s = 97 * 0.01  # [m]
     mfp_bz_t = 35.8 * 0.01  # [m]
@@ -276,7 +276,7 @@ def test_fission_plot():
     nu_sigma_bz_f = g * (sigma_bz_t - sigma_bz_s)
     bz_material = MaterialMacroInfo(dummy, 1.0, {"Lu": 1.0}, name="bz")
     bz_material.avg_atomic_mass = a_bz
-    bz_material._set_sigma([sigma_bz_t], [[sigma_bz_s]], [[nu_sigma_bz_f]])  # noqa: SLF001
+    bz_material._set_sigma([sigma_bz_t], [[sigma_bz_s]], [[nu_sigma_bz_f]])
 
     x_fw, x_bz = 5.72 * 0.01, 85 * 0.01
     incoming_flux = 41
@@ -295,9 +295,9 @@ def test_2_groups_2_layers():
     """Create a 2-layer 2-group model."""
     dummy = np.geomspace(MAX_E, MIN_E, 3)
     mat1 = MaterialMacroInfo(dummy, 1.0, {"Te": 1.0}, name="mat1")
-    mat1._set_sigma([100.0, 200], [[90, 1.0], [0.0, 199.5]])  # noqa: SLF001
+    mat1._set_sigma([100.0, 200], [[90, 1.0], [0.0, 199.5]])
     mat2 = MaterialMacroInfo(dummy, 1.0, {"Te": 1.0}, name="mat2")
-    mat2._set_sigma([10.0, 20], [[9, 1.0], [0.0, 8.0]])  # noqa: SLF001
+    mat2._set_sigma([10.0, 20], [[9, 1.0], [0.0, 8.0]])
     neutron_profile = NeutronFluxProfile(
         1.0,
         [0.2, 0.3],
@@ -310,21 +310,27 @@ def test_2_groups_2_layers():
             np.testing.assert_almost_equal(
                 neutron_profile.groupwise_neutron_flux_in_layer(n, num_layer, x),
                 neutron_profile.groupwise_neutron_flux_in_layer(n, num_layer + 1, x),
-                err_msg=f"Group {n} neutron flux continuity check at the {num_layer} layer interface ({x=}m.)",
+                err_msg=(
+                    f"Group {n} neutron flux continuity check at the "
+                    f"{num_layer} layer interface ({x=}m.)"
+                ),
             )
             np.testing.assert_almost_equal(
                 neutron_profile.groupwise_neutron_current_in_layer(n, num_layer, x),
                 neutron_profile.groupwise_neutron_current_in_layer(n, num_layer + 1, x),
-                err_msg=f"Group {n} neutron current continuity check at the {num_layer} layer interface ({x=}m.)",
+                err_msg=(
+                    f"Group {n} neutron current continuity check at the "
+                    f"{num_layer} layer interface ({x=}m.)"
+                ),
             )
 
 
 def test_tabulate():
     dummy = np.geomspace(MAX_E, MIN_E, 3)
     mat1 = MaterialMacroInfo(dummy, 1.0, {"Te": 1.0}, name="mat1")
-    mat1._set_sigma([100.0, 200], [[90, 1.0], [0.0, 199.5]])  # noqa: SLF001
+    mat1._set_sigma([100.0, 200], [[90, 1.0], [0.0, 199.5]])
     mat2 = MaterialMacroInfo(dummy, 1.0, {"Te": 1.0}, name="mat2")
-    mat2._set_sigma([10.0, 20], [[9, 1.0], [0.0, 8.0]])  # noqa: SLF001
+    mat2._set_sigma([10.0, 20], [[9, 1.0], [0.0, 8.0]])
     neutron_profile = NeutronFluxProfile(
         1.0,
         [0.2, 0.3],
@@ -341,7 +347,7 @@ def test_2_groups_1_layer():
     sigma_fw_s = 1 / mfp_fw_s  # [1/m]
     x_fw = 5.72 * 0.1
     fw_material = MaterialMacroInfo(dummy, 1.0, {"Te": 1.0}, name="fw")
-    fw_material._set_sigma(  # noqa: SLF001
+    fw_material._set_sigma(
         [1 / mfp_fw_t, 1 / (mfp_fw_t + 0.5)],
         [[sigma_fw_s, sigma_fw_s], [0.0, sigma_fw_s]],
     )
@@ -391,9 +397,9 @@ def test_2_groups_2_layers_two_identical_materials():
     """
     dummy = np.geomspace(MAX_E, MIN_E, 3)
     mat1 = MaterialMacroInfo(dummy, 1.0, {"Te": 1.0}, name="mat1")
-    mat1._set_sigma([10.0, 20], [[9, 1.0], [0.0, 8.0]])  # noqa: SLF001
+    mat1._set_sigma([10.0, 20], [[9, 1.0], [0.0, 8.0]])
     mat2 = MaterialMacroInfo(dummy, 1.0, {"Te": 1.0}, name="mat2")
-    mat2._set_sigma([10.0, 20], [[9, 1.0], [0.0, 8.0]])  # noqa: SLF001
+    mat2._set_sigma([10.0, 20], [[9, 1.0], [0.0, 8.0]])
     neutron_profile1 = NeutronFluxProfile(
         1.0,
         [0.2, 0.4],
@@ -417,10 +423,12 @@ def test_2_groups_2_layers_two_identical_materials():
 
 
 @pytest.mark.filterwarnings(
-    "ignore:Group 1 neutron current at x=0 != the predetermined value of 0.0! Instead current deviated by"
+    "ignore:Group 1 neutron current at x=0 != the predetermined value of 0.0! "
+    "Instead current deviated by"
 )
 @pytest.mark.filterwarnings(
-    "ignore:Group 2 neutron current at x=0 != the predetermined value of 0.0! Instead current deviated by"
+    "ignore:Group 2 neutron current at x=0 != the predetermined value of 0.0! "
+    "Instead current deviated by"
 )
 def test_3_groups_1_layer():
     dummy = np.geomspace(MAX_E, MIN_E, 4)  # dummy group structure
@@ -430,7 +438,7 @@ def test_3_groups_1_layer():
     sigma_fw_s = 1 / mfp_fw_s  # [1/m]
     x_fw = 5.72 * 0.1
     fw_material = MaterialMacroInfo(dummy, 1.0, {"Te": 1.0}, name="fw")
-    fw_material._set_sigma(  # noqa: SLF001
+    fw_material._set_sigma(
         [1 / mfp_fw_t, 1 / (mfp_fw_t + 0.25), 1 / (mfp_fw_t + 0.5)],
         [
             [sigma_fw_s, sigma_fw_s, sigma_fw_s],
@@ -498,7 +506,7 @@ def test_4_groups_1_layer():
     sigma_fw_s = 1 / mfp_fw_s  # [1/m]
     x_fw = 5.72 * 0.1
     fw_material = MaterialMacroInfo(dummy, 1.0, {"Te": 1.0}, name="fw")
-    fw_material._set_sigma(  # noqa: SLF001
+    fw_material._set_sigma(
         [
             1 / mfp_fw_t,
             1 / (mfp_fw_t + 0.25),
@@ -588,7 +596,7 @@ def test_4_groups_4_layers():
     dummy = np.geomspace(MAX_E, MIN_E, 5)  # dummy group structure
     # translate from mean-free-path lengths (mfp) to macroscopic cross-sections
     tungsten = MaterialMacroInfo(dummy, 19300.0, {"Te": 1.0}, name="tungsten")
-    tungsten._set_sigma(  # noqa: SLF001
+    tungsten._set_sigma(
         [36.70793446, 82.75605723, 557.10852765, 68.99371192],
         [
             [3.56412195e00, 3.10469266e-03, 1.86354209e-07, 9.59501248e-11],
@@ -598,7 +606,7 @@ def test_4_groups_4_layers():
         ],
     )
     lithium = MaterialMacroInfo(dummy, 534.0, {"Te": 1.0}, name="lithium")
-    lithium._set_sigma(  # noqa: SLF001
+    lithium._set_sigma(
         [8.53058076, 5.00130054, 8.6628814, 54.01467005],
         [
             [6.2826794, 0.01282172, 0.0, 0.0],
@@ -608,7 +616,7 @@ def test_4_groups_4_layers():
         ],
     )
     ss316 = MaterialMacroInfo(dummy, 7930.0, {"Te": 1.0}, name="ss316")
-    ss316._set_sigma(  # noqa: SLF001
+    ss316._set_sigma(
         [58.75691059, 274.00378023, 3562.92253327, 86.75244242],
         [
             [3.48853683e01, 1.01273247e-02, 0.00000000e00, 0.00000000e00],
@@ -618,7 +626,7 @@ def test_4_groups_4_layers():
         ],
     )
     concrete = MaterialMacroInfo(dummy, 3600.0, {"Te": 1.0}, name="concrete")
-    concrete._set_sigma(  # noqa: SLF001
+    concrete._set_sigma(
         [4.12742084, 7.42553891, 8.24183468, 8.29305646],
         [
             [3.56412195e00, 3.10469266e-03, 1.86354209e-07, 9.59501248e-11],
@@ -640,7 +648,9 @@ def test_4_groups_4_layers():
                 n, neutron_profile.n_layers - 1, neutron_profile.extended_boundary[n]
             ),
             0,
-            err_msg=f"Neutron flux at group {n}'s extended boundary is expected to be 0!",
+            err_msg=(
+                f"Neutron flux at group {n}'s extended boundary is expected to be 0!"
+            ),
         )
     for num_layer in range(neutron_profile.n_layers):
         mid_point = np.mean(neutron_profile.interface_x[num_layer : num_layer + 2])
@@ -677,12 +687,18 @@ def test_4_groups_4_layers():
             np.testing.assert_almost_equal(
                 neutron_profile.groupwise_neutron_flux_in_layer(n, num_layer, x),
                 neutron_profile.groupwise_neutron_flux_in_layer(n, num_layer + 1, x),
-                err_msg=f"Group {n} neutron flux continuity check at the {num_layer} layer interface ({x=}m.)",
+                err_msg=(
+                    f"Group {n} neutron flux continuity check at the {num_layer}"
+                    f" layer interface ({x=}m.)"
+                ),
             )
             np.testing.assert_almost_equal(
                 neutron_profile.groupwise_neutron_current_in_layer(n, num_layer, x),
                 neutron_profile.groupwise_neutron_current_in_layer(n, num_layer + 1, x),
-                err_msg=f"Group {n} neutron current continuity check at the {num_layer} layer interface ({x=}m.)",
+                err_msg=(
+                    f"Group {n} neutron current continuity check at the {num_layer}"
+                    f" layer interface ({x=}m.)"
+                ),
             )
 
 
@@ -692,7 +708,10 @@ def test_4_groups_4_layers():
 @pytest.mark.filterwarnings("ignore:Group 2 neutron")
 @pytest.mark.filterwarnings("ignore:Group 1 neutron")
 def test_5_groups_5_layers():
-    """Create an arbitrary 5-layer 5-group model. Check for continuity and conformity to the equation."""
+    """
+    Create an arbitrary 5-layer 5-group model. Check for continuity and
+    conformity to the equation.
+    """
     dummy_group_structure = np.geomspace(MAX_E, MIN_E, 5 + 1)
     mat_list = []
     at_masses = np.geomspace(1, 100, 5)[[3, 0, 2, 4, 1]]
@@ -724,7 +743,7 @@ def test_5_groups_5_layers():
     for i in range(5):
         mat = MaterialMacroInfo(dummy_group_structure, 1.0, {"C": 1.0}, name=f"mat{i}")
         mat.avg_atomic_mass = at_masses[i]
-        mat._set_sigma(  # noqa: SLF001
+        mat._set_sigma(
             sigma_t=sigma_t_lists[i],
             sigma_s=(
                 sigma_s_list[i]
