@@ -629,9 +629,6 @@ class NeutronFluxProfile:
                     stacklevel=2,
                 )
 
-        # Determine coefficients[0, n, n] by boundary conditions:
-        # top row enforces current at (x=0) = source current,
-        # bottom row enforces flux = 0 at the extended boundary.
         self._init_solve_group_n(n)
 
         self._optimization_record[n].append(self._iterate_solve_group_n(n))
@@ -735,6 +732,12 @@ class NeutronFluxProfile:
         ----------
         n:
             The index of the neutron group whose constants are being solved.
+
+        Notes
+        -----
+        The boundary conditions enforced are:
+        top row enforces current at (x=0) = source current,
+        bottom row enforces flux = 0 at the extended boundary.
         """
         top_row = self._groupwise_cs_differential_in_layer(n, 0, 0)
         y = -(
