@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from process.core import constants
-from process.core.io.plot.summary.common import box_style, text_layout
+from process.core.io.plot.summary.common import add_panel, add_symbol, box_style
 from process.core.io.plot.summary.plasma.physics import reaction_plot_grid
 from process.core.io.plot.summary.profiles.misc import (
     interp1d_profile,
@@ -285,14 +285,15 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
         ),
     ))
 
-    ax_main.text(
+    add_panel(
+        ax_main,
         -0.05,
         -0.175,
+        1.01,
+        0.35,
         textstr_density,
+        box_style("wheat", alpha=0.5, linewidth=None),
         transform=ax_impurity.transAxes,
-        fontsize=9,
-        verticalalignment="top",
-        bbox=box_style("wheat", alpha=0.5, linewidth=None),
     )
 
     textstr_ions = "\n".join((
@@ -323,19 +324,15 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
         ),
     ))
 
-    ax_impurity.text(
-        1.2,
-        0.05,
+    add_panel(
+        ax_impurity,
+        1.20,
+        0.34,
+        0.58,
+        0.27,
         textstr_ions,
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
+        {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5},
         transform=ax_impurity.transAxes,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "wheat",
-            "alpha": 0.5,
-        },
     )
 
     ax_main.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
@@ -389,14 +386,15 @@ def plot_jprofile(prof, mfile: MFile, scan: int):
     ))
 
     props_j = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
-    prof.text(
+    add_panel(
+        prof,
         0.65,
-        1.6,
+        1.60,
+        0.43,
+        0.31,
         textstr_j,
+        props_j,
         transform=prof.transAxes,
-        fontsize=9,
-        verticalalignment="top",
-        bbox=props_j,
     )
 
     prof.text(
@@ -560,14 +558,15 @@ def plot_t_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
         "facecolor": "wheat",
         "alpha": 0.5,
     }
-    prof.text(
+    add_panel(
+        prof,
         -0.1,
         -0.125,
+        1.25,
+        0.24,
         textstr_temperature,
+        props_temperature,
         transform=prof.transAxes,
-        fontsize=9,
-        verticalalignment="top",
-        bbox=props_temperature,
     )
     prof.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
 
@@ -631,18 +630,19 @@ def plot_qprofile(prof, demo_ranges: bool, mfile: MFile, scan: int):
     ))
 
     props_q = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
-    prof.text(
-        0.0,
-        1.4,
+    add_panel(
+        prof,
+        0.00,
+        1.40,
+        0.75,
+        0.14,
         textstr_q,
+        props_q,
         transform=prof.transAxes,
-        fontsize=9,
-        verticalalignment="top",
-        bbox=props_q,
     )
 
 
-def plot_fusion_rate_density_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
+def plot_fusion_rate_density_profiles(axis: plt.Axes, mfile: MFile, scan: int):
     """Plot the fusion rate density profiles on the given axis"""
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
@@ -831,13 +831,8 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, fig, mfile: MFile, scan: i
         " reactions/m³/s\n"
     )
 
-    axis.text(
-        0.05,
-        0.85,
-        textstr_general,
-        **text_layout(fig),
-        bbox=box_style("lightyellow"),
-    )
+    add_panel(axis, 0.05, 0.85, 0.42, 0.05, textstr_general, box_style("lightyellow"))
+    # add_symbol(axis, "$P_{\\text{inj}}$", 0.92, 0.625)
 
     # ============================================================================
 
@@ -851,22 +846,8 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, fig, mfile: MFile, scan: i
         f" {mfile.get('p_beam_dt_mw', scan=scan):,.2f} MW"
     )
 
-    axis.text(
-        0.05,
-        0.75,
-        textstr_dt,
-        **text_layout(fig),
-        bbox=box_style("lightyellow"),
-    )
-
-    axis.text(
-        0.39,
-        0.79,
-        "$\\text{D - T}$",
-        fontsize=20,
-        verticalalignment="top",
-        transform=fig.transFigure,
-    )
+    add_panel(axis, 0.05, 0.785, 0.42, 0.07, textstr_dt, box_style("lightyellow"))
+    add_symbol(axis, "$\\text{D - T}$", 0.38, 0.76)
 
     # =================================================
 
@@ -878,22 +859,8 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, fig, mfile: MFile, scan: i
         f" {mfile.get('f_dd_branching_trit', scan=scan):.4f}"
     )
 
-    axis.text(
-        0.05,
-        0.65,
-        textstr_dd,
-        **text_layout(fig),
-        bbox=box_style("lightyellow"),
-    )
-
-    axis.text(
-        0.36,
-        0.685,
-        "$\\text{D - D}$",
-        fontsize=20,
-        verticalalignment="top",
-        transform=fig.transFigure,
-    )
+    add_panel(axis, 0.05, 0.7, 0.42, 0.08, textstr_dd, box_style("lightyellow"))
+    add_symbol(axis, "$\\text{D - D}$", 0.38, 0.68)
 
     # =================================================
 
@@ -903,22 +870,8 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, fig, mfile: MFile, scan: i
         f" {mfile.get('pden_dhe3_total_vol_avg_mw', scan=scan):,.3e} MW/m³\n\n"
     )
 
-    axis.text(
-        0.05,
-        0.55,
-        textstr_dhe3,
-        **text_layout(fig),
-        bbox=box_style("lightyellow"),
-    )
-
-    axis.text(
-        0.21,
-        0.59,
-        "$\\text{D - 3He}$",
-        fontsize=20,
-        verticalalignment="top",
-        transform=fig.transFigure,
-    )
+    add_panel(axis, 0.05, 0.61, 0.42, 0.080, textstr_dhe3, box_style("lightyellow"))
+    add_symbol(axis, "$\\text{D - 3He}$", 0.36, 0.59)
 
     # =================================================
 
@@ -940,22 +893,8 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, fig, mfile: MFile, scan: i
         f" {mfile.get('f_pden_alpha_ions_mw', scan=scan):.4e} MW/m³"
     )
 
-    axis.text(
-        0.05,
-        0.25,
-        textstr_alpha,
-        **text_layout(fig),
-        bbox=box_style("red"),
-    )
-
-    axis.text(
-        0.35,
-        0.425,
-        "$\\alpha$",
-        fontsize=22,
-        verticalalignment="top",
-        transform=fig.transFigure,
-    )
+    add_panel(axis, 0.05, 0.42, 0.38, 0.220, textstr_alpha, box_style("red"))
+    add_symbol(axis, "$\\alpha$", 0.34, 0.4)
 
     # =================================================
 
@@ -970,22 +909,8 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, fig, mfile: MFile, scan: i
         f" {mfile.get('pden_plasma_neutron_vol_avg_mw', scan=scan):,.4e} MW/m³\n"
     )
 
-    axis.text(
-        0.05,
-        0.1,
-        textstr_neutron,
-        **text_layout(fig),
-        bbox=box_style("grey"),
-    )
-
-    axis.text(
-        0.3,
-        0.175,
-        "$n$",
-        fontsize=20,
-        verticalalignment="top",
-        transform=fig.transFigure,
-    )
+    add_panel(axis, 0.05, 0.18, 0.38, 0.1, textstr_neutron, box_style("grey"))
+    add_symbol(axis, "$n$", 0.34, 0.16)
 
 
 def plot_fusion_rate_profiles(
@@ -1241,15 +1166,15 @@ def plot_plasma_pressure_profiles(axis: plt.Axes, mfile: MFile, scan: int):
         ),
     ))
 
-    axis.text(
-        0.5,
-        1.2,
+    add_panel(
+        axis,
+        0.28,
+        1.20,
+        0.48,
+        0.12,
         textstr_pressure,
+        {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5},
         transform=axis.transAxes,
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="center",
-        bbox={"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5},
     )
 
     if (
@@ -1325,7 +1250,7 @@ def plot_plasma_poloidal_pressure_contours(axis: plt.Axes, mfile: MFile, scan: i
     # Mask points outside the plasma boundary (optional, but grid is inside by
     # construction)
     # Plot filled contour
-    axis.contourf(r_grid, -z_grid, pressure_grid, levels=50, cmap="plasma")
+    axis.contourf(r_grid, z_grid, pressure_grid, levels=50, cmap="plasma")
     c = axis.contourf(r_grid, -z_grid, pressure_grid, levels=50, cmap="plasma")
 
     # Add colorbar for pressure (now in kPa)

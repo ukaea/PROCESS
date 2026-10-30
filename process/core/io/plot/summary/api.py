@@ -337,10 +337,7 @@ def main_plot(
         scan,
     )
     plot_fusion_rate_density_profiles(
-        _add_page("fusion_rate_density").add_subplot(122),
-        pages["fusion_rate_density"],
-        m_file,
-        scan,
+        _add_page("fusion_rate_density").add_subplot(122), m_file, scan
     )
 
     fusion_rate_page = _add_page("fusion_rate")
@@ -582,7 +579,7 @@ def main_plot(
             0.5,
             0.5,
         ])  # Half height, a bit wider, top left
-        plot_superconducting_tf_wp(ax19, m_file, scan, pages["tf_wp"])
+        plot_superconducting_tf_wp(ax19, m_file, scan)
 
         _add_page("cable")
         if (
@@ -599,7 +596,7 @@ def main_plot(
             # TF coil turn structure
             ax20 = pages["cable"].add_subplot(325, aspect="equal")
             ax20.set_position([0.025, 0.5, 0.4, 0.4])
-            plot_tf_cable_in_conduit_turn(ax20, pages["cable"], m_file, scan)
+            plot_tf_cable_in_conduit_turn(ax20, m_file, scan)
 
         if (
             m_file.get("i_tf_turn_type", scan=scan)
@@ -671,7 +668,7 @@ def main_plot(
         ax19 = _add_page("tf_wp").add_subplot(211, aspect="equal")
         ax19.set_position([0.06, 0.55, 0.675, 0.4])
         plot_resistive_tf_wp(ax19, m_file, scan, pages["tf_wp"])
-        plot_resistive_tf_info(ax19, m_file, scan, pages["tf_wp"])
+        plot_resistive_tf_info(ax19, m_file, scan)
     plot_tf_coil_structure(
         _add_page().add_subplot(111, aspect="equal"),
         m_file,
@@ -696,13 +693,11 @@ def main_plot(
 
     plot_cs_coil_structure(
         _add_page("cs_structure").add_subplot(121, aspect="equal"),
-        pages["cs_structure"],
         m_file,
         scan,
     )
     plot_cs_turn_structure(
         pages["cs_structure"].add_subplot(326, aspect="equal"),
-        pages["cs_structure"],
         m_file,
         scan,
     )
@@ -836,9 +831,7 @@ def main_plot(
     plot_fw_90_deg_pipe_bend(pages["fw_td_cross_section"].add_subplot(337), m_file, scan)
 
     ax_blanket = _add_page("blkt_structure").add_subplot(122, aspect="equal")
-    plot_blkt_structure(
-        ax_blanket, pages["blkt_structure"], m_file, scan, radial_build, colour_scheme
-    )
+    plot_blkt_structure(ax_blanket, m_file, scan, radial_build, colour_scheme)
     plot_blkt_pipe_bends(_add_page("blkt_cooling"), m_file, scan)
     if (
         m_file.get("i_p_coolant_pumping", scan=scan)
@@ -855,9 +848,7 @@ def main_plot(
     ax24 = _add_page("power_profile_over_time").add_subplot(111)
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
-    plot_system_power_profiles_over_time(
-        ax24, m_file, scan, pages["power_profile_over_time"]
-    )
+    plot_system_power_profiles_over_time(ax24, m_file, scan)
     return list(pages.values())
 
 

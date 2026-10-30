@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Literal
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 from matplotlib import patches
+from matplotlib.patches import FancyBboxPatch
 
 from process.core.io.plot.summary.constants import (
     BLANKET_COLOUR,
@@ -102,6 +103,83 @@ def add_colourbar(contour_fill, axis, colourbar_axis):
     if colourbar_axis is None:
         return axis.figure.colorbar(contour_fill, ax=axis, pad=0.02)
     return axis.figure.colorbar(contour_fill, cax=colourbar_axis)
+
+
+def add_panel(
+    axis,
+    x: float,
+    top: float,
+    width: float,
+    height: float,
+    text: str,
+    style: dict,
+    text_x_offset: float = 0.004,
+    fontsize: float = 9,
+    transform=None,
+    text_position=None,
+    linespacing: float = 1.1,
+    text_kwargs=None,
+):
+    """Add one fixed-size box and its unchanged original text."""
+    box_expansion = 0.002
+    left = x - box_expansion
+    bottom = top - height - box_expansion
+    expanded_width = width + 2 * box_expansion
+    expanded_height = height + 2 * box_expansion
+    fig = axis.get_figure()
+    transform = fig.transFigure if transform is None else transform
+    patch = FancyBboxPatch(
+        (left, bottom),
+        expanded_width,
+        expanded_height,
+        boxstyle="round,pad=0,rounding_size=0.003",
+        transform=transform,
+        facecolor=style.get("facecolor", "white"),
+        edgecolor=style.get("edgecolor", "black"),
+        linewidth=style.get("linewidth", 1.1),
+        linestyle=style.get("linestyle", "solid"),
+        alpha=style.get("alpha", 1.0),
+        clip_on=False,
+        zorder=20,
+    )
+    axis.add_patch(patch)
+
+    text_kwargs = text_kwargs or {}
+    for reserved_key in ("clip_on", "zorder", "linespacing"):
+        text_kwargs.pop(reserved_key, None)
+    text_x, text_y = (
+        (x + text_x_offset, top - 0.004) if text_position is None else text_position
+    )
+    return axis.text(
+        text_x,
+        text_y,
+        text,
+        clip_on=False,
+        zorder=21,
+        linespacing=linespacing,
+        **{
+            **text_layout(fig, v_align="top"),
+            "fontsize": fontsize,
+            "transform": transform,
+            "color": "black",
+            **text_kwargs,
+        },
+    )
+
+
+def add_symbol(axis, panel_name: str, x: float, top: float):
+    """Add a large symbol at its original figure-relative position."""
+    return axis.text(
+        x,
+        top,
+        panel_name,
+        fontsize=23,
+        color="black",
+        verticalalignment="top",
+        transform=axis.get_figure().transFigure,
+        clip_on=False,
+        zorder=22,
+    )
 
 
 def color_key(axis: plt.Axes, mfile: MFile, scan: int, colour_scheme: Literal[1, 2]):

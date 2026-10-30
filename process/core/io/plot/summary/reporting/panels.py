@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from process.core.io.mfile import MFile, MFileErrorClass
-from process.core.io.plot.summary.common import box_style, setup_axis
+from process.core.io.plot.summary.common import add_panel, box_style, setup_axis
 from process.core.io.plot.summary.geometry.poloidal import poloidal_cross_section
 from process.core.io.plot.summary.plasma.physics import plot_plasma
 from process.core.io.plot.summary.rendering import ArrowSpec, draw_arrows
@@ -436,15 +436,16 @@ def plot_cover_page(
         f"• User: {user}\n"
         f"• PROCESS Version: {procver}"
     )
-    axis.text(
+    add_panel(
+        axis,
         0.1,
         0.72,
+        0.55,
+        0.11,
         run_info,
+        box_style("#e0f7fa"),
         fontsize=16,
-        ha="left",
-        va="top",
-        transform=fig.transFigure,
-        bbox=box_style("#e0f7fa"),
+        text_x_offset=0.008,
     )
 
     # Box 2: File/Branch Info
@@ -454,15 +455,16 @@ def plot_cover_page(
     fileprefix = textwrap.fill(f"File Prefix: {fileprefix}", max_line_len)
 
     file_info = f"• Tag Number: {tagno}\n{branch_line}\n• {fileprefix}"
-    axis.text(
+    add_panel(
+        axis,
         0.1,
-        0.57,
+        0.593,
+        0.55,
+        0.11,
         file_info,
+        box_style("#fffde7"),
         fontsize=14,
-        ha="left",
-        va="top",
-        transform=fig.transFigure,
-        bbox=box_style("#fffde7"),
+        text_x_offset=0.008,
     )
 
     # Box 3: Run Settings
@@ -478,20 +480,21 @@ def plot_cover_page(
         f"• Solver Iterations: {n_solver_iterations}\n"
         f"• Runtime: {mfile.get('process_runtime', scan=-1):.6f} seconds"
     )
-    axis.text(
+    add_panel(
+        axis,
         0.1,
-        0.46,
+        0.47,
+        0.55,
+        0.24,
         settings_info,
+        box_style("#f3e5f5"),
         fontsize=14,
-        ha="left",
-        va="top",
-        transform=fig.transFigure,
-        bbox=box_style("#f3e5f5"),
+        text_x_offset=0.008,
     )
 
     axis.text(
         0.1,
-        0.15,
+        0.2,
         "For more information, see the following pages.",
         fontsize=12,
         ha="left",
