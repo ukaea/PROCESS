@@ -15,8 +15,6 @@ import copy
 import sys
 from re import sub
 
-import numpy as np
-
 from process.core.data_structure import obsolete_vars as ov
 from process.core.data_structure.dicts import get_dicts
 from process.core.exceptions import ProcessValidationError
@@ -376,7 +374,13 @@ def get_parameters(data, use_string_values=True):
     # dict of all parameters set in input file, grouped by module
     # Include n_equality_constraints to allow eq and ineq constraints to be defined in
     # produced IN.DAT
-    exclusions = ["n_iteration_variables", "icc", "ixc"]
+    exclusions = [
+        "n_iteration_variables",
+        "icc",
+        "ixc",
+        "boundu",
+        "boundl",
+    ]  # try including boundl and boundu in here again and debugging
     # Parameters to exclude
 
     # Change module keys from DICT_MODULE: replace spaces with underscores and
@@ -1022,8 +1026,8 @@ class InDat:
         # parse_input_file will update these with default bounds
         self.data["boundl"] = copy.copy(self.data["bounds"])
         self.data["boundu"] = copy.copy(self.data["bounds"])
-        self.data["boundl"].value = np.full((N_ITERATION_VARIABLES_MAX), -9e99)
-        self.data["boundu"].value = np.full((N_ITERATION_VARIABLES_MAX), 9e99)
+        self.data["boundl"].value = [9e-99] * N_ITERATION_VARIABLES_MAX
+        self.data["boundu"].value = [9e99] * N_ITERATION_VARIABLES_MAX
 
         for itv_index, bounds in self.data["bounds"].value.items():
             if "l" in bounds:
