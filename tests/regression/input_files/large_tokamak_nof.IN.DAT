@@ -103,7 +103,7 @@ icc = 35
 *--------------------------*
 icc = 36
 * Minimum allowable temperature margin [K]
-tmargmin = 1.5
+temp_tf_superconductor_margin_min = 1.5 * minimum allowable temperature margin ; TF (K)
 
 * CS coil temp margin lower limit *
 *---------------------------------*

@@ -737,7 +737,7 @@ class Availability(Model):
         This routine calculates the unplanned unavailability of the magnets,
         using the methodology outlined in the 2014 EUROfusion
         RAMI report.
-        2014 EUROfusion RAMI report, &quot;Availability in PROCESS&quot;
+        2014 EUROfusion RAMI report, "Availability in PROCESS";
 
         Parameters
         ----------
@@ -750,12 +750,11 @@ class Availability(Model):
             unplanned unavailability of magnets
         """
         # Magnet temperature margin limit (K)
-        # Use the lower of the two values.  Issue #526
+        # Use the lower of the two values.  Issue #527
         tmargmin = min(
             self.data.tfcoil.temp_tf_superconductor_margin_min,
             self.data.tfcoil.temp_cs_superconductor_margin_min,
         )
-        mag_temp_marg_limit = tmargmin
 
         # Magnet maintenance time (years)
         mag_main_time = 0.5e0
@@ -768,11 +767,11 @@ class Availability(Model):
         # Point at which risk of unplanned unavailability increases
         # conf_mag is the c factor, which determines the temperature margin at which
         # lifetime starts to decline.
-        start_of_risk = mag_temp_marg_limit / self.data.costs.conf_mag
+        start_of_risk = tmargmin / self.data.costs.conf_mag
 
         # Determine if temperature margin is in region with risk of
         # unplanned unavailability
-        if self.data.tfcoil.temp_margin >= start_of_risk:
+        if self.data.tfcoil.temp_tf_superconductor_margin >= start_of_risk:
             u_unplanned_magnets = mag_min_u_unplanned
         else:
             # Linear decrease in expected lifetime when approaching the limit
@@ -782,7 +781,7 @@ class Availability(Model):
                     self.data.costs.t_plant_operational_total_yrs
                     / (start_of_risk - tmargmin)
                 )
-                * (self.data.tfcoil.temp_margin - tmargmin),
+                * (self.data.tfcoil.temp_tf_superconductor_margin - tmargmin),
             )
             u_unplanned_magnets = mag_main_time / (t_life + mag_main_time)
 
@@ -792,7 +791,7 @@ class Availability(Model):
         if output:
             po.ocmmnt(self.outfile, "Magnets:")
             po.oblnkl(self.outfile)
-            po.ovarre(
+            po.ovarre(  # This is of questionable interest...
                 self.outfile, "Minimum temperature margin (K)", "(tmargmin)", tmargmin
             )
             po.ovarre(
@@ -804,8 +803,8 @@ class Availability(Model):
             po.ovarre(
                 self.outfile,
                 "Temperature Margin (K)",
-                "(temp_margin)",
-                self.data.tfcoil.temp_margin,
+                "(temp_tf_superconductor_margin_min)",
+                self.data.tfcoil.temp_tf_superconductor_margin,
                 "OP ",
             )
             po.ovarre(

@@ -464,7 +464,7 @@ The critical current density *J*<sub>crit</sub> is a function of the temperature
 The temperature margin $\Delta$*T* is the difference between the current sharing temperature and the 
 operating temperature.  The current sharing temperature is the temperature at which *J*<sub>crit</sub> 
 is equal to the operating current density *J*<sub>op</sub>. The minimum allowed $\Delta$*T* can be 
-set using input parameter `tmargmin` together with constraint equation no. 60.
+set using input parameter `temp_cs_superconductor_margin_min` together with constraint equation no. 60.
 
 It is recommended that EITHER the temperature margin constraint (60), OR the current density 
 constraints (26 and 27) are activated.

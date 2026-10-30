@@ -417,7 +417,7 @@ def winding_pack_total_size(
         # jcrit for this bmax:
         jcrit_vector[k] = jcrit_from_material(
             b_max_k[k],
-            data.tfcoil.tftmp + data.tfcoil.tmargmin,
+            data.tfcoil.tftmp + data.tfcoil.temp_tf_superconductor_margin_min,
             data.tfcoil.i_tf_sc_mat,
             data.tfcoil.bcritsc,
             data.tfcoil.f_a_tf_turn_cable_copper,
@@ -425,7 +425,7 @@ def winding_pack_total_size(
             data.tfcoil.tcritsc,
             data.tfcoil.f_a_tf_turn_cable_space_extra_void,
             data.tfcoil.j_tf_wp,
-        )  # Get here a temperature margin from data.tfcoil.tmargtf.
+        )
 
     # The operation current density weighted with the global iop/icrit fraction
     lhs[:] = data.constraints.f_j_tf_wp_critical_max * jcrit_vector

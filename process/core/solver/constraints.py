@@ -997,18 +997,19 @@ def constraint_equation_35(constraint_registration, data):
     )
 
 
-@ConstraintManager.register_constraint(36, "K", ">=")
+@ConstraintManager.register_constraint(36, "A/m²", "<=")
 def constraint_equation_36(constraint_registration, data):
     """Equation for TF coil s/c temperature margin lower limit (SCTF)
+    by means of the actual to critical current density
 
-    temp_tf_superconductor_margin:
-        TF coil temperature margin (K)
-    temp_tf_superconductor_margin_min:
-        minimum allowable temperature margin : TF coils (K)
+    j_tf_wp:
+        winding pack current density (A/m²)
+    j_tf_wp_temp_margin:
+        superconducting strand critical current density (A/m²)
     """
-    return geq(
-        data.tfcoil.temp_tf_superconductor_margin,
-        data.tfcoil.temp_tf_superconductor_margin_min,
+    return leq(
+        data.tfcoil.j_tf_wp,
+        data.tfcoil.j_tf_wp_temp_margin,
         constraint_registration,
     )
 

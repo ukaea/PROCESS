@@ -6,7 +6,6 @@ from enum import IntEnum, unique
 from types import DynamicClassAttribute
 
 import numpy as np
-from scipy import optimize
 
 from process.core.exceptions import ProcessValueError
 
@@ -296,50 +295,6 @@ def jcrit_rebco(
         j_critical = -(temp_conductor - tcb)
 
     return j_critical, validity, b_c20_max, temp_c0_max
-
-
-def current_sharing_rebco(bfield, j):
-    """Current sharing temperature for "REBCO" 2nd generation HTS superconductor
-
-    Parameters
-    ----------
-    bfield :
-        Magnetic field at superconductor (T)
-    j :
-        Current density in superconductor (A/m2)
-
-    Returns
-    -------
-    current_sharing_t :
-        Current sharing temperature (K)
-    """
-
-    def deltaj_rebco(temperature):
-        jcritical, _, _, _ = jcrit_rebco(
-            temp_conductor=temperature,
-            b_conductor=bfield,
-            temp_c0_max=SuperconductorModel.CROCO_REBCO.temp_crit_zero_field_strain,
-            b_c20_max=SuperconductorModel.CROCO_REBCO.b_crit_zero_field_strain,
-        )
-        return jcritical - j
-
-    # No additional arguments are required for deltaj_rebco since it only has one
-    # argument.
-
-    estimate = 10.0
-    another_estimate = 20.0
-    current_sharing_t, _root_result = optimize.newton(
-        deltaj_rebco,
-        estimate,
-        tol=1e-6,
-        rtol=1e-6,
-        maxiter=50,
-        x1=another_estimate,
-        full_output=True,
-        disp=True,
-    )
-
-    return current_sharing_t
 
 
 def itersc(
