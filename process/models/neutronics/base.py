@@ -29,7 +29,7 @@ from __future__ import annotations
 import functools
 import inspect
 import warnings
-from itertools import pairwise, starmap
+from itertools import count, pairwise, starmap
 from operator import mul
 from typing import TYPE_CHECKING
 
@@ -48,8 +48,6 @@ from process.core.exceptions import ProcessValidationError
 from process.models.neutronics.data import N_A, MaterialMacroInfo
 
 CONVERGENCE_ATOL = 1e-15
-
-mp.prec = 69
 
 
 def mp_func_factory(mp_func, np_func):
@@ -678,11 +676,30 @@ class NeutronFluxProfile:
                     stacklevel=2,
                 )
 
-        self._init_solve_group_n(n)
+        pre_optimization_record = {mp.prec: np.inf}
+        for extra_precision in count(start=0, step=16):
+            with mp.extraprec(extra_precision):
+                self._init_solve_group_n(n)
+                scaled_conditions = self._scaled_groupwise_fitness(n)
+                pre_optimization_record[mp.prec] = np.sqrt(
+                    (scaled_conditions**2).mean()
+                )
+                opt_record = list(pre_optimization_record.values())
+                if opt_record[-1] <= CONVERGENCE_ATOL:
+                    break
+                if (
+                    len(opt_record) >= 2
+                    and (abs(opt_record[-2] - opt_record[-1]) / opt_record[-1])
+                    < CONVERGENCE_ATOL
+                ):
+                    break
 
-        self._optimization_record[n].append(self._iterate_solve_group_n(n))
+        with mp.extraprec(extra_precision):
+            self._optimization_record[n].append(
+                self._iterate_solve_group_n(n, pre_optimization_record)
+            )
+            conditions = self._groupwise_fitness(n, jac=False)
 
-        conditions = self._groupwise_fitness(n, jac=False)
         if self.fluxes[n]:
             source_current_deviation = conditions[0] / self.fluxes[n]
             source_current_dev_text = f"{source_current_deviation} %"
@@ -696,6 +713,8 @@ class NeutronFluxProfile:
                 f"{source_current_dev_text}.",
                 stacklevel=2,
             )
+
+        # TODO: put this whole section of validations into a method.
         for num_layer in range(self.n_layers - 1):
             # flux continuity
             i = 2 * num_layer
@@ -845,7 +864,8 @@ class NeutronFluxProfile:
         self._update_off_diag_coefs_of_column_n(n)
 
     def _iterate_solve_group_n(
-        self, n, scipy_method: str = "hybr", scipy_method_accepts_jac: bool = True
+        self, n, pre_optimization_record: dict[int, mp.mpf],
+        scipy_method: str = "hybr", scipy_method_accepts_jac: bool = True
     ) -> CustomOptimizationRecord:
         """
         Approach the true solution of the linear equations iteratively, using
@@ -905,7 +925,7 @@ class NeutronFluxProfile:
         )
         _set_coefficients(opt_result.x)
         return CustomOptimizationRecord(
-            self, n, vector_n, rms_residual, residual_n, opt_result
+            self, n, pre_optimization_record, vector_n, rms_residual, residual_n, opt_result
         )
 
     def _update_off_diag_coefs_of_column_n(self, leakage_basis: int) -> None:
@@ -1034,6 +1054,53 @@ class NeutronFluxProfile:
         if jac:
             return conditions, jacobians
         return conditions
+
+
+    def _scaled_groupwise_fitness(self, n: int) -> npt.NDArray[object]:
+        """
+        A scaled groupwise fitness, simply so that we can decide when to
+        terminate the pre-optimization step.
+
+        Parameters
+        ----------
+        n:
+            The group that we want to evaluate the fitness for.
+        """
+        scaled_conditions = mp_zeros(2 * self.n_layers)
+        incident_flux_scalar = self.fluxes[n] or self.fluxes.mean()
+        scaled_conditions[0] = (
+            self.groupwise_neutron_current_through_interface(n, 0) - self.fluxes[n]
+        ) / incident_flux_scalar
+
+        for num_layer in range(self.n_layers - 1):
+            x = self.layer_x[num_layer]
+            i = 2 * num_layer
+            # Enforce flux continuity at self.interface[num_layer]
+            this_flux = self.groupwise_neutron_flux_in_layer(n, num_layer, x)
+            next_flux = self.groupwise_neutron_flux_in_layer(n, num_layer + 1, x)
+            rms_flux = mp.sqrt((this_flux**2 + next_flux**2) / 2) or 1
+            scaled_conditions[i + 1] = (this_flux - next_flux) / rms_flux
+
+            # Enforce current continuity at self.interface[num_layer]
+            this_current = self.groupwise_neutron_current_in_layer(n, num_layer, x)
+            next_current = self.groupwise_neutron_current_in_layer(n, num_layer + 1, x)
+            rms_current = mp.sqrt((this_current**2 + next_current**2) / 2) or 1
+            scaled_conditions[i + 2] = (this_current - next_current) / rms_current
+
+        # Enforce zero flux at extended boundary
+        final_flux = (
+            self.groupwise_neutron_flux_in_layer(
+                n, self.n_layers - 1, self.interface_x[self.n_layers - 1]
+            )
+            or CONVERGENCE_ATOL
+        )
+        scaled_conditions[2 * self.n_layers - 1] = (
+            self.groupwise_neutron_flux_in_layer(
+                n, self.n_layers - 1, self.extended_boundary[n]
+            )
+            / final_flux
+        )
+        return scaled_conditions
 
     def _check_if_in_layer(
         self, x: npt.NDArray[np.float64], num_layer: int
@@ -1732,6 +1799,7 @@ class CustomOptimizationRecord:
         self,
         parent: NeutronFluxProfile,
         n: int,
+        precision_record: dict[int, mp.mpf],
         solution_vectors: Iterable[npt.NDArray[float | object]],
         rms_residuals: Iterable[object],
         residuals: Iterable[npt.NDArray[object]],
@@ -1761,6 +1829,7 @@ class CustomOptimizationRecord:
         """
         self.parent = parent
         self.n = n
+        self.precision_record = precision_record
         self.solution_vectors = convert_to_mpf(np.array(solution_vectors, dtype=object))
         self.rms_residuals = convert_to_mpf(np.array(rms_residuals, dtype=object))
         self.residuals = convert_to_mpf(np.array(residuals, dtype=object))
