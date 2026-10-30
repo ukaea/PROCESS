@@ -1499,6 +1499,10 @@ class SauterBootstrapCurrent(Model):
 
         # Calculate electron and ion density profiles
         ne = plasma_profile.neprofile.profile_y * 1e-19
+
+        # Prevent log(0) in Sauter bootstrap calculation
+        ne = np.maximum(ne, 1.0e-6)
+
         ni = (
             self.data.physics.nd_plasma_ions_total_vol_avg
             / self.data.physics.nd_plasma_electrons_vol_avg
