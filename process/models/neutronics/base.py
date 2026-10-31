@@ -49,6 +49,7 @@ from process.models.neutronics.data import N_A, MaterialMacroInfo
 
 CONVERGENCE_ATOL = 1e-15
 
+mp.prec = 69
 
 def mp_func_factory(mp_func, np_func):
     """Make a function that switches between mpmath version and the numpy
