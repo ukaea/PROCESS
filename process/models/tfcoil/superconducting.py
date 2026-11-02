@@ -2204,6 +2204,9 @@ class SuperconductingTFCoil(TFCoil):
         ------
         ProcessValueError
             If an unknown superconductor type is specified.
+            If an error occurs during the temperature margin calculation.
+            If the normalised residual for the temperature margin calculation is
+            not sufficiently close to zero.
         """
         model = SuperconductorModel(i_tf_superconductor)
 
