@@ -29,12 +29,13 @@ from __future__ import annotations
 import functools
 import inspect
 import warnings
+from contextlib import contextmanager
 from itertools import count, pairwise, starmap
 from operator import mul
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Iterable
+    from collections.abc import Callable, Iterable, Iterator
 
 import matplotlib as mpl
 import numpy as np
@@ -984,6 +985,21 @@ class NeutronFluxProfile:
                         * mat.conversion_factor[n, leakage_basis]
                     )
 
+    @contextmanager
+    def apply_groupwise_coefficients(
+            self, n: int, test_coefs: npt.NDArray[object]
+        ) -> Iterator[NeutronFluxProfile]:
+        saved_coefficients_n = self.coefficients[:, n, n].copy()
+        self.coefficients[:, n, n] = np.array(test_coefs, dtype=object).reshape(parent.n_layers, 2)
+        self._update_off_diag_coefs_of_column_n(n)
+
+        try:
+            yield self
+        finally:
+            self.coefficients[:, n, n] = saved_coefficients_n
+            self._update_off_diag_coefs_of_column_n(n)
+
+
     def _groupwise_fitness(
         self, n: int, jac: bool = True
     ) -> tuple[npt.NDArray[object], npt.NDArray]:
@@ -1909,20 +1925,17 @@ class CustomOptimizationRecord:
         for interface in parent.interface_x:
             _plot_vertical_dotted_line(ax, interface, ylims, symmetric=False)
 
-        def rollback_parent_to_get_flux(iteration: int):
+        def rollback_parent_to_get_flux(iteration: int) -> npt.NDArray[object]:
             """Rollback to a certain value of coefficient, and then"""
-            saved_coefficients = parent.coefficients[:, n, n]
-            parent.coefficients[:, n, n] = self.solution_vectors[iteration].reshape(
-                parent.n_layers, 2
-            )
-            parent._update_off_diag_coefs_of_column_n(n)
             this_flux = []
-            for num_layer, xi in enumerate(base_x):
-                this_flux.extend(
-                    parent.groupwise_neutron_flux_in_layer(n, num_layer, xi)
-                )
-            this_flux = np.array(this_flux)
-            parent.coefficients[:, n, n] = saved_coefficients
+            with parent.apply_groupwise_coefficients(
+                n, self.solution_vectors[iteration].reshape(parent.n_layers, 2)
+            ):
+                for num_layer, xi in enumerate(base_x):
+                    this_flux.extend(parent.groupwise_neutron_flux_in_layer(
+                        n, num_layer, xi
+                    ))
+                this_flux = np.array(this_flux, dtype=object)
             return this_flux
 
         if animate:
