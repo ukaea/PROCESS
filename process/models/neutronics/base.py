@@ -613,21 +613,13 @@ class NeutronFluxProfile:
         # Included below: For future implementation to allow solving
         # non-down-scatter-only systems by iterating.
         if self.contains_upscatter:
-            raise NotImplementedError(
-                "This program has not been validated against systems "
-                "containing up-scatter yet. Please raise an issue on the "
-                "process github/comment on a relevant issue if one exists."
-            )  # Sum over the addition in neutron flux due to the 2nd, 3rd, 4th
-            # etc. generation of neutrons, which should eventually converge.
-        for num_layer, mat in enumerate(self.materials):
-            if mat.diffusion_const[n] > self.layer_x[num_layer]:
-                warnings.warn(
-                    f"Calculation of flux in group {n} may be inaccurate as "
-                    f"layer {num_layer}: {mat} is thinner than "
-                    r"λ_{tr} "
-                    f"of group {n}.",
-                    stacklevel=2,
-                )
+            warnings.warn(
+                "This program has not been validated against systems containing "
+                "up-scatter yet. Please raise an issue on the process github/comment "
+                "on a relevant issue if you encounter a use case where "
+                "contains_upscatter=True and run into an error.",
+                stacklevel=2,
+            )
 
         self._init_solve_group_n(n)
 
@@ -717,8 +709,13 @@ class NeutronFluxProfile:
                 )
         self.num_iteration[n] += 1
         if self.contains_upscatter:
-            if not ...:
+            if self.num_iteration[n] == 1:
                 self._is_solved[n] = True
+            else:
+                raise NotImplementedError(
+                    "TODO: need to implement iterative solving for "
+                    "contains_upscatter systems."
+                )
         else:
             self._is_solved[n] = True
         return
