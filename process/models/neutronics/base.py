@@ -691,91 +691,8 @@ class NeutronFluxProfile:
             self._optimization_record[n].append(
                 self._iterate_solve_group_n(n, pre_optimization_record)
             )
-            conditions = self._groupwise_fitness(n, jac=False)
+            self._groupwise_validate(n)
 
-        if self.fluxes[n]:
-            source_current_deviation = conditions[0] / self.fluxes[n]
-            source_current_dev_text = f"{source_current_deviation} %"
-        else:
-            source_current_deviation = conditions[0]
-            source_current_dev_text = f"{source_current_deviation} m^-2 s^-1"
-        if not np.isclose(source_current_deviation, 0, atol=CONVERGENCE_ATOL):
-            warnings.warn(
-                f"Group {n} neutron current at x=0 != the predetermined "
-                f"value of {self.fluxes[n]}! Instead current deviated by "
-                f"{source_current_dev_text}.",
-                stacklevel=2,
-            )
-
-        # TODO: put this whole section of validations into a method.
-        for num_layer in range(self.n_layers - 1):
-            # flux continuity
-            i = 2 * num_layer
-            x = self.layer_x[num_layer]
-
-            this_flux = self.groupwise_neutron_flux_in_layer(n, num_layer, x)
-            if this_flux:
-                flux_deviation = conditions[
-                    i + 1
-                ] / self.groupwise_neutron_flux_in_layer(n, num_layer, x)
-                flux_dev_text = f"{flux_deviation * 100} %"
-            else:
-                flux_deviation = conditions[i + 1]
-                flux_dev_text = f"{flux_deviation} m^-2 s^-1"
-            if not np.isclose(flux_deviation, 0, atol=CONVERGENCE_ATOL):
-                warnings.warn(
-                    f"Group {n} neutron flux is not continuous at interface"
-                    f"[{num_layer + 1}]! Deviated by {flux_dev_text}.",
-                    stacklevel=2,
-                )
-            # current continuity
-            this_current = self.groupwise_neutron_current_in_layer(n, num_layer, x)
-            if this_current:
-                current_deviation = conditions[i + 2] / this_current
-                current_dev_text = f"{current_deviation * 100} %"
-            else:
-                current_deviation = conditions[i + 2]
-                current_dev_text = f"{current_deviation} m^-2 s^-1"
-            if not np.isclose(current_deviation, 0, atol=CONVERGENCE_ATOL):
-                # avoid divide by 0 situation
-                warnings.warn(
-                    f"Group {n} neutron current is not continuous at interface"
-                    f"[{num_layer + 1}]! Deviated by {current_dev_text}.",
-                    stacklevel=2,
-                )
-
-        # extended flux = 0
-        final_flux = self.groupwise_neutron_flux_in_layer(
-            n, self.n_layers - 1, self.interface_x[self.n_layers - 1]
-        )
-        final_flux_deviation = (
-            conditions[-1] / final_flux if final_flux else conditions[-1]
-        )
-        if not np.isclose(final_flux_deviation, 0, atol=CONVERGENCE_ATOL):
-            warnings.warn(
-                f"Group {n} neutrons has non-zero flux at the extended "
-                f"boundary! Instead flux = {conditions[-1]} m^-2 s^-1.",
-                stacklevel=2,
-            )
-        # non-negativity check for layer = num_layer:
-        for num_layer in range(self.n_layers):
-            if (
-                self.groupwise_neutron_flux_in_layer(
-                    n, num_layer, self.interface_x[num_layer]
-                )
-                < 0
-            ) or (
-                self.groupwise_neutron_flux_in_layer(
-                    n, num_layer, self.layer_x[num_layer]
-                )
-                < 0
-            ):
-                warnings.warn(
-                    "Negative flux found when solving for "
-                    f"group {n} in layer {num_layer}! Perhaps due to "
-                    "an unphysical cross-section value?",
-                    stacklevel=2,
-                )
         self.num_iteration[n] += 1
         if self.contains_upscatter:
             if self.num_iteration[n] == 1:
@@ -934,6 +851,107 @@ class NeutronFluxProfile:
             residual_n,
             opt_result,
         )
+
+    def _groupwise_validate(self, n: int) -> None:
+        """
+        Enforces four types of conditions:
+        * current at x=0 should match incoming flux value,
+        * flux continuity at every interface,
+        * current continuity at every interface,
+        * flux = 0 at extended_boundary.
+
+        Parameters
+        ----------
+        n:
+            The neutron group whose should be checked and validated.
+
+        Raises
+        ------
+        UserWarning
+            Warns when any of the four types of conditions isn't reached.
+        """
+        conditions = self._groupwise_fitness(n, jac=False)
+        if self.fluxes[n]:
+            source_current_deviation = conditions[0] / self.fluxes[n]
+            source_current_dev_text = f"{source_current_deviation} %"
+        else:
+            source_current_deviation = conditions[0]
+            source_current_dev_text = f"{source_current_deviation} m^-2 s^-1"
+        if not np.isclose(source_current_deviation, 0, atol=CONVERGENCE_ATOL):
+            warnings.warn(
+                f"Group {n} neutron current at x=0 != the predetermined "
+                f"value of {self.fluxes[n]}! Instead current deviated by "
+                f"{source_current_dev_text}.",
+                stacklevel=2,
+            )
+        for num_layer in range(self.n_layers - 1):
+            # flux continuity
+            i = 2 * num_layer
+            x = self.layer_x[num_layer]
+
+            this_flux = self.groupwise_neutron_flux_in_layer(n, num_layer, x)
+            if this_flux:
+                flux_deviation = conditions[
+                    i + 1
+                ] / self.groupwise_neutron_flux_in_layer(n, num_layer, x)
+                flux_dev_text = f"{flux_deviation * 100} %"
+            else:
+                flux_deviation = conditions[i + 1]
+                flux_dev_text = f"{flux_deviation} m^-2 s^-1"
+            if not np.isclose(flux_deviation, 0, atol=CONVERGENCE_ATOL):
+                warnings.warn(
+                    f"Group {n} neutron flux is not continuous at interface"
+                    f"[{num_layer + 1}]! Deviated by {flux_dev_text}.",
+                    stacklevel=2,
+                )
+            # current continuity
+            this_current = self.groupwise_neutron_current_in_layer(n, num_layer, x)
+            if this_current:
+                current_deviation = conditions[i + 2] / this_current
+                current_dev_text = f"{current_deviation * 100} %"
+            else:
+                current_deviation = conditions[i + 2]
+                current_dev_text = f"{current_deviation} m^-2 s^-1"
+            if not np.isclose(current_deviation, 0, atol=CONVERGENCE_ATOL):
+                # avoid divide by 0 situation
+                warnings.warn(
+                    f"Group {n} neutron current is not continuous at interface"
+                    f"[{num_layer + 1}]! Deviated by {current_dev_text}.",
+                    stacklevel=2,
+                )
+
+        # extended flux = 0
+        final_flux = self.groupwise_neutron_flux_in_layer(
+            n, self.n_layers - 1, self.interface_x[self.n_layers - 1]
+        )
+        final_flux_deviation = (
+            conditions[-1] / final_flux if final_flux else conditions[-1]
+        )
+        if not np.isclose(final_flux_deviation, 0, atol=CONVERGENCE_ATOL):
+            warnings.warn(
+                f"Group {n} neutrons has non-zero flux at the extended "
+                f"boundary! Instead flux = {conditions[-1]} m^-2 s^-1.",
+                stacklevel=2,
+            )
+        # non-negativity check for layer = num_layer:
+        for num_layer in range(self.n_layers):
+            if (
+                self.groupwise_neutron_flux_in_layer(
+                    n, num_layer, self.interface_x[num_layer]
+                )
+                < 0
+            ) or (
+                self.groupwise_neutron_flux_in_layer(
+                    n, num_layer, self.layer_x[num_layer]
+                )
+                < 0
+            ):
+                warnings.warn(
+                    "Negative flux found when solving for "
+                    f"group {n} in layer {num_layer}! Perhaps due to "
+                    "an unphysical cross-section value?",
+                    stacklevel=2,
+                )
 
     def _update_off_diag_coefs_of_column_n(self, leakage_basis: int) -> None:
         """
