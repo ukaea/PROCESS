@@ -35,7 +35,7 @@ from operator import mul
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Iterable, Iterator
+    from collections.abc import Callable, Generator, Iterable
 
 import matplotlib as mpl
 import numpy as np
@@ -51,6 +51,7 @@ from process.models.neutronics.data import N_A, MaterialMacroInfo
 CONVERGENCE_ATOL = 1e-15
 
 mp.prec = 69
+
 
 def mp_func_factory(mp_func, np_func):
     """Make a function that switches between mpmath version and the numpy
@@ -675,9 +676,7 @@ class NeutronFluxProfile:
             with mp.extraprec(extra_precision):
                 self._init_solve_group_n(n)
                 scaled_conditions = self._scaled_groupwise_fitness(n)
-                pre_optimization_record[mp.prec] = np.sqrt(
-                    (scaled_conditions**2).mean()
-                )
+                pre_optimization_record[mp.prec] = np.sqrt((scaled_conditions**2).mean())
                 opt_record = list(pre_optimization_record.values())
                 if opt_record[-1] <= CONVERGENCE_ATOL:
                     break
@@ -863,8 +862,11 @@ class NeutronFluxProfile:
         self._update_off_diag_coefs_of_column_n(n)
 
     def _iterate_solve_group_n(
-        self, n, pre_optimization_record: dict[int, mp.mpf],
-        scipy_method: str = "hybr", scipy_method_accepts_jac: bool = True
+        self,
+        n,
+        pre_optimization_record: dict[int, mp.mpf],
+        scipy_method: str = "hybr",
+        scipy_method_accepts_jac: bool = True,
     ) -> CustomOptimizationRecord:
         """
         Approach the true solution of the linear equations iteratively, using
@@ -924,7 +926,13 @@ class NeutronFluxProfile:
         )
         _set_coefficients(opt_result.x)
         return CustomOptimizationRecord(
-            self, n, pre_optimization_record, vector_n, rms_residual, residual_n, opt_result
+            self,
+            n,
+            pre_optimization_record,
+            vector_n,
+            rms_residual,
+            residual_n,
+            opt_result,
         )
 
     def _update_off_diag_coefs_of_column_n(self, leakage_basis: int) -> None:
@@ -984,10 +992,28 @@ class NeutronFluxProfile:
 
     @contextmanager
     def apply_groupwise_coefficients(
-            self, n: int, test_coefs: npt.NDArray[object]
-        ) -> Iterator[NeutronFluxProfile]:
+        self, n: int, test_coefs: npt.NDArray[object]
+    ) -> Generator[NeutronFluxProfile]:
+        """
+        The context manager within which we can test the effect of applying
+        a certain list of values as the group n coefficients.
+
+        Parameters
+        ----------
+        n:
+            The neutron group whose main diagonal coefficients would be updated.
+        test_coefs:
+            A list of values to be placed on the main diagonals. It should have the shape
+            [self.n_layers, 2], and each element should be of type mp.mpf.
+
+        Yields
+        ------
+        self:
+            a version of NeutronFluxProfile with the n-th main diagonal coefficients
+            temporarily modified (until this context manager exits).
+        """
         saved_coefficients_n = self.coefficients[:, n, n].copy()
-        self.coefficients[:, n, n] = np.array(test_coefs, dtype=object).reshape(parent.n_layers, 2)
+        self.coefficients[:, n, n] = np.array(test_coefs, dtype=object)
         self._update_off_diag_coefs_of_column_n(n)
 
         try:
@@ -995,7 +1021,6 @@ class NeutronFluxProfile:
         finally:
             self.coefficients[:, n, n] = saved_coefficients_n
             self._update_off_diag_coefs_of_column_n(n)
-
 
     def _groupwise_fitness(
         self, n: int, jac: bool = True
@@ -1068,7 +1093,6 @@ class NeutronFluxProfile:
         if jac:
             return conditions, jacobians
         return conditions
-
 
     def _scaled_groupwise_fitness(self, n: int) -> npt.NDArray[object]:
         """
@@ -1929,11 +1953,10 @@ class CustomOptimizationRecord:
                 n, self.solution_vectors[iteration].reshape(parent.n_layers, 2)
             ):
                 for num_layer, xi in enumerate(base_x):
-                    this_flux.extend(parent.groupwise_neutron_flux_in_layer(
-                        n, num_layer, xi
-                    ))
-                this_flux = np.array(this_flux, dtype=object)
-            return this_flux
+                    this_flux.extend(
+                        parent.groupwise_neutron_flux_in_layer(n, num_layer, xi)
+                    )
+                return np.array(this_flux, dtype=object)
 
         if animate:
             this_flux = []
