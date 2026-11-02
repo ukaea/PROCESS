@@ -999,8 +999,8 @@ def constraint_equation_35(constraint_registration, data):
 
 @ConstraintManager.register_constraint(36, "A/m²", "<=")
 def constraint_equation_36(constraint_registration, data):
-    """Equation for TF coil s/c temperature margin lower limit (SCTF)
-    by means of the actual to critical current density
+    """Equation for TF coil superconducting current density limit at the
+    minimum temperature margin
 
     j_tf_wp:
         winding pack current density (A/m²)
