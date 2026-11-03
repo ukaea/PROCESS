@@ -40,6 +40,9 @@ from process.core.io.plot.summary.magnets.cs import (
     plot_pf_cs_plasma_mutual_inductance,
 )
 from process.core.io.plot.summary.magnets.pf import plot_pf_dimensions
+from process.core.io.plot.summary.magnets.superconductor import (
+    plot_tf_superconductor_state,
+)
 from process.core.io.plot.summary.magnets.tf import (
     plot_corc_cable_geometry,
     plot_quench_time_evolution,
@@ -583,6 +586,8 @@ def main_plot(
             0.5,
         ])  # Half height, a bit wider, top left
         plot_superconducting_tf_wp(ax19, m_file, scan, pages["tf_wp"])
+
+        plot_tf_superconductor_state(_add_page("sc_state"), m_file, scan)
 
         _add_page("cable")
         if (

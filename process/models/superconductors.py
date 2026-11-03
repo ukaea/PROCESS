@@ -208,6 +208,26 @@ class SuperconductorModel(IntEnum):
         """The full name of this superconductor model."""
         return self._full_name_
 
+    def critical_current_density(
+        self, b: float, temp: float, strain: float = 0.0, **kwargs
+    ) -> float:
+        """Critical current density [A/m²] of this model at a single (B, T, ε) point.
+
+        Parameters
+        ----------
+        b:
+            Magnetic field [T].
+        temp:
+            Superconductor temperature [K].
+        strain:
+            Strain on the superconductor (ignored by models without strain dependence).
+        **kwargs:
+            Optional overrides: `b_c20max` and `temp_c0max` (e.g. for user-defined
+            models), `f_strain` (Bi-2212), and `dr_hts_tape`, `dx_hts_tape_rebco`,
+            `dx_hts_tape_total` (Hazelton-Zhai REBCO).
+        """
+        return _CRITICAL_CURRENT_DENSITY[self](self, b, temp, strain, **kwargs)
+
 
 def jcrit_rebco(
     temp_conductor: float, b_conductor: float, temp_c0_max: float, b_c20_max: float
@@ -1136,6 +1156,82 @@ def bottura_scaling(
         j_scaling = -abs(jc1 * jc2 * jc3)
 
     return j_scaling, b_critical, temp_critical
+
+
+def _critical_params(model, kwargs):
+    """Critical field/temperature, allowing overrides (e.g. user-defined models)."""
+    return (
+        kwargs.get("b_c20max", model.b_crit_zero_field_strain),
+        kwargs.get("temp_c0max", model.temp_crit_zero_field_strain),
+    )
+
+
+def _clamp_strain(strain, limit):
+    return float(np.clip(strain, -limit, limit))
+
+
+def _jc_itersc(model, b, temp, strain, **kwargs):
+    b_c20max, temp_c0max = _critical_params(model, kwargs)
+    return itersc(temp, b, _clamp_strain(strain, 0.5e-2), b_c20max, temp_c0max)[0]
+
+
+def _jc_bi2212(_model, b, temp, _strain, **kwargs):
+    return bi2212(b, 0.0, temp, kwargs.get("f_strain", 1.0))[0]
+
+
+def _jc_lubell_nbti(model, b, temp, _strain, **kwargs):
+    b_c20max, temp_c0max = _critical_params(model, kwargs)
+    return jcrit_nbti(temp, b, 1.0e10, b_c20max, temp_c0max)[0]
+
+
+def _jc_wst_nb3sn(model, b, temp, strain, **kwargs):
+    b_c20max, temp_c0max = _critical_params(model, kwargs)
+    return western_superconducting_nb3sn(
+        temp, b, _clamp_strain(strain, 0.5e-2), b_c20max, temp_c0max
+    )[0]
+
+
+def _jc_croco_rebco(model, b, temp, _strain, **kwargs):
+    b_c20max, temp_c0max = _critical_params(model, kwargs)
+    return jcrit_rebco(temp, b, temp_c0max, b_c20max)[0]
+
+
+def _jc_gl_nbti(model, b, temp, strain, **kwargs):
+    b_c20max, temp_c0max = _critical_params(model, kwargs)
+    return gl_nbti(temp, b, strain, b_c20max, temp_c0max)[0]
+
+
+def _jc_gl_rebco(model, b, temp, strain, **kwargs):
+    b_c20max, temp_c0max = _critical_params(model, kwargs)
+    return gl_rebco(temp, b, _clamp_strain(strain, 0.7e-2), b_c20max, temp_c0max)[0]
+
+
+def _jc_hazelton_zhai_rebco(model, b, temp, _strain, **kwargs):
+    b_c20max, temp_c0max = _critical_params(model, kwargs)
+    return hijc_rebco(
+        temp,
+        b,
+        b_c20max,
+        temp_c0max,
+        kwargs["dr_hts_tape"],
+        kwargs["dx_hts_tape_rebco"],
+        kwargs["dx_hts_tape_total"],
+    )[0]
+
+
+# Single point of dispatch from model to critical surface function. All entries share
+# the signature (model, b, temp, strain, **kwargs) -> critical current density [A/m²]
+_CRITICAL_CURRENT_DENSITY = {
+    SuperconductorModel.ITER_NB3SN: _jc_itersc,
+    SuperconductorModel.BI2212: _jc_bi2212,
+    SuperconductorModel.OLD_LUBELL_NBTI: _jc_lubell_nbti,
+    SuperconductorModel.USER_DEFINED_NB3SN: _jc_itersc,
+    SuperconductorModel.WST_NB3SN: _jc_wst_nb3sn,
+    SuperconductorModel.CROCO_REBCO: _jc_croco_rebco,
+    SuperconductorModel.DURHAM_NBTI: _jc_gl_nbti,
+    SuperconductorModel.DURHAM_REBCO: _jc_gl_rebco,
+    SuperconductorModel.HAZELTON_ZHAI_REBCO: _jc_hazelton_zhai_rebco,
+}
 
 
 @dataclass
