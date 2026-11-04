@@ -1,13 +1,35 @@
 """Module containing variables for the impurity radiation models"""
 
 from dataclasses import dataclass, field
+from enum import IntEnum, unique
 
 import numpy as np
 
 N_IMPURITIY_LOSS_FUNCTION_POINTS = 600
 """Number of points in the impurity loss function (L_z) tables"""
 
-N_IMPURITIES = 14
+
+@unique
+class IonSpecies(IntEnum):
+    """Enumeration of ion species for impurity radiation model"""
+
+    HYDROGEN = 1
+    HELIUM = 2
+    BERYLLIUM = 3
+    CARBON = 4
+    NITROGEN = 5
+    OXYGEN = 6
+    NEON = 7
+    SILICON = 8
+    ARGON = 9
+    IRON = 10
+    NICKEL = 11
+    KRYPTON = 12
+    XENON = 13
+    TUNGSTEN = 14
+
+
+N_IMPURITIES = len(IonSpecies)
 """Number of ion species in impurity radiation model
 
 ( 1)  Hydrogen  (fraction calculated by code)
