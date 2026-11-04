@@ -121,11 +121,6 @@ class ImpurityRadiationData:
     )
     """Array of impurity labels for internal use"""
 
-    m_impurity_amu_array: list[float] = field(
-        default_factory=lambda: np.zeros(N_ION_SPECIES)
-    )
-    """2D array of impurity atomic masses in Atomic Mass Units (amu)"""
-
     f_nd_impurity_electron_array: list[float] = field(
         default_factory=lambda: np.zeros(N_ION_SPECIES)
     )
