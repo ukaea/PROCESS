@@ -14,7 +14,7 @@ from process.core.exceptions import (
     ProcessValueError,
 )
 from process.core.solver.constraints import ConstraintManager
-from process.data_structure.impurity_radiation_variables import N_IMPURITIES
+from process.data_structure.impurity_radiation_variables import N_ION_SPECIES
 from process.data_structure.numerics import N_ITERATION_VARIABLES_MAX
 from process.data_structure.pfcoil_variables import N_PF_GROUPS_MAX
 from process.data_structure.physics_variables import N_CONFINEMENT_SCALINGS
@@ -1155,7 +1155,7 @@ INPUT_VARIABLES = {
     "impvardiv": InputVariable(
         "reinke",
         int,
-        choices=range(3, N_IMPURITIES + 1),
+        choices=range(3, N_ION_SPECIES + 1),
     ),
     "j_pf_coil_wp_peak": InputVariable("pf_coil", float, array=True),
     "ixc": InputVariable(
