@@ -67,11 +67,11 @@ class IonSpecies(IntEnum):
     def full_name(self):
         """The full name of this ion species."""
         return self._full_name_
-    
+
     @DynamicClassAttribute
     def is_impurity(self) -> bool:
         """Whether this ion species is an impurity."""
-        return self not in (IonSpecies.HYDROGEN, IonSpecies.HELIUM)
+        return self not in {IonSpecies.HYDROGEN, IonSpecies.HELIUM}
 
 
 N_ION_SPECIES = len(IonSpecies)
@@ -115,26 +115,6 @@ class ImpurityRadiationData:
         ))
     )
     """charge profile of impurities"""
-
-    imp_label: list[str] = field(
-        default_factory=lambda: np.array([
-            "H_",
-            "He",
-            "Be",
-            "C_",
-            "N_",
-            "O_",
-            "Ne",
-            "Si",
-            "Ar",
-            "Fe",
-            "Ni",
-            "Kr",
-            "Xe",
-            "W_",
-        ])
-    )
-    """Labels for impurity species"""
 
     impurity_arr_label: list[str] = field(
         default_factory=lambda: np.full(N_ION_SPECIES, "  ")

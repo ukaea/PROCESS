@@ -14,7 +14,9 @@ from process.core.io.plot.summary.profiles.misc import (
     interp1d_profile,
     profiles_with_pedestal,
 )
-from process.data_structure.impurity_radiation_variables import ImpurityRadiationData
+from process.data_structure.impurity_radiation_variables import (
+    IonSpecies,
+)
 from process.models.physics.profiles import (
     PlasmaProfileShapeType,
     calculate_profile_shell_contributions,
@@ -187,10 +189,10 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
         linewidth=1.5,
     )
 
-    imp_labels = ImpurityRadiationData().imp_label
-    for ind in range(2, imp_frac.shape[0]):
-        lbl = imp_labels[ind].replace("_", "")
+    for species in (species for species in IonSpecies if species.is_impurity):
+        ind = species.value - 1
         if imp_frac[ind] > 1.0e-30:
+            lbl = species.label.replace("_", "")
             ax_impurity.plot(
                 rho, imp_frac[ind] * ne / 1e16, label=rf"$n_{{\text{{{lbl}}}}}$"
             )
