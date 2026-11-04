@@ -109,6 +109,7 @@ from process.models.physics.profiles import (
     ElectronTemperatureProfile,
     IonTemperatureProfile,
 )
+from process.models.physics.radiation_power import PlasmaRadiation
 from process.models.physics.scrape_off_layer import ScrapeOffLayer
 from process.models.power import Power, PumpingPowerModelTypes
 from process.models.pulse import Pulse
@@ -707,6 +708,10 @@ class Models:
             sauter_bootstrap=self.sauter_bootstrap_current,
         )
         self.plasma_confinement = PlasmaConfinementTime()
+        self.plasma_radiation = PlasmaRadiation(
+            plasma_profile=self.plasma_profile,
+            data_structure=self.data,
+        )
         self.plasma_transition = PlasmaConfinementTransition()
         self.plasma_current = PlasmaCurrent()
         self.plasma_fields = PlasmaFields()
@@ -731,6 +736,7 @@ class Models:
             scrape_off_layer=self.scrape_off_layer,
             plasma_reactions=self.plasma_reactions,
             beam_reactions=self.beam_reactions,
+            plasma_radiation=self.plasma_radiation,
         )
         self.physics_detailed = DetailedPhysics(
             plasma_profile=self.plasma_profile,
@@ -832,6 +838,7 @@ class Models:
             self.scrape_off_layer,
             self.neoclassics,
             self.plasma_inductance,
+            self.plasma_radiation,
             self.ne_profile,
             self.te_profile,
             self.ti_profile,
