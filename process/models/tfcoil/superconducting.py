@@ -2756,7 +2756,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             tcritsc=self.data.tfcoil.tcritsc,
             data=self.data,
         )
-        self.data.tfcoil.j_tf_wp_temp_margin = (
+        self.data.tfcoil.j_tf_wp_temp_margin_min = (
             margin_superconductor_info.j_tf_wp_critical
         )
 
@@ -3890,7 +3890,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             dx_tf_hts_tape_total=d_sc_tf.dx_tf_hts_tape_total,
             a_tf_croco_strand=d_sc_tf.a_tf_croco_strand,
         )
-        self.data.tfcoil.j_tf_wp_temp_margin = (
+        self.data.tfcoil.j_tf_wp_temp_margin_min = (
             superconductor_margin_properties.j_tf_wp_critical
         )
 

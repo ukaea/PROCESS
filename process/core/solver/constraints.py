@@ -1004,12 +1004,12 @@ def constraint_equation_36(constraint_registration, data):
 
     j_tf_wp:
         winding pack current density (A/m²)
-    j_tf_wp_temp_margin:
+    j_tf_wp_temp_margin_min:
         superconducting strand critical current density (A/m²)
     """
     return leq(
         data.tfcoil.j_tf_wp,
-        data.tfcoil.j_tf_wp_temp_margin,
+        data.tfcoil.j_tf_wp_temp_margin_min,
         constraint_registration,
     )
 
