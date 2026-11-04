@@ -1246,11 +1246,15 @@ def nevins_reactivity(
             teff_now = ion_temperature_profile
         else:
             teff_now = ion_temperature_profile[j]
-        sgmv_now = (
-            np.sqrt(constants.KILOELECTRON_VOLT * teff_now * 8 / (np.pi * mr))
-            / (teff_now ** 2)
-            * np.nansum(e[1:] * sigma[1:] * np.diff(e) * np.exp(-e[1:] / teff_now))
-        )
+        # A cold point has no thermal reactivity. Dividing by T² is undefined.
+        if teff_now <= 0.0:
+            sgmv_now = 0.0
+        else:
+            sgmv_now = (
+                np.sqrt(constants.KILOELECTRON_VOLT * teff_now * 8 / (np.pi * mr))
+                / (teff_now ** 2)
+                * np.nansum(e[1:] * sigma[1:] * np.diff(e) * np.exp(-e[1:] / teff_now))
+            )
         if len_teff == 1:
             sgmv = sgmv_now
         else:
@@ -1326,11 +1330,17 @@ def tentori_belloni_reactivity(
             teff_now = ion_temperature_profile
         else:
             teff_now = ion_temperature_profile[j]
-        sgmv_now = (
-            np.sqrt(constants.KILOELECTRON_VOLT * teff_now * 8 / (np.pi * mr))
-            / (teff_now ** 2)
-            * np.nansum(e[1:] * sigma[1:] * np.diff(e) * np.exp(-e[1:] * 1.0e3 / teff_now))
-        ) * 1.0e6
+        # A cold point has no thermal reactivity. Dividing by T² is undefined.
+        if teff_now <= 0.0:
+            sgmv_now = 0.0
+        else:
+            sgmv_now = (
+                np.sqrt(constants.KILOELECTRON_VOLT * teff_now * 8 / (np.pi * mr))
+                / (teff_now ** 2)
+                * np.nansum(
+                    e[1:] * sigma[1:] * np.diff(e) * np.exp(-e[1:] * 1.0e3 / teff_now)
+                )
+            ) * 1.0e6
         if len_teff == 1:
             sgmv = sgmv_now
         else:
@@ -1636,7 +1646,8 @@ def sigv_beam_target_integrand(e_rel, v_th, vb, m_fi, m, i_model):
     if i_model == 1:
         sig = fsgmpb(e_rel)
     elif i_model == 2:
-        sig = tentori_belloni_reactivity(e_rel)
+        # Cross section, not reactivity. The fit takes centre-of-mass energy in MeV.
+        sig = fsgmpb_tentori_belloni(e_rel * 1.0e-3)
     else:
         raise ValueError(f"Invalid PB reaction model: {i_model}")
     return sig * fexp * vr * constants.KILOELECTRON_VOLT / mu
@@ -1670,6 +1681,10 @@ def cal_beam_fusion_sigv(e_beam_kev, tau_slow_beam, e_crit_beam, s0_beam, m_fi, 
     """
     积分外层函数得到反应率 <sigma*v>
     """
+
+    # No fast ions: the distribution and its density are both zero.
+    if n_fi <= 0.0:
+        return 0.0
 
     dedt = lambda e, t, e_crit: -2.0 * e / t * (1.0 + (e_crit / e)**1.5)
     g_beam = lambda e, t, e_crit, e_beam, s0: - s0 / dedt(e, t, e_crit) * (e_beam > e) # m^-3 keV^-1
@@ -1707,12 +1722,17 @@ def beam_fusion_p_b11(
     i_model: int,
 ):
 
+    if current_beam_total <= 0.0 or e_beam_kev <= 0.0:
+        return 0.0, 0.0, 0.0
+
     if i_pb_reactivity_model == 1:
-        f_avg = sigmv_pb / nevins_reactivity(ti)
+        reactivity_ti = nevins_reactivity(ti)
     elif i_pb_reactivity_model == 2:
-        f_avg = sigmv_pb / tentori_belloni_reactivity(ti)
+        reactivity_ti = tentori_belloni_reactivity(ti)
     else:
         raise ValueError(f"Invalid PB reaction model: {i_pb_reactivity_model}")
+    # ⟨σv⟩ / σv(⟨T⟩). Both are zero when the ion temperature is not positive.
+    f_avg = 0.0 if reactivity_ti == 0.0 else sigmv_pb / reactivity_ti
     y = constants.PB_ENERGY * 1.0e-6 # MJ
 
     #
@@ -1769,13 +1789,15 @@ def beam_fusion_p_b11(
     ) # Pa
     pressure_p = pressure(v_p_i / v_crit, constants.M_PROTON_AMU, tau_slow_p, s0_p)
 
-    sigv_p = cal_beam_fusion_sigv(
-        e_beam_kev, tau_slow_p, e_crit_p, s0_p, 
-        constants.M_PROTON_AMU, nd_beam_p, 
-        constants.M_BORON11_AMU, ti, i_model
-    )
-
-    sigmv_p = sigv_p * f_avg
+    if f_avg == 0.0:
+        sigmv_p = 0.0
+    else:
+        sigv_p = cal_beam_fusion_sigv(
+            e_beam_kev, tau_slow_p, e_crit_p, s0_p,
+            constants.M_PROTON_AMU, nd_beam_p,
+            constants.M_BORON11_AMU, ti, i_model,
+        )
+        sigmv_p = sigv_p * f_avg
 
     reaction_rate_beam = sigmv_p * beamfus0 * nd_fuel_b11 * nd_beam_p
 
