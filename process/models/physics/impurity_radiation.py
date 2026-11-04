@@ -439,39 +439,6 @@ def calculate_impurity_radiation_power_density(
     )
 
 
-def element2index(element: str, data: DataStructure) -> int:
-    """Returns the index of the `element` in the impurity array with
-    a given name
-
-    Parameters
-    ----------
-    element: str :
-        Name of the impurity element [-]
-
-    Returns
-    -------
-    int
-        Index of the element in the impurity array [-]
-
-    Raises
-    ------
-    ProcessValueError
-        If the element is not found in impurity_arr_label
-
-    """
-    try:
-        return (
-            data.impurity_radiation.impurity_arr_label
-            .astype(str)
-            .tolist()
-            .index(element)
-        )
-    except ValueError as e:
-        raise ProcessValueError(
-            f"Element {element} is not found in impurity_arr_label"
-        ) from e
-
-
 class ImpurityRadiation:
     """Calculates the impurity radiation losses for given temperature and
     density profiles. The considers the  total impurity radiation from the core
