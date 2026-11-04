@@ -269,6 +269,36 @@ $$
 
 ---------------------------------------------------------------------
 
+- `i_plasma_geometry = 13` -- Use a user-provided last closed flux surface (LCFS)
+  as discrete `(R, Z)` points. The following must be input:
+
+  - `r_array` : LCFS radial coordinates (m)
+  - `z_array` : LCFS vertical coordinates (m)
+
+  Arrays may be given as a comma-separated list, e.g.
+
+  ```text
+  i_plasma_geometry = 13
+  r_array = 5.0, 6.0, 7.0, 6.0, 5.0
+  z_array = 0.0, 2.0, 0.0, -2.0, 0.0
+  ```
+
+  From these points PROCESS calculates:
+
+  - `rmajor`, `rminor`, `aspect`
+  - separatrix elongation `kappa` and triangularity `triang`
+    (and the corresponding 95% values via the IPDG89 factors)
+  - poloidal perimeter, surface area, cross-section area and volume by direct
+    contour integration (`cal_integral_geometry`)
+
+  In this mode, `kappa` / `triang` should **not** be treated as independent
+  inputs; they are derived from the LCFS arrays. The derived elongation uses
+  $\kappa = Z_{\max}/a$ with $Z_{\max}=\max(|Z|)$, so for an up-down asymmetric
+  LCFS this is the larger of the upper/lower elongations. Triangularity uses
+  the $R$ coordinate at that same $|Z|_{\max}$ point.
+
+---------------------------------------------------------------------
+
 ### Plasma-Wall Gap
 
 The region directly outside the last closed flux surface of the core plasma is

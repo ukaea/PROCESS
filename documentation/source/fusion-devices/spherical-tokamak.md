@@ -44,7 +44,7 @@ Switch `itart` provides overall control of the ST switches within the code, and 
 | --- | --- | --- |
 | `i_plasma_geometry` | 0, 2, 3, 4 | 1, 5, 6, 7, 8 |
 | `i_bootstrap_current` | 1, 2, 3 | 2, 3 |
-| `i_plasma_current` | 1, 3, 4, 5, 6, 7 | 2, 9 |
+| `i_plasma_current` | 0, 1, 3, 4, 5, 6, 7 | 0, 2, 9 |
 | `itfsup` | 0, 1 | 0 |
 
 <center>Table 1: <i> Summary of the switch values in 'PROCESS' that relate to conventional aspect ratio and low aspect ratio machines.</i></center>
