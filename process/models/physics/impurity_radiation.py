@@ -11,11 +11,11 @@ from typing import TYPE_CHECKING
 import numpy as np
 from numba import njit
 
-from process.core import constants
 from process.core.data_structure.base import DataStructure
 from process.core.exceptions import ProcessError, ProcessValueError
 from process.data_structure.impurity_radiation_variables import (
     N_IMPURITIY_LOSS_FUNCTION_POINTS,
+    IonSpecies,
 )
 from process.models.physics.profiles import calculate_vol_avg_of_profile
 
@@ -59,10 +59,10 @@ def initialise_imprad(data: DataStructure):
     #  Hydrogen
 
     init_imp_element(
-        n_species_index=1,
-        name_label=data.impurity_radiation.imp_label[0],
-        z=1,
-        m_species_amu=constants.M_PROTIUM_AMU,  # 1.00782503223 1H
+        n_species_index=IonSpecies.HYDROGEN,
+        name_label=IonSpecies.HYDROGEN.label,
+        z=IonSpecies.HYDROGEN.full_ion_charge,
+        m_species_amu=IonSpecies.HYDROGEN.mass_amu,  # 1.00782503223 1H
         f_nd_species_electron=f_nd_species_electron,
         len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
@@ -73,10 +73,10 @@ def initialise_imprad(data: DataStructure):
 
     #  Helium
     init_imp_element(
-        n_species_index=2,
-        name_label=data.impurity_radiation.imp_label[1],
-        z=2,
-        m_species_amu=constants.M_HELIUM_AMU,  # 4.002602 (3He,4He) Average mass
+        n_species_index=IonSpecies.HELIUM,
+        name_label=IonSpecies.HELIUM.label,
+        z=IonSpecies.HELIUM.full_ion_charge,
+        m_species_amu=IonSpecies.HELIUM.mass_amu,  # 4.002602 (3He,4He) Average mass
         f_nd_species_electron=f_nd_species_electron,
         len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
@@ -85,10 +85,10 @@ def initialise_imprad(data: DataStructure):
 
     #  Beryllium
     init_imp_element(
-        n_species_index=3,
-        name_label=data.impurity_radiation.imp_label[2],
-        z=4,
-        m_species_amu=constants.M_BERYLLIUM_AMU,  # 9.0121831 9Be
+        n_species_index=IonSpecies.BERYLLIUM,
+        name_label=IonSpecies.BERYLLIUM.label,
+        z=IonSpecies.BERYLLIUM.full_ion_charge,
+        m_species_amu=IonSpecies.BERYLLIUM.mass_amu,  # 9.0121831 9Be
         f_nd_species_electron=f_nd_species_electron,
         len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
@@ -97,10 +97,10 @@ def initialise_imprad(data: DataStructure):
 
     #  Carbon
     init_imp_element(
-        n_species_index=4,
-        name_label=data.impurity_radiation.imp_label[3],
-        z=6,
-        m_species_amu=constants.M_CARBON_AMU,  # 12.0096, (12C,13C,14C) Average mass
+        n_species_index=IonSpecies.CARBON,
+        name_label=IonSpecies.CARBON.label,
+        z=IonSpecies.CARBON.full_ion_charge,
+        m_species_amu=IonSpecies.CARBON.mass_amu,  # 12.0096, (12C,13C,14C) Average mass
         f_nd_species_electron=f_nd_species_electron,
         len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
@@ -109,10 +109,10 @@ def initialise_imprad(data: DataStructure):
 
     #  Nitrogen
     init_imp_element(
-        n_species_index=5,
-        name_label=data.impurity_radiation.imp_label[4],
-        z=7,
-        m_species_amu=constants.M_NITROGEN_AMU,  # 14.00643, (14N,15N) Average mass
+        n_species_index=IonSpecies.NITROGEN,
+        name_label=IonSpecies.NITROGEN.label,
+        z=IonSpecies.NITROGEN.full_ion_charge,
+        m_species_amu=IonSpecies.NITROGEN.mass_amu,  # 14.00643, (14N,15N) Average mass
         f_nd_species_electron=f_nd_species_electron,
         len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
@@ -121,10 +121,10 @@ def initialise_imprad(data: DataStructure):
 
     #  Oxygen
     init_imp_element(
-        n_species_index=6,
-        name_label=data.impurity_radiation.imp_label[5],
-        z=8,
-        m_species_amu=constants.M_OXYGEN_AMU,  # 15.99903, (16O,17O,18O) Average mass
+        n_species_index=IonSpecies.OXYGEN,
+        name_label=IonSpecies.OXYGEN.label,
+        z=IonSpecies.OXYGEN.full_ion_charge,
+        m_species_amu=IonSpecies.OXYGEN.mass_amu,  # 15.99903, (16O,17O,18O) Average mass
         f_nd_species_electron=f_nd_species_electron,
         len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
@@ -133,10 +133,10 @@ def initialise_imprad(data: DataStructure):
 
     #  Neon
     init_imp_element(
-        n_species_index=7,
-        name_label=data.impurity_radiation.imp_label[6],
-        z=10,
-        m_species_amu=constants.M_NEON_AMU,  # 20.1797 (20Ne,21Ne,22Ne) Average mass
+        n_species_index=IonSpecies.NEON,
+        name_label=IonSpecies.NEON.label,
+        z=IonSpecies.NEON.full_ion_charge,
+        m_species_amu=IonSpecies.NEON.mass_amu,  # 20.1797 (20Ne,21Ne,22Ne) Average mass
         f_nd_species_electron=f_nd_species_electron,
         len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
@@ -145,10 +145,11 @@ def initialise_imprad(data: DataStructure):
 
     #  Silicon
     init_imp_element(
-        n_species_index=8,
-        name_label=data.impurity_radiation.imp_label[7],
-        z=14,
-        m_species_amu=constants.M_SILICON_AMU,  # 28.084 (28Si,29Si,30Si) Average mass
+        n_species_index=IonSpecies.SILICON,
+        name_label=IonSpecies.SILICON.label,
+        z=IonSpecies.SILICON.full_ion_charge,
+        m_species_amu=IonSpecies.SILICON.mass_amu,  # 28.084 (28Si,29Si,30Si) Average
+        # mass
         f_nd_species_electron=f_nd_species_electron,
         len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
@@ -157,10 +158,10 @@ def initialise_imprad(data: DataStructure):
 
     #  Argon
     init_imp_element(
-        n_species_index=9,
-        name_label=data.impurity_radiation.imp_label[8],
-        z=18,
-        m_species_amu=constants.M_ARGON_AMU,  # 39.948 (40Ar,36Ar,38Ar) Average mass
+        n_species_index=IonSpecies.ARGON,
+        name_label=IonSpecies.ARGON.label,
+        z=IonSpecies.ARGON.full_ion_charge,
+        m_species_amu=IonSpecies.ARGON.mass_amu,  # 39.948 (40Ar,36Ar,38Ar) Average mass
         f_nd_species_electron=f_nd_species_electron,
         len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
@@ -169,10 +170,11 @@ def initialise_imprad(data: DataStructure):
 
     #  Iron
     init_imp_element(
-        n_species_index=10,
-        name_label=data.impurity_radiation.imp_label[9],
-        z=26,
-        m_species_amu=constants.M_IRON_AMU,  # 55.845 (56Fe,54Fe,57Fe,58Fe) Average mass
+        n_species_index=IonSpecies.IRON,
+        name_label=IonSpecies.IRON.label,
+        z=IonSpecies.IRON.full_ion_charge,
+        m_species_amu=IonSpecies.IRON.mass_amu,  # 55.845 (56Fe,54Fe,57Fe,58Fe) Average
+        # mass
         f_nd_species_electron=f_nd_species_electron,
         len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
@@ -181,11 +183,11 @@ def initialise_imprad(data: DataStructure):
 
     #  Nickel
     init_imp_element(
-        n_species_index=11,
-        name_label=data.impurity_radiation.imp_label[10],
-        z=28,
+        n_species_index=IonSpecies.NICKEL,
+        name_label=IonSpecies.NICKEL.label,
+        z=IonSpecies.NICKEL.full_ion_charge,
         # 58.6934 (58Ni,60Ni,61Ni,62Ni,64Ni) Average mass
-        m_species_amu=constants.M_NICKEL_AMU,
+        m_species_amu=IonSpecies.NICKEL.mass_amu,
         f_nd_species_electron=f_nd_species_electron,
         len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
@@ -194,11 +196,11 @@ def initialise_imprad(data: DataStructure):
 
     #  Krypton
     init_imp_element(
-        n_species_index=12,
-        name_label=data.impurity_radiation.imp_label[11],
-        z=36,
+        n_species_index=IonSpecies.KRYPTON,
+        name_label=IonSpecies.KRYPTON.label,
+        z=IonSpecies.KRYPTON.full_ion_charge,
         # 83.798 (84Kr,86Kr,82Kr,80Kr,78Kr) Average mass
-        m_species_amu=constants.M_KRYPTON_AMU,
+        m_species_amu=IonSpecies.KRYPTON.mass_amu,
         f_nd_species_electron=f_nd_species_electron,
         len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
@@ -207,11 +209,11 @@ def initialise_imprad(data: DataStructure):
 
     #  Xenon
     init_imp_element(
-        n_species_index=13,
-        name_label=data.impurity_radiation.imp_label[12],
-        z=54,
+        n_species_index=IonSpecies.XENON,
+        name_label=IonSpecies.XENON.label,
+        z=IonSpecies.XENON.full_ion_charge,
         # 131.293 (132Xe,129Xe,131Xe,134Xe,136Xe) Average mass
-        m_species_amu=constants.M_XENON_AMU,
+        m_species_amu=IonSpecies.XENON.mass_amu,
         f_nd_species_electron=f_nd_species_electron,
         len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
@@ -220,11 +222,11 @@ def initialise_imprad(data: DataStructure):
 
     #  Tungsten
     init_imp_element(
-        n_species_index=14,
-        name_label=data.impurity_radiation.imp_label[13],
-        z=74,
+        n_species_index=IonSpecies.TUNGSTEN,
+        name_label=IonSpecies.TUNGSTEN.label,
+        z=IonSpecies.TUNGSTEN.full_ion_charge,
         # 183.84 (184W,186W,182W,183W,180W) Average mass
-        m_species_amu=constants.M_TUNGSTEN_AMU,
+        m_species_amu=IonSpecies.TUNGSTEN.mass_amu,
         f_nd_species_electron=f_nd_species_electron,
         len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
