@@ -2,8 +2,11 @@
 
 from dataclasses import dataclass, field
 from enum import IntEnum, unique
+from types import DynamicClassAttribute
 
 import numpy as np
+
+from process.core import constants
 
 N_IMPURITIY_LOSS_FUNCTION_POINTS = 600
 """Number of points in the impurity loss function (L_z) tables"""
@@ -13,39 +16,48 @@ N_IMPURITIY_LOSS_FUNCTION_POINTS = 600
 class IonSpecies(IntEnum):
     """Enumeration of ion species for impurity radiation model"""
 
-    HYDROGEN = 1
-    HELIUM = 2
-    BERYLLIUM = 3
-    CARBON = 4
-    NITROGEN = 5
-    OXYGEN = 6
-    NEON = 7
-    SILICON = 8
-    ARGON = 9
-    IRON = 10
-    NICKEL = 11
-    KRYPTON = 12
-    XENON = 13
-    TUNGSTEN = 14
+    HYDROGEN = (1, 1, "H_", constants.M_PROTIUM_AMU)
+    HELIUM = (2, 2, "He", constants.M_HELIUM_AMU)
+    BERYLLIUM = (3, 4, "Be", constants.M_BERYLLIUM_AMU)
+    CARBON = (4, 6, "C_", constants.M_CARBON_AMU)
+    NITROGEN = (5, 7, "N_", constants.M_NITROGEN_AMU)
+    OXYGEN = (6, 8, "O_", constants.M_OXYGEN_AMU)
+    NEON = (7, 10, "Ne", constants.M_NEON_AMU)
+    SILICON = (8, 14, "Si", constants.M_SILICON_AMU)
+    ARGON = (9, 18, "Ar", constants.M_ARGON_AMU)
+    IRON = (10, 26, "Fe", constants.M_IRON_AMU)
+    NICKEL = (11, 28, "Ni", constants.M_NICKEL_AMU)
+    KRYPTON = (12, 36, "Kr", constants.M_KRYPTON_AMU)
+    XENON = (13, 54, "Xe", constants.M_XENON_AMU)
+    TUNGSTEN = (14, 74, "W_", constants.M_TUNGSTEN_AMU)
+
+    def __new__(cls, index: int, full_ion_charge: int, label: str, mass_amu: float):
+        """Create a new instance of IonSpecies"""
+        obj = int.__new__(cls, index)
+        obj._value_ = index
+        obj._full_ion_charge_ = full_ion_charge
+        obj._label_ = label
+        obj._mass_amu_ = mass_amu
+        return obj
+
+    @DynamicClassAttribute
+    def full_ion_charge(self):
+        """The full ion charge for this ion species."""
+        return self._full_ion_charge_
+
+    @DynamicClassAttribute
+    def label(self):
+        """The label for this ion species."""
+        return self._label_
+
+    @DynamicClassAttribute
+    def mass_amu(self):
+        """The atomic mass of this ion species in Atomic Mass Units (amu)."""
+        return self._mass_amu_
 
 
 N_IMPURITIES = len(IonSpecies)
 """Number of ion species in impurity radiation model
-
-( 1)  Hydrogen  (fraction calculated by code)
-( 2)  Helium
-( 3)  Beryllium
-( 4)  Carbon
-( 5)  Nitrogen
-( 6)  Oxygen
-( 7)  Neon
-( 8)  Silicon
-( 9)  Argon
-(10)  Iron
-(11)  Nickel
-(12)  Krypton
-(13)  Xenon
-(14)  Tungsten
 """
 
 
