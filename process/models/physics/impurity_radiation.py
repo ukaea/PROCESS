@@ -16,6 +16,7 @@ from process.core.exceptions import ProcessError, ProcessValueError
 from process.data_structure.impurity_radiation_variables import (
     N_IMPURITIY_LOSS_FUNCTION_POINTS,
     IonSpecies,
+    N_ION_SPECIES,
 )
 from process.models.physics.profiles import calculate_vol_avg_of_profile
 
@@ -335,11 +336,11 @@ def init_imp_element(
     if error == 1:
         return
 
-    if n_species_index > len(data.impurity_radiation.impurity_arr_label):
+    if n_species_index not in IonSpecies:
         raise ProcessValueError(
             "Illegal impurity number",
             number=n_species_index,
-            max=len(data.impurity_radiation.impurity_arr_label),
+            max=N_ION_SPECIES,
         )
 
     data.impurity_radiation.impurity_arr_label[n_species_index - 1] = name_label
