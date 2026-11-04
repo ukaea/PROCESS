@@ -67,6 +67,11 @@ class IonSpecies(IntEnum):
     def full_name(self):
         """The full name of this ion species."""
         return self._full_name_
+    
+    @DynamicClassAttribute
+    def is_impurity(self) -> bool:
+        """Whether this ion species is an impurity."""
+        return self not in (IonSpecies.HYDROGEN, IonSpecies.HELIUM)
 
 
 N_ION_SPECIES = len(IonSpecies)
