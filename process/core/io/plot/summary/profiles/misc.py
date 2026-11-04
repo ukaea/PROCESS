@@ -32,8 +32,8 @@ def read_imprad_data(_skiprows, data_path):
     """
     lzdata = []
 
-    for label in IonSpecies.label:
-        file_iden = data_path + label.ljust(3, "_")
+    for ion in IonSpecies:
+        file_iden = data_path + IonSpecies(ion).label.ljust(3, "_")
 
         Te = None
         lz = None
