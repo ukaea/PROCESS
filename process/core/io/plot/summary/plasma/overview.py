@@ -12,7 +12,9 @@ from process.core.io.plot.summary.common import (
     place_plot_image,
 )
 from process.core.io.plot.summary.plasma.physics import plot_plasma
-from process.data_structure.impurity_radiation_variables import ImpurityRadiationData
+from process.data_structure.impurity_radiation_variables import (
+    IonSpecies,
+)
 from process.models.geometry.plasma import plasma_geometry
 from process.models.physics.bootstrap_current import BootstrapCurrentFractionModel
 from process.models.physics.current_drive import CurrentDriveModel
@@ -428,9 +430,9 @@ def plot_main_plasma_information(
         "$\\mathbf{densities:}$\n\n"
         f"Effective charge: {value('n_charge_plasma_effective_vol_avg'):.3f}\n\n"
         + "\n".join(
-            f"{label.replace('_', '') + ':':<6}"
-            f"{value(f'f_nd_impurity_electrons({index:02d})'):.4e}"
-            for index, label in enumerate(impurity_data.imp_label[:14], start=1)
+            f"{species.label.replace('_', '') + ':':<6}"
+            f"{value(f'f_nd_impurity_electrons({species.value:02d})'):.4e}"
+            for species in IonSpecies
         )
     )
 
