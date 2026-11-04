@@ -15,8 +15,8 @@ from process.core.data_structure.base import DataStructure
 from process.core.exceptions import ProcessError, ProcessValueError
 from process.data_structure.impurity_radiation_variables import (
     N_IMPURITIY_LOSS_FUNCTION_POINTS,
-    IonSpecies,
     N_ION_SPECIES,
+    IonSpecies,
 )
 from process.models.physics.profiles import calculate_vol_avg_of_profile
 
@@ -344,7 +344,7 @@ def init_imp_element(
         )
 
     data.impurity_radiation.impurity_arr_label[n_species_index - 1] = name_label
-    data.impurity_radiation.impurity_arr_z[n_species_index - 1] = z
+
     data.impurity_radiation.m_impurity_amu_array[n_species_index - 1] = m_species_amu
     data.impurity_radiation.f_nd_impurity_electron_array[n_species_index - 1] = (
         f_nd_species_electron
