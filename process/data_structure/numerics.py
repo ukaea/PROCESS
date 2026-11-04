@@ -292,14 +292,15 @@ class NumericsData:
             "CS achievable stress load cycles lower limit           ",
             "ECRH ignitability                ",  # Stellarator constraint
             "Fuel composition consistency     ",
+            "Fuel ion equilibrium             ",
         ]
     )
     """Labels describing constraint equations (corresponding itvs)<UL>
-    * ( 1) Beta (consistency equation) (itv 5)
+    * ( 1) Beta consistency equation
     * ( 2) Global power balance (consistency equation) (itv 10,1,2,3,4,6,11)
     * ( 3) Ion power balance DEPRECATED (itv 10,1,2,3,4,6,11)
     * ( 4) Electron power balance DEPRECATED (itv 10,1,2,3,4,6,11)
-    * ( 5) Density upper limit (itv 9,1,2,3,4,5,6)
+    * ( 5) Density upper limit (itv 9,1,2,3,4,6)
     * ( 6) (Epsilon x beta poloidal) upper limit (itv 8,1,2,3,4,6)
     * ( 7) Beam ion density (NBI) (consistency equation) (itv 7)
     * ( 8) Neutron wall load upper limit (itv 14,1,2,3,4,6)
@@ -394,6 +395,7 @@ class NumericsData:
     * (90) Lower Limit on number of stress load cycles for CS
     * (91) Checking if the design point is ECRH ignitable
     * (92) D/T/He3 ratio in fuel sums to 1
+    * (93) Fuel ion equilibrium
     """
 
     ixc: list[int] = field(
@@ -409,7 +411,6 @@ class NumericsData:
     * ( 2) b_plasma_toroidal_on_axis
     * ( 3) rmajor
     * ( 4) temp_plasma_electron_vol_avg_kev
-    * ( 5) beta_total_vol_avg
     * ( 6) nd_plasma_electrons_vol_avg
     * ( 7) f_nd_beam_electron
     * ( 8) NOT USED

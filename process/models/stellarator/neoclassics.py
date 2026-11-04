@@ -162,7 +162,9 @@ class Neoclassics(Model):
         )
         self.data.neoclassics.q_flux = self.neoclassics_calc_q_flux()
 
-    def init_profile_values_from_PROCESS(self, rho) -> tuple[np.ndarray, ...]:
+    def init_profile_values_from_PROCESS(
+        self, rho
+    ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         """Initialises the profile_values object from PROCESS' parabolic profiles
 
         Parameters
@@ -240,7 +242,7 @@ class Neoclassics(Model):
             (
                 self.data.physics.f_p_alpha_plasma_deposited
                 * self.data.physics.pden_alpha_total_vol_avg_mw
-                - self.data.physics.pden_plasma_core_rad_mw
+                - self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw
             )
             * self.data.physics.vol_plasma
             / self.data.physics.a_plasma_surface
@@ -582,7 +584,7 @@ class Neoclassics(Model):
         nominator = (
             self.data.physics.f_p_alpha_plasma_deposited
             * self.data.physics.pden_alpha_total_vol_avg_mw
-            - self.data.physics.pden_plasma_core_rad_mw
+            - self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw
         ) * volscaling
 
         # in fortran there was a 0*alphan term which I have removed for obvious reasons

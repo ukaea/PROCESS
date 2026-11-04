@@ -490,7 +490,7 @@ class ConfinementRadiationLossModel(IntEnum):
     """Confinement radiation loss model types"""
 
     FULL_RADIATION = (0, "All radiation included in loss power term")
-    CORE_ONLY = (1, "Only core radiation included in loss power term")
+    REDUCED_CORE_ONLY = (1, "Only reduced core radiation included in loss power term")
     NO_RADIATION = (2, "No radiation included in loss power term")
 
     def __new__(cls, value: int, description: str):
@@ -648,7 +648,7 @@ class PhysicsData:
     """multiplier for beam-background fusion calculation"""
 
     beta_total_vol_avg: float = 0.042
-    """Volume averaged total plasma beta (⟨β⟩) (`iteration variable 5`) (calculated if stellarator)"""
+    """Volume averaged total plasma beta (⟨β⟩)"""
 
     beta_fast_alpha: float = 0.0
     """Fast alpha beta component (β_alpha)"""
@@ -1324,11 +1324,17 @@ class PhysicsData:
     f_temp_plasma_electron_density_vol_avg: float = 0.0
     """Ratio of density weighted plasma electron tempertaurature to volume averaged (Profile Factor)"""
 
-    p_plasma_inner_rad_mw: float = 0.0
-    """radiation power from inner zone (MW)"""
+    p_plasma_core_rad_reduced_mw: float = 0.0
+    """Plasma reduced core radiation power [MW]"""
 
-    pden_plasma_core_rad_mw: float = 0.0
-    """total core radiation power per volume (MW/m3)"""
+    p_plasma_core_rad_mw: float = 0.0
+    """Plasma total core radiation power [MW]"""
+
+    pden_plasma_core_rad_reduced_vol_avg_mw: float = 0.0
+    """Volume-averaged total reduced core radiation power per volume [MW/m³]"""
+
+    pden_plasma_core_rad_vol_avg_mw: float = 0.0
+    """Volume-averaged total core radiation power per volume [MW/m³]"""
 
     p_dd_total_mw: float = 0.0
     """deuterium-deuterium fusion power (MW)"""
@@ -1381,11 +1387,11 @@ class PhysicsData:
     pden_plasma_pb_vol_avg_mw: float = 0.0
     """Volume-averaged proton-boron11 fusion power per volume just from plasma [MW/m³]"""
 
-    p_plasma_outer_rad_mw: float = 0.0
-    """radiation power from outer zone (MW)"""
+    p_plasma_edge_rad_mw: float = 0.0
+    """Plasma edge zone radiation power [MW]"""
 
-    pden_plasma_outer_rad_mw: float = 0.0
-    """edge radiation power per volume (MW/m3)"""
+    pden_plasma_edge_rad_vol_avg_mw: float = 0.0
+    """Plasma edge volume-averaged radiation power per unit volume [MW/m³]"""
 
     vs_plasma_internal: float = 0.0
     """internal plasma V-s"""
@@ -1457,10 +1463,52 @@ class PhysicsData:
     """plasma poloidal perimeter (m)"""
 
     p_plasma_rad_mw: float = 0.0
-    """total radiation power from inside LCFS (MW)"""
+    """Total plasma radiation power from inside LCFS [MW]"""
 
-    pden_plasma_rad_mw: float = 0.0
-    """total radiation power per volume (MW/m3)"""
+    p_plasma_rad_hydrogen_mw: float = 0.0
+    """Plasma radiation power due to hydrogen presence [MW]"""
+
+    p_plasma_rad_helium_mw: float = 0.0
+    """Plasma radiation power due to helium presence [MW]"""
+
+    p_plasma_rad_beryllium_mw: float = 0.0
+    """Plasma radiation power due to beryllium presence [MW]"""
+
+    p_plasma_rad_carbon_mw: float = 0.0
+    """Plasma radiation power due to carbon presence [MW]"""
+
+    p_plasma_rad_nitrogen_mw: float = 0.0
+    """Plasma radiation power due to nitrogen presence [MW]"""
+
+    p_plasma_rad_oxygen_mw: float = 0.0
+    """Plasma radiation power due to oxygen presence [MW]"""
+
+    p_plasma_rad_neon_mw: float = 0.0
+    """Plasma radiation power due to neon presence [MW]"""
+
+    p_plasma_rad_silicon_mw: float = 0.0
+    """Plasma radiation power due to silicon presence [MW]"""
+
+    p_plasma_rad_argon_mw: float = 0.0
+    """Plasma radiation power due to argon presence [MW]"""
+
+    p_plasma_rad_iron_mw: float = 0.0
+    """Plasma radiation power due to iron presence [MW]"""
+
+    p_plasma_rad_nickel_mw: float = 0.0
+    """Plasma radiation power due to nickel presence [MW]"""
+
+    p_plasma_rad_krypton_mw: float = 0.0
+    """Plasma radiation power due to krypton presence [MW]"""
+
+    p_plasma_rad_xenon_mw: float = 0.0
+    """Plasma radiation power due to xenon presence [MW]"""
+
+    p_plasma_rad_tungsten_mw: float = 0.0
+    """Plasma radiation power due to tungsten presence [MW]"""
+
+    pden_plasma_rad_vol_avg_mw: float = 0.0
+    """Plasma total volume-averaged radiation power per unit volume [MW/m³]"""
 
     pradsolmw: float = 0.0
     """radiation power from SoL (MW)"""
@@ -1471,11 +1519,23 @@ class PhysicsData:
     psolradmw: float = 0.0
     """SOL radiation power (MW) (`stellarator only`)"""
 
-    pden_plasma_sync_mw: float = 0.0
-    """Plasma synchrotron radiation power per unit volume [MW/m³]"""
+    pden_plasma_sync_vol_avg_mw: float = 0.0
+    """Plasma volume-averaged synchrotron radiation power per unit volume [MW/m³]"""
 
     p_plasma_sync_mw: float = 0.0
     """Total synchrotron radiation power from plasma (Pₛₙ) [MW]"""
+
+    p_plasma_rad_impurities_mw: float = 0.0
+    """Plasma radiation power due to impurity presence (Z>2) [MW]"""
+
+    f_p_plasma_rad_sync: float = 0.0
+    """Fraction of total plasma radiation power due to synchrotron radiation"""
+
+    f_p_plasma_rad_ions: float = 0.0
+    """Fraction of total plasma radiation power due to radiation caused by ion presence"""
+
+    f_p_plasma_rad_impurities: float = 0.0
+    """Fraction of total plasma radiation power due to radiation caused by impurity presence (Z>2)"""
 
     i_l_h_threshold: int = 19
     """switch for L-H mode power threshold scaling to use (see l_h_threshold_powers for list)"""
@@ -1537,8 +1597,11 @@ class PhysicsData:
     """Plasma safety factor at 95% flux surface (q₉₅) (`iteration variable 18`)
     """
 
-    molflow_plasma_fuelling_required: float = 0.0
+    molflow_plasma_fuelling: float = 5.0e21
     """plasma fuelling rate (nucleus-pairs/s)"""
+
+    molflow_plasma_fuelling_equilibrium: float = 0.0
+    """Plasma fuelling rate required for fuel-ion equilibrium (nucleus-pairs/s)."""
 
     tauratio: float = 1.0
     """tauratio /1.0/ : ratio of He and pellet particle confinement times"""

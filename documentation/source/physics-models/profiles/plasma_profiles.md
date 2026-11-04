@@ -405,7 +405,7 @@ $$
 With the coefficients used to turn the temperature from $\text{keV}$ back to Joules.
 
 
-We calculate the volume averaged thermal plasma pressure using the volume averaged density and the density weighted volume averaged temperature for the electrons and ions. The density weighted temperature is used as $\langle nT \rangle \neq \langle n \rangle \langle T \rangle$. This can be seen also in the [equality constraint for thermal $\beta$](../plasma_beta/plasma_beta.md#beta-consistency)
+We calculate the volume averaged thermal plasma pressure using the volume averaged density and the density weighted volume averaged temperature for the electrons and ions. The density weighted temperature is used as $\langle nT \rangle \neq \langle n \rangle \langle T \rangle$. 
 
 $$
 \langle p_{\text{thermal}} \rangle = \overbrace{\langle n_{\text{e}} \rangle_{\text{V}}}^{\texttt{nd_plasma_electrons_vol_avg}} \times \overbrace{\langle T_{\text{e}} \rangle_{\text{n}}}^{\texttt{temp_plasma_electron_density_weighted_kev}}\\

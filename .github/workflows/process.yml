@@ -14,7 +14,7 @@ permissions:
   id-token: write
 
 env:
-  python-version: '3.11'
+  python-version: "3.11"
 
 jobs:
   unit-test:
@@ -95,12 +95,12 @@ jobs:
       - name: Move other files
         run: mv tests/regression/input_files/*.json tracking/
       - name: Archive tracked MFILEs
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: tracked-mfiles
           path: tracking/*_MFILE.DAT
       - name: Archive tracked SIG_TF.json
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: sig-tfs
           path: tracking/*.json
@@ -178,7 +178,7 @@ jobs:
 
       - name: Get information about the current run
         if: failure()
-        uses: Fusion-Power-Plant-Framework/fppf-actions/get-workflow-origin@a6dd369021515269789428796f491a0fa67ea6f5
+        uses: Fusion-Power-Plant-Framework/fppf-actions/get-workflow-origin@12d5284c9baf30770e46880c8d4350928e540212
         id: workflow-run-info
       - name: Checkout and lint on main
         # check out main
@@ -225,7 +225,6 @@ jobs:
             To check what these are, run `hatch run lint:fmt_extra` on your branch and on main
           edit-mode: replace
 
-
   tracking:
     # update tracker to include the MFILEs created by the run-tracking-inputs job
     concurrency:
@@ -250,7 +249,7 @@ jobs:
       - name: Download tracking data
         run: git clone git@github.com:timothy-nunn/process-tracking-data.git process-tracking-data
       - name: Download MFILEs
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
         with:
           name: tracked-mfiles
           path: tracking/
@@ -263,7 +262,7 @@ jobs:
       - name: Create the tracking dashboard
         run: hatch run python tracking/tracking_data.py plot process-tracking-data --out tracking.html
       - name: Archive tracking dashboard
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: tracking-html
           path: tracking.html
@@ -296,12 +295,12 @@ jobs:
           python-version: ${{ env.python-version }}
       - run: git config --global --add safe.directory '*'
       - name: Download STF_TF.json files
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
         with:
           name: sig-tfs
           path: tracking/
       - name: Download MFILEs
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
         with:
           name: tracked-mfiles
           path: tracking/
@@ -312,7 +311,7 @@ jobs:
         run: mv tracking/large_tokamak_nof_MFILE.DAT.SUMMARY.pdf documentation/source/images/plot_summary.pdf
       - run: hatch run docs:build
       - name: Download tracking html
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
         with:
           name: tracking-html
       - run: mv tracking.html site || cp site/404.html site/tracking.html

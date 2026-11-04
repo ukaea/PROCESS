@@ -189,7 +189,6 @@ INPUT_VARIABLES = {
     "alphat": InputVariable("physics", float, range=(0.0, 10.0)),
     "aspect": InputVariable("physics", float, range=(1.001, 40.0)),
     "beamfus0": InputVariable("physics", float, range=(0.01, 10.0)),
-    "beta_total_vol_avg": InputVariable("physics", float, range=(0.0, 1.0)),
     "beta_vol_avg_max": InputVariable("physics", float, range=(0.0, 1.0)),
     "beta_vol_avg_min": InputVariable("physics", float, range=(0.0, 1.0)),
     "betbm0": InputVariable("physics", float, range=(0.0, 10.0)),
@@ -1083,7 +1082,7 @@ INPUT_VARIABLES = {
     "i_nd_plasma_protons": InputVariable("physics", int, choices=[0, 1]),
     "i_blkt_module_segmentation": InputVariable("fwbs", int, choices=[0, 1]),
     "inuclear": InputVariable("fwbs", int, choices=[0, 1]),
-    "iohcl": InputVariable("build", int, choices=[0, 1]),
+    "i_cs_use": InputVariable("build", int, choices=[0, 1]),
     "i_plasma_pedestal": InputVariable("physics", int, choices=[0, 1]),
     "i_pf_conductor": InputVariable("pf_coil", int, choices=[0, 1]),
     "ipnet": InputVariable("costs", int, choices=[0, 1]),
@@ -1226,6 +1225,7 @@ INPUT_VARIABLES = {
     "f_len_sol_power_decay_inboard_outboard": InputVariable(
         "physics", float, range=(0.01, 2.0)
     ),
+    "molflow_plasma_fuelling": InputVariable("physics", float, range=(1.0e18, 1.0e23)),
 }
 
 

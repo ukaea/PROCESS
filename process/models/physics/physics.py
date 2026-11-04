@@ -446,6 +446,24 @@ class Physics(Model):
         self.outplas()
         self.outtim()
 
+    def output_species_radiation_power_density(self) -> None:
+        """Output the specific radiation power of each supported ion species."""
+        species_powers = impurity_radiation.ImpurityRadiation(
+            self.plasma_profile, self.data
+        ).calculate_species_radiation_powers()
+        for (label, (_, p_mw)), attribute in zip(
+            species_powers.items(),
+            impurity_radiation.SPECIES_POWER_ATTRIBUTES,
+            strict=True,
+        ):
+            po.ovarre(
+                self.outfile,
+                f"{label} total radiation power [MW]",
+                f"({attribute})",
+                p_mw,
+                "OP ",
+            )
+
     def run(self):
         """Routine to calculate tokamak plasma physics information
         This routine calculates all the primary plasma physics parameters for a tokamak
@@ -805,12 +823,6 @@ class Physics(Model):
 
         # ============================================
 
-        # -----------------------------------------------------
-        # Beta Components
-        # -----------------------------------------------------
-
-        self.beta.run()
-
         # Stored thermal energies in the plasma
 
         (
@@ -1110,19 +1122,8 @@ class Physics(Model):
             self.data.physics.f_p_alpha_plasma_deposited,
         )
 
-        self.data.physics.beta_fast_alpha = self.beta.fast_alpha_beta(
-            b_plasma_poloidal_average=self.data.physics.b_plasma_surface_poloidal_average,
-            b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
-            nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
-            nd_plasma_fuel_ions_vol_avg=self.data.physics.nd_plasma_fuel_ions_vol_avg,
-            nd_plasma_ions_total_vol_avg=self.data.physics.nd_plasma_ions_total_vol_avg,
-            temp_plasma_electron_density_weighted_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
-            temp_plasma_ion_density_weighted_kev=self.data.physics.temp_plasma_ion_density_weighted_kev,
-            pden_alpha_total_vol_avg_mw=self.data.physics.pden_alpha_total_vol_avg_mw,
-            pden_plasma_alpha_vol_avg_mw=self.data.physics.pden_plasma_alpha_vol_avg_mw,
-            i_beta_fast_alpha=self.data.physics.i_beta_fast_alpha,
-            f_plasma_fuel_deuterium=self.data.physics.f_plasma_fuel_deuterium,
-        )
+        # Calculate beta quantities.
+        self.beta.run()
 
         if self.data.physics.i_fusion_reactions == "p-b11":
             self.data.physics.beta_fast_alpha = self.beta.fast_alpha_beta_pb(
@@ -1215,22 +1216,41 @@ class Physics(Model):
                 rho_plasma_core_norm=self.data.impurity_radiation.radius_plasma_core_norm,
                 eq=self.data.veqpy.equilibrium,
             )
-        self.data.physics.pden_plasma_sync_mw = radpwrdata.pden_plasma_sync_mw
-        self.data.physics.pden_plasma_core_rad_mw = radpwrdata.pden_plasma_core_rad_mw
-        self.data.physics.pden_plasma_outer_rad_mw = radpwrdata.pden_plasma_outer_rad_mw
-        self.data.physics.pden_plasma_rad_mw = radpwrdata.pden_plasma_rad_mw
+            
+        self.data.physics.pden_plasma_sync_vol_avg_mw = (
+            radpwrdata.pden_plasma_sync_vol_avg_mw
+        )
+        self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw = (
+            radpwrdata.pden_plasma_core_rad_reduced_vol_avg_mw
+        )
+        self.data.physics.pden_plasma_core_rad_vol_avg_mw = (
+            radpwrdata.pden_plasma_core_rad_vol_avg_mw
+        )
+        self.data.physics.pden_plasma_edge_rad_vol_avg_mw = (
+            radpwrdata.pden_plasma_edge_rad_vol_avg_mw
+        )
+        self.data.physics.pden_plasma_rad_vol_avg_mw = (
+            radpwrdata.pden_plasma_rad_vol_avg_mw
+        )
 
         self.data.physics.p_plasma_sync_mw = (
-            self.data.physics.pden_plasma_sync_mw * self.data.physics.vol_plasma
+            self.data.physics.pden_plasma_sync_vol_avg_mw * self.data.physics.vol_plasma
         )
-        self.data.physics.p_plasma_inner_rad_mw = (
-            self.data.physics.pden_plasma_core_rad_mw * self.data.physics.vol_plasma
+        self.data.physics.p_plasma_core_rad_reduced_mw = (
+            self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw
+            * self.data.physics.vol_plasma
         )
-        self.data.physics.p_plasma_outer_rad_mw = (
-            self.data.physics.pden_plasma_outer_rad_mw * self.data.physics.vol_plasma
+
+        self.data.physics.p_plasma_core_rad_mw = (
+            self.data.physics.pden_plasma_core_rad_vol_avg_mw
+            * self.data.physics.vol_plasma
+        )
+        self.data.physics.p_plasma_edge_rad_mw = (
+            self.data.physics.pden_plasma_edge_rad_vol_avg_mw
+            * self.data.physics.vol_plasma
         )
         self.data.physics.p_plasma_rad_mw = (
-            self.data.physics.pden_plasma_rad_mw * self.data.physics.vol_plasma
+            self.data.physics.pden_plasma_rad_vol_avg_mw * self.data.physics.vol_plasma
         )
 
         # Calculate ohmic power
@@ -1373,7 +1393,7 @@ class Physics(Model):
             p_non_alpha_charged_mw=self.data.physics.p_non_alpha_charged_mw,
             p_hcd_injected_total_mw=self.data.current_drive.p_hcd_injected_total_mw,
             plasma_current=self.data.physics.plasma_current,
-            pden_plasma_core_rad_mw=self.data.physics.pden_plasma_core_rad_mw,
+            pden_plasma_core_rad_reduced_vol_avg_mw=self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw,
             rmajor=self.data.physics.rmajor,
             rminor=self.data.physics.rminor,
             temp_plasma_electron_density_weighted_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
@@ -1445,7 +1465,7 @@ class Physics(Model):
             self.data.physics.burnup,
             self.data.physics.figmer,
             self.data.physics.fusrat,
-            self.data.physics.molflow_plasma_fuelling_required,
+            self.data.physics.molflow_plasma_fuelling_equilibrium,
             self.data.physics.rndfuel,
             self.data.physics.t_alpha_confinement,
             self.data.physics.f_t_alpha_energy_confinement,
@@ -1558,6 +1578,22 @@ class Physics(Model):
                 p_plasma_heating_mw=self.data.physics.p_plasma_heating_total_mw,
             )
         )
+
+        self.data.physics.f_p_plasma_rad_sync = (
+            self.data.physics.p_plasma_sync_mw / self.data.physics.p_plasma_rad_mw
+            if self.data.physics.p_plasma_rad_mw > 0.0
+            else 0.0
+        )
+        self.data.physics.f_p_plasma_rad_ions = (
+            1.0 - self.data.physics.f_p_plasma_rad_sync
+        )
+        self.data.physics.f_p_plasma_rad_impurities = (
+            self.data.physics.p_plasma_rad_impurities_mw
+            / self.data.physics.p_plasma_rad_mw
+            if self.data.physics.p_plasma_rad_mw > 0.0
+            else 0.0
+        )
+
         self.data.physics.rad_fraction_total = (
             self.data.physics.f_p_plasma_separatrix_rad
             + (1.0e0 - self.data.physics.f_p_plasma_separatrix_rad)
@@ -2396,59 +2432,57 @@ class Physics(Model):
         burnup_in: float,
         tauratio: float,
         i_fusion_reactions: str,
-    ) -> tuple[float, float, float, float, float, float, float, float]:
-        """Auxiliary physics quantities
+    ) -> tuple[float, float, float, float, float, float, float]:
+        """Calculate auxiliary plasma physics quantities.
 
         Parameters
         ----------
         aspect : float
             Plasma aspect ratio.
         nd_plasma_fuel_ions_vol_avg : float
-            Fuel ion density (/m3).
+            Volume-averaged fuel ion density (/m3).
         fusden_total_vol_avg : float
-            Fusion reaction rate from plasma and beams (/m3/s).
+            Volume-averaged fusion reaction rate density from plasma and beams (/m3/s).
         fusden_alpha_total_vol_avg : float
-            Alpha particle production rate (/m3/s).
+            Volume-averaged alpha particle production rate density (/m3/s).
         plasma_current : float
             Plasma current (A).
         sbar : float
             Exponent for aspect ratio (normally 1).
         nd_plasma_alphas_thermal_vol_avg : float
-            Alpha ash density (/m3).
+            Volume-averaged thermal alpha ash density (/m3).
         t_energy_confinement : float
             Global energy confinement time (s).
         vol_plasma : float
             Plasma volume (m3).
-        burnup_in: float
-            fractional plasma burnup user input
-        tauratio: float
-            ratio of He and pellet particle confinement times
+        burnup_in : float
+            Fractional plasma burnup user input.
+        tauratio : float
+            Ratio of helium ash to fuel particle confinement times.
         i_fusion_reactions: str
             Fusion reaction type
+
         Returns
         -------
         tuple
             A tuple containing:
-            - burnup (float): Fractional plasma burnup.
-            - figmer (float): Physics figure of merit.
-            - fusrat (float): Number of fusion reactions per second.
-            - molflow_plasma_fuelling_required (float): Fuelling rate for D-T
-              (nucleus-pairs/sec).
-            - rndfuel (float): Fuel burnup rate (reactions/s).
-            - t_alpha_confinement (float): Alpha particle confinement time (s).
-            - f_t_alpha_energy_confinement (float): Fraction of alpha energy confinement.
-            This subroutine calculates extra physics related items needed by other
-            parts of the code.
 
+            - burnup: fractional plasma burnup.
+            - figmer: physics figure of merit.
+            - fusrat: total number of fusion reactions per second.
+            - molflow_plasma_fuelling_equilibrium: plasma fuelling rate required
+            for fuel-ion equilibrium (nucleus-pairs/s).
+            - rndfuel: fuel burnup rate (reactions/s).
+            - t_alpha_confinement: alpha particle confinement time (s).
+            - f_t_alpha_energy_confinement: fraction of alpha energy confinement.
         """
-        figmer = 1e-6 * plasma_current * aspect**sbar
+        figmer = 1.0e-6 * plasma_current * aspect**sbar
 
         # Fusion reactions per second
         fusrat = fusden_total_vol_avg * vol_plasma
 
         # Alpha particle confinement time (s)
         # Number of alphas / alpha production rate
-        # only likely if DD is only active fusion reaction
         t_alpha_confinement = (
             0.0
             if fusden_alpha_total_vol_avg == 0.0  # noqa: RUF069
@@ -2458,15 +2492,8 @@ class Physics(Model):
         # Fractional burnup
         # (Consider detailed model in: G. L. Jackson, V. S. Chan, R. D. Stambaugh,
         # Fusion Science and Technology, vol.64, no.1, July 2013, pp.8-12)
-        # The ratio of ash to fuel particle confinement times is given by
-        # tauratio
-        # Possible logic...
-        # burnup = fuel ion-pairs burned/m3 / initial fuel ion-pairs/m3;
-        # fuel ion-pairs burned/m3 = alpha particles/m3 (for both D-T and
-        # D-He3 reactions)
-        # initial fuel ion-pairs/m3 = burnt fuel ion-pairs/m3 + unburnt fuel-ion
-        # pairs/m3
-        # Remember that unburnt fuel-ion pairs/m3 = 0.5 * unburnt fuel-ions/m3
+        #
+        # burnup = fuel ion-pairs burned / initial fuel ion-pairs
         if burnup_in <= 1.0e-9:
             burnup = (
                 nd_plasma_alphas_thermal_vol_avg
@@ -2482,11 +2509,11 @@ class Physics(Model):
         else:
             burnup = burnup_in
 
-        # Fuel burnup rate (reactions/second) (previously Amps)
+        # Fuel burnup rate (reactions/s)
         rndfuel = fusrat
 
-        # Required fuelling rate (fuel ion pairs/second) (previously Amps)
-        molflow_plasma_fuelling_required = rndfuel / burnup
+        # Plasma fuelling rate required to satisfy fuel-ion equilibrium
+        molflow_plasma_fuelling_equilibrium = rndfuel / burnup
 
         f_t_alpha_energy_confinement = t_alpha_confinement / t_energy_confinement
 
@@ -2494,7 +2521,7 @@ class Physics(Model):
             burnup,
             figmer,
             fusrat,
-            molflow_plasma_fuelling_required,
+            molflow_plasma_fuelling_equilibrium,
             rndfuel,
             t_alpha_confinement,
             f_t_alpha_energy_confinement,
@@ -2796,18 +2823,21 @@ class Physics(Model):
         self.plasma_reactions.output()
 
         po.oheadr(self.outfile, "Plasma Radiation (excluding SOL):")
+
+        po.osubhd(self.outfile, "Synchrotron Radiation:")
+
         po.ovarre(
             self.outfile,
-            "Plasma total synchrotron radiation power (Pₛₙ) (MW)",
+            "Plasma total synchrotron radiation power (Pₛₙ) [MW]",
             "(p_plasma_sync_mw)",
             self.data.physics.p_plasma_sync_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Plasma total synchrotron radiation power density (MW/m³)",
-            "(pden_plasma_sync_mw)",
-            self.data.physics.pden_plasma_sync_mw,
+            "Plasma volume-averaged synchrotron radiation power density [MW/m³]",
+            "(pden_plasma_sync_vol_avg_mw)",
+            self.data.physics.pden_plasma_sync_vol_avg_mw,
             "OP ",
         )
         po.ovarre(
@@ -2815,6 +2845,51 @@ class Physics(Model):
             "Synchrotron wall reflectivity factor",
             "(f_sync_reflect)",
             self.data.physics.f_sync_reflect,
+        )
+        po.ovarre(
+            self.outfile,
+            "Fraction of plasma radiation power due to synchrotron radiation",
+            "(f_p_plasma_rad_sync)",
+            self.data.physics.f_p_plasma_rad_sync,
+            "OP ",
+        )
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.osubhd(self.outfile, "Line, Recombination & Bremsstrahlung Radiation:")
+
+        self.output_species_radiation_power_density()
+
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Fraction of plasma radiation power due to presence of ions",
+            "(f_p_plasma_rad_ions)",
+            self.data.physics.f_p_plasma_rad_ions,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Plasma radiation power due to impurities, Z>2 (Pᵧ,ᵢₘₚ) [MW]",
+            "(p_plasma_rad_impurities_mw)",
+            self.data.physics.p_plasma_rad_impurities_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Fraction of plasma radiation power due to impurities, Z>2",
+            "(f_p_plasma_rad_impurities)",
+            self.data.physics.f_p_plasma_rad_impurities,
+            "OP ",
+        )
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.osubhd(self.outfile, "Core region:")
+
+        po.ocmmnt(
+            self.outfile, "Note: Only the core region contains the synchrotron radiation"
         )
         po.oblnkl(self.outfile)
         po.ovarre(
@@ -2829,18 +2904,62 @@ class Physics(Model):
             "(f_p_plasma_core_rad_reduction)",
             self.data.impurity_radiation.f_p_plasma_core_rad_reduction,
         )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Plasma total radiation power from core region (MW) (Pᵧ,ᵢₙₙₑᵣ)",
-            "(p_plasma_inner_rad_mw)",
-            self.data.physics.p_plasma_inner_rad_mw,
+            "Plasma reduced core radiation power (Pᵧ,ᵢₙₙₑᵣ) [MW]",
+            "(p_plasma_core_rad_reduced_mw)",
+            self.data.physics.p_plasma_core_rad_reduced_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Plasma total radiation power from edge region (MW) (Pᵧ,ₒᵤₜₑᵣ)",
-            "(p_plasma_outer_rad_mw)",
-            self.data.physics.p_plasma_outer_rad_mw,
+            "Plasma core radiation power (Pᵧ,ᵢₙₙₑᵣ) [MW]",
+            "(p_plasma_core_rad_mw)",
+            self.data.physics.p_plasma_core_rad_mw,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(
+            self.outfile,
+            "Note: Volume-averaged quantities are calculated over the whole plasma",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Volume-averaged total reduced core radiation power per volume [MW/m³]",
+            "(pden_plasma_core_rad_reduced_vol_avg_mw)",
+            self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Volume-averaged total core radiation power per volume [MW/m³]",
+            "(pden_plasma_core_rad_vol_avg_mw)",
+            self.data.physics.pden_plasma_core_rad_vol_avg_mw,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.osubhd(self.outfile, "Edge region:")
+        po.ovarre(
+            self.outfile,
+            "Plasma total radiation power from edge region (Pᵧ,ₒᵤₜₑᵣ) [MW] ",
+            "(p_plasma_edge_rad_mw)",
+            self.data.physics.p_plasma_edge_rad_mw,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(
+            self.outfile,
+            "Note: Volume-averaged quantities are calculated over the whole plasma",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Volume-averaged total edge radiation power per volume [MW/m³]",
+            "(pden_plasma_edge_rad_vol_avg_mw)",
+            self.data.physics.pden_plasma_edge_rad_vol_avg_mw,
             "OP ",
         )
 
@@ -2853,10 +2972,14 @@ class Physics(Model):
                 "OP ",
             )
 
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.osubhd(self.outfile, "Totals:")
+
         po.ovarre(
             self.outfile,
             "Plasma total radiation power from inside last closed flux surface "
-            "(Pᵧ) (MW)",
+            "(Pᵧ) [MW]",
             "(p_plasma_rad_mw)",
             self.data.physics.p_plasma_rad_mw,
             "OP ",
@@ -2868,6 +2991,17 @@ class Physics(Model):
             self.data.physics.f_p_plasma_separatrix_rad,
             "OP ",
         )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Plasma total volume-averaged radiation power per unit volume [MW/m³]",
+            "(pden_plasma_rad_vol_avg_mw)",
+            self.data.physics.pden_plasma_rad_vol_avg_mw,
+            "OP ",
+        )
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
 
         po.oblnkl(self.outfile)
         po.ovarre(
@@ -3404,8 +3538,15 @@ class Physics(Model):
         po.ovarre(
             self.outfile,
             "Fuelling rate (nucleus-pairs/s)",
-            "(molflow_plasma_fuelling_required)",
-            self.data.physics.molflow_plasma_fuelling_required,
+            "(molflow_plasma_fuelling)",
+            self.data.physics.molflow_plasma_fuelling,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Fuelling rate required for equilibrium (nucleus-pairs/s)",
+            "(molflow_plasma_fuelling_equilibrium)",
+            self.data.physics.molflow_plasma_fuelling_equilibrium,
             "OP ",
         )
         po.ovarre(
@@ -4482,6 +4623,44 @@ class PlasmaBeta(Model):
              If an illegal value of i_beta_norm_max is provided.
 
         """
+        # Thermal beta is derived directly from the current plasma state.
+        self.data.physics.beta_thermal_vol_avg = self.calculate_plasma_beta(
+            pres_plasma=(
+                constants.KILOELECTRON_VOLT
+                * (
+                    self.data.physics.nd_plasma_electrons_vol_avg
+                    * self.data.physics.temp_plasma_electron_density_weighted_kev
+                    + self.data.physics.nd_plasma_ions_total_vol_avg
+                    * self.data.physics.temp_plasma_ion_density_weighted_kev
+                )
+            ),
+            b_field=self.data.physics.b_plasma_total,
+        )
+
+        # Fast-alpha beta is calculated here so all tokamak beta calculations are
+        # owned by PlasmaBeta.run(). Keep fast_alpha_beta() unchanged because it is
+        # also called directly by the stellarator physics model.
+        self.data.physics.beta_fast_alpha = self.fast_alpha_beta(
+            b_plasma_poloidal_average=self.data.physics.b_plasma_surface_poloidal_average,
+            b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
+            nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
+            nd_plasma_fuel_ions_vol_avg=self.data.physics.nd_plasma_fuel_ions_vol_avg,
+            nd_plasma_ions_total_vol_avg=self.data.physics.nd_plasma_ions_total_vol_avg,
+            temp_plasma_electron_density_weighted_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
+            temp_plasma_ion_density_weighted_kev=self.data.physics.temp_plasma_ion_density_weighted_kev,
+            pden_alpha_total_vol_avg_mw=self.data.physics.pden_alpha_total_vol_avg_mw,
+            pden_plasma_alpha_vol_avg_mw=self.data.physics.pden_plasma_alpha_vol_avg_mw,
+            i_beta_fast_alpha=self.data.physics.i_beta_fast_alpha,
+            f_plasma_fuel_deuterium=self.data.physics.f_plasma_fuel_deuterium,
+        )
+
+        # Total beta is derived from the thermal and fast-particle components.
+        self.data.physics.beta_total_vol_avg = (
+            self.data.physics.beta_thermal_vol_avg
+            + self.data.physics.beta_fast_alpha
+            + self.data.physics.beta_beam
+        )
+
         # -----------------------------------------------------
         # Normalised Beta Limit
         # -----------------------------------------------------
@@ -4546,6 +4725,10 @@ class PlasmaBeta(Model):
             rminor=self.data.physics.rminor,
         )
 
+        # -----------------------------------------------------
+        # Derived beta components
+        # -----------------------------------------------------
+
         self.data.physics.beta_toroidal_vol_avg = (
             self.data.physics.beta_total_vol_avg
             * self.data.physics.b_plasma_total**2
@@ -4557,12 +4740,6 @@ class PlasmaBeta(Model):
             b_plasma_total=self.data.physics.b_plasma_total,
             b_plasma_poloidal_average=self.data.physics.b_plasma_surface_poloidal_average,
             beta=self.data.physics.beta_total_vol_avg,
-        )
-
-        self.data.physics.beta_thermal_vol_avg = (
-            self.data.physics.beta_total_vol_avg
-            - self.data.physics.beta_fast_alpha
-            - self.data.physics.beta_beam
         )
 
         self.data.physics.beta_poloidal_eps = (
@@ -4577,6 +4754,7 @@ class PlasmaBeta(Model):
             )
             ** 2
         )
+
         self.data.physics.beta_thermal_toroidal_vol_avg = (
             self.data.physics.beta_thermal_vol_avg
             * (
@@ -4619,6 +4797,7 @@ class PlasmaBeta(Model):
             )
             ** 2
         )
+
         self.data.physics.beta_norm_poloidal = (
             self.data.physics.beta_norm_total
             * (

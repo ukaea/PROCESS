@@ -71,8 +71,8 @@ OBS_VARS = {
     "strain_wp_max": "str_wp_max",
     "strain_wp": "str_wp",
     "rad_fraction": "rad_fraction_total",
-    "pcoreradmw": "p_plasma_inner_rad_mw",
-    "pedgeradmw": "p_plasma_outer_rad_mw",
+    "pcoreradmw": "p_plasma_core_rad_reduced_mw",
+    "pedgeradmw": "p_plasma_edge_rad_mw",
     "rad_fraction_core": "",
     "thshield": [
         "dr_shld_thermal_inboard",
@@ -428,7 +428,7 @@ OBS_VARS = {
     "rebco_thickness": "dx_tf_hts_tape_rebco",
     "tape_thickness": "dx_tf_hts_tape_total",
     "tape_width": "dr_tf_hts_tape",
-    "beta": "beta_total_vol_avg",
+    "beta": None,
     "beta_max": "beta_vol_avg_max",
     "beta_min": "beta_vol_avg_min",
     "f_deuterium": "f_plasma_fuel_deuterium",
@@ -481,6 +481,8 @@ OBS_VARS = {
     "f_p_div_lower": "f_p_div_lower_separatrix",
     "temp_plasma_pedestal_kev": "temp_plasma_pedestal_electron_kev",
     "temp_plasma_separatrix_kev": "temp_plasma_separatrix_electron_kev",
+    "iohcl": "i_cs_use",
+    "beta_total_vol_avg": None,
 }
 
 OBS_VARS_HELP = {

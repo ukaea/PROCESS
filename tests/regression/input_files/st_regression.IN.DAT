@@ -70,10 +70,6 @@ itart = 1
 *_______________________________________________________________________________________*
 *------------------------------- *Consistency Equations* -------------------------------*
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*
-icc = 1
-* DESCRIPTION:   Beta Consistency
-* JUSTIFICATION: Consistency equations should always be on
-* VARIABLES:     Calculated in-situ, no iteration variables
 
 icc = 2
 * DESCRIPTION:   Global Power Balance Consistency
@@ -85,13 +81,18 @@ icc = 11
 * JUSTIFICATION: Consistency equations should always be on
 * VARIABLES:     rmajor, Rest calculated in-situ
 
-*________________________________________________________________________*
+icc = 93
+* DESCRIPTION:   Plasma fuel-ion equillibrium
+* JUSTIFICATION: Consistency equations should always be on
+* VARIABLES:     molflow_plasma_fuelling, Rest calculated in-situ
+
 *------------------------------- *Plasma* -------------------------------*
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*
 *icc = 4
 * DESCRIPTION:   Global power balance for electrons
 * JUSTIFICATION: Not recommended for use 
 * VARIABLES:     i_rad_loss,i_plasma_ignited,p_hcd_injected_electrons_mw, Rest calculated in-situ
+
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Performance ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
@@ -146,6 +147,13 @@ p_plant_electric_net_required_mw = 100.0
 * DESCRIPTION:   Minimum fusion gain Q 
 * JUSTIFICATION: Turned off, don't care about lower Q value
 
+*-----------------------*
+* Fuel-ion equillibrium *
+*-----------------------*
+ixc = 178
+molflow_plasma_fuelling = 4.45548408068305741e+21
+* DESCRIPTION: Plasma fuelling rate
+* JUSTIFICATION: Use to find fuel-ion equillibrium.
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Shaping ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*
@@ -294,13 +302,6 @@ icc = 24
 *beta_vol_avg_max
 * DESCRIPTION:   Plasma beta upper limit
 * JUSTIFICATION: Turned off, not in use. icc=24. Allow to be calculated in-situ
-
-ixc = 5
-beta_total_vol_avg = 0.2
-boundl(5) = 0.01
-boundu(5) = 1.0
-* DESCRIPTION:   Total Plasma Beta, 
-* JUSTIFICATION: Beta is limited by beta_norm_max
 
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1482,7 +1483,7 @@ tftmp = 20.0
 *-------------------------------- CS & PF Coils --------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*
 
-iohcl = 0
+i_cs_use = 0
 * DESCRIPTION:   Switch for (0: no CS inductive current on start up 
 *                1: Yes there is a CS inductive current on start up)
 * JUSTIFICATION: Want no inductive current at flat-top when steady state running. 

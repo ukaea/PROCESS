@@ -46,7 +46,6 @@ ITERATION_VARIABLES = {
     2: IterationVariable("b_plasma_toroidal_on_axis", "physics", 0.010, 30.00),
     3: IterationVariable("rmajor", "physics", 0.1, 50.00),
     4: IterationVariable("temp_plasma_electron_vol_avg_kev", "physics", 5.0, 150.0),
-    5: IterationVariable("beta_total_vol_avg", "physics", 0.001, 1.0),
     6: IterationVariable("nd_plasma_electrons_vol_avg", "physics", 2.0e19, 1.0e21),
     7: IterationVariable("f_nd_beam_electron", "physics", 1.0e-6, 1.0),
     10: IterationVariable("hfact", "physics", 0.1, 3.0),
@@ -239,6 +238,12 @@ ITERATION_VARIABLES = {
     175: IterationVariable("kappa", "physics", 0.00, 10.00),
     176: IterationVariable("f_st_coil_aspect", "stellarator", 0.70, 1.30),
     177: IterationVariable("f_a_tf_turn_cable_space_extra_void", "tfcoil", 0.01, 1.0),
+    178: IterationVariable(
+        "molflow_plasma_fuelling",
+        "physics",
+        1.0e18,
+        1.0e23,
+    ),
 }
 
 

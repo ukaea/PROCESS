@@ -24,9 +24,9 @@ dependencies = [
     "cvxpy~=1.7.3",
     "pandas>=2.0",
     "numba>=0.57",
-    "PyVMCON>=2.4.0,<2.5.0",
+    "PyVMCON>=2.4.3,<2.5.0",
     "CoolProp>=6.4",
-    "matplotlib>=2.1.1",
+    "matplotlib>=3.8.0",
     "seaborn>=0.12.2",
     "tabulate",
     "pyyaml",  # just used for mfile yml outputting
@@ -69,13 +69,13 @@ docs = [
   "mkdocs-glightbox>=0.3.4",
   "pymdown-extensions>=6.3",
   "bokeh>=3.4.0,<4",
-  "mkdocstrings[python]==1.0.4",
+  "mkdocstrings[python]",
   "Jinja2>=3.0",
   "mkdocs-jupyter>=0.24,<0.27",
   "mkdocs-gen-files",
   "mkdocs-literate-nav",
 ]
-lint = ["pre-commit>=2.16.0", "ruff==0.16.10", "ty"]
+lint = ["pre-commit>=2.16.0", "ruff==0.17.3", "ty"]
 all = ["process[test,docs,lint,examples,plotly]", "toml"]
 
 [project.scripts]
@@ -115,7 +115,7 @@ deploy = "mkdocs gh-deploy"
 
 [tool.hatch.envs.lint]
 detached     = true                           # Don't inherit from default (does not download project dependencies)
-dependencies = ["pre-commit", "ruff==0.16.10", "ty"]
+dependencies = ["pre-commit", "ruff==0.17.3", "ty"]
 
 [tool.hatch.envs.lint.scripts]
 fmt    = ["pre-commit run --all-files --hook-stage manual {args:}"]

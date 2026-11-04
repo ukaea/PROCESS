@@ -2153,27 +2153,37 @@ class Stellarator(Model):
             self.data.physics.vol_plasma,
             self.data,
         )
-        self.data.physics.pden_plasma_sync_mw = radpwr_data.pden_plasma_sync_mw
-        self.data.physics.pden_plasma_core_rad_mw = radpwr_data.pden_plasma_core_rad_mw
-        self.data.physics.pden_plasma_outer_rad_mw = radpwr_data.pden_plasma_outer_rad_mw
-        self.data.physics.pden_plasma_rad_mw = radpwr_data.pden_plasma_rad_mw
-
-        self.data.physics.pden_plasma_core_rad_mw = max(
-            self.data.physics.pden_plasma_core_rad_mw, 0.0e0
+        self.data.physics.pden_plasma_sync_vol_avg_mw = (
+            radpwr_data.pden_plasma_sync_vol_avg_mw
         )
-        self.data.physics.pden_plasma_outer_rad_mw = max(
-            self.data.physics.pden_plasma_outer_rad_mw, 0.0e0
+        self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw = (
+            radpwr_data.pden_plasma_core_rad_reduced_vol_avg_mw
+        )
+        self.data.physics.pden_plasma_edge_rad_vol_avg_mw = (
+            radpwr_data.pden_plasma_edge_rad_vol_avg_mw
+        )
+        self.data.physics.pden_plasma_rad_vol_avg_mw = (
+            radpwr_data.pden_plasma_rad_vol_avg_mw
         )
 
-        self.data.physics.p_plasma_inner_rad_mw = (
-            self.data.physics.pden_plasma_core_rad_mw * self.data.physics.vol_plasma
+        self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw = max(
+            self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw, 0.0e0
+        )
+        self.data.physics.pden_plasma_edge_rad_vol_avg_mw = max(
+            self.data.physics.pden_plasma_edge_rad_vol_avg_mw, 0.0e0
+        )
+
+        self.data.physics.p_plasma_core_rad_reduced_mw = (
+            self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw
+            * self.data.physics.vol_plasma
         )  # Should probably be vol_core
-        self.data.physics.p_plasma_outer_rad_mw = (
-            self.data.physics.pden_plasma_outer_rad_mw * self.data.physics.vol_plasma
+        self.data.physics.p_plasma_edge_rad_mw = (
+            self.data.physics.pden_plasma_edge_rad_vol_avg_mw
+            * self.data.physics.vol_plasma
         )
 
         self.data.physics.p_plasma_rad_mw = (
-            self.data.physics.pden_plasma_rad_mw * self.data.physics.vol_plasma
+            self.data.physics.pden_plasma_rad_vol_avg_mw * self.data.physics.vol_plasma
         )
 
         # Heating power to plasma (= Psol in divertor model)
@@ -2185,7 +2195,7 @@ class Stellarator(Model):
             * self.data.physics.p_alpha_total_mw
             + self.data.physics.p_non_alpha_charged_mw
             + self.data.physics.p_plasma_ohmic_mw
-            - self.data.physics.pden_plasma_rad_mw * self.data.physics.vol_plasma
+            - self.data.physics.pden_plasma_rad_vol_avg_mw * self.data.physics.vol_plasma
         )
         powht = max(
             0.00001e0, powht
@@ -2313,7 +2323,7 @@ class Stellarator(Model):
             self.data.physics.p_non_alpha_charged_mw,
             self.data.current_drive.p_hcd_injected_total_mw,
             self.data.physics.plasma_current,
-            self.data.physics.pden_plasma_core_rad_mw,
+            self.data.physics.pden_plasma_core_rad_reduced_vol_avg_mw,
             self.data.physics.rmajor,
             self.data.physics.rminor,
             self.data.physics.temp_plasma_electron_density_weighted_kev,
@@ -2389,7 +2399,7 @@ class Stellarator(Model):
             self.data.physics.burnup,
             self.data.physics.figmer,
             _fusrat,
-            self.data.physics.molflow_plasma_fuelling_required,
+            self.data.physics.molflow_plasma_fuelling_equilibrium,
             self.data.physics.rndfuel,
             self.data.physics.t_alpha_confinement,
             self.data.physics.f_t_alpha_energy_confinement,

@@ -174,7 +174,7 @@ class BuildData:
     hr1: float = 0.0
     """half-height of TF coil inboard leg straight section (m)"""
 
-    iohcl: int = 1
+    i_cs_use: int = 1
     """Switch for existence of central solenoid:
     - =0 central solenoid not present
     - =1 central solenoid exists

@@ -5,7 +5,7 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.data_structure.pfcoil_variables import PFConductorModel
+from process.data_structure.pfcoil_variables import CSUseModel, PFConductorModel
 from process.data_structure.vacuum_variables import VacuumPumpType
 from process.models.engineering.pumping import CoolantType
 from process.models.superconductors import (
@@ -1852,7 +1852,7 @@ def test_acc2221(acc2221param, monkeypatch, costs):
 
 
 class Acc2222Param(NamedTuple):
-    iohcl: Any = None
+    i_cs_use: Any = None
 
     uccase: Any = None
 
@@ -1927,7 +1927,7 @@ class Acc2222Param(NamedTuple):
     "acc2222param",
     [
         Acc2222Param(
-            iohcl=1,
+            i_cs_use=CSUseModel.FULL_PULSE,
             uccase=50,
             uccu=75,
             cconshpf=70,
@@ -2118,7 +2118,7 @@ class Acc2222Param(NamedTuple):
             expected_c22224=9.1894413521392071,
         ),
         Acc2222Param(
-            iohcl=1,
+            i_cs_use=CSUseModel.FULL_PULSE,
             uccase=50,
             uccu=75,
             cconshpf=70,
@@ -2309,7 +2309,7 @@ class Acc2222Param(NamedTuple):
             expected_c22224=9.1894413521392071,
         ),
         Acc2222Param(
-            iohcl=1,
+            i_cs_use=CSUseModel.FULL_PULSE,
             uccase=50,
             uccu=75,
             cconshpf=70,
@@ -2515,7 +2515,7 @@ def test_acc2222(acc2222param, monkeypatch, costs):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(costs.data.build, "iohcl", acc2222param.iohcl)
+    monkeypatch.setattr(costs.data.build, "i_cs_use", acc2222param.i_cs_use)
 
     monkeypatch.setattr(costs.data.costs, "uccase", acc2222param.uccase)
 

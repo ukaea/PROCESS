@@ -47,7 +47,7 @@ e.g. FOO.bar says `bar`'s parent module is `FOO`.
 """
 
 import argparse
-import datetime
+import datetime as dt
 import itertools
 import json
 import logging
@@ -104,7 +104,7 @@ DEFAULT_TRACKING_VARIABLES = {
     "FWBSVariables.p_blkt_nuclear_heat_total_mw",
     "Physics.triang",
     "Physics.triang95",
-    "Physics.p_plasma_inner_rad_mw",
+    "Physics.p_plasma_core_rad_reduced_mw",
     "Physics.temp_plasma_separatrix_electron_kev",
     "Physics.f_nd_alpha_thermal_electron",
     "Physics.pflux_fw_neutron_mw",
@@ -401,9 +401,9 @@ class TrackedData:
 
         # common format for the timestamp of the run
         data_time_str = f"{date_str.strip()} - {time_str.strip()}"
-        date_time = datetime.datetime.strptime(
-            data_time_str, "%d/%m/%Y - %H:%M"
-        ).replace(tzinfo=datetime.UTC)
+        date_time = dt.datetime.strptime(data_time_str, "%d/%m/%Y - %H:%M").replace(
+            tzinfo=dt.UTC
+        )
 
         tracking_data = json_file_data.get(
             "tracking", []

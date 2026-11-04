@@ -6,8 +6,8 @@ i_process_run_mode = -2
 n_equality_constraints = 3
 
 * Equalities
-icc = 1 * Beta
 icc = 2 * Global power balance
+icc = 93 * Fuel-ion equilibrium
 icc = 11 * Radial build
 
 * Inequalities
@@ -38,7 +38,6 @@ boundu(6) = 5.0d+20
 ixc = 29 * bore
 boundl(29) = 0.1
 boundu(29) = 0.8
-
 *---------------Cs Fatigue Variables---------------*
 
 
@@ -66,7 +65,7 @@ dz_vv_lower = 0.3 * vacuum vessel underside thickness (TF coil / shield) (m)
 dr_shld_vv_gap_inboard    = 0.01 * gap between inboard vacuum vessel and thermal shield (m) (`iteration variable 61`)
 dr_cs_tf_gap    = 0.0 * gap between central solenoid and TF coil (m) (`iteration variable 42`)
 gapomin  = 0.0 * minimum gap between outboard vacuum vessel and TF coil (m) (`iteration variable 31`)
-iohcl    = 0 * Switch for existence of central solenoid;
+i_cs_use    = 0 * Switch for existence of central solenoid;
 i_cs_precomp = 0 * Switch for existence of central solenoid pre-compression structure;
 i_tf_inside_cs = 0 * Switch for placing the TF coil inside the CS
 i_tf_turn_type = 2 * CroCo Turn geometry for HTS Tapes
@@ -252,13 +251,12 @@ zref(10) = 1.0
 
 
 *----------------Physics Variables-----------------*
-
+molflow_plasma_fuelling = 4.45548408068305741e+21
 alphaj   = 0.1 * current profile index
 i_alphaj = 0 * Current profile index selection (0 = user input)
 alphan   = 0.9 * density profile index
 alphat   = 1.4 * temperature profile index
 aspect   = 1.8 * aspect ratio (`iteration variable 1`)
-beta_total_vol_avg     = 0.13134204235647895 * total plasma beta (`iteration variable 5`) (calculated if stellarator)
 b_plasma_toroidal_on_axis       = 3.0 * toroidal field on axis (T) (`iteration variable 2`)
 nd_plasma_electrons_vol_avg     = 9.69888313737236e+19 * electron density (/m3) (`iteration variable 6`)
 beta_norm_max = 5.0 * Troyon-like coefficient for beta scaling

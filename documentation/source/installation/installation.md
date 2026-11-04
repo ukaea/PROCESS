@@ -1,23 +1,18 @@
 # Installing PROCESS
-PROCESS is a command-line Python program. As such, it should be supported by a wide range of operating systems and Python versions above 3.10. However, we only test PROCESS on the latest Ubuntu with Python 3.10 and, therefore, we cannot guarantee its stability on other platforms. 
+PROCESS is a command-line Python program. As such, it should be supported by a wide range of operating systems and Python versions above 3.11. However, we only test PROCESS on the latest Ubuntu with Python 3.11 and, therefore, we cannot guarantee its stability on other platforms. 
 
 !!! Info "Windows User"
     While it is probably possible to run PROCESS on Windows, we recommend that Windows users use WSL as PROCESS is not tested for nor built for Windows use.
 
     To install Windows Subsystem for Linux (WSL) follow the 'Manual Installation Steps' 
-    [here](https://learn.microsoft.com/en-us/windows/wsl/install). Choose WSL 2 and Ubuntu 20 (if 
-    installing from the Microsoft store then Ubuntu 20 is installed by default). 
-
-    The following command is used to install WSL (**you need admin privileges to perform this command**):
-
-    ```bash
-    wsl --install
-    ```
+    [here](https://learn.microsoft.com/en-us/windows/wsl/install).
 
 !!! Warning "Differences between systems"
-    PROCESS is a complex numerical code that performs thousands of calculations and, on certain systems (e.g. Mac and some non-Ubuntu Linux systems), we have observed that floating-point rounding error can slightly alter the results of individual models--they are not wrong, just different. However, in a code like PROCESS, this error _could_ accumulate over many iterations of the optimiser to cause non-convergence/convergence to a very different design point. [Issue #3972](https://github.com/ukaea/PROCESS/issues/3972) shows that these differences and shows how these small errors can accumulate to slightly change a solution. 
+    PROCESS is a complex numerical code that performs thousands of calculations and, on certain systems (e.g. Mac and some non-Ubuntu Linux systems), we have observed that floating-point rounding error can slightly alter the results of individual models--they are not wrong, just different. However, in a code like PROCESS, this error _could_ accumulate over many iterations of the optimiser to cause non-convergence/convergence to a very different design point. [Issue #3972](https://github.com/ukaea/PROCESS/issues/3972) shows these differences and shows how these small errors can accumulate to slightly change a solution. 
 
-    In some sections of the code, these differences between systems are more pronounced (e.g. where operations occur on ill-conditioned matrices). Therefore, in our test suite, we skip a couple of tests if the system is not Linux or has an `ldd` version less than `2.31` because of this floating-point rounding difference: you can look for tests using the `skip_if_incompatible_system` fixture. While we encourage users of all systems to use PROCESS, we highly recommend you check your results on our officially support systems (listed above) and Python versions. 
+    In some sections of the code, these differences between systems are more pronounced (e.g. where operations occur on ill-conditioned matrices). Therefore, in our test suite, we skip a couple of tests if we identify your system produces different (again, not wrong) results to some reference ill-conditioned matrix calculation. 
+    
+    While we encourage users of all systems to use PROCESS, we highly recommend you check your results on our officially support systems (listed above) and Python versions. 
 
 
 Start by downloading the PROCESS source code using `git`:
@@ -25,6 +20,12 @@ Start by downloading the PROCESS source code using `git`:
 ```bash
 git clone https://github.com/ukaea/PROCESS
 cd PROCESS
+```
+
+You will probably want to checkout an official release of PROCESS, e.g.
+
+```bash
+git checkout v3.4.2
 ```
 
 !!! Info "Virtual Environment"
@@ -37,6 +38,7 @@ cd PROCESS
     python3 -m venv .venv
     source .venv/bin/activate
     ```
+    ensuring that you make an environment that is at least Python 3.11+.
 
     Please note that every time you start a new terminal you will need to run:
 
@@ -83,7 +85,7 @@ For developers looking to contribute code back to our GitHub repository via a pu
 Finally, developers will want to check that their work has not broken anything in PROCESS. Our test suite runs large portions of the code and compares the result to the "correct" value, reporting any differences. The following optional dependencies of PROCESS will need to be installed to run the test suite:
 
 ```
-pip install -e '.[examples, test]'
+pip install -e '.[all]'
 ```
 
 Documentation for running the test suite can be found at [development/testing](https://ukaea.github.io/PROCESS/development/testing/).

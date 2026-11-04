@@ -14,6 +14,7 @@ import click
 from numpy.random import default_rng
 
 from process.core.data_structure.base import DataStructure
+from process.core.exceptions import ProcessError
 from process.core.io.in_dat import InDat
 from process.core.io.mfile import MFile
 from process.core.io.vary_run.tools import (
@@ -262,7 +263,14 @@ iteration variables should get varied"""
             Path(self.wdir, "README.txt").write_text(self.comment)
 
     def error_status2readme(self, mfile):
-        """Appends PROCESS outcome to README.txt if reached maximum iterations"""
+        """Appends PROCESS outcome to README.txt if reached maximum iterations
+
+        Raises
+        ------
+        ProcessError
+            If VaryRun does not find a converging IN.DAT within the maximum
+            number of iterations
+        """
         m_file = MFile(filename=self.wdir / mfile)
 
         try:
@@ -298,6 +306,8 @@ iteration variables should get varied"""
             with open(Path(self.wdir, "README.txt"), "a") as readme:
                 readme.write(error_status)
             print(ifail_msg)
+        if ifail != SolverOutputCondition.CONVERGED:
+            raise ProcessError(ifail_msg)
 
     def modify_in_dat(self):
         """Modifies the original IN.DAT file"""

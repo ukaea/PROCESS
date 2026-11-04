@@ -33,15 +33,12 @@ i_figure_merit   = -14 * Switch for figure-of-merit (see lablmm for descriptions
 * DESCRIPTION:   Switch for Figure-of-Merit (1: Minimise major radius)
 * JUSTIFICATION: Aim to minimise major radius
 
-n_equality_constraints = 4
+n_equality_constraints = 3
 * DESCRIPTION:   No of equality constraints
 * JUSTIFICATION: 
 
 *--------------------------Constraint Equations-------------------------*
 
-icc = 1 
-* DESCRIPTION:   Beta Consistency
-* JUSTIFICATION: Consistency equations should always be on
 
 icc = 2 
 * DESCRIPTION:   Global Power Balance Consistency
@@ -49,6 +46,10 @@ icc = 2
 
 icc = 11 * Radial build
 * DESCRIPTION:   Radial Build Consistency
+* JUSTIFICATION: Consistency equations should always be on
+
+icc = 93
+* DESCRIPTION:   Plasma fuel-ion equillibrium
 * JUSTIFICATION: Consistency equations should always be on
 
 icc = 30 
@@ -173,11 +174,6 @@ boundu(4) = 150.0
 * DESCRIPTION:   Volume averaged electron temperature (keV)
 * JUSTIFICATION: Iterate temperature to get solution
 
-ixc = 5 
-beta_total_vol_avg = 3.71965626913446160e-02
-* DESCRIPTION:   Total Plasma Beta
-* JUSTIFICATION: Beta is limited by dnbeta
-
 ixc = 6
 nd_plasma_electrons_vol_avg = 6.88360041658364314e+19
 * DESCRIPTION:   Electron density (/m3)
@@ -299,6 +295,11 @@ ixc = 135
 f_nd_impurity_electrons(13) = 1.5e-04
 * DESCRIPTION:   Xenon Impurity Concentration
 * JUSTIFICATION: Xenon impurity used based on DEMO-2018
+
+ixc = 178
+molflow_plasma_fuelling = 4.5e+21
+* DESCRIPTION:   Plasma fuelling rate
+* JUSTIFICATION: Use to find fuel-ion equillibrium.
 
 *scan_dim = 1
 
@@ -791,7 +792,7 @@ f_nd_impurity_electrons(14) = 5e-05    *Tungsten
 
 *iteration variables - j_cs_flat_top_end, f_j_cs_start_pulse_end_flat_top and f_a_cs_steel
 
-iohcl    = 1 * Switch for existence of central solenoid;
+i_cs_use    = 1 * Switch for existence of central solenoid;
 * DESCRIPTION:   Switch for existence of central solenoid
 * JUSTIFICATION: Inductive machine - use CS for startup
 
