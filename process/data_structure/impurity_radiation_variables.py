@@ -69,7 +69,7 @@ class IonSpecies(IntEnum):
         return self._full_name_
 
 
-N_IMPURITIES = len(IonSpecies)
+N_ION_SPECIES = len(IonSpecies)
 """Number of ion species in impurity radiation model
 """
 
@@ -105,7 +105,7 @@ class ImpurityRadiationData:
 
     n_charge_impurity_profile: list[float] = field(
         default_factory=lambda: np.zeros((
-            N_IMPURITIES,
+            N_ION_SPECIES,
             N_IMPURITIY_LOSS_FUNCTION_POINTS,
         ))
     )
@@ -132,29 +132,29 @@ class ImpurityRadiationData:
     """Labels for impurity species"""
 
     impurity_arr_label: list[str] = field(
-        default_factory=lambda: np.full(N_IMPURITIES, "  ")
+        default_factory=lambda: np.full(N_ION_SPECIES, "  ")
     )
     """Array of impurity labels for internal use"""
 
-    impurity_arr_z: list[float] = field(default_factory=lambda: np.zeros(N_IMPURITIES))
+    impurity_arr_z: list[float] = field(default_factory=lambda: np.zeros(N_ION_SPECIES))
 
     m_impurity_amu_array: list[float] = field(
-        default_factory=lambda: np.zeros(N_IMPURITIES)
+        default_factory=lambda: np.zeros(N_ION_SPECIES)
     )
     """2D array of impurity atomic masses in Atomic Mass Units (amu)"""
 
     f_nd_impurity_electron_array: list[float] = field(
-        default_factory=lambda: np.zeros(N_IMPURITIES)
+        default_factory=lambda: np.zeros(N_ION_SPECIES)
     )
     """2D array of impurity relative densities (n_imp/n_e)"""
 
     impurity_arr_len_tab: list[int] = field(
-        default_factory=lambda: np.full(N_IMPURITIES, 0)
+        default_factory=lambda: np.full(N_ION_SPECIES, 0)
     )
 
     temp_impurity_keV_array: list[float] = field(
         default_factory=lambda: np.zeros((
-            N_IMPURITIES,
+            N_ION_SPECIES,
             N_IMPURITIY_LOSS_FUNCTION_POINTS,
         ))
     )
@@ -162,14 +162,14 @@ class ImpurityRadiationData:
 
     pden_impurity_lz_nd_temp_array: list[float] = field(
         default_factory=lambda: np.zeros((
-            N_IMPURITIES,
+            N_ION_SPECIES,
             N_IMPURITIY_LOSS_FUNCTION_POINTS,
         ))
     )
 
     impurity_arr_zav: list[float] = field(
         default_factory=lambda: np.zeros((
-            N_IMPURITIES,
+            N_ION_SPECIES,
             N_IMPURITIY_LOSS_FUNCTION_POINTS,
         ))
     )

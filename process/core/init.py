@@ -23,7 +23,7 @@ from process.data_structure.build_variables import (
     InboardBlanketConfiguration,
     TFCSRadialConfiguration,
 )
-from process.data_structure.impurity_radiation_variables import N_IMPURITIES
+from process.data_structure.impurity_radiation_variables import N_ION_SPECIES
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.pfcoil_variables import PFConductorModel
 from process.data_structure.physics_variables import (
@@ -410,7 +410,7 @@ def check_process(inputs, data):  # noqa: ARG001
         )
 
     # Impurity fractions
-    for imp in range(N_IMPURITIES):
+    for imp in range(N_ION_SPECIES):
         data.impurity_radiation.f_nd_impurity_electron_array[imp] = (
             data.impurity_radiation.f_nd_impurity_electrons[imp]
         )
