@@ -237,24 +237,6 @@ class Physics(Model):
         self.outplas()
         self.outtim()
 
-    def output_species_radiation_power_density(self) -> None:
-        """Output the specific radiation power of each supported ion species."""
-        species_powers = impurity_radiation.ImpurityRadiation(
-            self.plasma_profile, self.data
-        ).calculate_species_radiation_powers()
-        for (label, (_, p_mw)), attribute in zip(
-            species_powers.items(),
-            impurity_radiation.SPECIES_POWER_ATTRIBUTES,
-            strict=True,
-        ):
-            po.ovarre(
-                self.outfile,
-                f"{label} total radiation power [MW]",
-                f"({attribute})",
-                p_mw,
-                "OP ",
-            )
-
     def run(self):
         """Routine to calculate tokamak plasma physics information
         This routine calculates all the primary plasma physics parameters for a tokamak
@@ -1028,21 +1010,6 @@ class Physics(Model):
                 p_plasma_rad_mw=self.data.physics.p_plasma_rad_mw,
                 p_plasma_heating_mw=self.data.physics.p_plasma_heating_total_mw,
             )
-        )
-
-        self.data.physics.f_p_plasma_rad_sync = (
-            self.data.physics.p_plasma_sync_mw / self.data.physics.p_plasma_rad_mw
-            if self.data.physics.p_plasma_rad_mw > 0.0
-            else 0.0
-        )
-        self.data.physics.f_p_plasma_rad_ions = (
-            1.0 - self.data.physics.f_p_plasma_rad_sync
-        )
-        self.data.physics.f_p_plasma_rad_impurities = (
-            self.data.physics.p_plasma_rad_impurities_mw
-            / self.data.physics.p_plasma_rad_mw
-            if self.data.physics.p_plasma_rad_mw > 0.0
-            else 0.0
         )
 
         self.data.physics.rad_fraction_total = (
