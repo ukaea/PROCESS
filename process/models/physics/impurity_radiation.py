@@ -718,8 +718,11 @@ class ImpurityRadiation:
         """
         species_powers = {}
         p_plasma_rad_impurities_mw = 0.0
-        for index, label in enumerate(self.data.impurity_radiation.imp_label):
+
+        for species in IonSpecies:
+            index = species.value - 1
             pden_vol_avg_mw = 0.0
+
             if self.data.impurity_radiation.f_nd_impurity_electron_array[index] > 1e-30:
                 pden_profile = calculate_impurity_radiation_power_density(
                     imp_element_index=index,
@@ -733,13 +736,19 @@ class ImpurityRadiation:
                     profile_y=pden_profile,
                     profile_dx=self.plasma_profile.neprofile.profile_dx,
                 )
+
             p_mw = pden_vol_avg_mw * self.data.physics.vol_plasma
-            species_powers[str(label)] = (pden_vol_avg_mw, p_mw)
-            setattr(self.data.physics, SPECIES_POWER_ATTRIBUTES[index], p_mw)
-            # Only add the radiation power of impurity species (excluding H and He)
-            if str(label) not in {"H_", "He"}:
+            species_powers[species.label] = (pden_vol_avg_mw, p_mw)
+            setattr(
+                self.data.physics,
+                f"p_plasma_rad_{species.full_name}_mw",
+                p_mw,
+            )
+
+            if species.is_impurity:
                 p_plasma_rad_impurities_mw += p_mw
-        self.data.physics.p_plasma_rad_impurities_mw = p_plasma_rad_impurities_mw
+
+                self.data.physics.p_plasma_rad_impurities_mw = p_plasma_rad_impurities_mw
         return species_powers
 
     def map_imprad_profile(self):

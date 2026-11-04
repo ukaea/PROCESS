@@ -12,7 +12,9 @@ from process.core.io.plot.summary.profiles.misc import (
     profiles_with_pedestal,
     read_imprad_data,
 )
-from process.data_structure.impurity_radiation_variables import ImpurityRadiationData
+from process.data_structure.impurity_radiation_variables import (
+    IonSpecies,
+)
 from process.models.physics.profiles import calculate_profile_shell_contributions
 
 if TYPE_CHECKING:
@@ -105,13 +107,16 @@ def plot_line_brem_power_density_profile(
     axis.plot(rho, pden_rad_array[0] * 1.0e-6, label="H")
     axis.plot(rho, pden_rad_array[1] * 1.0e-6, label="He")
     # Plot the remaining impurity contributions if their fraction is significant
-    imp_labels = ImpurityRadiationData().imp_label
-    for ind in range(2, imp_data.shape[0]):
+    for species in IonSpecies:
+        if not species.is_impurity:
+            continue
+
+        ind = species.value - 1
         if imp_frac[ind] > 1.0e-30:
             axis.plot(
                 rho,
                 pden_rad_array[ind] * 1.0e-6,
-                label=imp_labels[ind].replace("_", ""),
+                label=species.label.replace("_", ""),
             )
 
     axis.minorticks_on()
@@ -206,13 +211,16 @@ def plot_line_brem_loss_function_profile(
     axis.plot(rho, lz[0], label="H")
     axis.plot(rho, lz[1], label="He")
     # Plot the remaining impurities if their fraction is significant
-    impurity_data = ImpurityRadiationData()
-    for ind in range(2, imp_data.shape[0]):
+    for species in IonSpecies:
+        if not species.is_impurity:
+            continue
+
+        ind = species.value - 1
         if imp_frac[ind] > 1.0e-30:
             axis.plot(
                 rho,
                 lz[ind],
-                label=impurity_data.imp_label[ind].replace("_", ""),
+                label=species.label.replace("_", ""),
             )
     axis.legend(loc="best", ncol=4)
     axis.minorticks_on()
@@ -312,12 +320,16 @@ def plot_line_brem_power_profile(
     axis.plot(rho, p_rad_array[0] * 1.0e-6, label="H")
     axis.plot(rho, p_rad_array[1] * 1.0e-6, label="He")
     # Only plot impurities with a significant fraction
-    for ind in range(2, imp_data.shape[0]):
+    for species in IonSpecies:
+        if not species.is_impurity:
+            continue
+
+        ind = species.value - 1
         if imp_frac[ind] > 1.0e-30:
             axis.plot(
                 rho,
                 p_rad_array[ind] * 1.0e-6,
-                label=ImpurityRadiationData().imp_label[ind].replace("_", ""),
+                label=species.label.replace("_", ""),
             )
 
     axis.plot(
