@@ -1074,8 +1074,15 @@ def plot_radiation_power_contributions(axis: plt.Axes, mfile: MFile, scan: int):
         ("Kr", "krypton"),
         ("Xe", "xenon"),
         ("W", "tungsten"),
+        ("B", "boron"),
     ]
     colour_fuel, colour_imp, colour_sync = "tab:blue", "tab:orange", "tab:green"
+    fusion_reaction = (
+        mfile.data["i_fusion_reactions"].get_scan(scan)
+        if "i_fusion_reactions" in mfile.data
+        else "d-t-he3"
+    )
+    fuel_labels = {"H", "He", "B"} if fusion_reaction == "p-b11" else {"H", "He"}
 
     contributions = [
         (
@@ -1088,7 +1095,7 @@ def plot_radiation_power_contributions(axis: plt.Axes, mfile: MFile, scan: int):
         contributions.append((
             label,
             mfile.get(f"p_plasma_rad_{name}_mw", scan=scan),
-            colour_fuel if label in {"H", "He"} else colour_imp,
+            colour_fuel if label in fuel_labels else colour_imp,
         ))
 
     # Only show non-zero contributions, largest at the top
@@ -1122,7 +1129,14 @@ def plot_radiation_power_contributions(axis: plt.Axes, mfile: MFile, scan: int):
     axis.axvline(0, color="black", linewidth=0.5)
     axis.legend(
         handles=[
-            mpl.patches.Patch(color=colour_fuel, label="Fuel & ⁴He Ash (Z$\\leq$2)"),
+            mpl.patches.Patch(
+                color=colour_fuel,
+                label=(
+                    "Fuel (H, B) & ⁴He ash"
+                    if fusion_reaction == "p-b11"
+                    else "Fuel & ⁴He Ash (Z$\\leq$2)"
+                ),
+            ),
             mpl.patches.Patch(color=colour_imp, label="Impurities (Z>2)"),
             mpl.patches.Patch(color=colour_sync, label="Synchrotron"),
         ],

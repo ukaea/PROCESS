@@ -1507,6 +1507,9 @@ class PhysicsData:
     p_plasma_rad_tungsten_mw: float = 0.0
     """Plasma radiation power due to tungsten presence [MW]"""
 
+    p_plasma_rad_boron_mw: float = 0.0
+    """Plasma radiation power due to boron presence [MW]"""
+
     pden_plasma_rad_vol_avg_mw: float = 0.0
     """Plasma total volume-averaged radiation power per unit volume [MW/m³]"""
 

@@ -44,6 +44,7 @@ SPECIES_POWER_ATTRIBUTES = (
     "p_plasma_rad_krypton_mw",
     "p_plasma_rad_xenon_mw",
     "p_plasma_rad_tungsten_mw",
+    "p_plasma_rad_boron_mw",
 )
 
 
@@ -747,8 +748,12 @@ class ImpurityRadiation:
             p_mw = pden_vol_avg_mw * self.data.physics.vol_plasma
             species_powers[str(label)] = (pden_vol_avg_mw, p_mw)
             setattr(self.data.physics, SPECIES_POWER_ATTRIBUTES[index], p_mw)
-            # Only add the radiation power of impurity species (excluding H and He)
-            if str(label) not in {"H_", "He"}:
+            # Fuel and helium ash are not counted as impurities. Boron is fuel
+            # for p-B11 and an impurity for D-T-He3.
+            fuel_labels = {"H_", "He"}
+            if self.data.physics.i_fusion_reactions == "p-b11":
+                fuel_labels.add("B_")
+            if str(label) not in fuel_labels:
                 p_plasma_rad_impurities_mw += p_mw
         self.data.physics.p_plasma_rad_impurities_mw = p_plasma_rad_impurities_mw
         return species_powers
