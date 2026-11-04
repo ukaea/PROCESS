@@ -12,6 +12,7 @@ import numpy as np
 from process.core.io.plot.summary.common import box_style, setup_axis
 from process.core.io.plot.summary.constants import PLASMA_COLOUR
 from process.core.io.plot.summary.reporting.text import plot_info
+from process.data_structure.impurity_radiation_variables import IonSpecies
 from process.models.build import Build
 from process.models.geometry.plasma import plasma_geometry
 from process.models.physics.physics import BetaNormMaxModel
@@ -1059,22 +1060,6 @@ def plot_radiation_power_contributions(axis: plt.Axes, mfile: MFile, scan: int):
         scan number to use
 
     """
-    species = [
-        ("H", "hydrogen"),
-        ("He", "helium"),
-        ("Be", "beryllium"),
-        ("C", "carbon"),
-        ("N", "nitrogen"),
-        ("O", "oxygen"),
-        ("Ne", "neon"),
-        ("Si", "silicon"),
-        ("Ar", "argon"),
-        ("Fe", "iron"),
-        ("Ni", "nickel"),
-        ("Kr", "krypton"),
-        ("Xe", "xenon"),
-        ("W", "tungsten"),
-    ]
     colour_fuel, colour_imp, colour_sync = "tab:blue", "tab:orange", "tab:green"
 
     contributions = [
@@ -1084,12 +1069,14 @@ def plot_radiation_power_contributions(axis: plt.Axes, mfile: MFile, scan: int):
             colour_sync,
         )
     ]
-    for label, name in species:
-        contributions.append((
-            label,
-            mfile.get(f"p_plasma_rad_{name}_mw", scan=scan),
-            colour_fuel if label in {"H", "He"} else colour_imp,
-        ))
+    contributions.extend(
+        (
+            ion_species.label.replace("_", ""),
+            mfile.get(f"p_plasma_rad_{ion_species.full_name}_mw", scan=scan),
+            colour_imp if ion_species.is_impurity else colour_fuel,
+        )
+        for ion_species in IonSpecies
+    )
 
     # Only show non-zero contributions, largest at the top
     contributions = sorted(
