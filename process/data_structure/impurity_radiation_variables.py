@@ -33,15 +33,15 @@ class IonSpecies(IntEnum):
 
     def __new__(
         cls,
-        index: int,
+        value: int,
         full_ion_charge: int,
         label: str,
         mass_amu: float,
         full_name: str,
     ):
         """Create a new instance of IonSpecies"""
-        obj = int.__new__(cls, index)
-        obj._value_ = index
+        obj = int.__new__(cls, value)
+        obj._value_ = value
         obj._full_ion_charge_ = full_ion_charge
         obj._label_ = label
         obj._mass_amu_ = mass_amu
@@ -130,26 +130,6 @@ class ImpurityRadiationData:
         ])
     )
     """Labels for impurity species"""
-
-    imp_full_ion_charge: list[int] = field(
-        default_factory=lambda: np.array([
-            1,
-            2,
-            4,
-            6,
-            7,
-            8,
-            10,
-            14,
-            18,
-            26,
-            28,
-            36,
-            54,
-            74,
-        ])
-    )
-    """Full ion charge of impurity species"""
 
     impurity_arr_label: list[str] = field(
         default_factory=lambda: np.full(N_IMPURITIES, "  ")
