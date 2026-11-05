@@ -1204,7 +1204,19 @@ class Physics(Model):
                 rho_plasma_core_norm=self.data.impurity_radiation.radius_plasma_core_norm,
                 eq=self.data.veqpy.equilibrium,
             )
-            
+            # Species powers and the impurity sum. The D-T path writes these
+            # from ADAS in ImpurityRadiation; p-B11 writes the Xie ion
+            # bremsstrahlung into the same fields.
+            physics_funcs.assign_p_b11_species_radiation_powers(
+                data=self.data,
+                rho=self.plasma_profile.neprofile.profile_x,
+                ne_profile=self.plasma_profile.neprofile.profile_y,
+                te_profile=self.plasma_profile.teprofile.profile_y,
+                profile_dx=self.plasma_profile.neprofile.profile_dx,
+                i_equilibrium_solve=self.data.physics.i_equilibrium_solve,
+                eq=self.data.veqpy.equilibrium,
+            )
+
         self.data.physics.pden_plasma_sync_vol_avg_mw = (
             radpwrdata.pden_plasma_sync_vol_avg_mw
         )

@@ -719,7 +719,9 @@ class ImpurityRadiation:
     ) -> dict[str, tuple[float, float]]:
         """Calculate the volume-averaged radiation power density and the total
         radiation power of every ion species, including those with zero density.
-        Only intended to be run at output.
+
+        D-T uses the ADAS loss functions and is called at output. p-B11 uses
+        the Xie ion bremsstrahlung on the same ``data.physics`` fields.
 
         Returns
         -------
@@ -728,6 +730,23 @@ class ImpurityRadiation:
             power [MW] (density multiplied by the plasma volume), keyed by the
             species label.
         """
+        if self.data.physics.i_fusion_reactions == "p-b11":
+            # ADAS has no boron loss function. Use the Xie ion bremsstrahlung
+            # already used by the p-B11 power balance, on the same fields.
+            from process.models.physics.radiation_power import (
+                assign_p_b11_species_radiation_powers,
+            )
+
+            return assign_p_b11_species_radiation_powers(
+                data=self.data,
+                rho=self.plasma_profile.neprofile.profile_x,
+                ne_profile=self.plasma_profile.neprofile.profile_y,
+                te_profile=self.plasma_profile.teprofile.profile_y,
+                profile_dx=self.plasma_profile.neprofile.profile_dx,
+                i_equilibrium_solve=self.data.physics.i_equilibrium_solve,
+                eq=self.data.veqpy.equilibrium,
+            )
+
         species_powers = {}
         p_plasma_rad_impurities_mw = 0.0
         for index, label in enumerate(self.data.impurity_radiation.imp_label):

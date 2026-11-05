@@ -13,6 +13,7 @@ from scipy.integrate import quad
 import process.models.physics.impurity_radiation as impurity
 from process.core.data_structure.base import DataStructure
 from process.models.physics.plasma_profiles import PlasmaProfile
+from process.models.physics.profiles import calculate_vol_avg_of_profile
 import process.core.constants as constants
 from process.data_structure.impurity_radiation_variables import ImpurityRadiationData
 
@@ -326,6 +327,101 @@ def calculate_power_bremsstrahlung_radiation(
     g_total = g_h_isotope + g_he_isotope + g_b11 + g_imp
     pden = c1 * c2 * (g_total + g_ee) * 1.0e-6
     return pden
+
+
+def bremsstrahlung_species_power_density(
+    ne: float,
+    te: float,
+    impurity_radiation: ImpurityRadiationData,
+) -> np.ndarray:
+    """Ion bremsstrahlung power density of each impurity-table species [MW/m³].
+
+    Uses the same Xie ion term as ``calculate_power_bremsstrahlung_radiation``.
+    Electron-electron bremsstrahlung is not assigned to a species.
+    """
+    n_species = len(impurity_radiation.impurity_arr_z)
+    pden = np.zeros(n_species)
+    if ne <= 0.0 or te <= 0.0:
+        return pden
+    c1 = (
+        32.0
+        * np.pi
+        * constants.ELECTRON_CHARGE**6
+        * ne**2
+        / (
+            3.0
+            * (4.0 * np.pi * constants.EPSILON0) ** 3
+            * constants.PLANCK_CONSTANT
+            * constants.ELECTRON_MASS
+            * constants.SPEED_LIGHT**3
+        )
+    )
+    c2 = np.sqrt(
+        2.0
+        * np.pi
+        * te
+        * constants.KILOELECTRON_VOLT
+        / (3.0 * constants.ELECTRON_MASS)
+    )
+    scale = c1 * c2 * 1.0e-6
+    for index in range(n_species):
+        z_imp = float(impurity_radiation.impurity_arr_z[index])
+        fraction = float(impurity_radiation.f_nd_impurity_electron_array[index])
+        if z_imp <= 0.0 or fraction <= 0.0:
+            continue
+        g_ei, _ = brem_gaunt_factor(te, z_imp)
+        pden[index] = scale * g_ei * z_imp**2 * fraction
+    return pden
+
+
+def assign_p_b11_species_radiation_powers(
+    data,
+    rho,
+    ne_profile,
+    te_profile,
+    profile_dx,
+    i_equilibrium_solve,
+    eq,
+) -> dict[str, tuple[float, float]]:
+    """Write p-B11 ion bremsstrahlung into the species radiation fields.
+
+    ``ImpurityRadiation.calculate_species_radiation_powers`` sets
+    ``p_plasma_rad_*_mw`` and ``p_plasma_rad_impurities_mw`` from ADAS loss
+    functions. The p-B11 path sets the same fields from the Xie ion
+    bremsstrahlung, with the same cylindrical volume average. Hydrogen, helium
+    and boron are fuel and are left out of the impurity sum.
+    """
+    ne_profile = np.asarray(ne_profile, dtype=float)
+    te_profile = np.asarray(te_profile, dtype=float)
+    n_species = len(impurity.SPECIES_POWER_ATTRIBUTES)
+    pden_profiles = np.zeros((n_species, ne_profile.size))
+    for point, (ne, te) in enumerate(zip(ne_profile, te_profile, strict=True)):
+        pden_profiles[:, point] = bremsstrahlung_species_power_density(
+            ne, te, data.impurity_radiation
+        )
+
+    species_powers = {}
+    p_plasma_rad_impurities_mw = 0.0
+    fuel_labels = {"H_", "He", "B_"}
+    for index, label in enumerate(data.impurity_radiation.imp_label):
+        if i_equilibrium_solve == 1 and eq is not None:
+            pden_vol_avg_mw = float(eq.grid.integrate(pden_profiles[index] * eq.J * eq.R)) / data.physics.vol_plasma
+        else:
+            pden_vol_avg_mw = float(
+                calculate_vol_avg_of_profile(
+                    profile_x=rho,
+                    profile_y=pden_profiles[index],
+                    profile_dx=profile_dx,
+                )
+            )
+        p_mw = pden_vol_avg_mw * data.physics.vol_plasma
+        species_powers[str(label)] = (pden_vol_avg_mw, p_mw)
+        setattr(data.physics, impurity.SPECIES_POWER_ATTRIBUTES[index], p_mw)
+        if str(label) not in fuel_labels:
+            p_plasma_rad_impurities_mw += p_mw
+    data.physics.p_plasma_rad_impurities_mw = p_plasma_rad_impurities_mw
+    return species_powers
+
 
 def calculate_power_radiation(
     nd_plasma_electron_on_axis: float,
