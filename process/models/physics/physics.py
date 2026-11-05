@@ -1054,7 +1054,7 @@ class Physics(Model):
                 )
 
             impurity_frac = self.data.impurity_radiation.f_nd_impurity_electron_array[
-                self.data.reinke.impvardiv - 1
+                self.data.reinke.impvardiv
             ]
             po.write(
                 self.outfile,
@@ -1179,7 +1179,7 @@ class Physics(Model):
             if not species.is_impurity:
                 continue
 
-            imp_index = species.value - 1
+            imp_index = species.value
             znimp += impurity_radiation.calculate_average_charge_at_temp(
                 imp_element_index=imp_index,
                 temp_electron_kev=np.array([
@@ -1225,7 +1225,7 @@ class Physics(Model):
         # Set hydrogen and helium relative impurity densities for
         # radiation calculations
         self.data.impurity_radiation.f_nd_impurity_electron_array[
-            IonSpecies.HYDROGEN.value - 1
+            IonSpecies.HYDROGEN.value
         ] = (
             self.data.physics.nd_plasma_protons_vol_avg
             + (
@@ -1237,7 +1237,7 @@ class Physics(Model):
         ) / self.data.physics.nd_plasma_electrons_vol_avg
 
         self.data.impurity_radiation.f_nd_impurity_electron_array[
-            IonSpecies.HELIUM.value - 1
+            IonSpecies.HELIUM.value
         ] = (
             self.data.physics.f_plasma_fuel_helium3
             * self.data.physics.nd_plasma_fuel_ions_vol_avg
@@ -1251,7 +1251,7 @@ class Physics(Model):
         self.data.physics.nd_plasma_impurities_vol_avg = 0.0
         for species in IonSpecies:
             if species.is_impurity:
-                imp_index = species.value - 1
+                imp_index = species.value
                 self.data.physics.nd_plasma_impurities_vol_avg += (
                     self.data.impurity_radiation.f_nd_impurity_electron_array[imp_index]
                     * self.data.physics.nd_plasma_electrons_vol_avg
@@ -1274,20 +1274,20 @@ class Physics(Model):
         # for the benefit of other routines
         self.data.physics.f_nd_plasma_carbon_electron = (
             self.data.impurity_radiation.f_nd_impurity_electron_array[
-                IonSpecies.CARBON.value - 1
+                IonSpecies.CARBON.value
             ]
         )
         self.data.physics.f_nd_plasma_oxygen_electron = (
             self.data.impurity_radiation.f_nd_impurity_electron_array[
-                IonSpecies.OXYGEN.value - 1
+                IonSpecies.OXYGEN.value
             ]
         )
         self.data.physics.f_nd_plasma_iron_argon_electron = (
             self.data.impurity_radiation.f_nd_impurity_electron_array[
-                IonSpecies.IRON.value - 1
+                IonSpecies.IRON.value
             ]
             + self.data.impurity_radiation.f_nd_impurity_electron_array[
-                IonSpecies.ARGON.value - 1
+                IonSpecies.ARGON.value
             ]
         )
 
@@ -1369,7 +1369,7 @@ class Physics(Model):
             if not species.is_impurity:
                 continue
 
-            imp_index = species.value - 1
+            imp_index = species.value
             self.data.physics.m_ions_total_amu += (
                 self.data.physics.nd_plasma_electrons_vol_avg
                 * self.data.impurity_radiation.f_nd_impurity_electron_array[imp_index]
@@ -1422,7 +1422,7 @@ class Physics(Model):
             if not species.is_impurity:
                 continue
 
-            imp_index = species.value - 1
+            imp_index = species.value
             self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg += (
                 self.data.impurity_radiation.f_nd_impurity_electron_array[imp_index]
                 * impurity_radiation.calculate_average_charge_at_temp(

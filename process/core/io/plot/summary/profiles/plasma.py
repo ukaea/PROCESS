@@ -190,7 +190,7 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
     )
 
     for species in (species for species in IonSpecies if species.is_impurity):
-        ind = species.value - 1
+        ind = species.value
         if imp_frac[ind] > 1.0e-30:
             lbl = species.label.replace("_", "")
             ax_impurity.plot(
