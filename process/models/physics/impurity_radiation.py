@@ -166,11 +166,11 @@ def init_imp_element(
             max=N_ION_SPECIES,
         )
 
-    data.impurity_radiation.impurity_arr_label[n_species_index - 1] = name_label
-    data.impurity_radiation.f_nd_impurity_electron_array[n_species_index - 1] = (
+    data.impurity_radiation.impurity_arr_label[n_species_index] = name_label
+    data.impurity_radiation.f_nd_impurity_electron_array[n_species_index] = (
         f_nd_species_electron
     )
-    data.impurity_radiation.impurity_arr_len_tab[n_species_index - 1] = len_tab
+    data.impurity_radiation.impurity_arr_len_tab[n_species_index] = len_tab
 
     if len_tab > N_IMPURITIY_LOSS_FUNCTION_POINTS:
         print(
@@ -218,9 +218,9 @@ def init_imp_element(
             f"Cannot locate Zav for infinite confinement data in {z_file}"
         )
 
-    data.impurity_radiation.temp_impurity_keV_array[n_species_index - 1, :] = Te * 1e-3
-    data.impurity_radiation.pden_impurity_lz_nd_temp_array[n_species_index - 1, :] = lz
-    data.impurity_radiation.impurity_arr_zav[n_species_index - 1, :] = zav
+    data.impurity_radiation.temp_impurity_keV_array[n_species_index, :] = Te * 1e-3
+    data.impurity_radiation.pden_impurity_lz_nd_temp_array[n_species_index, :] = lz
+    data.impurity_radiation.impurity_arr_zav[n_species_index, :] = zav
 
 
 def create_f_rad_core_profile(
@@ -509,7 +509,7 @@ class ImpurityRadiation:
         p_plasma_rad_impurities_mw = 0.0
 
         for species in IonSpecies:
-            index = species.value - 1
+            index = species.value
             pden_vol_avg_mw = 0.0
 
             if self.data.impurity_radiation.f_nd_impurity_electron_array[index] > 1e-30:

@@ -111,7 +111,7 @@ def plot_line_brem_power_density_profile(
         if not species.is_impurity:
             continue
 
-        ind = species.value - 1
+        ind = species.value
         if imp_frac[ind] > 1.0e-30:
             axis.plot(
                 rho,
@@ -215,7 +215,7 @@ def plot_line_brem_loss_function_profile(
         if not species.is_impurity:
             continue
 
-        ind = species.value - 1
+        ind = species.value
         if imp_frac[ind] > 1.0e-30:
             axis.plot(
                 rho,
@@ -262,7 +262,8 @@ def plot_line_brem_power_profile(
 
     # find impurity densities
     imp_frac = np.array([
-        mfile.get(f"f_nd_impurity_electrons({i:02d})", scan=scan) for i in range(1, 15)
+        mfile.get(f"f_nd_impurity_electrons({i:02d})", scan=scan)
+        for i in range(len(IonSpecies))
     ])
     vol_plasma = mfile.get("vol_plasma", scan=scan)
     p_plasma_rad_imps_mw = mfile.get("p_plasma_rad_mw", scan=scan) - mfile.get(
@@ -324,7 +325,7 @@ def plot_line_brem_power_profile(
         if not species.is_impurity:
             continue
 
-        ind = species.value - 1
+        ind = species.value
         if imp_frac[ind] > 1.0e-30:
             axis.plot(
                 rho,
