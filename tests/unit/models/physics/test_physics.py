@@ -1479,7 +1479,7 @@ class PlasmaCompositionParam(NamedTuple):
             expected_f_alpha_electron=0.73096121787894142,
             expected_m_fuel_amu=2.5145269632339478,
             expected_nd_fuel_ions=5.857588175158546e19,
-            expected_m_ions_total_amu=2.7392489422048745,
+            expected_m_ions_total_amu=2.7392458684937084,
             expected_nd_ions_total=6.612527625000001e19,
             expected_zeffai=0.43056805756193167,
             expected_f_alpha_ion=0.26903878212105858,

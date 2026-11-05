@@ -57,8 +57,6 @@ def initialise_imprad(data: DataStructure):
         init_imp_element(
             n_species_index=species,
             name_label=species.label,
-            z=species.full_ion_charge,
-            m_species_amu=species.mass_amu,
             f_nd_species_electron=(1.0 if species is IonSpecies.HYDROGEN else 0.0),
             len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
             error=0,
@@ -123,8 +121,6 @@ def read_impurity_file(impurity_file: Path):
 def init_imp_element(
     n_species_index: int,
     name_label: str,
-    z: int,
-    m_species_amu: float,
     f_nd_species_electron: float,
     len_tab: int,
     error: int,
@@ -142,10 +138,6 @@ def init_imp_element(
         Position of species in impurity array
     name_label : str
         Species name
-    z : int
-        Species charge number
-    m_species_amu : float
-        Species atomic mass [amu]
     f_nd_species_electron : float
         Number density / electron density
     len_tab : int
