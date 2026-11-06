@@ -2906,8 +2906,6 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
                     "Illegal value for i_tf_superconductor",
                     i_tf_superconductor=i_tf_superconductor,
                 )
-        return bc20m, c_turn_cables_critical, j_superconductor_critical, tc0m
-
         if model == SuperconductorModel.BI2212:
             # Preserve the original Bi-2212 costing convention.
             tfcoil.j_crit_str_tf = j_superconductor_critical
@@ -2935,7 +2933,6 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
                 {data.superconducting_tfcoil.dx_tf_turn_cable_space}
                 """
             )
-            strain = np.sign(strain) * 0.5e-2
 
         return TFSuperconductorLimits(
             j_tf_wp_critical=c_turn_cables_critical / a_tf_turn,
@@ -2947,112 +2944,6 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             tc0m=tc0m,
             c_turn_cables_critical=c_turn_cables_critical,
         )
-
-        # Scale for the copper area fraction of the cable
-        j_cables_critical = j_superconductor_critical * (
-            1.0e0 - f_a_tf_turn_cable_copper
-        )
-
-        #  Critical current in turn all turn cables
-        c_turn_cables_critical = j_cables_critical * a_tf_turn_cable_space_effective
-
-        # Strand critical current calculation for costing in $/kAm
-        # = Superconducting filaments jc * (1 - strand copper fraction)
-        data.tfcoil.j_crit_str_tf = j_superconductor_critical * (
-            1.0e0 - f_a_tf_turn_cable_copper
-        )
-        return bc20m, tc0m, j_superconductor_critical, c_turn_cables_critical
-
-    @staticmethod
-    def _cicc_user_defined_nb3sn_critical_properties(
-        a_tf_turn_cable_space_effective,
-        b_tf_inboard_peak,
-        bcritsc,
-        data,
-        f_a_tf_turn_cable_copper,
-        strain,
-        tcritsc,
-        temp_tf_coolant_peak_field,
-    ):
-        """Calculate critical properties for USER_DEFINED_NB3SN."""
-        bc20m = bcritsc  # [T]
-        tc0m = tcritsc  # [K]
-
-        # If strain limit achieved, throw a warning and use the lower strain
-        if abs(strain) > 0.5e-2:
-            logger.error(
-                f"TF strain={strain} was outside the region of applicability. "
-                f"Used lower strain."
-            )
-            strain = np.sign(strain) * 0.5e-2
-
-        j_superconductor_critical, _, _ = superconductors.itersc(
-            temp_conductor=temp_tf_coolant_peak_field,
-            b_conductor=b_tf_inboard_peak,
-            strain=strain,
-            b_c20max=bc20m,
-            temp_c0max=tc0m,
-        )
-        # Scale for the copper area fraction of the cable
-        j_cables_critical = j_superconductor_critical * (
-            1.0e0 - f_a_tf_turn_cable_copper
-        )
-
-        #  Critical current in turn all turn cables
-        c_turn_cables_critical = j_cables_critical * a_tf_turn_cable_space_effective
-
-        # Strand critical current calulation for costing in $ / kAm
-        # = superconducting filaments jc * (1 -strand copper fraction)
-        data.tfcoil.j_crit_str_tf = j_superconductor_critical * (
-            1.0e0 - f_a_tf_turn_cable_copper
-        )
-        return bc20m, tc0m, j_superconductor_critical, c_turn_cables_critical
-
-    @staticmethod
-    def _cicc_wst_nb3sn_critical_properties(
-        a_tf_turn_cable_space_effective,
-        b_tf_inboard_peak,
-        data,
-        f_a_tf_turn_cable_copper,
-        strain,
-        temp_tf_coolant_peak_field,
-    ):
-        """Calculate critical properties for WST_NB3SN."""
-        bc20m = SuperconductorModel.WST_NB3SN.b_crit_zero_field_strain  # [T]
-        tc0m = SuperconductorModel.WST_NB3SN.temp_crit_zero_field_strain  # [K]
-
-        # If strain limit achieved, throw a warning and use the lower strain
-        if abs(strain) > 0.5e-2:
-            logger.error(
-                f"TF strain={strain} was outside the region of applicability. "
-                f"Used lower strain."
-            )
-            strain = np.sign(strain) * 0.5e-2
-
-        #  j_superconductor_critical returned by superconductors.itersc is the
-        # critical current density in the superconductor - not the whole strand,
-        # which contains copper
-        j_superconductor_critical, _, _ = superconductors.western_superconducting_nb3sn(
-            temp_conductor=temp_tf_coolant_peak_field,
-            b_conductor=b_tf_inboard_peak,
-            strain=strain,
-            b_c20max=bc20m,
-            temp_c0max=tc0m,
-        )
-        # Scale for the copper area fraction of the cable
-        j_cables_critical = j_superconductor_critical * (
-            1.0e0 - f_a_tf_turn_cable_copper
-        )
-
-        #  Critical current in turn all turn cables
-        c_turn_cables_critical = j_cables_critical * a_tf_turn_cable_space_effective
-
-        # Strand critical current calulation for costing in $ / kAm
-        # = superconducting filaments jc * (1 -strand copper fraction)
-        data.tfcoil.j_crit_str_tf = j_superconductor_critical * (
-            1.0e0 - f_a_tf_turn_cable_copper
-        )
-        return bc20m, tc0m, j_superconductor_critical, c_turn_cables_critical
 
     @staticmethod
     def calculate_cable_in_conduit_strand_count(
@@ -3091,7 +2982,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         n_tf_coil_turns: int,
         len_tf_coil: float,
         n_tf_turn_superconducting_cables: int,
-    ) -> float:
+    ) -> tuple[float, float]:
         """Calculates the total length of superconducting material required for the
         TF coils.
 
