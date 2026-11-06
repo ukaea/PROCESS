@@ -111,11 +111,10 @@ def plot_line_brem_power_density_profile(
         if not species.is_impurity:
             continue
 
-        ind = species.value
-        if imp_frac[ind] > 1.0e-30:
+        if imp_frac[species.index] > 1.0e-30:
             axis.plot(
                 rho,
-                pden_rad_array[ind] * 1.0e-6,
+                pden_rad_array[species.index] * 1.0e-6,
                 label=species.label.replace("_", ""),
             )
 
@@ -215,11 +214,10 @@ def plot_line_brem_loss_function_profile(
         if not species.is_impurity:
             continue
 
-        ind = species.value
-        if imp_frac[ind] > 1.0e-30:
+        if imp_frac[species.index] > 1.0e-30:
             axis.plot(
                 rho,
-                lz[ind],
+                lz[species.index],
                 label=species.label.replace("_", ""),
             )
     axis.legend(loc="best", ncol=4)
@@ -325,11 +323,10 @@ def plot_line_brem_power_profile(
         if not species.is_impurity:
             continue
 
-        ind = species.value
-        if imp_frac[ind] > 1.0e-30:
+        if imp_frac[species.index] > 1.0e-30:
             axis.plot(
                 rho,
-                p_rad_array[ind] * 1.0e-6,
+                p_rad_array[species.index] * 1.0e-6,
                 label=species.label.replace("_", ""),
             )
 

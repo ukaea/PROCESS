@@ -509,12 +509,14 @@ class ImpurityRadiation:
         p_plasma_rad_impurities_mw = 0.0
 
         for species in IonSpecies:
-            index = species.value
             pden_vol_avg_mw = 0.0
 
-            if self.data.impurity_radiation.f_nd_impurity_electron_array[index] > 1e-30:
+            if (
+                self.data.impurity_radiation.f_nd_impurity_electron_array[species.index]
+                > 1e-30
+            ):
                 pden_profile = calculate_impurity_radiation_power_density(
-                    imp_element_index=index,
+                    imp_element_index=species.index,
                     nd_electron_profile=self.plasma_profile.neprofile.profile_y,
                     temp_electron_profile_kev=self.plasma_profile.teprofile.profile_y,
                     data=self.data,

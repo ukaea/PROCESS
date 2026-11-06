@@ -187,11 +187,9 @@ def plot_ion_charge_profile(axis: plt.Axes, mfile: MFile, scan: int):
 
     n_charge_plasma_profile = []
     for species in IonSpecies:
-        imp = species.value
-
-        if imp_frac[imp] > 1.0e-30:
+        if imp_frac[species.index] > 1.0e-30:
             profile = [
-                mfile.get(f"n_charge_plasma_profile{imp}_{i}", scan=scan)
+                mfile.get(f"n_charge_plasma_profile{species.index}_{i}", scan=scan)
                 for i in range(n_plasma_profile_elements)
             ]
             n_charge_plasma_profile.append(profile)
