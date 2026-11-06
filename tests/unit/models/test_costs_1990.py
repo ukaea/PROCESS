@@ -124,7 +124,7 @@ def test_acc2263(monkeypatch, costs):
     monkeypatch.setattr(costs.data.costs, "fkind", 1)
     monkeypatch.setattr(costs.data.costs, "lsa", 4)
     monkeypatch.setattr(costs.data.costs, "uccry", 9.3e4)
-    monkeypatch.setattr(costs.data.tfcoil, "tftmp", 4.5)
+    monkeypatch.setattr(costs.data.tfcoil, "temp_tf_operating", 4.5)
     monkeypatch.setattr(costs.data.heat_transport, "helpow", 80.980e3)
 
     costs.acc2263()

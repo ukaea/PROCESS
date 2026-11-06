@@ -1958,7 +1958,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         f" {mfile.get('b_tf_superconductor_critical_zero_temp_strain', scan=scan):.4f}"
         " T\nCritical temperature at\nzero field and strain:"
         f" {mfile.get('temp_tf_superconductor_critical_zero_field_strain', scan=scan):.4f}"  # noqa: E501
-        f" K\nTemperature at conductor: {mfile.get('tftmp', scan=scan):.4f}"
+        f" K\nTemperature at conductor: {mfile.get('temp_tf_operating', scan=scan):.4f}"
         " K\nField at conductor:"
         f" {mfile.get('b_tf_inboard_peak_with_ripple', scan=scan):.4f}"
         " T\nSuperconductor critical current density at\noperating"
@@ -2196,7 +2196,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         f" {mfile.get('b_tf_superconductor_critical_zero_temp_strain', scan=scan):.4f}"
         " T\nCritical temperature at\nzero field and strain:"
         f" {mfile.get('temp_tf_superconductor_critical_zero_field_strain', scan=scan):.4f}"  # noqa: E501
-        f" K\nTemperature at conductor: {mfile.get('tftmp', scan=scan):.4f}"
+        f" K\nTemperature at conductor: {mfile.get('temp_tf_operating', scan=scan):.4f}"
         " K\nField at conductor:"
         f" {mfile.get('b_tf_inboard_peak_with_ripple', scan=scan):.4f}"
         " T\nSuperconductor critical current density at\noperating"
