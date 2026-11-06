@@ -396,7 +396,9 @@ def test_supercon(superconparam, monkeypatch, cicc_sctfcoil):
         cicc_sctfcoil.data.tfcoil, "str_tf_con_res", superconparam.str_tf_con_res
     )
 
-    monkeypatch.setattr(cicc_sctfcoil.data.tfcoil, "i_str_wp", superconparam.i_str_wp)
+    monkeypatch.setattr(
+        cicc_sctfcoil.data.superconducting_tfcoil, "i_str_wp", superconparam.i_str_wp
+    )
 
     monkeypatch.setattr(cicc_sctfcoil.data.tfcoil, "str_wp", superconparam.str_wp)
 
