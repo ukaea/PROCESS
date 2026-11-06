@@ -8,7 +8,7 @@ import logging
 from dataclasses import dataclass
 from enum import IntEnum, unique
 from types import DynamicClassAttribute
-from typing import TYPE_CHECKING, NamedTuple
+from typing import TYPE_CHECKING, NamedTuple, TypeVar
 
 import numba
 import numpy as np
@@ -133,6 +133,50 @@ class YoungsModulusComponents(NamedTuple):
     """Axial component of Young's modulus [Pa]"""
     trans: float | numba.float64[:]
     """Transverse component of Young's modulus [Pa]"""
+
+
+@dataclass
+class TFStressResults:
+    """Stress results for tf coils"""
+
+    sig_tf_max: float
+    sig_tf_vmises_max: float
+    s_shear_tf_peak: float
+    deflect: float
+    eyoung: float
+    eyoung_wp: float
+    poisson_wp_trans: float
+    radial_array: float
+    s_shear_cea_tf_cond: float
+    poisson_wp_axial: float
+    sig_tf: float
+    sig_tf_smeared: float
+    s_shear_tf: float
+    sig_tf_vmises: float
+    str_tf: float
+    n_radial_array: float
+    n_tf_bucking: float
+    sig_tf_wp: float
+    sig_tf_case: float
+    sig_tf_cs_bucked: float
+    str_wp: float
+    casestr: float
+    insstrain: float
+    sig_tf_wp_av_z: float
+
+
+wrapperT = TypeVar("wrapperT")
+
+
+def _wrap_output(wrapper: wrapperT):
+
+    def _wrap(func):
+        def wrapped(*args, **kwargs) -> wrapperT:
+            return wrapper(*func(*args, **kwargs))
+
+        return wrapped
+
+    return _wrap
 
 
 class TFCoil(Model):
@@ -2261,6 +2305,7 @@ class TFCoil(Model):
         )
 
     @staticmethod
+    @_wrap_output(TFStressResults)
     @numba.njit(cache=True)
     def stresscl(  # noqa: PLR0917
         n_tf_layer,
