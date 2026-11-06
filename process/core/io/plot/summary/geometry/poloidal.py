@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import patches
 
+from process.core.io.plot.summary.common import add_panel
 from process.core.io.plot.summary.constants import (
     BLANKET_COLOUR,
     CRYOSTAT_COLOUR,
@@ -891,14 +892,17 @@ def plot_first_wall_poloidal_cross_section(axis: plt.Axes, mfile: MFile, scan: i
     ))
 
     props_fw = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
-    axis.text(
-        -0.5,
-        0.05,
+    add_panel(
+        axis,
+        -0.46,
+        0.29,
+        0.39,
+        0.22,
         textstr_fw,
+        props_fw,
+        fontsize=10,
+        linespacing=1.15,
         transform=axis.transAxes,
-        fontsize=11,
-        verticalalignment="bottom",
-        bbox=props_fw,
     )
 
     axis.set_xlabel("R [m]")
