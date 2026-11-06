@@ -1179,15 +1179,14 @@ class Physics(Model):
             if not species.is_impurity:
                 continue
 
-            imp_index = species.value
             znimp += impurity_radiation.calculate_average_charge_at_temp(
-                imp_element_index=imp_index,
+                imp_element_index=species.index,
                 temp_electron_kev=np.array([
                     self.data.physics.temp_plasma_electron_vol_avg_kev
                 ]),
                 data=self.data,
             ).squeeze() * (
-                self.data.impurity_radiation.f_nd_impurity_electron_array[imp_index]
+                self.data.impurity_radiation.f_nd_impurity_electron_array[species.index]
                 * self.data.physics.nd_plasma_electrons_vol_avg
             )
 
@@ -1251,9 +1250,10 @@ class Physics(Model):
         self.data.physics.nd_plasma_impurities_vol_avg = 0.0
         for species in IonSpecies:
             if species.is_impurity:
-                imp_index = species.value
                 self.data.physics.nd_plasma_impurities_vol_avg += (
-                    self.data.impurity_radiation.f_nd_impurity_electron_array[imp_index]
+                    self.data.impurity_radiation.f_nd_impurity_electron_array[
+                        species.index
+                    ]
                     * self.data.physics.nd_plasma_electrons_vol_avg
                 )
 
@@ -1369,10 +1369,11 @@ class Physics(Model):
             if not species.is_impurity:
                 continue
 
-            imp_index = species.value
             self.data.physics.m_ions_total_amu += (
                 self.data.physics.nd_plasma_electrons_vol_avg
-                * self.data.impurity_radiation.f_nd_impurity_electron_array[imp_index]
+                * self.data.impurity_radiation.f_nd_impurity_electron_array[
+                    species.index
+                ]
                 * species.mass_amu
             )
 
@@ -1422,11 +1423,10 @@ class Physics(Model):
             if not species.is_impurity:
                 continue
 
-            imp_index = species.value
             self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg += (
-                self.data.impurity_radiation.f_nd_impurity_electron_array[imp_index]
+                self.data.impurity_radiation.f_nd_impurity_electron_array[species.index]
                 * impurity_radiation.calculate_average_charge_at_temp(
-                    imp_element_index=imp_index,
+                    imp_element_index=species.index,
                     temp_electron_kev=np.array([
                         self.data.physics.temp_plasma_electron_vol_avg_kev
                     ]),

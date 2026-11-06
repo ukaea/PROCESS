@@ -49,6 +49,11 @@ class IonSpecies(IntEnum):
         return obj
 
     @DynamicClassAttribute
+    def index(self) -> int:
+        """The index of this ion species."""
+        return self.value
+
+    @DynamicClassAttribute
     def full_ion_charge(self):
         """The full ion charge for this ion species."""
         return self._full_ion_charge_
