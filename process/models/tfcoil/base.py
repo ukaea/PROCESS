@@ -2304,8 +2304,8 @@ class TFCoil(Model):
             * (self.data.build.r_tf_inboard_mid + self.data.build.r_tf_outboard_mid)
         )
 
-    @_wrap_output(TFStressResults)
     @staticmethod
+    @_wrap_output(TFStressResults)
     @numba.njit(cache=True)
     def stresscl(  # noqa: PLR0917
         n_tf_layer,
