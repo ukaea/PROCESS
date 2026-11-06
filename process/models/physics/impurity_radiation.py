@@ -529,7 +529,7 @@ class ImpurityRadiation:
                 )
 
             p_mw = pden_vol_avg_mw * self.data.physics.vol_plasma
-            species_powers[species.label] = (pden_vol_avg_mw, p_mw)
+            species_powers[species.symbol] = (pden_vol_avg_mw, p_mw)
             setattr(
                 self.data.physics,
                 f"p_plasma_rad_{species.full_name}_mw",

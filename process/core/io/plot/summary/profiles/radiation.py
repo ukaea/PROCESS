@@ -115,7 +115,7 @@ def plot_line_brem_power_density_profile(
             axis.plot(
                 rho,
                 pden_rad_array[species.index] * 1.0e-6,
-                label=species.label.replace("_", ""),
+                label=species.symbol,
             )
 
     axis.minorticks_on()
@@ -218,7 +218,7 @@ def plot_line_brem_loss_function_profile(
             axis.plot(
                 rho,
                 lz[species.index],
-                label=species.label.replace("_", ""),
+                label=species.symbol,
             )
     axis.legend(loc="best", ncol=4)
     axis.minorticks_on()
@@ -327,7 +327,7 @@ def plot_line_brem_power_profile(
             axis.plot(
                 rho,
                 p_rad_array[species.index] * 1.0e-6,
-                label=species.label.replace("_", ""),
+                label=species.symbol,
             )
 
     axis.plot(

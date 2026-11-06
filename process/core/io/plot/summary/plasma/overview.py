@@ -430,7 +430,7 @@ def plot_main_plasma_information(
         "$\\mathbf{densities:}$\n\n"
         f"Effective charge: {value('n_charge_plasma_effective_vol_avg'):.3f}\n\n"
         + "\n".join(
-            f"{species.label.replace('_', '') + ':':<6}"
+            f"{species.symbol + ':':<6}"
             f"{value(f'f_nd_impurity_electrons({species.index + 1:02d})'):.4e}"
             for species in IonSpecies
         )
