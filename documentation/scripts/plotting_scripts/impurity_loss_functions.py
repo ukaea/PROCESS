@@ -45,7 +45,7 @@ def plot_line_brem_loss_function_profile(
         axis.plot(
             species_data[:, 0],
             species_data[:, 1],
-            label=species.label.replace("_", ""),
+            label=species.symbol,
             linestyle=line_styles[index % len(line_styles)],
         )
 

@@ -203,8 +203,7 @@ def plot_ion_charge_profile(axis: plt.Axes, mfile: MFile, scan: int):
             axis.plot(
                 np.linspace(0, 1, n_plasma_profile_elements),
                 rel_ion_state,
-                label=f"{species.label.replace('_', '')} (Z={z_max}): "
-                f"avg {avg_ionisation:.1f}%",
+                label=f"{species.symbol} (Z={z_max}): avg {avg_ionisation:.1f}%",
             )
     axis.set_ylabel("Relative Ionisation State [% of $Z$]")
     axis.legend()

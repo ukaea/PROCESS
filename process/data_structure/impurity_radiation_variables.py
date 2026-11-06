@@ -74,6 +74,11 @@ class IonSpecies(IntEnum):
         return self._full_name_
 
     @DynamicClassAttribute
+    def symbol(self):
+        """The symbol of this ion species."""
+        return self._label_.replace("_", "")
+
+    @DynamicClassAttribute
     def is_impurity(self) -> bool:
         """Whether this ion species is an impurity."""
         return self not in {IonSpecies.HYDROGEN, IonSpecies.HELIUM}
