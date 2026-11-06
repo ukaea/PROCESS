@@ -2,6 +2,9 @@ from typing import Any, NamedTuple
 
 import pytest
 
+from process.data_structure.superconducting_tf_coil_variables import (
+    StrainTFSuperconductorType,
+)
 from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil import superconducting as sctf
 from process.models.tfcoil.superconducting import TFComponentShape, VVComponentShape
@@ -246,7 +249,7 @@ class SuperconParam(NamedTuple):
             c_tf_turn=74026.751437500003,
             b_tf_inboard_peak_with_ripple=12.48976756562082,
             str_tf_con_res=-0.0050000000000000001,
-            i_strain_tf_superconductor=1,
+            i_strain_tf_superconductor=StrainTFSuperconductorType.VERTICAL_WP_STRAIN,
             f_a_tf_turn_cable_space_cooling=0.3,
             str_wp=0.0015619754370069119,
             tf_fit_t=0.80807838916035957,
@@ -294,7 +297,7 @@ class SuperconParam(NamedTuple):
             c_tf_turn=74026.751437500003,
             b_tf_inboard_peak_with_ripple=12.48976756562082,
             str_tf_con_res=-0.0050000000000000001,
-            i_strain_tf_superconductor=1,
+            i_strain_tf_superconductor=StrainTFSuperconductorType.VERTICAL_WP_STRAIN,
             f_a_tf_turn_cable_space_cooling=0.3,
             str_wp=0.0015619754370069119,
             tf_fit_t=0.80807838916035957,

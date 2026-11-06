@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 from enum import IntEnum, unique
 
+
 @unique
 class StrainTFSuperconductorType(IntEnum):
     """TF superconductor strain type, controlled via the `i_strain_tf_superconductor`
@@ -14,6 +15,7 @@ class StrainTFSuperconductorType(IntEnum):
 
     VERTICAL_WP_STRAIN = 1
     """TF superconductor strain is due to calculated vertical winding pack strain"""
+
 
 @unique
 class TFWPIntegerTurnType(IntEnum):
