@@ -5,6 +5,19 @@ from enum import IntEnum, unique
 
 
 @unique
+class StrainTFSuperconductorType(IntEnum):
+    """TF superconductor strain type, controlled via the `i_strain_tf_superconductor`
+    variable.
+    """
+
+    RESIDUAL_MANUFACTURING_STRAIN = 0
+    """TF superconductor strain is due to residual manufacturing strain"""
+
+    VERTICAL_WP_STRAIN = 1
+    """TF superconductor strain is due to calculated vertical winding pack strain"""
+
+
+@unique
 class TFWPIntegerTurnType(IntEnum):
     """TF winding pack integer turn type, controlled via the `i_tf_turns_integer`
     variable.
@@ -194,6 +207,13 @@ class SuperconductingTFData:
 
     i_tf_turn_type: int = 1
     """Switch for TF turn geometry type"""
+
+    i_strain_tf_superconductor: int = 1
+    """Switch for the behavior of the TF strain used to compute
+    the strain-dependent critical surface:
+    - =0  str_tf_con_res is used
+    - =1  str_wp is used
+    """
 
     # Vacuum Vessel stress on TF coil quench
 

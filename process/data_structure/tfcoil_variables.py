@@ -485,29 +485,22 @@ class TFData:
 
     str_tf_con_res: float = -0.005
     """Residual manufacturing strain in TF superconductor material
-    If `i_str_wp == 0`, used to compute the critical surface.
+    If `i_strain_tf_superconductor == 0`, used to compute the critical surface.
     Otherwise, the self-consistent winding pack `str_wp` is used.
     """
 
     str_wp: float = 0.0
     """Axial (vertical) strain in the TF coil winding pack found by
     self-consistent stress/strain calculation.
-    if `i_str_wp == 1`, used to compute the critical surface.
+    if `i_strain_tf_superconductor == 1`, used to compute the critical surface.
     Otherwise, the input value `str_tf_con_res` is used.
     Constrain the absolute value using `constraint equation 88`
-    You can't have constraint 88 and i_str_wp = 0 at the same time
+    You can't have constraint 88 and i_strain_tf_superconductor = 0 at the same time
     """
 
     str_wp_max: float = 0.7e-2
     """Maximum allowed absolute value of the strain in the TF coil
     (`Constraint equation 88`)
-    """
-
-    i_str_wp: int = 1
-    """Switch for the behavior of the TF strain used to compute
-    the strain-dependent critical surface:
-    - =0  str_tf_con_res is used
-    - =1  str_wp is used
     """
 
     quench_model: str = "exponential"
