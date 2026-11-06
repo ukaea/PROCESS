@@ -104,32 +104,7 @@ class ResistiveTFCoil(TFCoil):
             self.data.tfcoil.n_rad_per_layer = 500
 
         try:  # noqa: PLW0717
-            (
-                sig_tf_max,
-                sig_tf_vmises_max,
-                s_shear_tf_peak,
-                deflect,
-                eyoung,
-                eyoung_wp,
-                poisson_wp_trans,
-                radial_array,
-                s_shear_cea_tf_cond,
-                poisson_wp_axial,
-                sig_tf,
-                sig_tf_smeared,
-                s_shear_tf,
-                sig_tf_vmises,
-                str_tf,
-                n_radial_array,
-                n_tf_bucking,
-                self.data.tfcoil.sig_tf_wp,
-                sig_tf_case,
-                sig_tf_cs_bucked,
-                str_wp,
-                casestr,
-                insstrain,
-                sig_tf_wp_av_z,
-            ) = self.stresscl(
+            stress = self.stresscl(
                 n_tf_layer=int(self.data.tfcoil.n_tf_stress_layers),
                 n_radial_array=int(self.data.tfcoil.n_rad_per_layer),
                 n_tf_wp_stress_layers=int(self.data.tfcoil.n_tf_wp_stress_layers),
@@ -201,49 +176,53 @@ class ResistiveTFCoil(TFCoil):
             self.data.tfcoil.sig_tf_case = (
                 self.data.tfcoil.sig_tf_case
                 if self.data.tfcoil.sig_tf_case is None
-                else sig_tf_case
+                else stress.sig_tf_case
             )
 
             self.data.tfcoil.sig_tf_cs_bucked = (
                 self.data.tfcoil.sig_tf_cs_bucked
                 if self.data.tfcoil.sig_tf_cs_bucked is None
-                else sig_tf_cs_bucked
+                else stress.sig_tf_cs_bucked
             )
 
             self.data.tfcoil.str_wp = (
-                self.data.tfcoil.str_wp if self.data.tfcoil.str_wp is None else str_wp
+                self.data.tfcoil.str_wp
+                if self.data.tfcoil.str_wp is None
+                else stress.str_wp
             )
 
             self.data.tfcoil.casestr = (
-                self.data.tfcoil.casestr if self.data.tfcoil.casestr is None else casestr
+                self.data.tfcoil.casestr
+                if self.data.tfcoil.casestr is None
+                else stress.casestr
             )
 
             self.data.tfcoil.insstrain = (
                 self.data.tfcoil.insstrain
                 if self.data.tfcoil.insstrain is None
-                else insstrain
+                else stress.insstrain
             )
 
             if output:
                 self.out_stress(
-                    sig_tf_max,
-                    sig_tf_vmises_max,
-                    s_shear_tf_peak,
-                    deflect,
-                    eyoung,
-                    eyoung_wp,
-                    poisson_wp_trans,
-                    radial_array,
-                    s_shear_cea_tf_cond,
-                    poisson_wp_axial,
-                    sig_tf,
-                    sig_tf_smeared,
-                    s_shear_tf,
-                    sig_tf_vmises,
-                    str_tf,
-                    n_radial_array,
-                    n_tf_bucking,
-                    sig_tf_wp_av_z,
+                    stress.sig_tf_max,
+                    stress.sig_tf_vmises_max,
+                    stress.s_shear_tf_peak,
+                    stress.deflect,
+                    stress.eyoung,
+                    stress.eyoung_wp,
+                    stress.poisson_wp_trans,
+                    stress.radial_array,
+                    stress.s_shear_cea_tf_cond,
+                    stress.poisson_wp_axial,
+                    stress.sig_tf,
+                    stress.sig_tf_smeared,
+                    stress.s_shear_tf,
+                    stress.sig_tf_vmises,
+                    stress.str_tf,
+                    stress.n_radial_array,
+                    stress.n_tf_bucking,
+                    stress.sig_tf_wp_av_z,
                 )
         except ValueError as e:
             if e.args[1] == 245 and e.args[2] == 0:

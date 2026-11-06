@@ -25,35 +25,6 @@ from process.models.superconductors import (
 from process.models.tfcoil import quench
 from process.models.tfcoil.base import TFCoil, TFPlasmaCaseType
 
-
-@dataclass
-class _TFStressResults:
-    sig_tf_max: float
-    sig_tf_vmises_max: float
-    s_shear_tf_peak: float
-    deflect: float
-    eyoung: float
-    eyoung_wp: float
-    poisson_wp_trans: float
-    radial_array: float
-    s_shear_cea_tf_cond: float
-    poisson_wp_axial: float
-    sig_tf: float
-    sig_tf_smeared: float
-    s_shear_tf: float
-    sig_tf_vmises: float
-    str_tf: float
-    n_radial_array: float
-    n_tf_bucking: float
-    sig_tf_wp: float
-    sig_tf_case: float
-    sig_tf_cs_bucked: float
-    str_wp: float
-    casestr: float
-    insstrain: float
-    sig_tf_wp_av_z: float
-
-
 logger = logging.getLogger(__name__)
 
 
@@ -2085,75 +2056,73 @@ class SuperconductingTFCoil(TFCoil):
         d_sc_tf = self.data.superconducting_tfcoil
 
         try:
-            stress = _TFStressResults(
-                *self.stresscl(
-                    n_tf_layer=int(self.data.tfcoil.n_tf_stress_layers),
-                    n_radial_array=int(self.data.tfcoil.n_rad_per_layer),
-                    n_tf_wp_stress_layers=int(self.data.tfcoil.n_tf_wp_stress_layers),
-                    i_tf_bucking=int(self.data.tfcoil.i_tf_bucking),
-                    r_tf_inboard_in=float(self.data.build.r_tf_inboard_in),
-                    dr_bore=self.data.build.dr_bore,
-                    dr_cs=self.data.build.dr_cs,
-                    i_tf_inside_cs=self.data.build.i_tf_inside_cs,
-                    dr_tf_inboard=self.data.build.dr_tf_inboard,
-                    dr_cs_tf_gap=self.data.build.dr_cs_tf_gap,
-                    i_pf_conductor=self.data.pf_coil.i_pf_conductor,
-                    j_cs_flat_top_end=self.data.pf_coil.j_cs_flat_top_end,
-                    j_cs_pulse_start=self.data.pf_coil.j_cs_pulse_start,
-                    c_pf_coil_turn_peak_input=self.data.pf_coil.c_pf_coil_turn_peak_input,
-                    n_pf_coils_in_group=self.data.pf_coil.n_pf_coils_in_group,
-                    f_dr_dz_cs_turn=self.data.pf_coil.f_dr_dz_cs_turn,
-                    radius_cs_turn_corners=self.data.pf_coil.radius_cs_turn_corners,
-                    f_a_cs_turn_steel=self.data.pf_coil.f_a_cs_turn_steel,
-                    eyoung_steel=self.data.tfcoil.eyoung_steel,
-                    poisson_steel=self.data.tfcoil.poisson_steel,
-                    eyoung_cond_axial=self.data.tfcoil.eyoung_cond_axial,
-                    poisson_cond_axial=self.data.tfcoil.poisson_cond_axial,
-                    eyoung_cond_trans=self.data.tfcoil.eyoung_cond_trans,
-                    poisson_cond_trans=self.data.tfcoil.poisson_cond_trans,
-                    eyoung_ins=self.data.tfcoil.eyoung_ins,
-                    poisson_ins=self.data.tfcoil.poisson_ins,
-                    dx_tf_turn_insulation=self.data.tfcoil.dx_tf_turn_insulation,
-                    eyoung_copper=self.data.tfcoil.eyoung_copper,
-                    poisson_copper=self.data.tfcoil.poisson_copper,
-                    i_tf_sup=self.data.tfcoil.i_tf_sup,
-                    eyoung_res_tf_buck=self.data.tfcoil.eyoung_res_tf_buck,
-                    r_tf_wp_inboard_inner=d_sc_tf.r_tf_wp_inboard_inner,
-                    tan_theta_coil=d_sc_tf.tan_theta_coil,
-                    rad_tf_coil_inboard_toroidal_half=d_sc_tf.rad_tf_coil_inboard_toroidal_half,
-                    r_tf_wp_inboard_outer=d_sc_tf.r_tf_wp_inboard_outer,
-                    a_tf_coil_inboard_steel=d_sc_tf.a_tf_coil_inboard_steel,
-                    a_tf_plasma_case=d_sc_tf.a_tf_plasma_case,
-                    a_tf_coil_nose_case=d_sc_tf.a_tf_coil_nose_case,
-                    dx_tf_wp_insertion_gap=self.data.tfcoil.dx_tf_wp_insertion_gap,
-                    dx_tf_wp_insulation=self.data.tfcoil.dx_tf_wp_insulation,
-                    n_tf_coil_turns=self.data.tfcoil.n_tf_coil_turns,
-                    i_tf_turns_integer=int(self.data.tfcoil.i_tf_turns_integer),
-                    dx_tf_turn_cable_space_average=d_sc_tf.dx_tf_turn_cable_space_average,
-                    dr_tf_turn_cable_space=d_sc_tf.dr_tf_turn_cable_space,
-                    dia_tf_turn_coolant_channel=self.data.tfcoil.dia_tf_turn_coolant_channel,
-                    f_a_tf_turn_cable_copper=self.data.tfcoil.f_a_tf_turn_cable_copper,
-                    dx_tf_turn_steel=self.data.tfcoil.dx_tf_turn_steel,
-                    dx_tf_side_case_average=d_sc_tf.dx_tf_side_case_average,
-                    dx_tf_wp_toroidal_average=d_sc_tf.dx_tf_wp_toroidal_average,
-                    a_tf_coil_inboard_insulation=d_sc_tf.a_tf_coil_inboard_insulation,
-                    a_tf_wp_steel=self.data.tfcoil.a_tf_wp_steel,
-                    a_tf_wp_conductor=self.data.tfcoil.a_tf_wp_conductor,
-                    a_tf_wp_with_insulation=d_sc_tf.a_tf_wp_with_insulation,
-                    eyoung_al=self.data.tfcoil.eyoung_al,
-                    poisson_al=self.data.tfcoil.poisson_al,
-                    fcoolcp=self.data.tfcoil.fcoolcp,
-                    n_tf_graded_layers=self.data.tfcoil.n_tf_graded_layers,
-                    c_tf_total=self.data.tfcoil.c_tf_total,
-                    dr_tf_plasma_case=self.data.tfcoil.dr_tf_plasma_case,
-                    i_tf_stress_model=self.data.tfcoil.i_tf_stress_model,
-                    vforce_inboard_tot=d_sc_tf.vforce_inboard_tot,
-                    i_tf_tresca=self.data.tfcoil.i_tf_tresca,
-                    a_tf_coil_inboard_case=self.data.tfcoil.a_tf_coil_inboard_case,
-                    vforce=self.data.tfcoil.vforce,
-                    a_tf_turn_steel=self.data.tfcoil.a_tf_turn_steel,
-                    a_cs_poloidal=self.data.pf_coil.a_cs_poloidal,
-                )
+            stress = self.stresscl(
+                n_tf_layer=int(self.data.tfcoil.n_tf_stress_layers),
+                n_radial_array=int(self.data.tfcoil.n_rad_per_layer),
+                n_tf_wp_stress_layers=int(self.data.tfcoil.n_tf_wp_stress_layers),
+                i_tf_bucking=int(self.data.tfcoil.i_tf_bucking),
+                r_tf_inboard_in=float(self.data.build.r_tf_inboard_in),
+                dr_bore=self.data.build.dr_bore,
+                dr_cs=self.data.build.dr_cs,
+                i_tf_inside_cs=self.data.build.i_tf_inside_cs,
+                dr_tf_inboard=self.data.build.dr_tf_inboard,
+                dr_cs_tf_gap=self.data.build.dr_cs_tf_gap,
+                i_pf_conductor=self.data.pf_coil.i_pf_conductor,
+                j_cs_flat_top_end=self.data.pf_coil.j_cs_flat_top_end,
+                j_cs_pulse_start=self.data.pf_coil.j_cs_pulse_start,
+                c_pf_coil_turn_peak_input=self.data.pf_coil.c_pf_coil_turn_peak_input,
+                n_pf_coils_in_group=self.data.pf_coil.n_pf_coils_in_group,
+                f_dr_dz_cs_turn=self.data.pf_coil.f_dr_dz_cs_turn,
+                radius_cs_turn_corners=self.data.pf_coil.radius_cs_turn_corners,
+                f_a_cs_turn_steel=self.data.pf_coil.f_a_cs_turn_steel,
+                eyoung_steel=self.data.tfcoil.eyoung_steel,
+                poisson_steel=self.data.tfcoil.poisson_steel,
+                eyoung_cond_axial=self.data.tfcoil.eyoung_cond_axial,
+                poisson_cond_axial=self.data.tfcoil.poisson_cond_axial,
+                eyoung_cond_trans=self.data.tfcoil.eyoung_cond_trans,
+                poisson_cond_trans=self.data.tfcoil.poisson_cond_trans,
+                eyoung_ins=self.data.tfcoil.eyoung_ins,
+                poisson_ins=self.data.tfcoil.poisson_ins,
+                dx_tf_turn_insulation=self.data.tfcoil.dx_tf_turn_insulation,
+                eyoung_copper=self.data.tfcoil.eyoung_copper,
+                poisson_copper=self.data.tfcoil.poisson_copper,
+                i_tf_sup=self.data.tfcoil.i_tf_sup,
+                eyoung_res_tf_buck=self.data.tfcoil.eyoung_res_tf_buck,
+                r_tf_wp_inboard_inner=d_sc_tf.r_tf_wp_inboard_inner,
+                tan_theta_coil=d_sc_tf.tan_theta_coil,
+                rad_tf_coil_inboard_toroidal_half=d_sc_tf.rad_tf_coil_inboard_toroidal_half,
+                r_tf_wp_inboard_outer=d_sc_tf.r_tf_wp_inboard_outer,
+                a_tf_coil_inboard_steel=d_sc_tf.a_tf_coil_inboard_steel,
+                a_tf_plasma_case=d_sc_tf.a_tf_plasma_case,
+                a_tf_coil_nose_case=d_sc_tf.a_tf_coil_nose_case,
+                dx_tf_wp_insertion_gap=self.data.tfcoil.dx_tf_wp_insertion_gap,
+                dx_tf_wp_insulation=self.data.tfcoil.dx_tf_wp_insulation,
+                n_tf_coil_turns=self.data.tfcoil.n_tf_coil_turns,
+                i_tf_turns_integer=int(self.data.tfcoil.i_tf_turns_integer),
+                dx_tf_turn_cable_space_average=d_sc_tf.dx_tf_turn_cable_space_average,
+                dr_tf_turn_cable_space=d_sc_tf.dr_tf_turn_cable_space,
+                dia_tf_turn_coolant_channel=self.data.tfcoil.dia_tf_turn_coolant_channel,
+                f_a_tf_turn_cable_copper=self.data.tfcoil.f_a_tf_turn_cable_copper,
+                dx_tf_turn_steel=self.data.tfcoil.dx_tf_turn_steel,
+                dx_tf_side_case_average=d_sc_tf.dx_tf_side_case_average,
+                dx_tf_wp_toroidal_average=d_sc_tf.dx_tf_wp_toroidal_average,
+                a_tf_coil_inboard_insulation=d_sc_tf.a_tf_coil_inboard_insulation,
+                a_tf_wp_steel=self.data.tfcoil.a_tf_wp_steel,
+                a_tf_wp_conductor=self.data.tfcoil.a_tf_wp_conductor,
+                a_tf_wp_with_insulation=d_sc_tf.a_tf_wp_with_insulation,
+                eyoung_al=self.data.tfcoil.eyoung_al,
+                poisson_al=self.data.tfcoil.poisson_al,
+                fcoolcp=self.data.tfcoil.fcoolcp,
+                n_tf_graded_layers=self.data.tfcoil.n_tf_graded_layers,
+                c_tf_total=self.data.tfcoil.c_tf_total,
+                dr_tf_plasma_case=self.data.tfcoil.dr_tf_plasma_case,
+                i_tf_stress_model=self.data.tfcoil.i_tf_stress_model,
+                vforce_inboard_tot=d_sc_tf.vforce_inboard_tot,
+                i_tf_tresca=self.data.tfcoil.i_tf_tresca,
+                a_tf_coil_inboard_case=self.data.tfcoil.a_tf_coil_inboard_case,
+                vforce=self.data.tfcoil.vforce,
+                a_tf_turn_steel=self.data.tfcoil.a_tf_turn_steel,
+                a_cs_poloidal=self.data.pf_coil.a_cs_poloidal,
             )
         except ValueError as e:
             if e.args[1] == 245 and e.args[2] == 0:
