@@ -15988,7 +15988,7 @@ Conductor_transverse_Youngs_modulus______________________________________ (eyoun
 TF_superconductor_switch_________________________________________________ (i_tf_sc_mat)__________________            1 
 Critical_field_at_zero_temperature_and_strain_(T)________________________ (b_tf_superconductor_critical_zero_temp_strain)_ 3.29699999999999989e+01 
 Critical_temperature_at_zero_field_and_strain_(K)________________________ (temp_tf_superconductor_critical_zero_field_strain)_ 1.60599999999999987e+01 
-TF_coil_temperature_at_peak_field_(K)____________________________________ (tftmp)________________________ 4.75000000000000000e+00 
+TF_coil_temperature_at_peak_field_(K)____________________________________ (temp_tf_operating)________________________ 4.75000000000000000e+00 
 Peak_inboard_toroidal_field_including_ripple_(T)_________________________ (b_tf_inboard_peak_with_ripple)_ 1.16033603121343702e+01 
 Total_cooling_area_fraction_inside_cable_space___________________________ (f_a_tf_turn_cable_space_cooling)_ 3.39136204594625568e-01 OP 
 Copper_fraction_of_conductor_____________________________________________ (f_a_tf_turn_cable_copper)_____ 8.94897995816505754e-01 
@@ -17380,7 +17380,7 @@ dx_tf_wp_insulation = 0.008
 dia_tf_turn_coolant_channel = 0.01
 
 * Helium coolant temperature [K]
-tftmp = 4.75
+temp_tf_operating = 4.75
 
 * Coolant fraction of TF cable [-]
 f_a_tf_turn_cable_space_extra_void = 0.3
