@@ -195,7 +195,7 @@ class SuperconductingTFData:
     i_tf_turn_type: int = 1
     """Switch for TF turn geometry type"""
 
-    i_str_wp: int = 1
+    i_strain_tf_superconductor: int = 1
     """Switch for the behavior of the TF strain used to compute
     the strain-dependent critical surface:
     - =0  str_tf_con_res is used

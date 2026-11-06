@@ -1018,7 +1018,9 @@ INPUT_VARIABLES = {
     "i_rad_loss": InputVariable("physics", int, choices=[0, 1, 2]),
     "i_shield_mat": InputVariable("fwbs", int, choices=[0, 1]),
     "i_single_null": InputVariable("physics", int, choices=[0, 1]),
-    "i_str_wp": InputVariable("superconducting_tfcoil", int, choices=[0, 1]),
+    "i_strain_tf_superconductor": InputVariable(
+        "superconducting_tfcoil", int, choices=[0, 1]
+    ),
     "i_r_pf_outside_tf_placement": InputVariable("pf_coil", int, choices=[0, 1]),
     "i_tf_bucking": InputVariable("tfcoil", int, range=(0, 3)),
     "i_tf_case_geom": InputVariable("tfcoil", int, choices=[0, 1]),
