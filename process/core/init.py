@@ -1301,7 +1301,7 @@ def check_process(inputs, data):  # noqa: ARG001
             + data.numerics.n_inequality_constraints
         ]
         == 88
-    ).any() and data.tfcoil.i_str_wp == 0:
+    ).any() and data.superconducting_tfcoil.i_str_wp == 0:
         raise ProcessValidationError("Can't use constraint 88 if i_strain_tf == 0")
 
 

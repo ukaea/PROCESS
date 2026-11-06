@@ -503,13 +503,6 @@ class TFData:
     (`Constraint equation 88`)
     """
 
-    i_str_wp: int = 1
-    """Switch for the behavior of the TF strain used to compute
-    the strain-dependent critical surface:
-    - =0  str_tf_con_res is used
-    - =1  str_wp is used
-    """
-
     quench_model: str = "exponential"
     """switch for TF coil quench model (Only applies to REBCO magnet at present, issue #522):
     - ='exponential' exponential quench with constant discharge resistor

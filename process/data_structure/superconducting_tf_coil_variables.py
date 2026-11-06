@@ -195,6 +195,13 @@ class SuperconductingTFData:
     i_tf_turn_type: int = 1
     """Switch for TF turn geometry type"""
 
+    i_str_wp: int = 1
+    """Switch for the behavior of the TF strain used to compute
+    the strain-dependent critical surface:
+    - =0  str_tf_con_res is used
+    - =1  str_wp is used
+    """
+
     # Vacuum Vessel stress on TF coil quench
 
     vv_stress_quench: float = 0.0

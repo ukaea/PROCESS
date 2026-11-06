@@ -995,7 +995,7 @@ class SuperconductingTFCoil(TFCoil):
         """Output TF superconductor information"""
         d_sc_tf = self.data.superconducting_tfcoil
 
-        if self.data.tfcoil.i_str_wp == 0:
+        if self.data.superconducting_tfcoil.i_str_wp == 0:
             strain = self.data.tfcoil.str_tf_con_res
         else:
             strain = self.data.tfcoil.str_wp
@@ -2535,7 +2535,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         match AvailabilityModel(self.data.costs.i_plant_availability):
             # Only calculate temperature margin if required
             case AvailabilityModel.MORRIS | AvailabilityModel.ST:
-                if self.data.tfcoil.i_str_wp == 0:
+                if self.data.superconducting_tfcoil.i_str_wp == 0:
                     strain = self.data.tfcoil.str_tf_con_res
                 else:
                     strain = self.data.tfcoil.str_wp
@@ -2687,7 +2687,11 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
                 "superconductors."
             )
 
-        strain = tfcoil.str_tf_con_res if tfcoil.i_str_wp == 0 else tfcoil.str_wp
+        strain = (
+            tfcoil.str_tf_con_res
+            if data.superconducting_tfcoil.i_str_wp == 0
+            else tfcoil.str_wp
+        )
         non_copper_fraction = 1.0 - f_a_tf_turn_cable_copper
         conductor_fraction = 1.0 - min(f_a_tf_turn_cable_space_cooling, 0.99)
 
@@ -3697,7 +3701,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         match AvailabilityModel(self.data.costs.i_plant_availability):
             # Only calculate temperature margin if required
             case AvailabilityModel.MORRIS | AvailabilityModel.ST:
-                if self.data.tfcoil.i_str_wp == 0:
+                if self.data.superconducting_tfcoil.i_str_wp == 0:
                     strain = self.data.tfcoil.str_tf_con_res
                 else:
                     strain = self.data.tfcoil.str_wp
@@ -3935,7 +3939,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                 "superconductors."
             )
 
-        if self.data.tfcoil.i_str_wp == 0:
+        if self.data.superconducting_tfcoil.i_str_wp == 0:
             strain = self.data.tfcoil.str_tf_con_res
         else:
             strain = self.data.tfcoil.str_wp
