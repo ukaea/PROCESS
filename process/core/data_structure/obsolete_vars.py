@@ -67,7 +67,7 @@ OBS_VARS = {
     "strncon_cs": "str_cs_con_res",
     "strncon_pf": "str_pf_con_res",
     "strncon_tf": "str_tf_con_res",
-    "i_strain_wp": "i_str_wp",
+    "i_strain_wp": "i_strain_tf_superconductor",
     "strain_wp_max": "str_wp_max",
     "strain_wp": "str_wp",
     "rad_fraction": "rad_fraction_total",
