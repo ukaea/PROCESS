@@ -1224,7 +1224,7 @@ class Physics(Model):
         # Set hydrogen and helium relative impurity densities for
         # radiation calculations
         self.data.impurity_radiation.f_nd_impurity_electron_array[
-            IonSpecies.HYDROGEN.value
+            IonSpecies.HYDROGEN.index
         ] = (
             self.data.physics.nd_plasma_protons_vol_avg
             + (
@@ -1236,7 +1236,7 @@ class Physics(Model):
         ) / self.data.physics.nd_plasma_electrons_vol_avg
 
         self.data.impurity_radiation.f_nd_impurity_electron_array[
-            IonSpecies.HELIUM.value
+            IonSpecies.HELIUM.index
         ] = (
             self.data.physics.f_plasma_fuel_helium3
             * self.data.physics.nd_plasma_fuel_ions_vol_avg
@@ -1274,20 +1274,20 @@ class Physics(Model):
         # for the benefit of other routines
         self.data.physics.f_nd_plasma_carbon_electron = (
             self.data.impurity_radiation.f_nd_impurity_electron_array[
-                IonSpecies.CARBON.value
+                IonSpecies.CARBON.index
             ]
         )
         self.data.physics.f_nd_plasma_oxygen_electron = (
             self.data.impurity_radiation.f_nd_impurity_electron_array[
-                IonSpecies.OXYGEN.value
+                IonSpecies.OXYGEN.index
             ]
         )
         self.data.physics.f_nd_plasma_iron_argon_electron = (
             self.data.impurity_radiation.f_nd_impurity_electron_array[
-                IonSpecies.IRON.value
+                IonSpecies.IRON.index
             ]
             + self.data.impurity_radiation.f_nd_impurity_electron_array[
-                IonSpecies.ARGON.value
+                IonSpecies.ARGON.index
             ]
         )
 

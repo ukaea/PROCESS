@@ -191,11 +191,10 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
 
     for species in IonSpecies:
         if species.is_impurity and imp_frac[species.index] > 1.0e-30:
-            lbl = species.symbol
             ax_impurity.plot(
                 rho,
                 imp_frac[species.index] * ne / 1e16,
-                label=rf"$n_{{\text{{{lbl}}}}}$",
+                label=rf"$n_{{\text{{{species.symbol}}}}}$",
             )
 
     ax_main.legend(loc="best")
