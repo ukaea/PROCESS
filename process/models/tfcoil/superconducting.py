@@ -957,7 +957,7 @@ class SuperconductingTFCoil(TFCoil):
                 bc20m=d_sc_tf.b_tf_superconductor_critical_zero_temp_strain,
                 tc0m=d_sc_tf.temp_tf_superconductor_critical_zero_field_strain,
                 c0=1.0e10,
-                temp_tf_coolant_peak_field=self.data.tfcoil.tftmp,
+                temp_tf_coolant_peak_field=self.data.tfcoil.temp_tf_operating,
                 data=self.data,
             )
         except ProcessValueError:
@@ -2750,7 +2750,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             j_tf_wp=self.data.tfcoil.j_tf_wp,
             i_tf_superconductor=self.data.tfcoil.i_tf_sc_mat,
             f_strain_scale=self.data.tfcoil.fhts,
-            temp_tf_coolant_peak_field=self.data.tfcoil.tftmp
+            temp_tf_coolant_peak_field=self.data.tfcoil.temp_tf_operating
             + self.data.tfcoil.temp_tf_superconductor_margin_min,
             bcritsc=self.data.tfcoil.bcritsc,
             tcritsc=self.data.tfcoil.tcritsc,
@@ -3882,7 +3882,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             a_tf_turn=self.data.tfcoil.a_tf_turn,
             b_tf_inboard_peak=self.data.tfcoil.b_tf_inboard_peak_with_ripple,
             cur_tf_turn=self.data.tfcoil.c_tf_turn,
-            temp_tf_peak=self.data.tfcoil.tftmp
+            temp_tf_peak=self.data.tfcoil.temp_tf_operating
             + self.data.tfcoil.temp_tf_superconductor_margin_min,
             i_tf_superconductor=self.data.tfcoil.i_tf_sc_mat,
             dr_tf_hts_tape=d_sc_tf.dr_tf_hts_tape,
