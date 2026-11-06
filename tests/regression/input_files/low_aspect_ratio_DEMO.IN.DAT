@@ -940,12 +940,12 @@ dx_tf_wp_insulation   = 0.008
 * DESCRIPTION:   Ground insulation thickness surrounding winding pack (m)
 * JUSTIFICATION: 
 
-tmargmin = 1.500
-* DESCRIPTION:   Minimum allowable temperature margin (cs and tf coils) (k)
+temp_tf_superconductor_margin_min = 1.5
+* DESCRIPTION:   Minimum allowable temperature margin (TF coils) (k)
 * JUSTIFICATION: 
 
-*t_margmin_cs = 1.500
-* DESCRIPTION:   Minimum allowable temperature margin (cs and tf coils) (k)
+temp_cs_superconductor_margin_min = 1.5
+* DESCRIPTION:   Minimum allowable temperature margin (CS) (k)
 * JUSTIFICATION: 
 
 f_a_tf_turn_cable_space_extra_void = 0.300

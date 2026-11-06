@@ -238,7 +238,7 @@ def calc_u_unplanned_magnets_param(**kwargs):
     :rtype: dict
     """
     defaults = {
-        "temp_margin": 1.5,
+        "temp_tf_superconductor_margin": 1.5,
         "temp_tf_superconductor_margin_min": 1.5,
         "temp_cs_superconductor_margin_min": 1.5,
         "t_plant_operational_total_yrs": 30,
@@ -264,13 +264,13 @@ def calc_u_unplanned_magnets_params():
     return [
         calc_u_unplanned_magnets_param(),
         calc_u_unplanned_magnets_param(
-            temp_margin=2.0,
+            temp_tf_superconductor_margin=2.0,
             temp_tf_superconductor_margin_min=1.6,
             temp_cs_superconductor_margin_min=1.6,
             conf_mag=0.8,
         ),
         calc_u_unplanned_magnets_param(
-            temp_margin=1.8,
+            temp_tf_superconductor_margin=1.8,
             temp_tf_superconductor_margin_min=1.6,
             temp_cs_superconductor_margin_min=1.6,
             conf_mag=0.8,
@@ -314,7 +314,11 @@ def calc_u_unplanned_magnets_fix(availability, request, monkeypatch):
         "temp_tf_superconductor_margin_min",
         param["temp_tf_superconductor_margin_min"],
     )
-    monkeypatch.setattr(availability.data.tfcoil, "temp_margin", param["temp_margin"])
+    monkeypatch.setattr(
+        availability.data.tfcoil,
+        "temp_tf_superconductor_margin",
+        param["temp_tf_superconductor_margin"],
+    )
 
     return param["expected"]
 
