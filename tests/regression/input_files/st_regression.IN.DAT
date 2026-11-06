@@ -1199,7 +1199,7 @@ f_vforce_inboard = 0.5
 * DESCRIPTION:   Residual manufacturing strain in TF superconductor material
 * JUSTIFICATION: Not set, assuming default
 
-*i_str_wp = 
+*i_strain_tf_superconductor = 
 * DESCRIPTION:   Switch for the behavior of the TF strain used to compute
 * the strain-dependent critical surface: 
 * =0  str_tf_con_res is used

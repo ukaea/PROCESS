@@ -1291,14 +1291,14 @@ def check_process(data, _inputs):
             "temp_tf_cryo should be lower than temp_tf_operating"
         )
 
-    # Cannot use TF coil strain limit if i_str_wp is off:
+    # Cannot use TF coil strain limit if i_strain_tf_superconductor is off:
     if (
         data.numerics.icc[
             : data.numerics.n_equality_constraints
             + data.numerics.n_inequality_constraints
         ]
         == 88
-    ).any() and data.superconducting_tfcoil.i_str_wp == 0:
+    ).any() and data.superconducting_tfcoil.i_strain_tf_superconductor == 0:
         raise ProcessValidationError("Can't use constraint 88 if i_strain_tf == 0")
 
 
