@@ -9,7 +9,9 @@ from matplotlib.patches import FancyBboxPatch
 
 from process.core.io.plot.summary.common import box_style, place_plot_image, text_layout
 from process.core.io.plot.summary.plasma.physics import plot_plasma
-from process.data_structure.impurity_radiation_variables import ImpurityRadiationData
+from process.data_structure.impurity_radiation_variables import (
+    IonSpecies,
+)
 from process.models.geometry.plasma import plasma_geometry
 from process.models.physics.bootstrap_current import BootstrapCurrentFractionModel
 from process.models.physics.current_drive import CurrentDriveModel
@@ -520,16 +522,15 @@ def plot_main_plasma_information(
         box_style("khaki") | {"edgecolor": "black"},
     )
 
-    impurity_data = ImpurityRadiationData()
     textstr_ions = (
         "$\\mathbf{Ion\\ to\\ electron}$\n"
         "$\\mathbf{relative\\ number}$\n"
         "$\\mathbf{densities:}$\n\n"
         f"Effective charge: {value('n_charge_plasma_effective_vol_avg'):.3f}\n\n"
         + "\n".join(
-            f"{label.replace('_', '') + ':':<6}"
-            f"{value(f'f_nd_impurity_electrons({index:02d})'):.4e}"
-            for index, label in enumerate(impurity_data.imp_label[:14], start=1)
+            f"{species.symbol + ':':<6}"
+            f"{value(f'f_nd_impurity_electrons({species.index + 1:02d})'):.4e}"
+            for species in IonSpecies
         )
     )
     add_panel(

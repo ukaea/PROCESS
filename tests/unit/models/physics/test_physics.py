@@ -1235,10 +1235,6 @@ class PlasmaCompositionParam(NamedTuple):
 
     f_nd_impurity_electron_array: Any = None
 
-    impurity_arr_z: Any = None
-
-    m_impurity_amu_array: Any = None
-
     alphat: Any = None
 
     i_plasma_ignited: Any = None
@@ -1353,38 +1349,6 @@ class PlasmaCompositionParam(NamedTuple):
                 0.00038000000000000008,
                 5.0000000000000021e-06,
             ]),
-            impurity_arr_z=np.array([
-                1.0,
-                2.0,
-                4.0,
-                6.0,
-                7.0,
-                8.0,
-                10.0,
-                14.0,
-                18.0,
-                26.0,
-                28.0,
-                36.0,
-                54.0,
-                74.0,
-            ]),
-            m_impurity_amu_array=np.array([
-                1.01,
-                4.0030000000000001,
-                9.0099999999999998,
-                12.01,
-                14.01,
-                15.999000000000001,
-                20.18,
-                28.09,
-                39.950000000000003,
-                55.850000000000001,
-                58.700000000000003,
-                83.799999999999997,
-                131.30000000000001,
-                183.84999999999999,
-            ]),
             alphat=1.45,
             i_plasma_ignited=PlasmaIgnitionModel.NON_IGNITED,
             f_alpha_electron=0,
@@ -1465,32 +1429,6 @@ class PlasmaCompositionParam(NamedTuple):
                 0.00038000000000000008,
                 5.0000000000000021e-06,
             ]),
-            impurity_arr_z=np.array(
-                np.array((1, 2, 4, 6, 7, 8, 10, 14, 18, 26, 28, 36, 54, 74), order="F"),
-                order="F",
-            ).transpose(),
-            m_impurity_amu_array=np.array(
-                np.array(
-                    (
-                        1.01,
-                        4.0030000000000001,
-                        9.0099999999999998,
-                        12.01,
-                        14.01,
-                        15.999000000000001,
-                        20.18,
-                        28.09,
-                        39.950000000000003,
-                        55.850000000000001,
-                        58.700000000000003,
-                        83.799999999999997,
-                        131.30000000000001,
-                        183.84999999999999,
-                    ),
-                    order="F",
-                ),
-                order="F",
-            ).transpose(),
             alphat=1.45,
             i_plasma_ignited=PlasmaIgnitionModel.NON_IGNITED,
             f_alpha_electron=0.6845930883190634,
@@ -1541,7 +1479,7 @@ class PlasmaCompositionParam(NamedTuple):
             expected_f_alpha_electron=0.73096121787894142,
             expected_m_fuel_amu=2.5145269632339478,
             expected_nd_fuel_ions=5.857588175158546e19,
-            expected_m_ions_total_amu=2.7392489422048745,
+            expected_m_ions_total_amu=2.7392458684937084,
             expected_nd_ions_total=6.612527625000001e19,
             expected_zeffai=0.43056805756193167,
             expected_f_alpha_ion=0.26903878212105858,
@@ -1577,8 +1515,6 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     )
     for field in [
         "f_nd_impurity_electron_array",
-        "impurity_arr_z",
-        "m_impurity_amu_array",
     ]:
         monkeypatch.setattr(
             physics.data.impurity_radiation,

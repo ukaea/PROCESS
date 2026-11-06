@@ -307,14 +307,14 @@ class PlasmaRadiation(Model):
     def output_species_radiation_power_density(self) -> None:
         """Output the specific radiation power of each supported ion species."""
         species_powers = self.impurity_rad.calculate_species_radiation_powers()
-        for (label, (_, p_mw)), attribute in zip(
+        for (symbol, (_, p_mw)), attribute in zip(
             species_powers.items(),
             SPECIES_POWER_ATTRIBUTES,
             strict=True,
         ):
             po.ovarre(
                 self.outfile,
-                f"{label} total radiation power [MW]",
+                f"{symbol} total radiation power [MW]",
                 f"({attribute})",
                 p_mw,
                 "OP ",

@@ -7,8 +7,7 @@ from typing import TYPE_CHECKING
 import numpy as np
 
 from process.data_structure.impurity_radiation_variables import (
-    N_IMPURITIES,
-    ImpurityRadiationData,
+    IonSpecies,
 )
 
 if TYPE_CHECKING:
@@ -187,25 +186,24 @@ def plot_ion_charge_profile(axis: plt.Axes, mfile: MFile, scan: int):
     ])
 
     n_charge_plasma_profile = []
-    impurity_data = ImpurityRadiationData()
-    for imp in range(N_IMPURITIES):
-        if imp_frac[imp] > 1.0e-30:
+    for species in IonSpecies:
+        if imp_frac[species.index] > 1.0e-30:
             profile = [
-                mfile.get(f"n_charge_plasma_profile{imp}_{i}", scan=scan)
+                mfile.get(f"n_charge_plasma_profile{species.index}_{i}", scan=scan)
                 for i in range(n_plasma_profile_elements)
             ]
             n_charge_plasma_profile.append(profile)
-            z_max = impurity_data.imp_full_ion_charge[imp]
-            # Calculate relative ionisation state as percent of full ionisation
+
+            z_max = species.full_ion_charge
             rel_ion_state = [
                 100.0 * (val / z_max if z_max > 0 else 0) for val in profile
             ]
             avg_ionisation = np.mean(rel_ion_state)
+
             axis.plot(
                 np.linspace(0, 1, n_plasma_profile_elements),
                 rel_ion_state,
-                label=f"{impurity_data.imp_label[imp].replace('_', '')} (Z={z_max}): "
-                f"avg {avg_ionisation:.1f}%",
+                label=f"{species.symbol} (Z={z_max}): avg {avg_ionisation:.1f}%",
             )
     axis.set_ylabel("Relative Ionisation State [% of $Z$]")
     axis.legend()
