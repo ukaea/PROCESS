@@ -1053,7 +1053,7 @@ class Physics(Model):
                     " is at least notable"
                 )
 
-            impurity_frac = self.data.impurity_radiation.f_nd_impurity_electron_array[
+            impurity_frac = self.data.impurity_radiation.f_nd_impurity_electrons[
                 self.data.reinke.impvardiv - 1
             ]
             po.write(
@@ -1182,7 +1182,7 @@ class Physics(Model):
                     np.array([self.data.physics.temp_plasma_electron_vol_avg_kev]),
                     self.data,
                 ).squeeze() * (
-                    self.data.impurity_radiation.f_nd_impurity_electron_array[imp]
+                    self.data.impurity_radiation.f_nd_impurity_electrons[imp]
                     * self.data.physics.nd_plasma_electrons_vol_avg
                 )
 
@@ -1219,7 +1219,7 @@ class Physics(Model):
 
         # Set hydrogen and helium relative impurity densities for
         # radiation calculations
-        self.data.impurity_radiation.f_nd_impurity_electron_array[
+        self.data.impurity_radiation.f_nd_impurity_electrons[
             impurity_radiation.element2index("H_", self.data)
         ] = (
             self.data.physics.nd_plasma_protons_vol_avg
@@ -1231,7 +1231,7 @@ class Physics(Model):
             + self.data.physics.nd_beam_ions
         ) / self.data.physics.nd_plasma_electrons_vol_avg
 
-        self.data.impurity_radiation.f_nd_impurity_electron_array[
+        self.data.impurity_radiation.f_nd_impurity_electrons[
             impurity_radiation.element2index("He", self.data)
         ] = (
             self.data.physics.f_plasma_fuel_helium3
@@ -1247,7 +1247,7 @@ class Physics(Model):
         for imp in range(N_IMPURITIES):
             if self.data.impurity_radiation.impurity_arr_z[imp] > 2:
                 self.data.physics.nd_plasma_impurities_vol_avg += (
-                    self.data.impurity_radiation.f_nd_impurity_electron_array[imp]
+                    self.data.impurity_radiation.f_nd_impurity_electrons[imp]
                     * self.data.physics.nd_plasma_electrons_vol_avg
                 )
 
@@ -1267,20 +1267,20 @@ class Physics(Model):
         # Set some relative impurity density variables
         # for the benefit of other routines
         self.data.physics.f_nd_plasma_carbon_electron = (
-            self.data.impurity_radiation.f_nd_impurity_electron_array[
+            self.data.impurity_radiation.f_nd_impurity_electrons[
                 impurity_radiation.element2index("C_", self.data)
             ]
         )
         self.data.physics.f_nd_plasma_oxygen_electron = (
-            self.data.impurity_radiation.f_nd_impurity_electron_array[
+            self.data.impurity_radiation.f_nd_impurity_electrons[
                 impurity_radiation.element2index("O_", self.data)
             ]
         )
         self.data.physics.f_nd_plasma_iron_argon_electron = (
-            self.data.impurity_radiation.f_nd_impurity_electron_array[
+            self.data.impurity_radiation.f_nd_impurity_electrons[
                 impurity_radiation.element2index("Fe", self.data)
             ]
-            + self.data.impurity_radiation.f_nd_impurity_electron_array[
+            + self.data.impurity_radiation.f_nd_impurity_electrons[
                 impurity_radiation.element2index("Ar", self.data)
             ]
         )
@@ -1293,7 +1293,7 @@ class Physics(Model):
         self.data.physics.n_charge_plasma_effective_vol_avg = 0.0
         for imp in range(N_IMPURITIES):
             self.data.physics.n_charge_plasma_effective_vol_avg += (
-                self.data.impurity_radiation.f_nd_impurity_electron_array[imp]
+                self.data.impurity_radiation.f_nd_impurity_electrons[imp]
                 * impurity_radiation.calculate_average_charge_at_temp(
                     imp,
                     np.array([self.data.physics.temp_plasma_electron_vol_avg_kev]),
@@ -1363,7 +1363,7 @@ class Physics(Model):
             if self.data.impurity_radiation.impurity_arr_z[imp] > 2:
                 self.data.physics.m_ions_total_amu += (
                     self.data.physics.nd_plasma_electrons_vol_avg
-                    * self.data.impurity_radiation.f_nd_impurity_electron_array[imp]
+                    * self.data.impurity_radiation.f_nd_impurity_electrons[imp]
                     * self.data.impurity_radiation.m_impurity_amu_array[imp]
                 )
 
@@ -1412,7 +1412,7 @@ class Physics(Model):
         for imp in range(N_IMPURITIES):
             if self.data.impurity_radiation.impurity_arr_z[imp] > 2:
                 self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg += (
-                    self.data.impurity_radiation.f_nd_impurity_electron_array[imp]
+                    self.data.impurity_radiation.f_nd_impurity_electrons[imp]
                     * impurity_radiation.calculate_average_charge_at_temp(
                         imp,
                         np.array([self.data.physics.temp_plasma_electron_vol_avg_kev]),
@@ -1679,7 +1679,7 @@ class Physics(Model):
             zeff_profile[i] = 0.0
             for imp in range(N_IMPURITIES):
                 zeff_profile[i] += (
-                    self.data.impurity_radiation.f_nd_impurity_electron_array[imp]
+                    self.data.impurity_radiation.f_nd_impurity_electrons[imp]
                     * impurity_radiation.calculate_average_charge_at_temp(
                         imp,
                         np.array([self.plasma_profile.teprofile.profile_y[i]]),
@@ -2894,16 +2894,8 @@ class Physics(Model):
         po.oblnkl(self.outfile)
 
         for imp in range(N_IMPURITIES):
-            # MDK Update f_nd_impurity_electrons, as this will make the ITV output
-            # work correctly.
-            self.data.impurity_radiation.f_nd_impurity_electrons[imp] = (
-                self.data.impurity_radiation.f_nd_impurity_electron_array[imp]
-            )
             str1 = (
-                self.data.impurity_radiation
-                .impurity_arr_label[imp]
-                .item()
-                .replace("_", "")
+                self.data.impurity_radiation.imp_label[imp].item().replace("_", "")
                 + " concentration"
             )
             str2 = f"(f_nd_impurity_electrons({imp + 1:02}))"
