@@ -698,7 +698,7 @@ class NeutronFluxProfile:
             if self.num_iteration[n] == 1:
                 self._is_solved[n] = True
             else:
-                self._is_solved[n] == self._upscatter_convergence_attempt(n)
+                self._is_solved[n] = self._upscatter_convergence_attempt(n)
         else:
             self._is_solved[n] = True
         return
@@ -1042,7 +1042,7 @@ class NeutronFluxProfile:
         For system containing upscatter, we have a chicken-and-egg problem where
         we must first know the in-scattering group's flux in order to calculate the
         neutron flux, and at least one group is interdependent on another group.
-        Hence we need to start with a guess value in iteration [0], and then 
+        Hence we need to start with a guess value in iteration [0], and then
         approach the true solution iteratively.
 
         Parameters
@@ -1051,15 +1051,15 @@ class NeutronFluxProfile:
             We want to determine whether the coefficient for this neutron group
             has converged (stabilized) or not.
 
-        Returns
-        -------
-        NotImplemented
+        Raises
+        ------
+        NotImplementedError
             It has not been implemented yet.
         """
-        coefficient_list = [
+        coefficients_list = [  # noqa: F841
             opt_record.solution_vectors for opt_record in self._optimization_record[n]
         ]
-        return NotImplemented(
+        raise NotImplementedError(
             "Need to complete this function. May need underrelaxiation."
         )
 
