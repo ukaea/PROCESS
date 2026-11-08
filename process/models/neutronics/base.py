@@ -630,10 +630,7 @@ class NeutronFluxProfile:
             if self.num_iteration[n] == 1:
                 self._is_solved[n] = True
             else:
-                raise NotImplementedError(
-                    "TODO: need to implement iterative solving for "
-                    "contains_upscatter systems."
-                )
+                self._is_solved[n] == self._upscatter_convergence_attempt(n)
         else:
             self._is_solved[n] = True
         return
@@ -786,7 +783,7 @@ class NeutronFluxProfile:
         Parameters
         ----------
         n:
-            The neutron group whose should be checked and validated.
+            The neutron group who should be checked and validated.
 
         Raises
         ------
@@ -930,6 +927,32 @@ class NeutronFluxProfile:
                         )
                         * mat.conversion_factor[n, leakage_basis]
                     )
+
+    def _upscatter_convergence_attempt(self, n) -> bool:
+        """
+        For system containing upscatter, we have a chicken-and-egg problem where
+        we must first know the in-scattering group's flux in order to calculate the
+        neutron flux, and at least one group is interdependent on another group.
+        Hence we need to start with a guess value in iteration [0], and then 
+        approach the true solution iteratively.
+
+        Parameters
+        ----------
+        n:
+            We want to determine whether the coefficient for this neutron group
+            has converged (stabilized) or not.
+
+        Returns
+        -------
+        NotImplemented
+            It has not been implemented yet.
+        """
+        coefficient_list = [
+            opt_record.solution_vectors for opt_record in self._optimization_record[n]
+        ]
+        return NotImplemented(
+            "Need to complete this function. May need underrelaxiation."
+        )
 
     def _groupwise_fitness(
         self, n: int, jac: bool = True
