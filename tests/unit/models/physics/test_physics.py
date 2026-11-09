@@ -38,6 +38,7 @@ def test_impurity_particle_counts_and_output(physics, monkeypatch):
     data.physics.nd_plasma_electrons_vol_avg = 7.5e19
     data.physics.temp_plasma_electron_vol_avg_kev = 12.0
     data.physics.vol_plasma = 123.0
+    data.physics.n_plasma_profile_elements = 0
     for species in IonSpecies:
         if species.is_impurity:
             data.impurity_radiation.f_nd_impurity_electron_array[species.index] = (
