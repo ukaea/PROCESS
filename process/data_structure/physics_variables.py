@@ -50,8 +50,13 @@ class PlasmaConfinementTransitionModel(IntEnum):
         """
         obj = int.__new__(cls, value)
         obj._value_ = value
-        obj.full_name = full_name
+        obj._full_name_ = full_name
         return obj
+
+    @DynamicClassAttribute
+    def full_name(self):
+        """The full name of the plasma confinement model."""
+        return self._full_name_
 
 
 @unique

@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Literal
 
 import numpy as np
 
-from process.core.io.plot.summary.common import box_style, text_layout
+from process.core.io.plot.summary.common import add_panel, box_style
 from process.core.io.plot.summary.geometry.poloidal import plot_blanket, plot_firstwall
 from process.core.io.plot.summary.plasma.physics import plot_plasma
 from process.core.io.plot.summary.reporting.layouts import draw_bend
@@ -77,7 +77,6 @@ def plot_blkt_pipe_bends(fig, m_file, scan: int):
 
 def plot_blkt_structure(
     ax: plt.Axes,
-    fig: plt.Figure,
     m_file: MFile,
     scan: int,
     radial_build: dict[str, float],
@@ -355,13 +354,7 @@ def plot_blkt_structure(
         " $\\text{m}^2$ "
     )
 
-    ax.text(
-        0.05,
-        0.3,
-        textstr_blkt_areas,
-        **text_layout(fig),
-        bbox=box_style("wheat"),
-    )
+    add_panel(ax, 0.05, 0.48, 0.29, 0.19, textstr_blkt_areas, box_style("wheat"))
 
     textstr_blkt_volumes = (
         "$\\mathbf{Blanket \\ Volumes:}$\n\nInboard blanket, with holes and"
@@ -379,10 +372,4 @@ def plot_blkt_structure(
         " $\\text{m}^3$ "
     )
 
-    ax.text(
-        0.05,
-        0.05,
-        textstr_blkt_volumes,
-        **text_layout(fig),
-        bbox=box_style("wheat"),
-    )
+    add_panel(ax, 0.05, 0.25, 0.29, 0.19, textstr_blkt_volumes, box_style("wheat"))
