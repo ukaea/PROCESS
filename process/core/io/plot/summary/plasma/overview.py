@@ -520,7 +520,7 @@ def plot_main_plasma_information(
     add_symbol(axis, "$Z$", 0.815, 0.29)
     add_symbol(axis, "$I_{\\text{p}}$", 0.93, 0.90)
     add_symbol(axis, "$B$", 0.75, 0.12)
-    add_symbol(axis, "$\\gamma$", 0.705, 0.78)
+    add_symbol(axis, "$\\gamma$", 0.715, 0.78)
 
     add_panel(
         axis,
@@ -551,7 +551,7 @@ def plot_main_plasma_information(
     add_panel(axis, 0.805, 0.335, 0.170, 0.310, text_ions, ion_box, text_x_offset=0.045)
     add_panel(axis, 0.720, 0.975, 0.255, 0.130, text_currents, box_style("#C8A2C8"))
     add_panel(axis, 0.5325, 0.140, 0.2575, 0.115, text_fields, box_style("royalblue"))
-    add_panel(axis, 0.70, 0.830, 0.275, 0.145, text_rad, rad_box, text_x_offset=0.032)
+    add_panel(axis, 0.71, 0.830, 0.265, 0.145, text_rad, rad_box, text_x_offset=0.03)
     add_panel(axis, 0.220, 0.400, 0.110, 0.080, text_lh, box_style("peachpuff"))
     add_panel(axis, 0.220, 0.310, 0.130, 0.075, text_density_limit, box_style("pink"))
 
