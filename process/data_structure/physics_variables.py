@@ -616,6 +616,57 @@ class PhysicsData:
     m_plasma: float = 0.0
     """Total mass of the plasma (kg)"""
 
+    n_plasma_electrons: int = 0
+    """Number of electrons in the plasma"""
+
+    n_plasma_deuterons: int = 0
+    """Number of deuterons in the plasma"""
+
+    n_plasma_tritons: int = 0
+    """Number of tritons in the plasma"""
+
+    n_plasma_helions: int = 0
+    """Number of helions in the plasma"""
+
+    n_plasma_alpha_particles: int = 0
+    """Number of alpha particles in the plasma"""
+
+    n_plasma_beryllium_ions: int = 0
+    """Number of beryllium ions in the plasma"""
+
+    n_plasma_carbon_ions: int = 0
+    """Number of carbon ions in the plasma"""
+
+    n_plasma_oxygen_ions: int = 0
+    """Number of oxygen ions in the plasma"""
+
+    n_plasma_nitrogen_ions: int = 0
+    """Number of nitrogen ions in the plasma"""
+
+    n_plasma_neon_ions: int = 0
+    """Number of neon ions in the plasma"""
+
+    n_plasma_argon_ions: int = 0
+    """Number of argon ions in the plasma"""
+
+    n_plasma_silicon_ions: int = 0
+    """Number of silicon ions in the plasma"""
+
+    n_plasma_iron_ions: int = 0
+    """Number of iron ions in the plasma"""
+
+    n_plasma_nickel_ions: int = 0
+    """Number of nickel ions in the plasma"""
+
+    n_plasma_krypton_ions: int = 0
+    """Number of krypton ions in the plasma"""
+
+    n_plasma_xenon_ions: int = 0
+    """Number of xenon ions in the plasma"""
+
+    n_plasma_tungsten_ions: int = 0
+    """Number of tungsten ions in the plasma"""
+
     alphaj: float = 1.0
     """Plasma current profile index (⍺ⱼ)"""  # noqa: RUF001
 
