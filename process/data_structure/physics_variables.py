@@ -613,6 +613,51 @@ class PhysicsData:
     m_plasma_electron: float = 0.0
     """Mass of the electrons in the plasma (kg)"""
 
+    m_plasma_deuterons: float = 0.0
+    """Mass of the deuterons in the plasma (kg)"""
+
+    m_plasma_tritons: float = 0.0
+    """Mass of the tritons in the plasma (kg)"""
+
+    m_plasma_helions: float = 0.0
+    """Mass of the helions in the plasma (kg)"""
+
+    m_plasma_beryllium: float = 0.0
+    """Mass of the beryllium ions in the plasma (kg)"""
+
+    m_plasma_carbon: float = 0.0
+    """Mass of the carbon ions in the plasma (kg)"""
+
+    m_plasma_oxygen: float = 0.0
+    """Mass of the oxygen ions in the plasma (kg)"""
+
+    m_plasma_nitrogen: float = 0.0
+    """Mass of the nitrogen ions in the plasma (kg)"""
+
+    m_plasma_neon: float = 0.0
+    """Mass of the neon ions in the plasma (kg)"""
+
+    m_plasma_argon: float = 0.0
+    """Mass of the argon ions in the plasma (kg)"""
+
+    m_plasma_silicon: float = 0.0
+    """Mass of the silicon ions in the plasma (kg)"""
+
+    m_plasma_iron: float = 0.0
+    """Mass of the iron ions in the plasma (kg)"""
+
+    m_plasma_nickel: float = 0.0
+    """Mass of the nickel ions in the plasma (kg)"""
+
+    m_plasma_krypton: float = 0.0
+    """Mass of the krypton ions in the plasma (kg)"""
+
+    m_plasma_xenon: float = 0.0
+    """Mass of the xenon ions in the plasma (kg)"""
+
+    m_plasma_tungsten: float = 0.0
+    """Mass of the tungsten ions in the plasma (kg)"""
+
     m_plasma: float = 0.0
     """Total mass of the plasma (kg)"""
 
