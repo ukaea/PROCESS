@@ -225,6 +225,9 @@ class FWBSData:
     nflutf: float = 0.0
     """peak fast neutron fluence on TF coil superconductor [n m^-2] """
 
+    tf_wp_fluence: float = 0.0
+    """fast neutron fluence on inboard TF superconducting winding pack [n/m^2]"""
+
     npdiv: int = 2
     """number of divertor ports """
 

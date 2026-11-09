@@ -50,6 +50,8 @@ Source        = "https://github.com/ukaea/process"
 Documentation = "https://ukaea.github.io/PROCESS"
 Issues        = "https://github.com/ukaea/process/issues"
 
+
+
 [project.optional-dependencies]
 test = [
   "pytest>=5.4.1",
@@ -60,6 +62,11 @@ test = [
   "filelock",
   "process[examples]"
 ]
+# openmc = [
+#     "openmc@git+https://git@github.com/je-cook/openmc-meson-install.git",
+#     "rich",
+#     "openmc_data==2.4.0",
+# ]
 examples = ["jupyter==1.1.1", "jupytext"]
 plotly = ["plotly>=5.15,<7"]
 docs = [

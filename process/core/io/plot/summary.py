@@ -1,6 +1,7 @@
 """PROCESS plot_summary"""
 
 import json
+import math
 import textwrap
 from dataclasses import dataclass
 from importlib import resources
@@ -347,6 +348,31 @@ def cumulative_radial_build2(section, mfile: MFile, scan: int):
             break
     previous = cumulative_build - build
     return (cumulative_build, previous)
+
+
+def plot_fluence_profile(axis: plt.Axes, mfile: MFile, scan: int):
+    """Plots the inboard neutron fluence"""
+    xlist = []
+    flist = []
+    for i in range(int(mfile.get("no_ib_comp", scan=scan)) - 1):
+        xlist += [mfile.get(f"ib_r_comp{i}", scan=scan)]
+        print(mfile.get(f"ib_r_comp{i}", scan=scan))
+        flist += [mfile.get(f"ib_fluence_comp{i}", scan=scan)]
+        print(mfile.get(f"ib_fluence_comp{i}", scan=scan))
+    axis.plot(xlist, flist, color="black")
+    xlist = []
+    flist = []
+    for i in range(int(mfile.get("no_ob_comp", scan=scan))):
+        xlist += [mfile.get(f"ob_r_comp{i}", scan=scan)]
+        flist += [mfile.get(f"ob_fluence_comp{i}", scan=scan)]
+    axis.plot(xlist, flist, color="black")
+    axis.set_ylabel("Fluence [n/cm^2]")
+    axis.set_title("Neutron fluence across the radial build")
+    power = math.floor(math.log10(abs(max(flist))))
+    ticks = [10**i for i in range(1, int(power) + 1, 2)]
+    axis.set_yticks(ticks)
+    axis.set_yscale("log")
+    axis.set_ylim(1, 1.5 * max(flist))
 
 
 def poloidal_cross_section(
@@ -9520,7 +9546,7 @@ def plot_radial_build(axis: plt.Axes, mfile: MFile, colour_scheme: Literal[1, 2]
             0,
             radial_build[kk, :],
             left=lower,
-            height=0.8,
+            height=1e25,
             label=f"{radial_labels[kk]}\n[{radial_variables[kk]}]\n{radial_build[kk][0]:.3f} m",
             color=radial_color[kk],
             edgecolor="black",
@@ -15630,26 +15656,26 @@ def main_plot(
             plot_205 = figs[25].add_subplot(223, aspect="equal")
             plot_205.set_position([0.075, 0.1, 0.3, 0.3])
             plot_cable_in_conduit_cable(plot_205, figs[25], m_file, scan)
-            plot_quench_time_evolution(
-                tau_discharge=m_file.get("t_tf_superconductor_quench", scan=scan),
-                b_peak=m_file.get("b_tf_inboard_peak_with_ripple", scan=scan),
-                f_a_cable_copper=m_file.get("f_a_tf_turn_cable_copper", scan=scan),
-                f_a_cable_space_helium=m_file.get(
-                    "f_a_tf_turn_cable_space_cooling", scan=scan
-                ),
-                temp_he_peak=m_file.get("tftmp", scan=scan),
-                temp_quench_max=m_file.get("temp_tf_conductor_quench_max", scan=scan),
-                cu_rrr=m_file.get("rrr_tf_cu", scan=scan),
-                t_quench_detection=m_file.get("t_tf_quench_detection", scan=scan),
-                fluence=m_file.get("nflutfmax", scan=scan),
-                j_operating=m_file.get("j_tf_wp", scan=scan),
-                a_tf_turn_cable_space=m_file.get(
-                    "a_tf_turn_cable_space_no_void", scan=scan
-                ),
-                a_tf_turn=m_file.get("a_tf_turn", scan=scan),
-                axes_1=figs[26].add_subplot(211),
-                axes_2=figs[26].add_subplot(212),
-            )
+            # plot_quench_time_evolution(
+            #     tau_discharge=m_file.get("t_tf_superconductor_quench", scan=scan),
+            #     b_peak=m_file.get("b_tf_inboard_peak_with_ripple", scan=scan),
+            #     f_a_cable_copper=m_file.get("f_a_tf_turn_cable_copper", scan=scan),
+            #     f_a_cable_space_helium=m_file.get(
+            #         "f_a_tf_turn_cable_space_cooling", scan=scan
+            #     ),
+            #     temp_he_peak=m_file.get("tftmp", scan=scan),
+            #     temp_quench_max=m_file.get("temp_tf_conductor_quench_max", scan=scan),
+            #     cu_rrr=m_file.get("rrr_tf_cu", scan=scan),
+            #     t_quench_detection=m_file.get("t_tf_quench_detection", scan=scan),
+            #     fluence=m_file.get("nflutfmax", scan=scan),
+            #     j_operating=m_file.get("j_tf_wp", scan=scan),
+            #     a_tf_turn_cable_space=m_file.get(
+            #         "a_tf_turn_cable_space_no_void", scan=scan
+            #     ),
+            #     a_tf_turn=m_file.get("a_tf_turn", scan=scan),
+            #     axes_1=figs[26].add_subplot(211),
+            #     axes_2=figs[26].add_subplot(212),
+            # )
     else:
         ax19 = figs[24].add_subplot(211, aspect="equal")
         ax19.set_position([0.06, 0.55, 0.675, 0.4])
@@ -15711,6 +15737,11 @@ def main_plot(
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
     plot_system_power_profiles_over_time(ax24, m_file, scan, figs[36])
+
+    ax25 = figs[37].add_subplot(111)
+    ax25.set_position([0.1, 0.33, 0.8, 0.6])
+    plot_radial_build(ax25, m_file, colour_scheme)
+    plot_fluence_profile(ax25, m_file, scan=scan)
 
 
 def create_thickness_builds(m_file, scan: int):
@@ -15816,7 +15847,7 @@ def plot_summary(
 
     # create main plot
     # Increase range when adding new page
-    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(37)]
+    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(38)]
 
     # run main_plot
     mfile_obj = MFile(mfile) if mfile != "" else MFile("MFILE.DAT")

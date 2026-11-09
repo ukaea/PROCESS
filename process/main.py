@@ -39,6 +39,7 @@ Box file F/MI/PJK/PROCESS and F/PL/PJK/PROCESS (15/01/96 to 24/01/12)
 Box file T&amp;M/PKNIGHT/PROCESS (from 24/01/12)
 """
 
+import json
 import logging
 from pathlib import Path
 
@@ -54,6 +55,7 @@ from process.core.io.vary_run import RunProcessConfig, vary_iteration_variables
 from process.core.log import logging_model_handler, show_errors
 from process.core.model import DataStructure, Model
 from process.core.process_output import OutputFileManager, oheadr
+from process.core.repository import get_process_root
 from process.core.scan import Scan
 from process.data_structure.numerics import PROCESSRunMode
 from process.models.availability import Availability
@@ -67,6 +69,7 @@ from process.models.costs.costs_2015 import Costs2015
 from process.models.cryostat import Cryostat
 from process.models.cs_fatigue import CsFatigue
 from process.models.divertor import Divertor
+from process.models.engineering.radial_build_neutronics import RadialBuildNeutronics
 from process.models.fw import FirstWall
 from process.models.ife import IFE
 from process.models.pfcoil import CSCoil, PFCoil
@@ -698,6 +701,17 @@ class Models:
         )
 
         self.dcll = DCLL(fw=self.fw)
+        data_dir = get_process_root() / "../examples/data/"
+        file_path = data_dir / "radial_build_component_properties.json"
+        path = Path(file_path)
+        with open(path, "rb") as f:
+            shielding_components = json.load(f)
+        self.ib_shielding = RadialBuildNeutronics(
+            ib=True, component_dict=shielding_components
+        )
+        self.ob_shielding = RadialBuildNeutronics(
+            ib=False, component_dict=shielding_components
+        )
         self.setup_data_structure()
 
     @property
@@ -739,6 +753,8 @@ class Models:
             self.ccfe_hcpb,
             self.fw,
             self.dcll,
+            self.ib_shielding,
+            self.ob_shielding,
             self.blanket_library,
             self.cryostat,
             self.sctfcoil,

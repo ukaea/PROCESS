@@ -1954,6 +1954,8 @@ class Build(Model):
             i_tf_wp_geom=self.data.tfcoil.i_tf_wp_geom,
         )
 
+        self.data.build.radial_build = self.cumulative_radial_build()
+
         if output:
             #  Print out device build
 
@@ -2030,260 +2032,7 @@ class Build(Model):
                     "(Bore hollow space has been filled with a solid metal cyclinder to act as wedge support)\n",
                 )
 
-            # an array that holds the following information
-            # description, variable name, thickness, radius
-            radial_build_data = []
-
-            radius = 0.0e0
-            radial_build_data.append(["Device centreline", None, 0.0, radius])
-            if (
-                self.data.build.i_tf_inside_cs == 1
-                and self.data.tfcoil.i_tf_bucking >= 2
-            ):
-                radius += self.data.build.dr_bore
-
-                radial_build_data.append([
-                    "Machine dr_bore wedge support cylinder",
-                    "dr_bore",
-                    self.data.build.dr_bore,
-                    radius,
-                ])
-            elif (
-                self.data.build.i_tf_inside_cs == 1 and self.data.tfcoil.i_tf_bucking < 2
-            ):
-                radius += self.data.build.dr_bore
-                radial_build_data.append([
-                    "Machine dr_bore hole",
-                    "dr_bore",
-                    self.data.build.dr_bore,
-                    radius,
-                ])
-            else:
-                radius += self.data.build.dr_bore
-                radial_build_data.append([
-                    "Machine dr_bore",
-                    "dr_bore",
-                    self.data.build.dr_bore,
-                    radius,
-                ])
-            if self.data.build.i_tf_inside_cs == 1:
-                radius += self.data.build.dr_tf_inboard
-                radial_build_data.append([
-                    "TF coil inboard leg (in dr_bore)",
-                    "dr_tf_inboard",
-                    self.data.build.dr_tf_inboard,
-                    radius,
-                ])
-
-                radius += self.data.build.dr_cs_tf_gap
-                radial_build_data.append([
-                    "CS precompresion to TF coil radial gap",
-                    "dr_cs_tf_gap",
-                    self.data.build.dr_cs_tf_gap,
-                    radius,
-                ])
-
-            radius += self.data.build.dr_cs
-            radial_build_data.append([
-                "Central solenoid",
-                "dr_cs",
-                self.data.build.dr_cs,
-                radius,
-            ])
-
-            radius += self.data.build.dr_cs_precomp
-            radial_build_data.append([
-                "CS precompression",
-                "dr_cs_precomp",
-                self.data.build.dr_cs_precomp,
-                radius,
-            ])
-            if self.data.build.i_tf_inside_cs == 0:
-                radius += self.data.build.dr_cs_tf_gap
-                radial_build_data.append([
-                    "CS precompresion to TF coil radial gap",
-                    "dr_cs_tf_gap",
-                    self.data.build.dr_cs_tf_gap,
-                    radius,
-                ])
-
-                radius += self.data.build.dr_tf_inboard
-                radial_build_data.append([
-                    "TF coil inboard leg",
-                    "dr_tf_inboard",
-                    self.data.build.dr_tf_inboard,
-                    radius,
-                ])
-
-            radius += self.data.build.dr_tf_shld_gap
-            radial_build_data.append([
-                "TF coil inboard leg insulation gap",
-                "dr_tf_shld_gap",
-                self.data.build.dr_tf_shld_gap,
-                radius,
-            ])
-
-            radius += self.data.build.dr_shld_thermal_inboard
-            radial_build_data.append([
-                "Thermal shield, inboard",
-                "dr_shld_thermal_inboard",
-                self.data.build.dr_shld_thermal_inboard,
-                radius,
-            ])
-
-            radius += self.data.build.dr_shld_vv_gap_inboard
-            radial_build_data.append([
-                "Thermal shield to vessel radial gap",
-                "dr_shld_vv_gap_inboard",
-                self.data.build.dr_shld_vv_gap_inboard,
-                radius,
-            ])
-
-            radius += self.data.build.dr_vv_inboard
-            radial_build_data.append([
-                "Inboard vacuum vessel",
-                "dr_vv_inboard",
-                self.data.build.dr_vv_inboard,
-                radius,
-            ])
-
-            radius += self.data.build.dr_shld_inboard
-            radial_build_data.append([
-                "Inner radiation shield",
-                "dr_shld_inboard",
-                self.data.build.dr_shld_inboard,
-                radius,
-            ])
-
-            radius += self.data.build.dr_shld_blkt_gap
-            radial_build_data.append([
-                "Gap",
-                "dr_shld_blkt_gap",
-                self.data.build.dr_shld_blkt_gap,
-                radius,
-            ])
-
-            radius += self.data.build.dr_blkt_inboard
-            radial_build_data.append([
-                "Inboard blanket",
-                "dr_blkt_inboard",
-                self.data.build.dr_blkt_inboard,
-                radius,
-            ])
-
-            radius += self.data.build.dr_fw_inboard
-            radial_build_data.append([
-                "Inboard first wall",
-                "dr_fw_inboard",
-                self.data.build.dr_fw_inboard,
-                radius,
-            ])
-
-            radius += self.data.build.dr_fw_plasma_gap_inboard
-            radial_build_data.append([
-                "Inboard scrape-off",
-                "dr_fw_plasma_gap_inboard",
-                self.data.build.dr_fw_plasma_gap_inboard,
-                radius,
-            ])
-
-            radius += self.data.physics.rminor
-            radial_build_data.append([
-                "Plasma geometric centre",
-                "rminor",
-                self.data.physics.rminor,
-                radius,
-            ])
-
-            radius += self.data.physics.rminor
-            radial_build_data.append([
-                "Plasma outboard edge",
-                "rminor",
-                self.data.physics.rminor,
-                radius,
-            ])
-
-            radius += self.data.build.dr_fw_plasma_gap_outboard
-            radial_build_data.append([
-                "Outboard scrape-off",
-                "dr_fw_plasma_gap_outboard",
-                self.data.build.dr_fw_plasma_gap_outboard,
-                radius,
-            ])
-
-            radius += self.data.build.dr_fw_outboard
-            radial_build_data.append([
-                "Outboard first wall",
-                "dr_fw_outboard",
-                self.data.build.dr_fw_outboard,
-                radius,
-            ])
-
-            radius += self.data.build.dr_blkt_outboard
-            radial_build_data.append([
-                "Outboard blanket",
-                "dr_blkt_outboard",
-                self.data.build.dr_blkt_outboard,
-                radius,
-            ])
-
-            radius += self.data.build.dr_shld_blkt_gap
-            radial_build_data.append([
-                "Gap",
-                "dr_shld_blkt_gap",
-                self.data.build.dr_shld_blkt_gap,
-                radius,
-            ])
-
-            radius += self.data.build.dr_shld_outboard
-            radial_build_data.append([
-                "Outer radiation shield",
-                "dr_shld_outboard",
-                self.data.build.dr_shld_outboard,
-                radius,
-            ])
-
-            radius += self.data.build.dr_vv_outboard
-            radial_build_data.append([
-                "Outboard vacuum vessel",
-                "dr_vv_outboard",
-                self.data.build.dr_vv_outboard,
-                radius,
-            ])
-
-            radius += self.data.build.dr_shld_vv_gap_outboard
-            radial_build_data.append([
-                "Vessel to TF gap",
-                "dr_shld_vv_gap_outboard",
-                self.data.build.dr_shld_vv_gap_outboard,
-                radius,
-            ])
-
-            radius += self.data.build.dr_shld_thermal_outboard
-            radial_build_data.append([
-                "Ouboard thermal shield",
-                "dr_shld_thermal_outboard",
-                self.data.build.dr_shld_thermal_outboard,
-                radius,
-            ])
-
-            radius += self.data.build.dr_tf_shld_gap
-            radial_build_data.append([
-                "Gap",
-                "dr_tf_shld_gap",
-                self.data.build.dr_tf_shld_gap,
-                radius,
-            ])
-
-            radius += self.data.build.dr_tf_outboard
-            radial_build_data.append([
-                "TF coil outboard leg",
-                "dr_tf_outboard",
-                self.data.build.dr_tf_outboard,
-                radius,
-            ])
-
-            for description, variable, thickness, radius in radial_build_data:
+            for description, variable, thickness, radius in self.data.build.radial_build:
                 po.obuild(
                     self.outfile,
                     description,
@@ -2295,7 +2044,7 @@ class Build(Model):
             # use manual index to ensure count is contiguous in the event
             # of a `None` variable component
             index = 0
-            for description, variable, thickness, radius in radial_build_data:
+            for description, variable, thickness, radius in self.data.build.radial_build:
                 if variable is None:
                     continue
 
@@ -2334,3 +2083,254 @@ class Build(Model):
                     "(dx_beam_duct)",
                     self.data.current_drive.dx_beam_duct,
                 )
+
+    def cumulative_radial_build(self):
+        """
+        Returns cumulative radial build array
+        """
+        radial_build_data = []
+
+        radius = 0.0e0
+        radial_build_data.append(["Device centreline", None, 0.0, radius])
+        if self.data.build.i_tf_inside_cs == 1 and self.data.tfcoil.i_tf_bucking >= 2:
+            radius += self.data.build.dr_bore
+
+            radial_build_data.append([
+                "Machine dr_bore wedge support cylinder",
+                "dr_bore",
+                self.data.build.dr_bore,
+                radius,
+            ])
+        elif self.data.build.i_tf_inside_cs == 1 and self.data.tfcoil.i_tf_bucking < 2:
+            radius += self.data.build.dr_bore
+            radial_build_data.append([
+                "Machine dr_bore hole",
+                "dr_bore",
+                self.data.build.dr_bore,
+                radius,
+            ])
+        else:
+            radius += self.data.build.dr_bore
+            radial_build_data.append([
+                "Machine dr_bore",
+                "dr_bore",
+                self.data.build.dr_bore,
+                radius,
+            ])
+        if self.data.build.i_tf_inside_cs == 1:
+            radius += self.data.build.dr_tf_inboard
+            radial_build_data.append([
+                "TF coil inboard leg (in dr_bore)",
+                "dr_tf_inboard",
+                self.data.build.dr_tf_inboard,
+                radius,
+            ])
+
+            radius += self.data.build.dr_cs_tf_gap
+            radial_build_data.append([
+                "CS precompresion to TF coil radial gap",
+                "dr_cs_tf_gap",
+                self.data.build.dr_cs_tf_gap,
+                radius,
+            ])
+
+        radius += self.data.build.dr_cs
+        radial_build_data.append([
+            "Central solenoid",
+            "dr_cs",
+            self.data.build.dr_cs,
+            radius,
+        ])
+
+        radius += self.data.build.dr_cs_precomp
+        radial_build_data.append([
+            "CS precompression",
+            "dr_cs_precomp",
+            self.data.build.dr_cs_precomp,
+            radius,
+        ])
+        if self.data.build.i_tf_inside_cs == 0:
+            radius += self.data.build.dr_cs_tf_gap
+            radial_build_data.append([
+                "CS precompresion to TF coil radial gap",
+                "dr_cs_tf_gap",
+                self.data.build.dr_cs_tf_gap,
+                radius,
+            ])
+
+            radius += self.data.build.dr_tf_inboard
+            radial_build_data.append([
+                "TF coil inboard leg",
+                "dr_tf_inboard",
+                self.data.build.dr_tf_inboard,
+                radius,
+            ])
+
+        radius += self.data.build.dr_tf_shld_gap
+        radial_build_data.append([
+            "TF coil inboard leg insulation gap",
+            "dr_tf_shld_gap",
+            self.data.build.dr_tf_shld_gap,
+            radius,
+        ])
+
+        radius += self.data.build.dr_shld_thermal_inboard
+        radial_build_data.append([
+            "Thermal shield, inboard",
+            "dr_shld_thermal_inboard",
+            self.data.build.dr_shld_thermal_inboard,
+            radius,
+        ])
+
+        radius += self.data.build.dr_shld_vv_gap_inboard
+        radial_build_data.append([
+            "Thermal shield to vessel radial gap",
+            "dr_shld_vv_gap_inboard",
+            self.data.build.dr_shld_vv_gap_inboard,
+            radius,
+        ])
+
+        radius += self.data.build.dr_vv_inboard
+        radial_build_data.append([
+            "Inboard vacuum vessel",
+            "dr_vv_inboard",
+            self.data.build.dr_vv_inboard,
+            radius,
+        ])
+
+        radius += self.data.build.dr_shld_inboard
+        radial_build_data.append([
+            "Inner radiation shield",
+            "dr_shld_inboard",
+            self.data.build.dr_shld_inboard,
+            radius,
+        ])
+
+        radius += self.data.build.dr_shld_blkt_gap
+        radial_build_data.append([
+            "Gap",
+            "dr_shld_blkt_gap",
+            self.data.build.dr_shld_blkt_gap,
+            radius,
+        ])
+
+        radius += self.data.build.dr_blkt_inboard
+        radial_build_data.append([
+            "Inboard blanket",
+            "dr_blkt_inboard",
+            self.data.build.dr_blkt_inboard,
+            radius,
+        ])
+
+        radius += self.data.build.dr_fw_inboard
+        radial_build_data.append([
+            "Inboard first wall",
+            "dr_fw_inboard",
+            self.data.build.dr_fw_inboard,
+            radius,
+        ])
+
+        radius += self.data.build.dr_fw_plasma_gap_inboard
+        radial_build_data.append([
+            "Inboard scrape-off",
+            "dr_fw_plasma_gap_inboard",
+            self.data.build.dr_fw_plasma_gap_inboard,
+            radius,
+        ])
+
+        radius += self.data.physics.rminor
+        radial_build_data.append([
+            "Plasma geometric centre",
+            "rminor",
+            self.data.physics.rminor,
+            radius,
+        ])
+
+        radius += self.data.physics.rminor
+        radial_build_data.append([
+            "Plasma outboard edge",
+            "rminor",
+            self.data.physics.rminor,
+            radius,
+        ])
+
+        radius += self.data.build.dr_fw_plasma_gap_outboard
+        radial_build_data.append([
+            "Outboard scrape-off",
+            "dr_fw_plasma_gap_outboard",
+            self.data.build.dr_fw_plasma_gap_outboard,
+            radius,
+        ])
+
+        radius += self.data.build.dr_fw_outboard
+        radial_build_data.append([
+            "Outboard first wall",
+            "dr_fw_outboard",
+            self.data.build.dr_fw_outboard,
+            radius,
+        ])
+
+        radius += self.data.build.dr_blkt_outboard
+        radial_build_data.append([
+            "Outboard blanket",
+            "dr_blkt_outboard",
+            self.data.build.dr_blkt_outboard,
+            radius,
+        ])
+
+        radius += self.data.build.dr_shld_blkt_gap
+        radial_build_data.append([
+            "Gap",
+            "dr_shld_blkt_gap",
+            self.data.build.dr_shld_blkt_gap,
+            radius,
+        ])
+
+        radius += self.data.build.dr_shld_outboard
+        radial_build_data.append([
+            "Outer radiation shield",
+            "dr_shld_outboard",
+            self.data.build.dr_shld_outboard,
+            radius,
+        ])
+
+        radius += self.data.build.dr_vv_outboard
+        radial_build_data.append([
+            "Outboard vacuum vessel",
+            "dr_vv_outboard",
+            self.data.build.dr_vv_outboard,
+            radius,
+        ])
+
+        radius += self.data.build.dr_shld_vv_gap_outboard
+        radial_build_data.append([
+            "Vessel to TF gap",
+            "dr_shld_vv_gap_outboard",
+            self.data.build.dr_shld_vv_gap_outboard,
+            radius,
+        ])
+
+        radius += self.data.build.dr_shld_thermal_outboard
+        radial_build_data.append([
+            "Ouboard thermal shield",
+            "dr_shld_thermal_outboard",
+            self.data.build.dr_shld_thermal_outboard,
+            radius,
+        ])
+
+        radius += self.data.build.dr_tf_shld_gap
+        radial_build_data.append([
+            "Gap",
+            "dr_tf_shld_gap",
+            self.data.build.dr_tf_shld_gap,
+            radius,
+        ])
+
+        radius += self.data.build.dr_tf_outboard
+        radial_build_data.append([
+            "TF coil outboard leg",
+            "dr_tf_outboard",
+            self.data.build.dr_tf_outboard,
+            radius,
+        ])
+        return radial_build_data

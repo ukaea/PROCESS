@@ -1,0 +1,235 @@
+{
+  "FW": {
+    "type": "mixture",
+    "materials": {
+      "water": {
+        "default": false,
+        "elements": "H2O",
+        "density": {
+          "value": 1.0,
+          "unit": "g/cm^3"
+        },
+        "fraction": 0.25
+      },
+      "steel": {
+        "default": false,
+        "elements": {
+          "Fe": 0.70345,
+          "C": 0.0003,
+          "Cr": 0.17,
+          "Ni": 0.105,
+          "Mo": 0.02125,
+          "fraction_type": "mass"
+        },
+        "density": {
+          "value": 8.0,
+          "unit": "g/cm^3"
+        },
+        "fraction": 0.6
+      },
+      "tungsten": {
+        "default": false,
+        "elements": "W",
+        "density": {
+          "value": 19.0,
+          "unit": "g/cm^3"
+        },
+        "fraction": 0.15
+      }
+    }
+  },
+  "BB": {
+    "type": "mixture",
+    "materials": {
+      "water": {
+        "default": false,
+        "elements": "H2O",
+        "density": {
+          "value": 1.0,
+          "unit": "g/cm^3"
+        },
+        "fraction": 0.035
+      },
+      "steel": {
+        "default": false,
+        "elements": {
+          "Fe": 0.70345,
+          "C": 0.0003,
+          "Cr": 0.17,
+          "Ni": 0.105,
+          "Mo": 0.02125,
+          "fraction_type": "mass"
+        },
+        "density": {
+          "value": 8.0,
+          "unit": "g/cm^3"
+        },
+        "fraction": 0.25
+      },
+      "eutectic_lead_lithium": {
+        "default": false,
+        "elements": {
+          "Li": 0.006,
+          "Pb": 0.994,
+          "fraction_type": "mass"
+        },
+        "density": {
+          "value": 10.0,
+          "unit": "g/cm^3"
+        },
+        "fraction": 0.715
+      }
+    }
+  },
+  "RS": {
+    "type": "material",
+    "default": false,
+    "elements": {
+      "W": 0.94,
+      "C": 0.06,
+      "fraction_type": "mass"
+    },
+    "density": {
+      "value": 15.6,
+      "unit": "g/cm^3"
+    }
+  },
+  "VV": {
+    "type": "mixture",
+    "materials": {
+      "water": {
+        "default": false,
+        "elements": "H2O",
+        "density": {
+          "value": 1.0,
+          "unit": "g/cm^3"
+        },
+        "fraction": 0.05
+      },
+      "steel": {
+        "default": false,
+        "elements": {
+          "Fe": 0.70345,
+          "C": 0.0003,
+          "Cr": 0.17,
+          "Ni": 0.105,
+          "Mo": 0.02125,
+          "fraction_type": "mass"
+        },
+        "density": {
+          "value": 8.0,
+          "unit": "g/cm^3"
+        },
+        "fraction": 0.95
+      }
+    }
+  },
+  "TS": {
+    "type": "material",
+    "default": false,
+    "elements": {
+      "Fe": 0.70345,
+      "C": 0.0003,
+      "Cr": 0.17,
+      "Ni": 0.105,
+      "Mo": 0.02125,
+      "fraction_type": "mass"
+    },
+    "density": {
+      "value": 8.0,
+      "unit": "g/cm^3"
+    }
+  },
+  "TF": {
+    "type": "mixture",
+    "materials": {
+      "Copper": {
+        "default": false,
+        "elements": "Cu",
+        "density": {
+          "value": 8.96,
+          "unit": "g/cm^3"
+        },
+        "fraction": 0.1
+      },
+      "Niobium_Tin": {
+        "default": false,
+        "elements": "Nb3Sn",
+        "density": {
+          "value": 5.7,
+          "unit": "g/cm^3"
+        },
+        "fraction": 0.1
+      },
+      "steel": {
+        "default": false,
+        "elements": {
+          "Fe": 0.70345,
+          "C": 0.0003,
+          "Cr": 0.17,
+          "Ni": 0.105,
+          "Mo": 0.02125,
+          "fraction_type": "mass"
+        },
+        "density": {
+          "value": 8.0,
+          "unit": "g/cm^3"
+        },
+        "fraction": 0.8
+      }
+    }
+  },
+  "CS": {
+    "type": "mixture",
+    "materials": {
+      "Copper": {
+        "default": false,
+        "elements": "Cu",
+        "density": {
+          "value": 8.96,
+          "unit": "g/cm^3"
+        },
+        "fraction": 0.1
+      },
+      "Niobium_Tin": {
+        "default": false,
+        "elements": "Nb3Sn",
+        "density": {
+          "value": 5.7,
+          "unit": "g/cm^3"
+        },
+        "fraction": 0.1
+      },
+      "steel": {
+        "default": false,
+        "elements": {
+          "Fe": 0.70345,
+          "C": 0.0003,
+          "Cr": 0.17,
+          "Ni": 0.105,
+          "Mo": 0.02125,
+          "fraction_type": "mass"
+        },
+        "density": {
+          "value": 8.0,
+          "unit": "g/cm^3"
+        },
+        "fraction": 0.8
+      }
+    }
+  },
+  "Gap": {
+    "type": "material",
+    "default": false,
+    "elements": {
+      "N": 0.755,
+      "O": 0.232,
+      "Ar": 0.013,
+      "fraction_type": "mass"
+    },
+    "density": {
+      "value": 0.001225,
+      "unit": "g/cm^3"
+    }
+  }
+}

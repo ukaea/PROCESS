@@ -182,6 +182,7 @@ class ScanVariables(Enum):
     )
     fcoolcp = ScanVariable("fcoolcp", "Coolant fraction of TF", 80)
     n_tf_coil_turns = ScanVariable("n_tf_coil_turns", "Number of turns in TF", 81)
+    dr_vv_inboard = ScanVariable("dr_vv_inboard", "radial thickness of inboard VV", 82)
 
 
 class Scan:
@@ -1243,6 +1244,8 @@ class Scan:
                 self.data.tfcoil.fcoolcp = swp[iscn - 1]
             case 81:
                 self.data.tfcoil.n_tf_coil_turns = swp[iscn - 1]
+            case 82:
+                self.data.build.dr_vv_inboard = swp[iscn - 1]
             case _:
                 raise ProcessValueError("Illegal scan variable number", nwp=nwp)
 

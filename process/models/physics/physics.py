@@ -493,7 +493,8 @@ class Physics(Model):
             self.data.current_drive.f_c_plasma_pfirsch_schluter = (
                 self.data.current_drive.f_c_plasma_pfirsch_schluter_scene
             )
-
+        # import pdb
+        # pdb.set_trace()
         self.plasma_bootstrap_current.run()
 
         self.data.physics.err242 = 0
@@ -809,6 +810,8 @@ class Physics(Model):
             self.data.physics.kappa95,
         )
 
+        # import pdb
+        # pdb.set_trace()
         self.density_limit.run()
 
         # Calculate transport losses and energy confinement time using the

@@ -1,0 +1,34 @@
+{
+  "FW": {
+    "type": "cross_section",
+    "sigma": 0.16
+  },
+  "BB": {
+    "type": "cross_section",
+    "sigma": 0.18
+  },
+  "RS": {
+    "type": "cross_section",
+    "sigma": 0.2
+  },
+  "VV": {
+    "type": "cross_section",
+    "sigma": 0.15
+  },
+  "TS": {
+    "type": "cross_section",
+    "sigma": 0.17
+  },
+  "TF": {
+    "type": "cross_section",
+    "sigma": 0.12
+  },
+  "CS": {
+    "type": "cross_section",
+    "sigma": 0.12
+  },
+  "Gap": {
+    "type": "cross_section",
+    "sigma": 0.04
+  }
+}

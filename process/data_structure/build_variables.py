@@ -311,6 +311,11 @@ class BuildData:
     the ripple calculation, else 0
     """
 
+    radial_build: list[float] = None
+    """Output for the radial build. Includes the label,
+    component thickness and cumulative radial value.
+    """
+
     i_blkt_inboard: int = 1
     """Switch for inboard blanket, controlled through InboardBlanketConfiguration enum:
     - =0 No inboard blanket (dr_blkt_inboard=0.0)

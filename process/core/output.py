@@ -64,6 +64,10 @@ def write(models, data, _outfile):
     # Machine Build Model
     models.build.output()
 
+    # Shielding Model
+    models.ib_shielding.output()
+    models.ob_shielding.output()
+
     # Cryostat build
     models.cryostat.output()
 

@@ -378,6 +378,10 @@ class Caller:
         # Availability model
         self.models.availability.run()
 
+        # Shielding model
+        self.models.ib_shielding.run()
+        self.models.ob_shielding.run()
+
         # Water usage in secondary cooling system
         self.models.water_use.run()
 
