@@ -210,7 +210,7 @@ def plot_system_power_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int
         0.075,
         0.225,
         0.34,
-        0.175,
+        0.09,
         textstr_energy,
         box_style("grey"),
     )

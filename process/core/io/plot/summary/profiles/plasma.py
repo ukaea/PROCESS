@@ -290,9 +290,10 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
         -0.05,
         -0.175,
         1.01,
-        0.35,
+        0.525,
         textstr_density,
         box_style("wheat", alpha=0.5, linewidth=None),
+        linespacing=1.75,
         transform=ax_impurity.transAxes,
     )
 
@@ -329,9 +330,10 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
         1.20,
         0.34,
         0.58,
-        0.27,
+        0.325,
         textstr_ions,
         {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5},
+        linespacing=1.5,
         transform=ax_impurity.transAxes,
     )
 
@@ -391,7 +393,7 @@ def plot_jprofile(prof, mfile: MFile, scan: int):
         0.65,
         1.60,
         0.43,
-        0.31,
+        0.32,
         textstr_j,
         props_j,
         transform=prof.transAxes,
@@ -399,7 +401,7 @@ def plot_jprofile(prof, mfile: MFile, scan: int):
 
     prof.text(
         0.35,
-        0.04,
+        0.045,
         "*Current profile is assumed to be parabolic",
         fontsize=10,
         ha="left",
@@ -407,7 +409,7 @@ def plot_jprofile(prof, mfile: MFile, scan: int):
     )
     prof.text(
         0.35,
-        0.02,
+        0.025,
         "*Bootstrap profile is for representation only",
         fontsize=10,
         ha="left",
@@ -563,9 +565,10 @@ def plot_t_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
         -0.1,
         -0.125,
         1.25,
-        0.24,
+        0.325,
         textstr_temperature,
         props_temperature,
+        linespacing=1.75,
         transform=prof.transAxes,
     )
     prof.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
@@ -613,7 +616,7 @@ def plot_qprofile(prof, demo_ranges: bool, mfile: MFile, scan: int):
         prof.set_ylim(0, q95 * 1.2)
 
     prof.text(
-        0.6,
+        0.675,
         0.04,
         "*Profile is not calculated, only $q_0$ and $q_{95}$ are known.",
         fontsize=10,
@@ -635,7 +638,7 @@ def plot_qprofile(prof, demo_ranges: bool, mfile: MFile, scan: int):
         0.00,
         1.40,
         0.75,
-        0.14,
+        0.15,
         textstr_q,
         props_q,
         transform=prof.transAxes,
@@ -859,7 +862,7 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, mfile: MFile, scan: int):
         f" {mfile.get('f_dd_branching_trit', scan=scan):.4f}"
     )
 
-    add_panel(axis, 0.05, 0.7, 0.42, 0.08, textstr_dd, box_style("lightyellow"))
+    add_panel(axis, 0.05, 0.7, 0.42, 0.07, textstr_dd, box_style("lightyellow"))
     add_symbol(axis, "$\\text{D - D}$", 0.38, 0.68)
 
     # =================================================
@@ -893,7 +896,7 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, mfile: MFile, scan: int):
         f" {mfile.get('f_pden_alpha_ions_mw', scan=scan):.4e} MW/m³"
     )
 
-    add_panel(axis, 0.05, 0.42, 0.38, 0.220, textstr_alpha, box_style("red"))
+    add_panel(axis, 0.05, 0.42, 0.38, 0.20, textstr_alpha, box_style("red"))
     add_symbol(axis, "$\\alpha$", 0.34, 0.4)
 
     # =================================================
