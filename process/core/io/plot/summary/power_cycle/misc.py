@@ -1381,7 +1381,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     # Recirculated power to cryo plant arrow
     axis.annotate(
         "",
-        xy=(0.525, 0.075),
+        xy=(0.525, 0.08),
         xytext=(0.525, 0.1625),
         xycoords=fig.transFigure,
         arrowprops={
@@ -1405,7 +1405,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     # # Recirculated power to tritium plant arrow
     axis.annotate(
         "",
-        xy=(0.44, 0.075),
+        xy=(0.44, 0.08),
         xytext=(0.44, 0.1625),
         xycoords=fig.transFigure,
         arrowprops={
@@ -1459,7 +1459,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     # TF coil power box
     axis.text(
         0.325,
-        0.075,
+        0.05,
         f"TF coils:\n{mfile.get('p_tf_electric_supplies_mw', scan=scan):.3f} MWe",
         **text_layout(fig),
         bbox=box_style("burlywood", alpha=0.8),
@@ -1492,7 +1492,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     # Recirculated power to  PF
     axis.annotate(
         "",
-        xy=(0.28, 0.075),
+        xy=(0.28, 0.08),
         xytext=(0.28, 0.1625),
         xycoords=fig.transFigure,
         arrowprops={
@@ -1507,7 +1507,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     # Recirculated power to TF
     axis.annotate(
         "",
-        xy=(0.35, 0.1),
+        xy=(0.35, 0.08),
         xytext=(0.35, 0.1625),
         xycoords=fig.transFigure,
         arrowprops={

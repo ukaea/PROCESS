@@ -124,7 +124,7 @@ def plot_line_brem_power_density_profile(
     axis.text(
         0.02,
         0.02,
-        rf"$f_{{\text{{core,reduce}}}}$ =  {1.0}\n"
+        f"$f_{{\text{{core,reduce}}}}$ =  {1.0}\n"
         rf"$\rho_{{\text{{core}}}}$ =  {core_radius:.3f}",
         transform=axis.transAxes,
         fontsize=8,

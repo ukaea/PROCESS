@@ -459,7 +459,7 @@ def plot_main_plasma_information(
     rc_rp = "\n".join(
         textwrap.wrap(
             "Reduced Core radiation power: "
-            f"{value('p_plasma_core_rad_reduced_mw'):.4f} MW\n",
+            f"{value('p_plasma_core_rad_reduced_mw'):.4f} MW",
             width=40,
         )
     )
@@ -469,7 +469,7 @@ def plot_main_plasma_information(
         f"Total radiation power: {value('p_plasma_rad_mw'):.4f} MW\n"
         f"Separatrix radiation fraction: {value('f_p_plasma_separatrix_rad'):.4f}\n"
         + rc_rp
-        + f"   - $f_{{\\text{{core,reduce}}}}$: "
+        + f"\n   - $f_{{\\text{{core,reduce}}}}$: "
         f"{value('f_p_plasma_core_rad_reduction'):.4f}\n"
         f"Core radiation power: {value('p_plasma_core_rad_mw'):.4f} MW\n"
         f"Edge radiation power: {value('p_plasma_edge_rad_mw'):.4f} MW\n"
@@ -520,20 +520,38 @@ def plot_main_plasma_information(
     add_symbol(axis, "$Z$", 0.815, 0.29)
     add_symbol(axis, "$I_{\\text{p}}$", 0.93, 0.90)
     add_symbol(axis, "$B$", 0.75, 0.12)
-    add_symbol(axis, "$\\gamma$", 0.725, 0.78)
+    add_symbol(axis, "$\\gamma$", 0.705, 0.78)
 
-    add_panel(axis, 0.365, 0.975, 0.340, 0.110, text_plasma, box_style("lightyellow"))
-    add_panel(axis, 0.730, 0.675, 0.245, 0.300, text_hcd, box_style("paleturquoise"))
+    add_panel(
+        axis,
+        0.365,
+        0.975,
+        0.340,
+        0.110,
+        text_plasma,
+        box_style("lightyellow"),
+        linespacing=1.25,
+    )
+    add_panel(
+        axis,
+        0.730,
+        0.675,
+        0.245,
+        0.32,
+        text_hcd,
+        box_style("paleturquoise"),
+        linespacing=1.25,
+    )
     add_panel(axis, 0.025, 0.975, 0.325, 0.180, text_beta, box_style("lightblue"))
     add_panel(axis, 0.025, 0.780, 0.335, 0.195, text_volt_sec, box_style("lightgreen"))
-    add_panel(axis, 0.350, 0.120, 0.165, 0.095, text_div, box_style("orange"))
+    add_panel(axis, 0.350, 0.120, 0.165, 0.09, text_div, box_style("orange"))
     add_panel(axis, 0.025, 0.570, 0.325, 0.155, text_confinement, box_style("gainsboro"))
     add_panel(axis, 0.025, 0.400, 0.185, 0.165, text_reactions, box_style("red", 0.6))
-    add_panel(axis, 0.025, 0.220, 0.255, 0.175, text_fuelling, box_style("khaki"))
+    add_panel(axis, 0.025, 0.220, 0.255, 0.16, text_fuelling, box_style("khaki"))
     add_panel(axis, 0.805, 0.335, 0.170, 0.310, text_ions, ion_box, text_x_offset=0.045)
     add_panel(axis, 0.720, 0.975, 0.255, 0.130, text_currents, box_style("#C8A2C8"))
     add_panel(axis, 0.5325, 0.140, 0.2575, 0.115, text_fields, box_style("royalblue"))
-    add_panel(axis, 0.720, 0.830, 0.255, 0.145, text_rad, rad_box, text_x_offset=0.032)
+    add_panel(axis, 0.70, 0.830, 0.275, 0.145, text_rad, rad_box, text_x_offset=0.032)
     add_panel(axis, 0.220, 0.400, 0.110, 0.080, text_lh, box_style("peachpuff"))
     add_panel(axis, 0.220, 0.310, 0.130, 0.075, text_density_limit, box_style("pink"))
 
