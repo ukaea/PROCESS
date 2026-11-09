@@ -11,11 +11,12 @@ from typing import TYPE_CHECKING
 import numpy as np
 from numba import njit
 
-from process.core import constants
 from process.core.data_structure.base import DataStructure
 from process.core.exceptions import ProcessError, ProcessValueError
 from process.data_structure.impurity_radiation_variables import (
     N_IMPURITIY_LOSS_FUNCTION_POINTS,
+    N_ION_SPECIES,
+    IonSpecies,
 )
 from process.models.physics.profiles import calculate_vol_avg_of_profile
 
@@ -52,184 +53,15 @@ def initialise_imprad(data: DataStructure):
 
     This routine initialises the impurity radiation data.
     """
-    errorflag = 0
-
-    f_nd_species_electron = 1.0e0
-
-    #  Hydrogen
-
-    init_imp_element(
-        n_species_index=1,
-        name_label=data.impurity_radiation.imp_label[0],
-        z=1,
-        m_species_amu=constants.M_PROTIUM_AMU,  # 1.00782503223 1H
-        f_nd_species_electron=f_nd_species_electron,
-        len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
-        error=errorflag,
-        data=data,
-    )
-
-    f_nd_species_electron = 0.0e0
-
-    #  Helium
-    init_imp_element(
-        n_species_index=2,
-        name_label=data.impurity_radiation.imp_label[1],
-        z=2,
-        m_species_amu=constants.M_HELIUM_AMU,  # 4.002602 (3He,4He) Average mass
-        f_nd_species_electron=f_nd_species_electron,
-        len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
-        error=errorflag,
-        data=data,
-    )
-
-    #  Beryllium
-    init_imp_element(
-        n_species_index=3,
-        name_label=data.impurity_radiation.imp_label[2],
-        z=4,
-        m_species_amu=constants.M_BERYLLIUM_AMU,  # 9.0121831 9Be
-        f_nd_species_electron=f_nd_species_electron,
-        len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
-        error=errorflag,
-        data=data,
-    )
-
-    #  Carbon
-    init_imp_element(
-        n_species_index=4,
-        name_label=data.impurity_radiation.imp_label[3],
-        z=6,
-        m_species_amu=constants.M_CARBON_AMU,  # 12.0096, (12C,13C,14C) Average mass
-        f_nd_species_electron=f_nd_species_electron,
-        len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
-        error=errorflag,
-        data=data,
-    )
-
-    #  Nitrogen
-    init_imp_element(
-        n_species_index=5,
-        name_label=data.impurity_radiation.imp_label[4],
-        z=7,
-        m_species_amu=constants.M_NITROGEN_AMU,  # 14.00643, (14N,15N) Average mass
-        f_nd_species_electron=f_nd_species_electron,
-        len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
-        error=errorflag,
-        data=data,
-    )
-
-    #  Oxygen
-    init_imp_element(
-        n_species_index=6,
-        name_label=data.impurity_radiation.imp_label[5],
-        z=8,
-        m_species_amu=constants.M_OXYGEN_AMU,  # 15.99903, (16O,17O,18O) Average mass
-        f_nd_species_electron=f_nd_species_electron,
-        len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
-        error=errorflag,
-        data=data,
-    )
-
-    #  Neon
-    init_imp_element(
-        n_species_index=7,
-        name_label=data.impurity_radiation.imp_label[6],
-        z=10,
-        m_species_amu=constants.M_NEON_AMU,  # 20.1797 (20Ne,21Ne,22Ne) Average mass
-        f_nd_species_electron=f_nd_species_electron,
-        len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
-        error=errorflag,
-        data=data,
-    )
-
-    #  Silicon
-    init_imp_element(
-        n_species_index=8,
-        name_label=data.impurity_radiation.imp_label[7],
-        z=14,
-        m_species_amu=constants.M_SILICON_AMU,  # 28.084 (28Si,29Si,30Si) Average mass
-        f_nd_species_electron=f_nd_species_electron,
-        len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
-        error=errorflag,
-        data=data,
-    )
-
-    #  Argon
-    init_imp_element(
-        n_species_index=9,
-        name_label=data.impurity_radiation.imp_label[8],
-        z=18,
-        m_species_amu=constants.M_ARGON_AMU,  # 39.948 (40Ar,36Ar,38Ar) Average mass
-        f_nd_species_electron=f_nd_species_electron,
-        len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
-        error=errorflag,
-        data=data,
-    )
-
-    #  Iron
-    init_imp_element(
-        n_species_index=10,
-        name_label=data.impurity_radiation.imp_label[9],
-        z=26,
-        m_species_amu=constants.M_IRON_AMU,  # 55.845 (56Fe,54Fe,57Fe,58Fe) Average mass
-        f_nd_species_electron=f_nd_species_electron,
-        len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
-        error=errorflag,
-        data=data,
-    )
-
-    #  Nickel
-    init_imp_element(
-        n_species_index=11,
-        name_label=data.impurity_radiation.imp_label[10],
-        z=28,
-        # 58.6934 (58Ni,60Ni,61Ni,62Ni,64Ni) Average mass
-        m_species_amu=constants.M_NICKEL_AMU,
-        f_nd_species_electron=f_nd_species_electron,
-        len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
-        error=errorflag,
-        data=data,
-    )
-
-    #  Krypton
-    init_imp_element(
-        n_species_index=12,
-        name_label=data.impurity_radiation.imp_label[11],
-        z=36,
-        # 83.798 (84Kr,86Kr,82Kr,80Kr,78Kr) Average mass
-        m_species_amu=constants.M_KRYPTON_AMU,
-        f_nd_species_electron=f_nd_species_electron,
-        len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
-        error=errorflag,
-        data=data,
-    )
-
-    #  Xenon
-    init_imp_element(
-        n_species_index=13,
-        name_label=data.impurity_radiation.imp_label[12],
-        z=54,
-        # 131.293 (132Xe,129Xe,131Xe,134Xe,136Xe) Average mass
-        m_species_amu=constants.M_XENON_AMU,
-        f_nd_species_electron=f_nd_species_electron,
-        len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
-        error=errorflag,
-        data=data,
-    )
-
-    #  Tungsten
-    init_imp_element(
-        n_species_index=14,
-        name_label=data.impurity_radiation.imp_label[13],
-        z=74,
-        # 183.84 (184W,186W,182W,183W,180W) Average mass
-        m_species_amu=constants.M_TUNGSTEN_AMU,
-        f_nd_species_electron=f_nd_species_electron,
-        len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
-        error=errorflag,
-        data=data,
-    )
+    for species in IonSpecies:
+        init_imp_element(
+            n_species_index=species,
+            name_label=species.label,
+            f_nd_species_electron=(1.0 if species is IonSpecies.HYDROGEN else 0.0),
+            len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
+            error=0,
+            data=data,
+        )
 
 
 @dataclasses.dataclass
@@ -289,8 +121,6 @@ def read_impurity_file(impurity_file: Path):
 def init_imp_element(
     n_species_index: int,
     name_label: str,
-    z: int,
-    m_species_amu: float,
     f_nd_species_electron: float,
     len_tab: int,
     error: int,
@@ -308,10 +138,6 @@ def init_imp_element(
         Position of species in impurity array
     name_label : str
         Species name
-    z : int
-        Species charge number
-    m_species_amu : float
-        Species atomic mass [amu]
     f_nd_species_electron : float
         Number density / electron density
     len_tab : int
@@ -333,20 +159,18 @@ def init_imp_element(
     if error == 1:
         return
 
-    if n_species_index > len(data.impurity_radiation.impurity_arr_label):
+    if n_species_index not in IonSpecies:
         raise ProcessValueError(
             "Illegal impurity number",
             number=n_species_index,
-            max=len(data.impurity_radiation.impurity_arr_label),
+            max=N_ION_SPECIES,
         )
 
-    data.impurity_radiation.impurity_arr_label[n_species_index - 1] = name_label
-    data.impurity_radiation.impurity_arr_z[n_species_index - 1] = z
-    data.impurity_radiation.m_impurity_amu_array[n_species_index - 1] = m_species_amu
-    data.impurity_radiation.f_nd_impurity_electron_array[n_species_index - 1] = (
+    data.impurity_radiation.impurity_arr_label[n_species_index] = name_label
+    data.impurity_radiation.f_nd_impurity_electron_array[n_species_index] = (
         f_nd_species_electron
     )
-    data.impurity_radiation.impurity_arr_len_tab[n_species_index - 1] = len_tab
+    data.impurity_radiation.impurity_arr_len_tab[n_species_index] = len_tab
 
     if len_tab > N_IMPURITIY_LOSS_FUNCTION_POINTS:
         print(
@@ -394,9 +218,9 @@ def init_imp_element(
             f"Cannot locate Zav for infinite confinement data in {z_file}"
         )
 
-    data.impurity_radiation.temp_impurity_keV_array[n_species_index - 1, :] = Te * 1e-3
-    data.impurity_radiation.pden_impurity_lz_nd_temp_array[n_species_index - 1, :] = lz
-    data.impurity_radiation.impurity_arr_zav[n_species_index - 1, :] = zav
+    data.impurity_radiation.temp_impurity_keV_array[n_species_index, :] = Te * 1e-3
+    data.impurity_radiation.pden_impurity_lz_nd_temp_array[n_species_index, :] = lz
+    data.impurity_radiation.impurity_arr_zav[n_species_index, :] = zav
 
 
 def create_f_rad_core_profile(
@@ -607,39 +431,6 @@ def calculate_impurity_radiation_power_density(
     )
 
 
-def element2index(element: str, data: DataStructure) -> int:
-    """Returns the index of the `element` in the impurity array with
-    a given name
-
-    Parameters
-    ----------
-    element: str :
-        Name of the impurity element [-]
-
-    Returns
-    -------
-    int
-        Index of the element in the impurity array [-]
-
-    Raises
-    ------
-    ProcessValueError
-        If the element is not found in impurity_arr_label
-
-    """
-    try:
-        return (
-            data.impurity_radiation.impurity_arr_label
-            .astype(str)
-            .tolist()
-            .index(element)
-        )
-    except ValueError as e:
-        raise ProcessValueError(
-            f"Element {element} is not found in impurity_arr_label"
-        ) from e
-
-
 class ImpurityRadiation:
     """Calculates the impurity radiation losses for given temperature and
     density profiles. The considers the  total impurity radiation from the core
@@ -716,11 +507,16 @@ class ImpurityRadiation:
         """
         species_powers = {}
         p_plasma_rad_impurities_mw = 0.0
-        for index, label in enumerate(self.data.impurity_radiation.imp_label):
+
+        for species in IonSpecies:
             pden_vol_avg_mw = 0.0
-            if self.data.impurity_radiation.f_nd_impurity_electron_array[index] > 1e-30:
+
+            if (
+                self.data.impurity_radiation.f_nd_impurity_electron_array[species.index]
+                > 1e-30
+            ):
                 pden_profile = calculate_impurity_radiation_power_density(
-                    imp_element_index=index,
+                    imp_element_index=species.index,
                     nd_electron_profile=self.plasma_profile.neprofile.profile_y,
                     temp_electron_profile_kev=self.plasma_profile.teprofile.profile_y,
                     data=self.data,
@@ -731,13 +527,19 @@ class ImpurityRadiation:
                     profile_y=pden_profile,
                     profile_dx=self.plasma_profile.neprofile.profile_dx,
                 )
+
             p_mw = pden_vol_avg_mw * self.data.physics.vol_plasma
-            species_powers[str(label)] = (pden_vol_avg_mw, p_mw)
-            setattr(self.data.physics, SPECIES_POWER_ATTRIBUTES[index], p_mw)
-            # Only add the radiation power of impurity species (excluding H and He)
-            if str(label) not in {"H_", "He"}:
+            species_powers[species.symbol] = (pden_vol_avg_mw, p_mw)
+            setattr(
+                self.data.physics,
+                f"p_plasma_rad_{species.full_name}_mw",
+                p_mw,
+            )
+
+            if species.is_impurity:
                 p_plasma_rad_impurities_mw += p_mw
-        self.data.physics.p_plasma_rad_impurities_mw = p_plasma_rad_impurities_mw
+
+                self.data.physics.p_plasma_rad_impurities_mw = p_plasma_rad_impurities_mw
         return species_powers
 
     def map_imprad_profile(self):

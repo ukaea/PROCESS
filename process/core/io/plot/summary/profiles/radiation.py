@@ -12,7 +12,9 @@ from process.core.io.plot.summary.profiles.misc import (
     profiles_with_pedestal,
     read_imprad_data,
 )
-from process.data_structure.impurity_radiation_variables import ImpurityRadiationData
+from process.data_structure.impurity_radiation_variables import (
+    IonSpecies,
+)
 from process.models.physics.profiles import calculate_profile_shell_contributions
 
 if TYPE_CHECKING:
@@ -59,7 +61,8 @@ def plot_line_brem_power_density_profile(
 
     # find impurity densities
     imp_frac = np.array([
-        mfile.get(f"f_nd_impurity_electrons({i:02d})", scan=scan) for i in range(1, 15)
+        mfile.get(f"f_nd_impurity_electrons({species.index + 1:02d})", scan=scan)
+        for species in IonSpecies
     ])
 
     rho, nd_electron, temp_electron_kev = profiles_with_pedestal(mfile=mfile, scan=scan)
@@ -105,13 +108,15 @@ def plot_line_brem_power_density_profile(
     axis.plot(rho, pden_rad_array[0] * 1.0e-6, label="H")
     axis.plot(rho, pden_rad_array[1] * 1.0e-6, label="He")
     # Plot the remaining impurity contributions if their fraction is significant
-    imp_labels = ImpurityRadiationData().imp_label
-    for ind in range(2, imp_data.shape[0]):
-        if imp_frac[ind] > 1.0e-30:
+    for species in IonSpecies:
+        if not species.is_impurity:
+            continue
+
+        if imp_frac[species.index] > 1.0e-30:
             axis.plot(
                 rho,
-                pden_rad_array[ind] * 1.0e-6,
-                label=imp_labels[ind].replace("_", ""),
+                pden_rad_array[species.index] * 1.0e-6,
+                label=species.symbol,
             )
 
     axis.minorticks_on()
@@ -172,7 +177,8 @@ def plot_line_brem_loss_function_profile(
 
     # find impurity densities
     imp_frac = np.array([
-        mfile.get(f"f_nd_impurity_electrons({i:02d})", scan=scan) for i in range(1, 15)
+        mfile.get(f"f_nd_impurity_electrons({species.index + 1:02d})", scan=scan)
+        for species in IonSpecies
     ])
 
     rho, _, temp_electron_kev = profiles_with_pedestal(mfile, scan)
@@ -206,13 +212,15 @@ def plot_line_brem_loss_function_profile(
     axis.plot(rho, lz[0], label="H")
     axis.plot(rho, lz[1], label="He")
     # Plot the remaining impurities if their fraction is significant
-    impurity_data = ImpurityRadiationData()
-    for ind in range(2, imp_data.shape[0]):
-        if imp_frac[ind] > 1.0e-30:
+    for species in IonSpecies:
+        if not species.is_impurity:
+            continue
+
+        if imp_frac[species.index] > 1.0e-30:
             axis.plot(
                 rho,
-                lz[ind],
-                label=impurity_data.imp_label[ind].replace("_", ""),
+                lz[species.index],
+                label=species.symbol,
             )
     axis.legend(loc="best", ncol=4)
     axis.minorticks_on()
@@ -254,7 +262,8 @@ def plot_line_brem_power_profile(
 
     # find impurity densities
     imp_frac = np.array([
-        mfile.get(f"f_nd_impurity_electrons({i:02d})", scan=scan) for i in range(1, 15)
+        mfile.get(f"f_nd_impurity_electrons({species.index + 1:02d})", scan=scan)
+        for species in IonSpecies
     ])
     vol_plasma = mfile.get("vol_plasma", scan=scan)
     p_plasma_rad_imps_mw = mfile.get("p_plasma_rad_mw", scan=scan) - mfile.get(
@@ -272,19 +281,19 @@ def plot_line_brem_power_profile(
 
     # Intailise the impurity radiation profile
     for temp_point in range(temp_electron_kev.shape[0]):
-        for impurity in range(imp_data.shape[0]):
-            if temp_electron_ev[temp_point] <= imp_data[impurity][0][0]:
-                lz[impurity][temp_point] = imp_data[impurity][0][1]
+        for ion in IonSpecies:
+            if temp_electron_ev[temp_point] <= imp_data[ion.index][0][0]:
+                lz[ion.index][temp_point] = imp_data[ion.index][0][1]
             elif (
                 temp_electron_ev[temp_point]
-                >= imp_data[impurity][imp_data.shape[1] - 1][0]
+                >= imp_data[ion.index][imp_data.shape[1] - 1][0]
             ):
-                lz[impurity][temp_point] = imp_data[impurity][imp_data.shape[1] - 1][1]
+                lz[ion.index][temp_point] = imp_data[ion.index][imp_data.shape[1] - 1][1]
             else:
                 # Use np.interp for log-log interpolation
-                log_te_data = np.log([row[0] for row in imp_data[impurity]])
-                log_lz_data = np.log([row[1] for row in imp_data[impurity]])
-                lz[impurity][temp_point] = np.exp(
+                log_te_data = np.log([row[0] for row in imp_data[ion.index]])
+                log_lz_data = np.log([row[1] for row in imp_data[ion.index]])
+                lz[ion.index][temp_point] = np.exp(
                     np.interp(
                         np.log(temp_electron_ev[temp_point]), log_te_data, log_lz_data
                     )
@@ -292,32 +301,40 @@ def plot_line_brem_power_profile(
 
             # Calculate the absolue radiation power for each volumetric shell for each
             # impurity
-            p_rad_array[impurity] = calculate_profile_shell_contributions(
+            p_rad_array[ion.index] = calculate_profile_shell_contributions(
                 profile_x=rho,
                 profile_y=(
-                    imp_frac[impurity] * nd_electron * nd_electron * lz[impurity]
+                    imp_frac[ion.index] * nd_electron * nd_electron * lz[ion.index]
                 ),
                 vol_plasma=vol_plasma,
                 profile_dx=rho[1] - rho[0],
             )
 
-        for l_ in range(imp_data.shape[0]):
-            p_total_profile[temp_point] += p_rad_array[l_][temp_point] * 1.0e-6
+        for ion in IonSpecies:
+            p_total_profile[temp_point] += p_rad_array[ion.index][temp_point] * 1.0e-6
 
     axis.plot(
         rho, p_total_profile, label="$P_{\\Sigma\\text{Impurities}}$", linestyle="dotted"
     )
 
     # Plot individual impurity radiation profiles
-    axis.plot(rho, p_rad_array[0] * 1.0e-6, label="H")
-    axis.plot(rho, p_rad_array[1] * 1.0e-6, label="He")
+    axis.plot(
+        rho,
+        p_rad_array[IonSpecies.HYDROGEN.index] * 1.0e-6,
+        label=IonSpecies.HYDROGEN.symbol,
+    )
+    axis.plot(
+        rho,
+        p_rad_array[IonSpecies.HELIUM.index] * 1.0e-6,
+        label=IonSpecies.HELIUM.symbol,
+    )
     # Only plot impurities with a significant fraction
-    for ind in range(2, imp_data.shape[0]):
-        if imp_frac[ind] > 1.0e-30:
+    for species in IonSpecies:
+        if species.is_impurity and imp_frac[species.index] > 1.0e-30:
             axis.plot(
                 rho,
-                p_rad_array[ind] * 1.0e-6,
-                label=ImpurityRadiationData().imp_label[ind].replace("_", ""),
+                p_rad_array[species.index] * 1.0e-6,
+                label=species.symbol,
             )
 
     axis.plot(
@@ -416,7 +433,8 @@ def plot_rad_density_contour(axis: Axes, mfile: MFile, scan: int, impp: str):
 
     # Find the relative number density of each impurity
     imp_frac = np.array([
-        mfile.get(f"f_nd_impurity_electrons({i:02d})", scan=scan) for i in range(1, 15)
+        mfile.get(f"f_nd_impurity_electrons({species.index + 1:02d})", scan=scan)
+        for species in IonSpecies
     ])
 
     # Initialize the radius

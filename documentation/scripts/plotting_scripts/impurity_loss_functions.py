@@ -6,7 +6,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from process.core.io.plot.summary import read_imprad_data
-from process.data_structure.impurity_radiation_variables import ImpurityRadiationData
+from process.data_structure.impurity_radiation_variables import (
+    IonSpecies,
+)
 
 
 def plot_line_brem_loss_function_profile(
@@ -36,18 +38,14 @@ def plot_line_brem_loss_function_profile(
         (0, (1, 1)),
     ]
 
-    for index, (label, raw_species_data) in enumerate(
-        zip(
-            [label.replace("_", "") for label in ImpurityRadiationData().imp_label],
-            imp_data,
-            strict=True,
-        )
+    for index, (species, raw_species_data) in enumerate(
+        zip(IonSpecies, imp_data, strict=True)
     ):
         species_data = np.asarray(raw_species_data)
         axis.plot(
             species_data[:, 0],
             species_data[:, 1],
-            label=label,
+            label=species.symbol,
             linestyle=line_styles[index % len(line_styles)],
         )
 

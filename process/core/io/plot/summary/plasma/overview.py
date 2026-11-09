@@ -12,7 +12,9 @@ from process.core.io.plot.summary.common import (
     place_plot_image,
 )
 from process.core.io.plot.summary.plasma.physics import plot_plasma
-from process.data_structure.impurity_radiation_variables import ImpurityRadiationData
+from process.data_structure.impurity_radiation_variables import (
+    IonSpecies,
+)
 from process.models.geometry.plasma import plasma_geometry
 from process.models.physics.bootstrap_current import BootstrapCurrentFractionModel
 from process.models.physics.current_drive import CurrentDriveModel
@@ -270,7 +272,6 @@ def plot_main_plasma_information(
     i_hcd_secondary = value("i_hcd_secondary")
     cd_1 = CurrentDriveModel(i_hcd_primary)
     cd_2 = CurrentDriveModel(i_hcd_secondary)
-    impurity_data = ImpurityRadiationData()
 
     beta_component = BetaComponentLimits(value("i_beta_component")).full_name
     beta_norm_model = BetaNormMaxModel(value("i_beta_norm_max")).full_name
@@ -428,9 +429,9 @@ def plot_main_plasma_information(
         "$\\mathbf{densities:}$\n\n"
         f"Effective charge: {value('n_charge_plasma_effective_vol_avg'):.3f}\n\n"
         + "\n".join(
-            f"{label.replace('_', '') + ':':<6}"
-            f"{value(f'f_nd_impurity_electrons({index:02d})'):.4e}"
-            for index, label in enumerate(impurity_data.imp_label[:14], start=1)
+            f"{species.symbol + ':':<6}"
+            f"{value(f'f_nd_impurity_electrons({species.index + 1:02d})'):.4e}"
+            for species in IonSpecies
         )
     )
 
