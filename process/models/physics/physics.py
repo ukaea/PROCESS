@@ -1438,6 +1438,42 @@ class Physics(Model):
 
         # ======================================================================
 
+        self.data.physics.n_plasma_electrons = (
+            self.data.physics.nd_plasma_electrons_vol_avg * self.data.physics.vol_plasma
+        )
+
+        self.data.physics.n_plasma_deuterons = (
+            self.data.physics.nd_plasma_fuel_ions_vol_avg
+            * self.data.physics.f_plasma_fuel_deuterium
+            * self.data.physics.vol_plasma
+        )
+        self.data.physics.n_plasma_tritons = (
+            self.data.physics.nd_plasma_fuel_ions_vol_avg
+            * self.data.physics.f_plasma_fuel_tritium
+            * self.data.physics.vol_plasma
+        )
+        self.data.physics.n_plasma_helions = (
+            self.data.physics.nd_plasma_fuel_ions_vol_avg
+            * self.data.physics.f_plasma_fuel_helium3
+            * self.data.physics.vol_plasma
+        )
+        self.data.physics.n_plasma_alpha_particles = (
+            self.data.physics.nd_plasma_alphas_thermal_vol_avg
+            * self.data.physics.vol_plasma
+        )
+
+        for species in IonSpecies:
+            if species.is_impurity:
+                setattr(
+                    self.data.physics,
+                    f"n_plasma_{species.full_name}_ions",
+                    self.data.impurity_radiation.f_nd_impurity_electron_array[
+                        species.index
+                    ]
+                    * self.data.physics.nd_plasma_electrons_vol_avg
+                    * self.data.physics.vol_plasma,
+                )
+
     @staticmethod
     @nb.njit(cache=True)
     def phyaux(
@@ -3044,6 +3080,63 @@ class Physics(Model):
             self.data.physics.m_plasma,
             "OP ",
         )
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "Particle Numbers:")
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Total number of electrons in plasma",
+            "(n_plasma_electrons)",
+            self.data.physics.n_plasma_electrons,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Total number of deuterons in plasma",
+            "(n_plasma_deuterons)",
+            self.data.physics.n_plasma_deuterons,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Total number of tritons in plasma",
+            "(n_plasma_tritons)",
+            self.data.physics.n_plasma_tritons,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Total number of helions in plasma",
+            "(n_plasma_helions)",
+            self.data.physics.n_plasma_helions,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Total number of alpha particles in plasma",
+            "(n_plasma_alpha_particles)",
+            self.data.physics.n_plasma_alpha_particles,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        for species in IonSpecies:
+            if species.is_impurity:
+                po.ovarre(
+                    self.outfile,
+                    f"Total number of {species.full_name} ions in plasma",
+                    f"(n_plasma_{species.full_name}_ions)",
+                    getattr(self.data.physics, f"n_plasma_{species.full_name}_ions"),
+                    "OP ",
+                )
 
         # Issue 558 - addition of constraint 76 to limit the value of
         # nd_plasma_separatrix_electron, in proportion with the ballooning parameter
