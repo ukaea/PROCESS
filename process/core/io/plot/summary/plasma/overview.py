@@ -272,7 +272,6 @@ def plot_main_plasma_information(
     i_hcd_secondary = value("i_hcd_secondary")
     cd_1 = CurrentDriveModel(i_hcd_primary)
     cd_2 = CurrentDriveModel(i_hcd_secondary)
-    impurity_data = ImpurityRadiationData()
 
     beta_component = BetaComponentLimits(value("i_beta_component")).full_name
     beta_norm_model = BetaNormMaxModel(value("i_beta_norm_max")).full_name

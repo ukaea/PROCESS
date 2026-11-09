@@ -61,7 +61,8 @@ def plot_line_brem_power_density_profile(
 
     # find impurity densities
     imp_frac = np.array([
-        mfile.get(f"f_nd_impurity_electrons({i:02d})", scan=scan) for i in range(1, 15)
+        mfile.get(f"f_nd_impurity_electrons({species.index + 1:02d})", scan=scan)
+        for species in IonSpecies
     ])
 
     rho, nd_electron, temp_electron_kev = profiles_with_pedestal(mfile=mfile, scan=scan)
@@ -176,7 +177,8 @@ def plot_line_brem_loss_function_profile(
 
     # find impurity densities
     imp_frac = np.array([
-        mfile.get(f"f_nd_impurity_electrons({i:02d})", scan=scan) for i in range(1, 15)
+        mfile.get(f"f_nd_impurity_electrons({species.index + 1:02d})", scan=scan)
+        for species in IonSpecies
     ])
 
     rho, _, temp_electron_kev = profiles_with_pedestal(mfile, scan)
@@ -431,7 +433,8 @@ def plot_rad_density_contour(axis: Axes, mfile: MFile, scan: int, impp: str):
 
     # Find the relative number density of each impurity
     imp_frac = np.array([
-        mfile.get(f"f_nd_impurity_electrons({i:02d})", scan=scan) for i in range(1, 15)
+        mfile.get(f"f_nd_impurity_electrons({species.index + 1:02d})", scan=scan)
+        for species in IonSpecies
     ])
 
     # Initialize the radius

@@ -72,7 +72,8 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
     nd_plasma_electrons_vol_avg = mfile.get("nd_plasma_electrons_vol_avg", scan=scan)
     # find impurity densities
     imp_frac = np.array([
-        mfile.get(f"f_nd_impurity_electrons({i:02d})", scan=scan) for i in range(1, 15)
+        mfile.get(f"f_nd_impurity_electrons({species.index + 1:02d})", scan=scan)
+        for species in IonSpecies
     ])
 
     nd_plasma_separatrix_electron = mfile.get("nd_plasma_separatrix_electron", scan=scan)
