@@ -10,7 +10,6 @@ from process.core.io.plot.summary.common import (
     add_symbol,
     box_style,
     place_plot_image,
-    text_layout,
 )
 from process.core.io.plot.summary.plasma.physics import plot_plasma
 from process.data_structure.impurity_radiation_variables import ImpurityRadiationData
@@ -266,27 +265,34 @@ def plot_main_plasma_information(
     rminor = value("rminor")
     radius_plasma_core_norm = value("radius_plasma_core_norm")
 
-    axis.axis("off")
-    plot_plasma(axis, mfile, scan, colour_scheme)
-    plasma_main_page(
-        axis,
-        fig,
-        rmajor,
-        rminor,
-        triang,
-        radius_plasma_core_norm,
-        kappa,
-        value("i_single_null"),
-        value("plasma_square"),
-        value("big_q_plasma"),
-        value("p_fw_alpha_mw"),
-        value("f_p_alpha_plasma_deposited"),
-        value("p_neutron_total_mw"),
-        value("pflux_plasma_surface_neutron_avg_mw"),
-    )
-
     geom_type = PlasmaGeometryModelType(value("i_plasma_geometry"))
-    textstr_plasma = (
+    i_hcd_primary = value("i_hcd_primary")
+    i_hcd_secondary = value("i_hcd_secondary")
+    cd_1 = CurrentDriveModel(i_hcd_primary)
+    cd_2 = CurrentDriveModel(i_hcd_secondary)
+    impurity_data = ImpurityRadiationData()
+
+    beta_component = BetaComponentLimits(value("i_beta_component")).full_name
+    beta_norm_model = BetaNormMaxModel(value("i_beta_norm_max")).full_name
+    inductance_model = IndInternalNormModel(
+        value("i_ind_plasma_internal_norm")
+    ).full_name
+    current_model = PlasmaCurrentModel(value("i_plasma_current")).full_name
+    bootstrap_model = BootstrapCurrentFractionModel(
+        value("i_bootstrap_current")
+    ).full_name
+    diamagnetic_model = PlasmaDiamagneticCurrentModel(
+        value("i_diamagnetic_current")
+    ).full_name
+    lh_t_model_name = PlasmaConfinementTransitionModel(
+        value("i_l_h_threshold")
+    ).full_name
+    density_model = DensityLimitModel(value("i_density_limit")).full_name
+
+    if len(lh_t_model_name) > 20:
+        lh_t_model_name = "\n".join(textwrap.wrap(lh_t_model_name, width=20))
+
+    text_plasma = (
         "$\\mathbf{Shaping:}$\n\n"
         f"$\\kappa_{{95}}$: {value('kappa95'):.2f} "
         f"({geom_type.kappa95_model.description}) | "
@@ -304,13 +310,8 @@ def plot_main_plasma_information(
         "$L_{\\text{p,poloidal}}$: "
         f"{value('len_plasma_poloidal'):,.3f} $\\mathrm{{m}}$"
     )
-    add_panel(axis, 0.365, 0.975, 0.340, 0.110, textstr_plasma, box_style("lightyellow"))
 
-    i_hcd_primary = value("i_hcd_primary")
-    i_hcd_secondary = value("i_hcd_secondary")
-    cd_1 = CurrentDriveModel(i_hcd_primary)
-    cd_2 = CurrentDriveModel(i_hcd_secondary)
-    textstr_hcd = (
+    text_hcd = (
         "$\\mathbf{Heating\\ &\\ current\\ drive:}$\n\n"
         f"Total injected heat: {value('p_hcd_injected_total_mw'):.3f} MW\n"
         f"Ohmic heating power: {value('p_plasma_ohmic_mw'):.3f} MW\n\n"
@@ -333,20 +334,8 @@ def plot_main_plasma_information(
         "$\\times 10^{20}\\ \\mathrm{A}/\\mathrm{Wm}^2$\n"
         f"Current driven by secondary: {value('c_hcd_secondary_driven') / 1e6:.3f} MA"
     )
-    add_panel(
-        axis,
-        0.730,
-        0.675,
-        0.245,
-        0.300,
-        textstr_hcd,
-        box_style("paleturquoise") | {"edgecolor": "black"},
-    )
-    add_symbol(axis, "$P_{\\text{inj}}$", 0.92, 0.625)
 
-    beta_component = BetaComponentLimits(value("i_beta_component")).full_name
-    beta_norm_model = BetaNormMaxModel(value("i_beta_norm_max")).full_name
-    textstr_beta = (
+    text_beta = (
         "$\\mathbf{Beta\\ Information:}$\n\n"
         f"Total beta, $\\langle\\beta\\rangle$: {value('beta_total_vol_avg'):.4f}\n"
         f"Thermal beta, $\\langle\\beta_{{\\text{{thermal}}}}\\rangle$: "
@@ -366,13 +355,8 @@ def plot_main_plasma_information(
         f"Maximum normalised beta ({beta_norm_model}), $\\beta_{{\\text{{N,max}}}}$: "
         f"{value('beta_norm_max'):.4f}"
     )
-    add_panel(axis, 0.025, 0.975, 0.325, 0.180, textstr_beta, box_style("lightblue"))
-    add_symbol(axis, "$\\beta$", 0.27, 0.94)
 
-    inductance_model = IndInternalNormModel(
-        value("i_ind_plasma_internal_norm")
-    ).full_name
-    textstr_volt_second = (
+    text_volt_sec = (
         "$\\mathbf{Volt-second\\ requirements:}$\n\n"
         f"Total volt-second consumption: {value('vs_plasma_total_required'):.4f} Vs\n"
         f"  - Internal volt-seconds: {value('vs_plasma_internal'):.4f} Vs\n"
@@ -389,22 +373,16 @@ def plot_main_plasma_information(
         f"Plasma normalised internal inductance, $l_i$ ({inductance_model}): "
         f"{value('ind_plasma_internal_norm'):.3f}"
     )
-    add_panel(
-        axis, 0.025, 0.780, 0.335, 0.195, textstr_volt_second, box_style("lightgreen")
-    )
-    add_symbol(axis, "Vs", 0.30, 0.77)
 
-    textstr_div = (
+    text_div = (
         f"$P_{{\\text{{sep}}}}$: {value('p_plasma_separatrix_mw'):.2f} MW\n\n"
         f"$\\frac{{P_{{\\text{{sep}}}}}}{{R}}$: "
         f"{value('p_plasma_separatrix_rmajor_mw'):.2f} MW/m\n\n"
         f"$\\frac{{P_{{\\text{{sep}}}}B_T}}{{q_{{95}} A R}}$: "
         f"{value('p_div_bt_q_aspect_rmajor_mw'):.2f} MW T/m"
     )
-    add_panel(axis, 0.350, 0.120, 0.165, 0.095, textstr_div, box_style("orange"))
-    add_symbol(axis, "$P_{\\text{div}}$", 0.45, 0.10)
 
-    textstr_confinement = (
+    text_confinement = (
         "$\\mathbf{Confinement:}$\n\n"
         f"Confinement scaling law: {value('tauelaw')}\n"
         f"Confinement $H$ factor: {value('hfact'):.4f}\n"
@@ -418,18 +396,8 @@ def plot_main_plasma_information(
         f"Alpha particle confinement time: {value('t_alpha_confinement'):.4f} s | "
         f"$\\tau_{{\\alpha}}/\\tau_{{e}}$: {value('f_t_alpha_energy_confinement'):.4f}"
     )
-    add_panel(
-        axis,
-        0.025,
-        0.570,
-        0.325,
-        0.155,
-        textstr_confinement,
-        box_style("gainsboro") | {"edgecolor": "black"},
-    )
-    add_symbol(axis, "$\\tau_{\\text{e}}$", 0.30, 0.55)
 
-    textstr_reactions = (
+    text_reactions = (
         "$\\mathbf{Fusion\\ Reactions:}$\n\n"
         "Fuel mixture:\n"
         f"| D: {value('f_plasma_fuel_deuterium'):.2f} | "
@@ -441,17 +409,8 @@ def plot_main_plasma_information(
         f"D-3He Power, $P_{{\\text{{fus,D3He}}}}$: {value('p_dhe3_total_mw'):,.2f} MW\n"
         f"Alpha Power, $P_{{\\alpha}}$: {value('p_alpha_total_mw'):,.2f} MW"
     )
-    add_panel(
-        axis,
-        0.025,
-        0.400,
-        0.185,
-        0.165,
-        textstr_reactions,
-        {"boxstyle": "round", "facecolor": "red", "alpha": 0.6, "linewidth": 2},
-    )
 
-    textstr_fuelling = (
+    text_fuelling = (
         "$\\mathbf{Fuelling:}$\n\n"
         f"Plasma mass: {value('m_plasma') * 1000:.4f} g\n"
         f"   - Average mass of all plasma ions: {value('m_ions_total_amu'):.3f} amu\n"
@@ -462,18 +421,8 @@ def plot_main_plasma_information(
         f"Fuel burn-up rate: {value('rndfuel'):.3e} reactions/s\n"
         f"Burn-up fraction: {value('burnup'):.4f}"
     )
-    add_panel(
-        axis,
-        0.025,
-        0.220,
-        0.255,
-        0.175,
-        textstr_fuelling,
-        box_style("khaki") | {"edgecolor": "black"},
-    )
 
-    impurity_data = ImpurityRadiationData()
-    textstr_ions = (
+    text_ions = (
         "$\\mathbf{Ion\\ to\\ electron}$\n"
         "$\\mathbf{relative\\ number}$\n"
         "$\\mathbf{densities:}$\n\n"
@@ -484,26 +433,8 @@ def plot_main_plasma_information(
             for index, label in enumerate(impurity_data.imp_label[:14], start=1)
         )
     )
-    add_panel(
-        axis,
-        0.805,
-        0.335,
-        0.170,
-        0.310,
-        textstr_ions,
-        {"boxstyle": "round", "facecolor": "olivedrab", "alpha": 0.7, "linewidth": 2},
-        text_x_offset=0.045,
-    )
-    add_symbol(axis, "$Z$", 0.815, 0.29)
 
-    current_model = PlasmaCurrentModel(value("i_plasma_current")).full_name
-    bootstrap_model = BootstrapCurrentFractionModel(
-        value("i_bootstrap_current")
-    ).full_name
-    diamagnetic_model = PlasmaDiamagneticCurrentModel(
-        value("i_diamagnetic_current")
-    ).full_name
-    textstr_currents = (
+    text_currents = (
         "$\\mathbf{Plasma\\ currents:}$\n\n"
         f"Plasma current ({current_model}): {value('plasma_current_ma'):.4f} MA\n"
         f"  - Bootstrap fraction ({bootstrap_model}): "
@@ -514,10 +445,8 @@ def plot_main_plasma_information(
         f"  - Auxiliary fraction: {value('f_c_plasma_auxiliary'):.4f}\n"
         f"  - Inductive fraction: {value('f_c_plasma_inductive'):.4f}"
     )
-    add_panel(axis, 0.720, 0.975, 0.255, 0.130, textstr_currents, box_style("#C8A2C8"))
-    add_symbol(axis, "$I_{\\text{p}}$", 0.93, 0.90)
 
-    textstr_fields = (
+    text_fields = (
         "$\\mathbf{Magnetic\\ fields:}$\n\n"
         f"Toroidal field at $R_0$, $B_T$: {value('b_plasma_toroidal_on_axis'):.4f} T\n"
         f"  Ripple at outboard, $\\delta$: {value('ripple_b_tf_plasma_edge'):.2f}%\n"
@@ -527,63 +456,95 @@ def plot_main_plasma_information(
         f"Vertical field, $B_{{\\text{{vert}}}}$: "
         f"{value('b_plasma_vertical_required'):.4f} T"
     )
-    add_panel(axis, 0.5325, 0.140, 0.2575, 0.115, textstr_fields, box_style("royalblue"))
-    add_symbol(axis, "$B$", 0.75, 0.12)
+    rc_rp = "\n".join(
+        textwrap.wrap(
+            "Reduced Core radiation power: "
+            f"{value('p_plasma_core_rad_reduced_mw'):.4f} MW\n",
+            width=40,
+        )
+    )
 
-    textstr_radiation = (
+    text_rad = (
         "$\\mathbf{Radiation:}$\n"
         f"Total radiation power: {value('p_plasma_rad_mw'):.4f} MW\n"
         f"Separatrix radiation fraction: {value('f_p_plasma_separatrix_rad'):.4f}\n"
-        f"Reduced Core radiation power: {value('p_plasma_core_rad_reduced_mw'):.4f} MW\n"
-        f"   - $f_{{\\text{{core,reduce}}}}$: "
+        + rc_rp
+        + f"   - $f_{{\\text{{core,reduce}}}}$: "
         f"{value('f_p_plasma_core_rad_reduction'):.4f}\n"
         f"Core radiation power: {value('p_plasma_core_rad_mw'):.4f} MW\n"
         f"Edge radiation power: {value('p_plasma_edge_rad_mw'):.4f} MW\n"
         f"Synchrotron radiation power: {value('p_plasma_sync_mw'):.4f} MW\n"
         f"Synchrotron wall reflectivity: {value('f_sync_reflect'):.4f}"
     )
-    add_panel(
-        axis,
-        0.720,
-        0.830,
-        0.255,
-        0.145,
-        textstr_radiation,
-        box_style("lavender") | {"edgecolor": "black"},
-        text_x_offset=0.032,
-    )
-    add_symbol(axis, "$\\gamma$", 0.725, 0.78)
-
-    model_name = PlasmaConfinementTransitionModel(value("i_l_h_threshold")).full_name
-    if len(model_name) > 20:
-        model_name = "\n".join(textwrap.wrap(model_name, width=20))
-    textstr_lh = (
+    text_lh = (
         "$\\mathbf{L-H\\ threshold:}$\n"
-        f"{model_name}\n\n"
+        f"{lh_t_model_name}\n\n"
         f"$P_{{\\text{{L-H}}}}$: {value('p_l_h_threshold_mw'):.4f} MW"
     )
-    add_panel(axis, 0.220, 0.400, 0.110, 0.080, textstr_lh, box_style("peachpuff"))
 
-    density_model = DensityLimitModel(value("i_density_limit")).full_name
-    textstr_density_limit = (
+    text_density_limit = (
         "$\\mathbf{Density\\ limit:}$\n"
         f"({density_model})\n"
         f"$n_{{\\text{{e,limit}}}}$: {value('nd_plasma_electrons_max'):.3e} "
         "$\\mathrm{m}^{-3}$\n"
         f"$f_{{\\text{{GW}}}}$: {value('f_nd_plasma_greenwald'):.4f}"
     )
-    add_panel(axis, 0.220, 0.310, 0.130, 0.075, textstr_density_limit, box_style("pink"))
+
+    ion_box = box_style("olivedrab", 0.7)
+    rad_box = box_style("lavender")
+
+    axis.axis("off")
+    plot_plasma(axis, mfile, scan, colour_scheme)
+    plasma_main_page(
+        axis,
+        fig,
+        rmajor,
+        rminor,
+        triang,
+        radius_plasma_core_norm,
+        kappa,
+        value("i_single_null"),
+        value("plasma_square"),
+        value("big_q_plasma"),
+        value("p_fw_alpha_mw"),
+        value("f_p_alpha_plasma_deposited"),
+        value("p_neutron_total_mw"),
+        value("pflux_plasma_surface_neutron_avg_mw"),
+    )
+
+    add_symbol(axis, "$P_{\\text{inj}}$", 0.92, 0.625)
+    add_symbol(axis, "$\\beta$", 0.27, 0.94)
+    add_symbol(axis, "Vs", 0.30, 0.77)
+    add_symbol(axis, "$P_{\\text{div}}$", 0.45, 0.10)
+    add_symbol(axis, "$\\tau_{\\text{e}}$", 0.30, 0.55)
+    add_symbol(axis, "$Z$", 0.815, 0.29)
+    add_symbol(axis, "$I_{\\text{p}}$", 0.93, 0.90)
+    add_symbol(axis, "$B$", 0.75, 0.12)
+    add_symbol(axis, "$\\gamma$", 0.725, 0.78)
+
+    add_panel(axis, 0.365, 0.975, 0.340, 0.110, text_plasma, box_style("lightyellow"))
+    add_panel(axis, 0.730, 0.675, 0.245, 0.300, text_hcd, box_style("paleturquoise"))
+    add_panel(axis, 0.025, 0.975, 0.325, 0.180, text_beta, box_style("lightblue"))
+    add_panel(axis, 0.025, 0.780, 0.335, 0.195, text_volt_sec, box_style("lightgreen"))
+    add_panel(axis, 0.350, 0.120, 0.165, 0.095, text_div, box_style("orange"))
+    add_panel(axis, 0.025, 0.570, 0.325, 0.155, text_confinement, box_style("gainsboro"))
+    add_panel(axis, 0.025, 0.400, 0.185, 0.165, text_reactions, box_style("red", 0.6))
+    add_panel(axis, 0.025, 0.220, 0.255, 0.175, text_fuelling, box_style("khaki"))
+    add_panel(axis, 0.805, 0.335, 0.170, 0.310, text_ions, ion_box, text_x_offset=0.045)
+    add_panel(axis, 0.720, 0.975, 0.255, 0.130, text_currents, box_style("#C8A2C8"))
+    add_panel(axis, 0.5325, 0.140, 0.2575, 0.115, text_fields, box_style("royalblue"))
+    add_panel(axis, 0.720, 0.830, 0.255, 0.145, text_rad, rad_box, text_x_offset=0.032)
+    add_panel(axis, 0.220, 0.400, 0.110, 0.080, text_lh, box_style("peachpuff"))
+    add_panel(axis, 0.220, 0.310, 0.130, 0.075, text_density_limit, box_style("pink"))
 
 
-def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int):
+def plot_detailed_plasma_parameters(axis: plt.Axes, mfile: MFile, scan: int):
     """Function to plot detailed plasma parameters from physics data.
 
     Parameters
     ----------
     axis : plt.Axes
         Axis object to plot to
-    fig : plt.Figure
-        Figure object for text placement
     mfile : MFile
         MFILE data object
     scan : int
@@ -695,6 +656,8 @@ def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int
     )
 
     light_yellow_box = box_style("lightyellow")
+    light_cyan_box = box_style("lightcyan")
+    light_green_box = box_style("lightgreen")
 
     add_panel(axis, 0.05, 0.45, 0.185, 0.115, textstr_debye, light_yellow_box)
 
@@ -702,25 +665,24 @@ def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int
 
     add_panel(axis, 0.45, 0.45, 0.185, 0.115, textstr_velocities, light_yellow_box)
 
-    light_cyan_box = box_style("lightcyan")
     add_panel(axis, 0.05, 0.31, 0.185, 0.120, textstr_frequencies, light_cyan_box)
 
     add_panel(axis, 0.25, 0.31, 0.185, 0.120, textstr_coulomb, light_cyan_box)
 
     add_panel(axis, 0.45, 0.31, 0.185, 0.120, textstr_collision_times, light_cyan_box)
 
-    light_green_box = box_style("lightgreen")
-
     add_panel(axis, 0.05, 0.17, 0.185, 0.115, textstr_collision_freq, light_green_box)
 
     add_panel(axis, 0.25, 0.17, 0.185, 0.115, textstr_mfp, light_green_box)
 
-    axis.text(
+    add_panel(
+        axis,
         0.45,
         0.17,
+        0.185,
+        0.115,
         textstr_spitzer + "\n" + textstr_resistivity,
-        **text_layout(fig, v_align="top"),
-        bbox=light_green_box,
+        light_green_box,
     )
 
     axis.axis("off")

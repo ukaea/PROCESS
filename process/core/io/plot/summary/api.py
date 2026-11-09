@@ -488,10 +488,7 @@ def main_plot(
     plot_resistivity_profile(pages["detailed_params"].add_subplot(232), m_file, scan)
 
     plot_detailed_plasma_parameters(
-        pages["detailed_params"].add_subplot(233),
-        fig=pages["detailed_params"],
-        mfile=m_file,
-        scan=scan,
+        pages["detailed_params"].add_subplot(233), mfile=m_file, scan=scan
     )
 
     ax_electron_freq = _add_page("freq").add_subplot(211)
