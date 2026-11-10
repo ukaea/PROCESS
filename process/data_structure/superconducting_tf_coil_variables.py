@@ -211,7 +211,7 @@ class SuperconductingTFData:
     i_strain_tf_superconductor: int = 1
     """Switch for the behavior of the TF strain used to compute
     the strain-dependent critical surface:
-    - =0  str_tf_con_res is used
+    - =0  strain_tf_superconductor_residual is used
     - =1  str_wp is used
     """
 
