@@ -488,6 +488,8 @@ OBS_VARS = {
         "temp_cs_superconductor_margin_min",
     ],
     "tftmp": "temp_tf_operating",
+    "ccl0_ma": "cur_pf_group_flux_swing_cancellation_ma",
+    "ccls_ma": "cur_pf_group_equilibrium_ma",
 }
 
 OBS_VARS_HELP = {
