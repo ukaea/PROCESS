@@ -830,7 +830,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                     psurffwi=self.data.fwbs.psurffwi,
                     psurffwo=self.data.fwbs.psurffwo,
                     p_blkt_nuclear_heat_total_mw=self.data.fwbs.p_blkt_nuclear_heat_total_mw,
-                    p_shld_nuclear_heat_mw=self.data.heat_transport.p_shld_nuclear_heat_mw,
+                    p_shld_nuclear_heat_mw=self.data.heat_transport.p_shld_secondary_heat_mw,
                     p_cp_shield_nuclear_heat_mw=self.data.fwbs.p_cp_shield_nuclear_heat_mw,
                     p_plasma_separatrix_mw=self.data.physics.p_plasma_separatrix_mw,
                     p_div_nuclear_heat_total_mw=self.data.fwbs.p_div_nuclear_heat_total_mw,
