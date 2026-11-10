@@ -200,6 +200,27 @@ class PlasmaFields(Model):
         """
         return np.sqrt(b_plasma_toroidal**2 + b_plasma_poloidal**2)
 
+    @staticmethod
+    def calculate_plasma_magnetic_flux_angle(
+        b_plasma_toroidal: float, b_plasma_poloidal: float
+    ) -> float:
+        """Calculate the magnetic flux angle from the midplane in the plasma based on
+        the toroidal and poloidal magnetic fields strengths
+
+        Parameters
+        ----------
+        b_plasma_toroidal :
+            toroidal field at point of interest [T]
+        b_plasma_poloidal :
+            poloidal field at point of interest [T]
+
+        Returns
+        -------
+        :
+            magnetic flux angle at the plasma edge [degrees]
+        """
+        return np.degrees(np.arctan(b_plasma_poloidal / b_plasma_toroidal))
+
     def output(self):
         """Output plasma magnetic fields data."""
         po.oheadr(self.outfile, "Plasma magnetic fields")
@@ -248,6 +269,23 @@ class PlasmaFields(Model):
             "OP ",
         )
         po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Outboard plasma magnetic flux angle from midplane [deg]",
+            "(deg_b_plasma_outboard_flux_midplane)",
+            self.data.physics.deg_b_plasma_outboard_flux_midplane,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Inboard plasma magnetic flux angle from midplane [deg]",
+            "(deg_b_plasma_inboard_flux_midplane)",
+            self.data.physics.deg_b_plasma_inboard_flux_midplane,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+
         po.ovarre(
             self.outfile,
             "Total field (Bₜₒₜ) [T]",
@@ -255,6 +293,7 @@ class PlasmaFields(Model):
             self.data.physics.b_plasma_total,
             "OP ",
         )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "Total field at inboard (Bₜₒₜ(R₀-a)) [T]",
