@@ -693,7 +693,7 @@ def _superconductor_text(get, *, croco=False):
             ".4f",
             "K",
         ),
-        ("Temperature at conductor", "tftmp", ".4f", "K"),
+        ("Temperature at conductor", "temp_tf_operating", ".4f", "K"),
         ("Field at conductor", "b_tf_inboard_peak_with_ripple", ".4f", "T"),
         (
             "Superconductor critical current density at\noperating conditions",

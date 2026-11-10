@@ -833,7 +833,7 @@ INPUT_VARIABLES = {
     "tfcbv": InputVariable("buildings", float, range=(10000.0, 1000000.0)),
     "dx_tf_wp_insertion_gap": InputVariable("tfcoil", float, range=(1e-10, 0.1)),
     "f_dr_tf_outboard_inboard": InputVariable("build", float, range=(0.2, 5.0)),
-    "tftmp": InputVariable("tfcoil", float, range=(0.01, 293.0)),
+    "temp_tf_operating": InputVariable("tfcoil", float, range=(0.01, 293.0)),
     "temp_cs_superconductor_operating": InputVariable(
         "pf_coil", float, range=(0.01, 293.0)
     ),

@@ -897,7 +897,7 @@ class PFCoil(Model):
                             isumat=self.data.pf_coil.i_pf_superconductor,
                             fhts=self.data.tfcoil.fhts,
                             strain=self.data.tfcoil.str_pf_con_res,
-                            temp_pf_peak_field=self.data.tfcoil.tftmp,
+                            temp_pf_peak_field=self.data.tfcoil.temp_tf_operating,
                             bcritsc=self.data.tfcoil.bcritsc,
                             tcritsc=self.data.tfcoil.tcritsc,
                             dr_hts_tape=self.data.superconducting_tfcoil.dr_tf_hts_tape,
