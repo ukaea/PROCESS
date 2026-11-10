@@ -285,18 +285,24 @@ class Physics(Model):
         )
 
         self.data.physics.m_plasma_deuterons = (
-            self.data.physics.m_plasma_fuel_ions
+            self.data.physics.nd_plasma_fuel_ions_vol_avg
             * self.data.physics.f_plasma_fuel_deuterium
+            * self.data.physics.vol_plasma
+            * constants.DEUTERON_MASS
         )
 
         self.data.physics.m_plasma_tritons = (
-            self.data.physics.m_plasma_fuel_ions
+            self.data.physics.nd_plasma_fuel_ions_vol_avg
             * self.data.physics.f_plasma_fuel_tritium
+            * self.data.physics.vol_plasma
+            * constants.TRITON_MASS
         )
 
         self.data.physics.m_plasma_helions = (
-            self.data.physics.m_plasma_fuel_ions
+            self.data.physics.nd_plasma_fuel_ions_vol_avg
             * self.data.physics.f_plasma_fuel_helium3
+            * self.data.physics.vol_plasma
+            * constants.HELION_MASS
         )
 
         for species in IonSpecies:
@@ -3140,6 +3146,7 @@ class Physics(Model):
             self.data.physics.m_plasma_electron,
             "OP ",
         )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "Total mass of the plasma [kg]",
