@@ -1785,6 +1785,7 @@ class PFCoil(Model):
 
         noh = min(noh, nohmax)
 
+        # noh should always be positive
         noh = max(noh, 0)
 
         roh = np.zeros(noh)

@@ -321,7 +321,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         # Mass of He coolant = volume * density at typical coolant temperatures
         # and pressures (kg)
         self.data.fwbs.m_fw_blkt_div_coolant_total = coolvol * 1.517
-
+        # Average first wall coolant fraction
         self.data.fwbs.fwclfr = (
             self.data.first_wall.a_fw_inboard
             * self.data.build.dr_fw_inboard

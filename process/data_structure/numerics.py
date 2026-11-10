@@ -194,7 +194,7 @@ class NumericsData:
         default_factory=lambda: [False] * N_CONSTRAINT_EQUATIONS_MAX
     )
     """Logical array showing which constraints are active"""
-
+    # WARNING lablcc entries should not be changed
     lablcc: list[str] = field(
         default_factory=lambda: [
             "⟨β⟩ consistency                   ",

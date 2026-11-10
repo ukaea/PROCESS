@@ -2590,7 +2590,7 @@ class TFCoil(Model):
 
             # Superconducting CS
             if i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
-                # Getting the turn dimention from scratch
+                # Getting the turn dimension from scratch
 
                 # Maximum current in Central Solenoid, at either BOP or EOF [MA-turns]
                 # Absolute value

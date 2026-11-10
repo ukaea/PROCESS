@@ -47,7 +47,8 @@ class SolverHandler:
         load_iteration_variables(self.data)
         load_scaled_bounds(self.data)
 
-        # Initialise solver variables from numerics module
+        # Initialise iteration variables from numerics module
+        # Trim maximum size arrays down to actually used size
         x = self.data.numerics.xcm[: self.data.numerics.n_iteration_variables]
         bndl = self.data.numerics.itv_scaled_lower_bounds[
             : self.data.numerics.n_iteration_variables
