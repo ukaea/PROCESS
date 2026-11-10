@@ -162,7 +162,7 @@ class SuperconParam(NamedTuple):
 
     b_tf_inboard_peak_with_ripple: Any = None
 
-    str_tf_con_res: Any = None
+    strain_tf_superconductor_residual: Any = None
 
     a_tf_turn_cable_space_effective: Any = None
 
@@ -249,7 +249,7 @@ class SuperconParam(NamedTuple):
             dia_tf_turn_coolant_channel=0.010000000000000002,
             c_tf_turn=74026.751437500003,
             b_tf_inboard_peak_with_ripple=12.48976756562082,
-            str_tf_con_res=-0.0050000000000000001,
+            strain_tf_superconductor_residual=-0.0050000000000000001,
             i_strain_tf_superconductor=StrainTFSuperconductorType.VERTICAL_WP_STRAIN,
             f_a_tf_turn_cable_space_cooling=0.3,
             str_wp=0.0015619754370069119,
@@ -297,7 +297,7 @@ class SuperconParam(NamedTuple):
             dia_tf_turn_coolant_channel=0.010000000000000002,
             c_tf_turn=74026.751437500003,
             b_tf_inboard_peak_with_ripple=12.48976756562082,
-            str_tf_con_res=-0.0050000000000000001,
+            strain_tf_superconductor_residual=-0.0050000000000000001,
             i_strain_tf_superconductor=StrainTFSuperconductorType.VERTICAL_WP_STRAIN,
             f_a_tf_turn_cable_space_cooling=0.3,
             str_wp=0.0015619754370069119,
@@ -396,7 +396,9 @@ def test_supercon(superconparam, monkeypatch, cicc_sctfcoil):
     )
 
     monkeypatch.setattr(
-        cicc_sctfcoil.data.tfcoil, "str_tf_con_res", superconparam.str_tf_con_res
+        cicc_sctfcoil.data.tfcoil,
+        "strain_tf_superconductor_residual",
+        superconparam.strain_tf_superconductor_residual,
     )
 
     monkeypatch.setattr(

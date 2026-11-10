@@ -483,7 +483,7 @@ class TFData:
     str_pf_con_res: float = -0.005
     """Residual manufacturing strain in PF superconductor material"""
 
-    str_tf_con_res: float = -0.005
+    strain_tf_superconductor_residual: float = -0.005
     """Residual manufacturing strain in TF superconductor material
     If `i_strain_tf_superconductor == 0`, used to compute the critical surface.
     Otherwise, the self-consistent winding pack `str_wp` is used.
@@ -493,7 +493,7 @@ class TFData:
     """Axial (vertical) strain in the TF coil winding pack found by
     self-consistent stress/strain calculation.
     if `i_strain_tf_superconductor == 1`, used to compute the critical surface.
-    Otherwise, the input value `str_tf_con_res` is used.
+    Otherwise, the input value `strain_tf_superconductor_residual` is used.
     Constrain the absolute value using `constraint equation 88`
     You can't have constraint 88 and i_strain_tf_superconductor = 0 at the same time
     """

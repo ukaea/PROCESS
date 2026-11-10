@@ -771,7 +771,9 @@ INPUT_VARIABLES = {
     "stcl": InputVariable("buildings", float, range=(0.0, 10.0)),
     "str_cs_con_res": InputVariable("tfcoil", float, range=(-0.02, 0.02)),
     "str_pf_con_res": InputVariable("tfcoil", float, range=(-0.02, 0.02)),
-    "str_tf_con_res": InputVariable("tfcoil", float, range=(-0.02, 0.02)),
+    "strain_tf_superconductor_residual": InputVariable(
+        "tfcoil", float, range=(-0.02, 0.02)
+    ),
     "str_wp_max": InputVariable("tfcoil", float, range=(0.0, 0.3)),
     "t_plant_pulse_dwell": InputVariable("times", float, range=(0.0, 100000000.0)),
     "t_plant_pulse_burn": InputVariable("times", float, range=(0.0, 100000000.0)),

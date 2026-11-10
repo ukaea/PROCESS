@@ -1195,14 +1195,14 @@ f_vforce_inboard = 0.5
 * DESCRIPTION:   Fraction of the vertical tension taken by the inboard mid-plane
 * JUSTIFICATION: 
 
-*str_tf_con_res = 
+*strain_tf_superconductor_residual = 
 * DESCRIPTION:   Residual manufacturing strain in TF superconductor material
 * JUSTIFICATION: Not set, assuming default
 
 *i_strain_tf_superconductor = 
 * DESCRIPTION:   Switch for the behavior of the TF strain used to compute
 * the strain-dependent critical surface: 
-* =0  str_tf_con_res is used
+* =0  strain_tf_superconductor_residual is used
 * =1  str_wp is used
 * JUSTIFICATION: Not set, assuming default
 

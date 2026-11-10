@@ -1009,7 +1009,7 @@ class SuperconductingTFCoil(TFCoil):
             self.data.superconducting_tfcoil.i_strain_tf_superconductor
         ):
             case StrainTFSuperconductorType.RESIDUAL_MANUFACTURING_STRAIN:
-                strain = self.data.tfcoil.str_tf_con_res
+                strain = self.data.tfcoil.strain_tf_superconductor_residual
             case StrainTFSuperconductorType.VERTICAL_WP_STRAIN:
                 strain = self.data.tfcoil.str_wp
             case _:
@@ -1092,8 +1092,8 @@ class SuperconductingTFCoil(TFCoil):
         po.ovarre(
             self.outfile,
             "Residual manufacturing strain on superconductor",
-            "(str_tf_con_res)",
-            self.data.tfcoil.str_tf_con_res,
+            "(strain_tf_superconductor_residual)",
+            self.data.tfcoil.strain_tf_superconductor_residual,
         )
         po.ovarre(
             self.outfile,
@@ -2561,7 +2561,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
                     self.data.superconducting_tfcoil.i_strain_tf_superconductor
                 ):
                     case StrainTFSuperconductorType.RESIDUAL_MANUFACTURING_STRAIN:
-                        strain = self.data.tfcoil.str_tf_con_res
+                        strain = self.data.tfcoil.strain_tf_superconductor_residual
                     case StrainTFSuperconductorType.VERTICAL_WP_STRAIN:
                         strain = self.data.tfcoil.str_wp
                     case _:
@@ -2720,7 +2720,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             data.superconducting_tfcoil.i_strain_tf_superconductor
         ):
             case StrainTFSuperconductorType.RESIDUAL_MANUFACTURING_STRAIN:
-                strain = tfcoil.str_tf_con_res
+                strain = tfcoil.strain_tf_superconductor_residual
             case StrainTFSuperconductorType.VERTICAL_WP_STRAIN:
                 strain = tfcoil.str_wp
             case _:
@@ -3741,7 +3741,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                     self.data.superconducting_tfcoil.i_strain_tf_superconductor
                 ):
                     case StrainTFSuperconductorType.RESIDUAL_MANUFACTURING_STRAIN:
-                        strain = self.data.tfcoil.str_tf_con_res
+                        strain = self.data.tfcoil.strain_tf_superconductor_residual
                     case StrainTFSuperconductorType.VERTICAL_WP_STRAIN:
                         strain = self.data.tfcoil.str_wp
                     case _:
@@ -3983,7 +3983,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             )
 
         if self.data.superconducting_tfcoil.i_strain_tf_superconductor == 0:
-            strain = self.data.tfcoil.str_tf_con_res
+            strain = self.data.tfcoil.strain_tf_superconductor_residual
         else:
             strain = self.data.tfcoil.str_wp
 
