@@ -212,7 +212,7 @@ class SuperconductingTFData:
     """Switch for the behavior of the TF strain used to compute
     the strain-dependent critical surface:
     - =0  strain_tf_superconductor_residual is used
-    - =1  str_wp is used
+    - =1  strain_z_tf_inboard_wp is used
     """
 
     # Vacuum Vessel stress on TF coil quench

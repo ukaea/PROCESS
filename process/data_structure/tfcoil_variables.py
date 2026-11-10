@@ -486,10 +486,10 @@ class TFData:
     strain_tf_superconductor_residual: float = -0.005
     """Residual manufacturing strain in TF superconductor material
     If `i_strain_tf_superconductor == 0`, used to compute the critical surface.
-    Otherwise, the self-consistent winding pack `str_wp` is used.
+    Otherwise, the self-consistent winding pack `strain_z_tf_inboard_wp` is used.
     """
 
-    str_wp: float = 0.0
+    strain_z_tf_inboard_wp: float = 0.0
     """Axial (vertical) strain in the TF coil winding pack found by
     self-consistent stress/strain calculation.
     if `i_strain_tf_superconductor == 1`, used to compute the critical surface.

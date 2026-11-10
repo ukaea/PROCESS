@@ -2722,7 +2722,7 @@ class TFCoil(Model):
 
         sig_tf_case = None
         sig_tf_cs_bucked = None
-        str_wp = None
+        strain_z_tf_inboard_wp = None
         casestr = None
         insstrain = None
 
@@ -3191,7 +3191,7 @@ class TFCoil(Model):
             )  # Array equation [EDIT: Are you sure? It doesn't look like one to me]
 
             # Strain in vertical direction on WP
-            str_wp = sig_tf_z[n_tf_bucking] / eyoung_wp_axial_eff
+            strain_z_tf_inboard_wp = sig_tf_z[n_tf_bucking] / eyoung_wp_axial_eff
 
             # Case strain
             casestr = sig_tf_z[n_tf_bucking - 1] / eyoung_steel
@@ -3238,7 +3238,7 @@ class TFCoil(Model):
             )
 
             # Strain in TF conductor material
-            str_wp = str_tf_z[n_tf_bucking * n_radial_array]
+            strain_z_tf_inboard_wp = str_tf_z[n_tf_bucking * n_radial_array]
 
         # ---
 
@@ -3462,7 +3462,7 @@ class TFCoil(Model):
             sig_tf_wp,
             sig_tf_case,
             sig_tf_cs_bucked,
-            str_wp,
+            strain_z_tf_inboard_wp,
             casestr,
             insstrain,
             sig_tf_wp_av_z,

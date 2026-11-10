@@ -1889,10 +1889,10 @@ def constraint_equation_88(constraint_registration, data):
     """Equation for TF coil vertical strain upper limit (absolute value)
 
     str_wp_max: Allowable maximum TF coil vertical strain
-    str_wp: Constrained TF coil vertical strain
+    strain_z_tf_inboard_wp: Constrained TF coil vertical strain
     """
     return leq(
-        abs(data.tfcoil.str_wp),
+        abs(data.tfcoil.strain_z_tf_inboard_wp),
         data.tfcoil.str_wp_max,
         constraint_registration,
     )

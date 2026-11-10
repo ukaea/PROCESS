@@ -904,7 +904,7 @@ class StressclParam(NamedTuple):
 
     f_a_tf_turn_cable_copper: Any = None
 
-    str_wp: Any = None
+    strain_z_tf_inboard_wp: Any = None
 
     n_tf_wp_stress_layers: Any = None
 
@@ -1032,7 +1032,7 @@ class StressclParam(NamedTuple):
             poisson_cond_trans=0.30000001192092896,
             dia_tf_turn_coolant_channel=0.010000000000000002,
             f_a_tf_turn_cable_copper=0.80884,
-            str_wp=0,
+            strain_z_tf_inboard_wp=0,
             n_tf_wp_stress_layers=5,
             i_pf_conductor=PFConductorModel.SUPERCONDUCTING,
             f_a_cs_turn_steel=0.57874999999999999,
@@ -1148,7 +1148,7 @@ class StressclParam(NamedTuple):
             poisson_cond_trans=0.30000001192092896,
             dia_tf_turn_coolant_channel=0.010000000000000002,
             f_a_tf_turn_cable_copper=0.80884,
-            str_wp=0.0015619754370069119,
+            strain_z_tf_inboard_wp=0.0015619754370069119,
             n_tf_wp_stress_layers=5,
             i_pf_conductor=PFConductorModel.SUPERCONDUCTING,
             f_a_cs_turn_steel=0.57874999999999999,
