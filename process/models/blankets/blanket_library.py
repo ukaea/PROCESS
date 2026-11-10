@@ -1562,43 +1562,43 @@ class BlanketLibrary(Model):
                 )
             )
 
-        self.data.blanket.dpres_blkt_inboard_coolant_channel_straight_total = (
-            blkt_inboard_friction_params.dpres_straight
-        )
-        self.data.blanket.dpres_blkt_inboard_coolant_channel_90_bend = (
-            blkt_inboard_friction_params.dpres_90
-        )
-        self.data.blanket.dpres_blkt_inboard_coolant_channel_90_bends_total = (
-            blkt_inboard_friction_params.dpres_90_total
-        )
-        self.data.blanket.dpres_blkt_inboard_coolant_channel_180_bend = (
-            blkt_inboard_friction_params.dpres_180
-        )
-        self.data.blanket.dpres_blkt_inboard_coolant_channel_180_bends_total = (
-            blkt_inboard_friction_params.dpres_180_total
-        )
-        self.data.blanket.dpres_blkt_inboard_bends_total = (
-            blkt_inboard_friction_params.dpres_bends_total
-        )
+            self.data.blanket.dpres_blkt_inboard_coolant_channel_straight_total = (
+                blkt_inboard_friction_params.dpres_straight
+            )
+            self.data.blanket.dpres_blkt_inboard_coolant_channel_90_bend = (
+                blkt_inboard_friction_params.dpres_90
+            )
+            self.data.blanket.dpres_blkt_inboard_coolant_channel_90_bends_total = (
+                blkt_inboard_friction_params.dpres_90_total
+            )
+            self.data.blanket.dpres_blkt_inboard_coolant_channel_180_bend = (
+                blkt_inboard_friction_params.dpres_180
+            )
+            self.data.blanket.dpres_blkt_inboard_coolant_channel_180_bends_total = (
+                blkt_inboard_friction_params.dpres_180_total
+            )
+            self.data.blanket.dpres_blkt_inboard_bends_total = (
+                blkt_inboard_friction_params.dpres_bends_total
+            )
 
-        self.data.blanket.reynolds_blkt_inboard_coolant = (
-            blkt_inboard_friction_params.reynolds_number
-        )
-        self.data.blanket.darcy_frict_blkt_inboard_coolant = (
-            blkt_inboard_friction_params.darcy_friction_factor
-        )
-        self.data.blanket.f_straight_blkt_inboard_coolant = (
-            blkt_inboard_friction_params.f_straight
-        )
-        self.data.blanket.len_blkt_inboard_coolant_channel_straight_total = (
-            blkt_inboard_friction_params.len_straight
-        )
-        self.data.blanket.f_elbow_blkt_inboard_90_bend = (
-            blkt_inboard_friction_params.f_elbow_90
-        )
-        self.data.blanket.f_elbow_blkt_inboard_180_bend = (
-            blkt_inboard_friction_params.f_elbow_180
-        )
+            self.data.blanket.reynolds_blkt_inboard_coolant = (
+                blkt_inboard_friction_params.reynolds_number
+            )
+            self.data.blanket.darcy_frict_blkt_inboard_coolant = (
+                blkt_inboard_friction_params.darcy_friction_factor
+            )
+            self.data.blanket.f_straight_blkt_inboard_coolant = (
+                blkt_inboard_friction_params.f_straight
+            )
+            self.data.blanket.len_blkt_inboard_coolant_channel_straight_total = (
+                blkt_inboard_friction_params.len_straight
+            )
+            self.data.blanket.f_elbow_blkt_inboard_90_bend = (
+                blkt_inboard_friction_params.f_elbow_90
+            )
+            self.data.blanket.f_elbow_blkt_inboard_180_bend = (
+                blkt_inboard_friction_params.f_elbow_180
+            )
 
         # If the blanket has a liquid metal breeder...
         if self.data.fwbs.i_blkt_dual_coolant > 0:
