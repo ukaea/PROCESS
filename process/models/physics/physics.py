@@ -284,6 +284,34 @@ class Physics(Model):
             self.data.physics.nd_plasma_electrons_vol_avg,
         )
 
+        self.data.physics.m_plasma_deuterium = (
+            self.data.physics.m_plasma_fuel_ions
+            * self.data.physics.f_plasma_fuel_deuterium
+        )
+
+        self.data.physics.m_plasma_tritium = (
+            self.data.physics.m_plasma_fuel_ions
+            * self.data.physics.f_plasma_fuel_tritium
+        )
+
+        self.data.physics.m_plasma_helions = (
+            self.data.physics.m_plasma_fuel_ions
+            * self.data.physics.f_plasma_fuel_helions
+        )
+
+        for species in IonSpecies:
+            if species.is_impurity:
+                setattr(
+                    self.data.physics,
+                    f"m_plasma_{species.full_name}_ions",
+                    self.data.impurity_radiation.f_nd_impurity_electron_array[
+                        species.index
+                    ]
+                    * self.data.physics.nd_plasma_electrons_vol_avg
+                    * self.data.physics.vol_plasma,
+                    *species.mass_amu * constants.ATOMIC_MASS_UNIT,
+                )
+
         # Define coulomb logarithm
         # (collisions: ion-electron, electron-electron)
         self.data.physics.dlamee = (
