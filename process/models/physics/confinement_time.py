@@ -39,8 +39,13 @@ class ConfinementTimeData:
     """Plasma energy confinement time in seconds."""
     p_plasma_loss_mw: float
     """Total plasma loss power in MW."""
-    hstar: float
-    """Non-radiation corrected H factor on energy confinement times"""
+    hfact_full_radiation: float
+    """Full radiation corrected H factor on energy confinement times"""
+    hfact_core_radiation: float
+    """Core radiation corrected H factor on energy confinement times"""
+    hfact_no_radiation: float
+    """No radiation corrected H factor on energy confinement times"""
+    
 
 
 class PlasmaConfinementTime(Model):
@@ -154,7 +159,7 @@ class PlasmaConfinementTime(Model):
         # ========================================================================
 
         # Calculate heating power (MW)
-        p_plasma_loss_mw = (
+        p_plasma_heating_mw = (
             self.data.physics.f_p_alpha_plasma_deposited * p_alpha_total_mw
             + p_non_alpha_charged_mw
             + self.data.physics.p_plasma_ohmic_mw
@@ -162,7 +167,9 @@ class PlasmaConfinementTime(Model):
 
         # If the device is not ignited, add the injected auxiliary power
         if PlasmaIgnitionModel(i_plasma_ignited) == PlasmaIgnitionModel.NON_IGNITED:
-            p_plasma_loss_mw += p_hcd_injected_total_mw
+            p_plasma_heating_mw += p_hcd_injected_total_mw
+
+        p_plasma_loss_mw = p_plasma_heating_mw
 
         # Include the radiation as a loss term based on radiation model
         try:  # noqa: PLW0717
@@ -192,6 +199,17 @@ class PlasmaConfinementTime(Model):
 
         # Ensure heating power is positive (shouldn't be necessary)
         p_plasma_loss_mw = max(p_plasma_loss_mw, 1.0e-3)
+        p_plasma_loss_full_radiation_mw = max(
+            p_plasma_heating_mw
+            - self.data.physics.pden_plasma_rad_vol_avg_mw * vol_plasma,
+            1.0e-3,
+        )
+        p_plasma_loss_core_radiation_mw = max(
+            p_plasma_heating_mw
+            - pden_plasma_core_rad_reduced_vol_avg_mw * vol_plasma,
+            1.0e-3,
+        )
+        p_plasma_loss_no_radiation_mw = max(p_plasma_heating_mw, 1.0e-3)
 
         # ========================================================================
 
@@ -226,6 +244,21 @@ class PlasmaConfinementTime(Model):
                 "Illegal value for i_confinement_time",
                 i_confinement_time=i_confinement_time,
             ) from e
+
+        if model.loss_power_exponent is None:
+            self.data.physics.hfact_full_radiation = hfact
+            self.data.physics.hfact_core_radiation = hfact
+            self.data.physics.hfact_no_radiation = hfact
+        else:
+            self.data.physics.hfact_full_radiation = hfact * (
+                p_plasma_loss_full_radiation_mw / p_plasma_loss_mw
+            ) ** model.loss_power_exponent
+            self.data.physics.hfact_core_radiation = hfact * (
+                p_plasma_loss_core_radiation_mw / p_plasma_loss_mw
+            ) ** model.loss_power_exponent
+            self.data.physics.hfact_no_radiation = hfact * (
+                p_plasma_loss_no_radiation_mw / p_plasma_loss_mw
+            ) ** model.loss_power_exponent
 
         match model:
             # ====================================================================
@@ -982,41 +1015,6 @@ class PlasmaConfinementTime(Model):
         # Ion energy confinement time
         t_ion_energy_confinement = t_electron_energy_confinement
 
-        # Calculate H* non-radiation corrected H factor
-        # Note: we will assume the IPB-98y2 scaling.
-        match ConfinementRadiationLossModel(self.data.physics.i_rad_loss):
-            case ConfinementRadiationLossModel.REDUCED_CORE_ONLY:
-                hstar = (
-                    hfact
-                    * (
-                        p_plasma_loss_mw
-                        / (
-                            p_plasma_loss_mw
-                            + self.data.physics.pden_plasma_sync_vol_avg_mw * vol_plasma
-                            + self.data.physics.p_plasma_core_rad_reduced_mw
-                        )
-                    )
-                    ** 0.31
-                )
-            case ConfinementRadiationLossModel.FULL_RADIATION:
-                hstar = (
-                    hfact
-                    * (
-                        p_plasma_loss_mw
-                        / (
-                            p_plasma_loss_mw
-                            + self.data.physics.pden_plasma_rad_vol_avg_mw * vol_plasma
-                        )
-                    )
-                    ** 0.31
-                )
-            case ConfinementRadiationLossModel.NO_RADIATION:
-                hstar = hfact
-            case _:
-                raise ProcessValueError(
-                    "Illegal value for i_rad_loss",
-                    i_rad_loss=self.data.physics.i_rad_loss,
-                )
 
         # Calculation of the transport power loss terms
         # Transport losses in Watts/m3 are 3/2 * n.e.T / tau , with T in eV
@@ -1054,7 +1052,9 @@ class PlasmaConfinementTime(Model):
             t_ion_energy_confinement=t_ion_energy_confinement,
             t_plasma_energy_confinement=t_energy_confinement,
             p_plasma_loss_mw=p_plasma_loss_mw,
-            hstar=hstar,
+            hfact_full_radiation=self.data.physics.hfact_full_radiation,
+            hfact_core_radiation=self.data.physics.hfact_core_radiation,
+            hfact_no_radiation=self.data.physics.hfact_no_radiation,
         )
 
     @staticmethod
@@ -1218,6 +1218,26 @@ class PlasmaConfinementTime(Model):
         po.ovarre(
             self.outfile, "Confinement H factor", "(hfact)", self.data.physics.hfact
         )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Full radiation corrected H factor",
+            "(hfact_full_radiation)",
+            self.data.physics.hfact_full_radiation,
+        )
+        po.ovarre(
+            self.outfile,
+            "Core radiation corrected H factor",
+            "(hfact_core_radiation)",
+            self.data.physics.hfact_core_radiation,
+        )
+        po.ovarre(
+            self.outfile,
+            "No radiation corrected H factor",
+            "(hfact_no_radiation)",
+            self.data.physics.hfact_no_radiation,
+        )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "Global thermal energy confinement time, from scaling (τₑ) (s)",

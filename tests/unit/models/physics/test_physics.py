@@ -6,7 +6,10 @@ import numpy as np
 import pytest
 
 from process.core import constants
-from process.data_structure.physics_variables import PlasmaIgnitionModel
+from process.data_structure.physics_variables import (
+    ConfinementTimeModel,
+    PlasmaIgnitionModel,
+)
 from process.models.physics.impurity_radiation import initialise_imprad
 from process.models.physics.physics import (
     DetailedPhysics,
@@ -3103,6 +3106,46 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
     assert confinement_time_data.p_plasma_loss_mw == pytest.approx(
         confinementtimeparam.expected_p_plasma_loss_mw
     )
+
+    loss_power_exponent = ConfinementTimeModel(
+        confinementtimeparam.i_confinement_time
+    ).loss_power_exponent
+    plasma_heating_mw = (
+        confinementtimeparam.f_p_alpha_plasma_deposited
+        * confinementtimeparam.p_alpha_total_mw
+        + confinementtimeparam.p_non_alpha_charged_mw
+        + confinementtimeparam.p_plasma_ohmic_mw
+    )
+    if (
+        PlasmaIgnitionModel(confinementtimeparam.i_plasma_ignited)
+        == PlasmaIgnitionModel.NON_IGNITED
+    ):
+        plasma_heating_mw += confinementtimeparam.p_hcd_injected_total_mw
+
+    radiation_adjusted_loss_powers = {
+        "hfact_full_radiation": max(
+            plasma_heating_mw
+            - confinementtimeparam.pden_plasma_rad_vol_avg_mw
+            * confinementtimeparam.vol_plasma,
+            1.0e-3,
+        ),
+        "hfact_core_radiation": max(
+            plasma_heating_mw
+            - confinementtimeparam.pden_plasma_core_rad_reduced_vol_avg_mw
+            * confinementtimeparam.vol_plasma,
+            1.0e-3,
+        ),
+        "hfact_no_radiation": max(plasma_heating_mw, 1.0e-3),
+    }
+    for hfact_name, loss_power_mw in radiation_adjusted_loss_powers.items():
+        expected_hfact = confinementtimeparam.hfact
+        if loss_power_exponent is not None:
+            expected_hfact *= (
+                loss_power_mw / confinement_time_data.p_plasma_loss_mw
+            ) ** loss_power_exponent
+        assert getattr(physics.data.physics, hfact_name) == pytest.approx(
+            expected_hfact
+        )
 
     assert confinement_time_data.pden_electron_transport_loss_mw == pytest.approx(
         confinementtimeparam.expected_pden_electron_transport_loss_mw
