@@ -82,6 +82,7 @@ def jcrit_from_material(
 
         jstrand = j_wp / (1 - f_he)
         #  jstrand = 0  # as far as I can tell this will always be 0
+        # as j_wp takes its default value of 0.0
 
         j_crit_cable, tmarg = superconductors.bi2212(
             b_max, jstrand, t_helium, f_hts
