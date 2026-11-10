@@ -1016,7 +1016,16 @@ class PhysicsData:
     """H factors for an ignited plasma for each energy confinement time scaling law"""
 
     hfact: float = 1.0
-    """H factor on energy confinement times, radiation corrected (`iteration variable 10`)."""
+    """H factor on energy confinement times. (`iteration variable 10`)."""
+
+    hfact_full_radiation: float = 1.0
+    """Full radiation corrected H factor on energy confinement times"""
+
+    hfact_core_radiation: float = 1.0
+    """Core radiation corrected H factor on energy confinement times"""
+
+    hfact_no_radiation: float = 1.0
+    """No radiation corrected H factor on energy confinement times"""
 
     hstar: float = 1.0
     """H* non-radiation corrected H factor on energy confinement times"""
