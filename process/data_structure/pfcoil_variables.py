@@ -104,17 +104,17 @@ class PFCoilData:
     r_pf_cs_current_filaments: list[float] = field(
         default_factory=lambda: np.zeros(NFIXMX)
     )
-    """Array of radial positions of current filaments in central solenoid"""
+    """Array of radial positions of current filaments in central solenoid [m]"""
 
     z_pf_cs_current_filaments: list[float] = field(
         default_factory=lambda: np.zeros(NFIXMX)
     )
-    """Array of vertical positions of current filaments in central solenoid"""
+    """Array of vertical positions of current filaments in central solenoid [m]"""
 
     c_pf_cs_current_filaments: list[float] = field(
         default_factory=lambda: np.zeros(NFIXMX)
     )
-    """Array of current in filaments in central solenoid"""
+    """Array of current in filaments in central solenoid [A]"""
 
     ind_pf_coil_edge_mutual: list[float] = field(
         default_factory=lambda: np.zeros(NFIXMX)

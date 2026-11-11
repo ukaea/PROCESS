@@ -369,7 +369,7 @@ class PFCoil(Model):
                 raise ProcessValueError(
                     "Too many test points npts across plasma midplane",
                     npts=npts,
-                    nptsmx=N_PF_FIELD_CONSTRAINT_POINTS_MAX,
+                    N_PF_FIELD_CONSTRAINT_POINTS_MAX=N_PF_FIELD_CONSTRAINT_POINTS_MAX,
                 )
 
             # Position and B-field at each test point
@@ -1470,7 +1470,7 @@ class PFCoil(Model):
         ----------
         npts : int
             number of data points at which field is to be fixed; should
-            be <= nptsmx
+            be <= N_PF_FIELD_CONSTRAINT_POINTS_MAX
         rpts : np.ndarray
             coords of data points (m)
         zpts : np.ndarray
@@ -5344,7 +5344,7 @@ def rsid(npts, brin, bzin, nfix, n_pf_coil_groups, cur_pf_group_equilibrium, bfi
     ----------
     npts : int
         number of data points at which field is  to be fixed;
-        should be <= nptsmx
+        should be <= N_PF_FIELD_CONSTRAINT_POINTS_MAX
     brin : numpy.ndarray
         field components at data points (T)
     bzin : numpy.ndarray
@@ -5413,10 +5413,10 @@ def fixb(lrow1, npts, rpts, zpts, nfix, rfix, zfix, cfix):
     Parameters
     ----------
     lrow1 : int
-        row length of array bfix; should be >= nptsmx
+        row length of array bfix; should be >= N_PF_FIELD_CONSTRAINT_POINTS_MAX
     npts : int
         number of data points at which field is to be fixed;
-        should be <= nptsmx
+        should be <= N_PF_FIELD_CONSTRAINT_POINTS_MAX
     rpts : numpy.ndarray
         coords of data points (m)
     zpts : numpy.ndarray
@@ -5482,13 +5482,13 @@ def mtrx(
     ----------
     lrow1 : int
         row length of arrays bfix, bvec, gmat, umat, vmat; should
-        be >= (2*nptsmx + n_pf_groups_max)
+        be >= (2*N_PF_FIELD_CONSTRAINT_POINTS_MAX + n_pf_groups_max)
     lcol1 : int
         column length of arrays gmat, umat, vmat; should be >=
         n_pf_groups_max
     npts : int
         number of data points at which field is to be fixed; should
-        be <= nptsmx
+        be <= N_PF_FIELD_CONSTRAINT_POINTS_MAX
     rpts : numpy.ndarray
         coords of data points (m)
     zpts : numpy.ndarray
