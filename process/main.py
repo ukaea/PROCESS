@@ -1,4 +1,4 @@
-"""Run `PROCESS` by calling into the Python module.
+"""Run `PROCESS` by calling physics and engineering models.
 
 Power Reactor Optimisation Code for Environmental and Safety Studies
 
