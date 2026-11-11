@@ -3143,9 +3143,7 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
             expected_hfact *= (
                 loss_power_mw / confinement_time_data.p_plasma_loss_mw
             ) ** loss_power_exponent
-        assert getattr(physics.data.physics, hfact_name) == pytest.approx(
-            expected_hfact
-        )
+        assert getattr(physics.data.physics, hfact_name) == pytest.approx(expected_hfact)
 
     assert confinement_time_data.pden_electron_transport_loss_mw == pytest.approx(
         confinementtimeparam.expected_pden_electron_transport_loss_mw

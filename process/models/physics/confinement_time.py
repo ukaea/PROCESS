@@ -45,7 +45,6 @@ class ConfinementTimeData:
     """Core radiation corrected H factor on energy confinement times"""
     hfact_no_radiation: float
     """No radiation corrected H factor on energy confinement times"""
-    
 
 
 class PlasmaConfinementTime(Model):
@@ -205,8 +204,7 @@ class PlasmaConfinementTime(Model):
             1.0e-3,
         )
         p_plasma_loss_core_radiation_mw = max(
-            p_plasma_heating_mw
-            - pden_plasma_core_rad_reduced_vol_avg_mw * vol_plasma,
+            p_plasma_heating_mw - pden_plasma_core_rad_reduced_vol_avg_mw * vol_plasma,
             1.0e-3,
         )
         p_plasma_loss_no_radiation_mw = max(p_plasma_heating_mw, 1.0e-3)
@@ -250,15 +248,21 @@ class PlasmaConfinementTime(Model):
             self.data.physics.hfact_core_radiation = hfact
             self.data.physics.hfact_no_radiation = hfact
         else:
-            self.data.physics.hfact_full_radiation = hfact * (
-                p_plasma_loss_full_radiation_mw / p_plasma_loss_mw
-            ) ** model.loss_power_exponent
-            self.data.physics.hfact_core_radiation = hfact * (
-                p_plasma_loss_core_radiation_mw / p_plasma_loss_mw
-            ) ** model.loss_power_exponent
-            self.data.physics.hfact_no_radiation = hfact * (
-                p_plasma_loss_no_radiation_mw / p_plasma_loss_mw
-            ) ** model.loss_power_exponent
+            self.data.physics.hfact_full_radiation = (
+                hfact
+                * (p_plasma_loss_full_radiation_mw / p_plasma_loss_mw)
+                ** model.loss_power_exponent
+            )
+            self.data.physics.hfact_core_radiation = (
+                hfact
+                * (p_plasma_loss_core_radiation_mw / p_plasma_loss_mw)
+                ** model.loss_power_exponent
+            )
+            self.data.physics.hfact_no_radiation = (
+                hfact
+                * (p_plasma_loss_no_radiation_mw / p_plasma_loss_mw)
+                ** model.loss_power_exponent
+            )
 
         match model:
             # ====================================================================
@@ -1015,7 +1019,6 @@ class PlasmaConfinementTime(Model):
         # Ion energy confinement time
         t_ion_energy_confinement = t_electron_energy_confinement
 
-
         # Calculation of the transport power loss terms
         # Transport losses in Watts/m3 are 3/2 * n.e.T / tau , with T in eV
         # (here, temp_plasma_ion_density_weighted_kev and
@@ -1494,13 +1497,13 @@ class PlasmaConfinementTime(Model):
         Parameters
         ----------
         dene20 :
-            Volume averaged electron density in units of 10**20 m**-3
+            Volume averaged electron density [10²⁰ m⁻³]
         rminor :
             Plasma minor radius [m]
         rmajor :
             Plasma major radius [m]
         qstar :
-            Equivalent cylindrical edge safety factor
+            Equivalent cylindrical edge safety factor [-]
 
         Returns
         -------
@@ -1510,9 +1513,9 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria) and
-              ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
-              Feb. 1990.
+        [1] N. A. Uckan, International Atomic Energy Agency, Vienna (Austria) and
+            ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
+            Feb. 1990.
         """
         return 0.07e0 * dene20 * rminor * rmajor * rmajor * qstar
 
@@ -1527,7 +1530,7 @@ class PlasmaConfinementTime(Model):
         rminor :
             Plasma minor radius [m]
         kappa95 :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         cur_plasma_ma :
             Plasma current [MA]
 
@@ -1538,9 +1541,9 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria) and
-              ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
-              Feb. 1990.
+        [1] N. A. Uckan, International Atomic Energy Agency, Vienna (Austria) and
+            ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
+            Feb. 1990.
         """
         return 0.2e0 * rminor * np.sqrt(kappa95) * cur_plasma_ma
 
@@ -1563,13 +1566,13 @@ class PlasmaConfinementTime(Model):
         rminor :
             Plasma minor radius [m]
         kappa95 :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         qstar :
-            Equivalent cylindrical edge safety factor
+            Equivalent cylindrical edge safety factor [-]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         ten :
             Electron temperature [keV]
 
@@ -1581,9 +1584,9 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and
-              ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
-              Feb. 1990.
+        [1] N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and
+            ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
+            Feb. 1990.
         """
         return (
             3.5e-3
@@ -1615,9 +1618,9 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         kappa95 :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
 
         Returns
         -------
@@ -1626,9 +1629,9 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and
-              ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
-              Feb. 1990.
+        [1] N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and
+            ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
+            Feb. 1990.
         """
         return (
             0.045e0
@@ -1655,15 +1658,15 @@ class PlasmaConfinementTime(Model):
         Parameters
         ----------
         kappa95 :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         cur_plasma_ma :
             Plasma current [MA]
         n20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Volume averaged electron density [10²⁰ m⁻³]
         rmajor :
             Plasma major radius [m]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         rminor :
@@ -1678,15 +1681,15 @@ class PlasmaConfinementTime(Model):
 
         Notes
         -----
-            - An isotope correction factor (M_i/1.5)^0.5 is added to the original
-              scaling to reflect the fact that the empirical fits to the data were
-              from experiments with H and D  mixture, M_i = 1.5
+        - An isotope correction factor (M_i/1.5)^0.5 is added to the original
+        scaling to reflect the fact that the empirical fits to the data were
+        from experiments with H and D  mixture, M_i = 1.5
 
         References
         ----------
-            - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and
-              ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
-              Feb. 1990.
+        [1] N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and
+            ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
+            Feb. 1990.
         """
         return (
             0.055e0
@@ -1724,13 +1727,13 @@ class PlasmaConfinementTime(Model):
         rminor :
             Plasma minor radius [m]
         kappa :
-            Plasma elongation
+            Plasma elongation [-]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         p_plasma_loss_mw :
             Net Heating power [MW]
 
@@ -1742,12 +1745,12 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
-              AEA FUS 172, 1992
+        [1] T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
+            AEA FUS 172, 1992
 
-            - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and
-              ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
-              Feb. 1990.
+        [2] N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and
+            ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
+            Feb. 1990.
         """
         return (
             0.048e0
@@ -1784,13 +1787,13 @@ class PlasmaConfinementTime(Model):
         rminor :
             Plasma minor radius [m]
         kappa :
-            Plasma elongation
+            Plasma elongation [-]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         p_plasma_loss_mw :
             Net Heating power [MW]
 
@@ -1801,8 +1804,8 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
-              AEA FUS 172, 1992
+        [1] T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
+            AEA FUS 172, 1992
         """
         term1 = (
             0.04e0
@@ -1846,15 +1849,15 @@ class PlasmaConfinementTime(Model):
         rmajor :
             Plasma major radius [m]
         kappa :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         cur_plasma_ma :
             Plasma current [MA]
         zeff :
-            Effective charge
+            Effective charge [-]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         p_plasma_loss_mw :
@@ -1868,8 +1871,8 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
-              AEA FUS 172, 1992
+        [1] T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
+            AEA FUS 172, 1992
         """
         rll = (rminor**2 * rmajor * kappa) ** (1.0e0 / 3.0e0)
         term1 = 1.2e-2 * cur_plasma_ma * rll**1.5e0 / np.sqrt(zeff)
@@ -1904,9 +1907,9 @@ class PlasmaConfinementTime(Model):
         rminor :
             Plasma minor radius [m]
         kappa95 :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         p_plasma_loss_mw :
             Net Heating power [MW]
 
@@ -1917,9 +1920,9 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and
-              ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
-              Feb. 1990.
+        [1] N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and
+            ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
+            Feb. 1990.
         """
         return (
             0.037e0
@@ -1948,21 +1951,21 @@ class PlasmaConfinementTime(Model):
         Parameters
         ----------
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         rmajor :
             Plasma major radius [m]
         qstar :
-            Equivalent cylindrical edge safety factor
+            Equivalent cylindrical edge safety factor [-]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         rminor :
             Plasma minor radius [m]
         kappa95 :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         p_plasma_loss_mw :
             Net Heating power [MW]
         zeff :
-            Effective charge
+            Effective charge [-]
         cur_plasma_ma :
             Plasma current [MA]
 
@@ -1973,9 +1976,9 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and
-              ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
-              Feb. 1990.
+        [1] N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and
+            ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
+            Feb. 1990.
         """
         denfac = (
             nd_plasma_electron_line_20
@@ -2018,13 +2021,13 @@ class PlasmaConfinementTime(Model):
         Parameters
         ----------
         kappa95 :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         rminor :
             Plasma minor radius [m]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         n20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Volume averaged electron density [10²⁰ m⁻³]
         cur_plasma_ma :
             Plasma current [MA]
         b_plasma_toroidal_on_axis :
@@ -2032,9 +2035,9 @@ class PlasmaConfinementTime(Model):
         rmajor :
             Plasma major radius [m]
         qstar :
-            Equivalent cylindrical edge safety factor
+            Equivalent cylindrical edge safety factor [-]
         zeff :
-            Effective charge
+            Effective charge [-]
         p_plasma_loss_mw :
             Net Heating power [MW]
 
@@ -2045,9 +2048,9 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria) and
-              ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
-              Feb. 1990.
+        [1] N. A. Uckan, International Atomic Energy Agency, Vienna (Austria) and
+            ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
+            Feb. 1990.
         """
         gjaeri = (
             zeff**0.4e0
@@ -2091,13 +2094,13 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         kappa95 :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         cur_plasma_ma :
             Plasma current [MA]
         n20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Volume averaged electron density [10²⁰ m⁻³]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         p_plasma_loss_mw :
             Net Heating power [MW]
 
@@ -2109,9 +2112,9 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria) and
-              ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
-              Feb. 1990.
+        [1] N. A. Uckan, International Atomic Energy Agency, Vienna (Austria) and
+            ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
+            Feb. 1990.
         """
         return (
             0.105e0
@@ -2147,13 +2150,13 @@ class PlasmaConfinementTime(Model):
         rminor :
             Plasma minor radius [m]
         kappa :
-            Plasma elongation
+            Plasma elongation [-]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         p_plasma_loss_mw :
             Net Heating power [MW]
 
@@ -2165,8 +2168,8 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
-              AEA FUS 172, 1992
+        [1] T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
+            AEA FUS 172, 1992
         """
         return (
             0.064e0
@@ -2201,9 +2204,9 @@ class PlasmaConfinementTime(Model):
         rminor :
             Plasma minor radius [m]
         kappa95 :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         p_plasma_loss_mw :
@@ -2216,8 +2219,8 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
-              AEA FUS 172, 1992
+        [1] T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
+            AEA FUS 172, 1992
         """
         return (
             0.044e0
@@ -2252,15 +2255,15 @@ class PlasmaConfinementTime(Model):
         rminor :
             Plasma minor radius [m]
         kappa95 :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         p_plasma_loss_mw :
             Net Heating power [MW]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
 
         Returns
         -------
@@ -2269,8 +2272,8 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
-              AEA FUS 172, 1992
+        [1] T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
+            AEA FUS 172, 1992
         """
         return (
             0.24e0
@@ -2304,9 +2307,9 @@ class PlasmaConfinementTime(Model):
         rminor :
             Plasma minor radius [m]
         kappa95 :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         p_plasma_loss_mw :
@@ -2319,8 +2322,8 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
-              AEA FUS 172, 1992
+        [1] T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
+            AEA FUS 172, 1992
         """
         qhat = (
             (1.0e0 + kappa95**2)
@@ -2361,9 +2364,9 @@ class PlasmaConfinementTime(Model):
         rminor :
             Plasma minor radius [m]
         kappa95 :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         p_plasma_loss_mw :
@@ -2377,8 +2380,8 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
-              AEA FUS 172, 1992
+        [1] T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
+            AEA FUS 172, 1992
         """
         return (
             0.063e0
@@ -2413,13 +2416,13 @@ class PlasmaConfinementTime(Model):
         rminor :
             Plasma minor radius [m]
         kappa95 :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         p_plasma_loss_mw :
             Net Heating power [MW]
 
@@ -2430,8 +2433,8 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
-              AEA FUS 172, 1992
+        [1] T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
+            AEA FUS 172, 1992
         """
         return (
             0.1e0
@@ -2463,13 +2466,13 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         rmajor :
             Plasma major radius [m]
         p_plasma_loss_mw :
             Net Heating power [MW]
         kappa :
-            Plasma elongation
+            Plasma elongation [-]
 
         Returns
         -------
@@ -2478,9 +2481,9 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - J. P. Christiansen et al., “Global energy confinement H-mode database
-              for ITER,” Nuclear Fusion, vol. 32, no. 2, pp. 291-338, Feb. 1992,
-              doi: https://doi.org/10.1088/0029-5515/32/2/i11.
+        [1] J. P. Christiansen et al., “Global energy confinement H-mode database
+            for ITER,” Nuclear Fusion, vol. 32, no. 2, pp. 291-338, Feb. 1992,
+            doi: https://doi.org/10.1088/0029-5515/32/2/i11.
         """
         return (
             0.082e0
@@ -2508,7 +2511,7 @@ class PlasmaConfinementTime(Model):
         rminor :
             Plasma minor radius [m]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         p_plasma_loss_mw :
@@ -2521,9 +2524,9 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - S. Sudo et al., “Scalings of energy confinement and density limit in
-              stellarator/heliotron devices,” Nuclear Fusion, vol. 30, no. 1,
-              pp. 11-21, Jan. 1990, doi: https://doi.org/10.1088/0029-5515/30/1/002.
+        [1] S. Sudo et al., “Scalings of energy confinement and density limit in
+            stellarator/heliotron devices,” Nuclear Fusion, vol. 30, no. 1,
+            pp. 11-21, Jan. 1990, doi: https://doi.org/10.1088/0029-5515/30/1/002.
         """
         return (
             0.17e0
@@ -2549,7 +2552,7 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         p_plasma_loss_mw :
             Net Heating power [MW]
         rminor :
@@ -2564,8 +2567,8 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - Goldston, R. J., H. Biglari, and G. W. Hammett. "E x B/B 2 vs. μ B/B as
-              the Cause of Transport in Tokamaks." Bull. Am. Phys. Soc 34 (1989): 1964.
+        [1] Goldston, R. J., H. Biglari, and G. W. Hammett. "E x B/B 2 vs. μ B/B as
+            the Cause of Transport in Tokamaks." Bull. Am. Phys. Soc 34 (1989): 1964.
         """
         return (
             0.25e0
@@ -2594,13 +2597,13 @@ class PlasmaConfinementTime(Model):
         rminor :
             Plasma minor radius [m]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         p_plasma_loss_mw :
             Net Heating power [MW]
         q :
-            Edge safety factor
+            Edge safety factor [-]
 
         Returns
         -------
@@ -2609,9 +2612,9 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - K. Lackner and N. A. O. Gottardi, “Tokamak confinement in relation to
-              plateau scaling,” Nuclear Fusion, vol. 30, no. 4, pp. 767-770, Apr. 1990,
-              doi: https://doi.org/10.1088/0029-5515/30/4/018.
+        [1] K. Lackner and N. A. O. Gottardi, “Tokamak confinement in relation to
+            plateau scaling,” Nuclear Fusion, vol. 30, no. 4, pp. 767-770, Apr. 1990,
+            doi: https://doi.org/10.1088/0029-5515/30/4/018.
         """
         return (
             0.17e0
@@ -2645,15 +2648,15 @@ class PlasmaConfinementTime(Model):
         p_plasma_loss_mw :
             Net Heating power [MW]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         rmajor :
             Plasma major radius [m]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         kappa :
-            Plasma elongation
+            Plasma elongation [-]
 
         Returns
         -------
@@ -2662,9 +2665,9 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - K. Thomsen et al., “ITER H mode confinement database update,”
-              vol. 34, no. 1, pp. 131-167, Jan. 1994,
-              doi: https://doi.org/10.1088/0029-5515/34/1/i10.
+        [1] K. Thomsen et al., “ITER H mode confinement database update,”
+            vol. 34, no. 1, pp. 131-167, Jan. 1994,
+            doi: https://doi.org/10.1088/0029-5515/34/1/i10.
         """
         return (
             0.036e0
@@ -2700,15 +2703,15 @@ class PlasmaConfinementTime(Model):
         p_plasma_loss_mw :
             Net Heating power [MW]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         rmajor :
             Plasma major radius [m]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         kappa :
-            Plasma elongation
+            Plasma elongation [-]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
 
         Returns
         -------
@@ -2717,10 +2720,10 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - I. C. Database and M. W. G. (presented Cordey), “Energy confinement
-              scaling and the extrapolation to ITER,”
-              Plasma Physics and Controlled Fusion, vol. 39, no. 12B, pp. B115-B127,
-              Dec. 1997, doi: https://doi.org/10.1088/0741-3335/39/12b/009.
+        [1] I. C. Database and M. W. G. (presented Cordey), “Energy confinement
+            scaling and the extrapolation to ITER,”
+            Plasma Physics and Controlled Fusion, vol. 39, no. 12B, pp. B115-B127,
+            Dec. 1997, doi: https://doi.org/10.1088/0741-3335/39/12b/009.
         """
         return (
             0.031e0
@@ -2756,15 +2759,15 @@ class PlasmaConfinementTime(Model):
         p_plasma_loss_mw :
             Net Heating power [MW]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         rmajor :
             Plasma major radius [m]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         kappa :
-            Plasma elongation
+            Plasma elongation [-]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
 
         Returns
         -------
@@ -2773,14 +2776,14 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - I. C. Database and M. W. G. (presented Cordey), “Energy confinement
-              scaling and the extrapolation to ITER,”
-              Plasma Physics and Controlled Fusion, vol. 39, no. 12B, pp. B115-B127,
-              Dec. 1997, doi: https://doi.org/10.1088/0741-3335/39/12b/009.
+        [1] I. C. Database and M. W. G. (presented Cordey), “Energy confinement
+            scaling and the extrapolation to ITER,”
+            Plasma Physics and Controlled Fusion, vol. 39, no. 12B, pp. B115-B127,
+            Dec. 1997, doi: https://doi.org/10.1088/0741-3335/39/12b/009.
 
-            - International Atomic Energy Agency, Vienna (Austria), "Technical basis
-              for the ITER final design report, cost review and safety analysis (FDR)",
-              no.16. Dec. 1998.
+        [2] International Atomic Energy Agency, Vienna (Austria), "Technical basis
+            for the ITER final design report, cost review and safety analysis (FDR)",
+            no.16. Dec. 1998.
         """
         return (
             0.029e0
@@ -2814,15 +2817,15 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         kappa95 :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         rmajor :
             Plasma major radius [m]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         p_plasma_loss_mw :
             Net Heating power [MW]
 
@@ -2837,7 +2840,7 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - S. B. Kaye et al., “ITER L mode confinement database,”
+        [1] S. B. Kaye et al., “ITER L mode confinement database,”
             Nuclear Fusion, vol. 37, no. 9, pp. 1303-1328, Sep. 1997,
             doi: https://doi.org/10.1088/0029-5515/37/9/i10.
         """
@@ -2873,15 +2876,15 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         rmajor :
             Plasma major radius [m]
         rminor :
             Plasma minor radius [m]
         kappa :
-            Plasma elongation
+            Plasma elongation [-]
         p_plasma_loss_mw :
             Net Heating power [MW]
 
@@ -2922,15 +2925,15 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         kappa :
-            Plasma elongation
+            Plasma elongation [-]
         rmajor :
             Plasma major radius [m]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         p_plasma_loss_mw :
             Net Heating power [MW]
 
@@ -2941,7 +2944,7 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - Kaye PPPL Workshop April 1998
+        [1] Kaye PPPL Workshop April 1998
         """
         return (
             0.021e0
@@ -2975,17 +2978,17 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         p_plasma_loss_mw :
             Net Heating power [MW]
         rmajor :
             Plasma major radius [m]
         kappa :
-            Plasma separatrix elongation
+            Plasma separatrix elongation [-]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
 
         Returns
         -------
@@ -3024,17 +3027,17 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         p_plasma_loss_mw :
             Net Heating power [MW]
         rmajor :
             Plasma major radius [m]
         kappa :
-            IPB sprcific plasma separatrix elongation
+            IPB sprcific plasma separatrix elongation [-]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
 
         Returns
         -------
@@ -3049,15 +3052,15 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B.
-              Editors, “Chapter 2: Plasma confinement and transport,” Nuclear Fusion,
-              vol. 39, no. 12, pp. 2175-2249, Dec. 1999,
-              doi: https://doi.org/10.1088/0029-5515/39/12/302.
+        [1] I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B.
+            Editors, “Chapter 2: Plasma confinement and transport,” Nuclear Fusion,
+            vol. 39, no. 12, pp. 2175-2249, Dec. 1999,
+            doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
-            - Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a
-              sequence of papers in Nuclear Fusion,” Nuclear Fusion, vol. 48, no. 9,
-              pp. 099801-099801, Aug. 2008,
-              doi: https://doi.org/10.1088/0029-5515/48/9/099801.
+        [2] Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a
+            sequence of papers in Nuclear Fusion,” Nuclear Fusion, vol. 48, no. 9,
+            pp. 099801-099801, Aug. 2008,
+            doi: https://doi.org/10.1088/0029-5515/48/9/099801.
         """
         return (
             0.0365e0
@@ -3091,17 +3094,17 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         p_plasma_loss_mw :
             Net Heating power [MW]
         rmajor :
             Plasma major radius [m]
         kappa_ipb :
-            IPB specific plasma separatrix elongation
+            IPB specific plasma separatrix elongation [-]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
 
         Returns
         -------
@@ -3115,15 +3118,15 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B.
-              Editors, “Chapter 2: Plasma confinement and transport,” Nuclear Fusion,
-              vol. 39, no. 12, pp. 2175-2249, Dec. 1999,
-              doi: https://doi.org/10.1088/0029-5515/39/12/302.
+        [1] I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B.
+            Editors, “Chapter 2: Plasma confinement and transport,” Nuclear Fusion,
+            vol. 39, no. 12, pp. 2175-2249, Dec. 1999,
+            doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
-            - Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a
-              sequence of papers in Nuclear Fusion,” Nuclear Fusion, vol. 48, no. 9,
-              pp. 099801-099801, Aug. 2008,
-              doi: https://doi.org/10.1088/0029-5515/48/9/099801.
+        [2] Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a
+            sequence of papers in Nuclear Fusion,” Nuclear Fusion, vol. 48, no. 9,
+            pp. 099801-099801, Aug. 2008,
+            doi: https://doi.org/10.1088/0029-5515/48/9/099801.
         """
         return (
             0.0503e0
@@ -3157,17 +3160,17 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         p_plasma_loss_mw :
             Net Heating power [MW]
         rmajor :
             Plasma major radius [m]
         kappa_ipb :
-            IPB specific plasma separatrix elongation
+            IPB specific plasma separatrix elongation [-]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
 
         Returns
         -------
@@ -3181,15 +3184,15 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B.
-              Editors, “Chapter 2: Plasma confinement and transport,” Nuclear Fusion,
-              vol. 39, no. 12, pp. 2175-2249, Dec. 1999,
-              doi: https://doi.org/10.1088/0029-5515/39/12/302.
+        [1] I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B.
+            Editors, “Chapter 2: Plasma confinement and transport,” Nuclear Fusion,
+            vol. 39, no. 12, pp. 2175-2249, Dec. 1999,
+            doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
-            - Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a
-              sequence of papers in Nuclear Fusion,” Nuclear Fusion, vol. 48, no. 9,
-              pp. 099801-099801, Aug. 2008,
-              doi: https://doi.org/10.1088/0029-5515/48/9/099801.
+        [2] Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a
+            sequence of papers in Nuclear Fusion,” Nuclear Fusion, vol. 48, no. 9,
+            pp. 099801-099801, Aug. 2008,
+            doi: https://doi.org/10.1088/0029-5515/48/9/099801.
         """
         return (
             0.0562e0
@@ -3223,17 +3226,17 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         p_plasma_loss_mw :
             Net Heating power [MW]
         rmajor :
             Plasma major radius [m]
         kappa_ipb :
-            IPB specific plasma separatrix elongation
+            IPB specific plasma separatrix elongation [-]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
 
         Returns
         -------
@@ -3247,15 +3250,15 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B.
-              Editors, “Chapter 2: Plasma confinement and transport,” Nuclear Fusion,
-              vol. 39, no. 12, pp. 2175-2249, Dec. 1999,
-              doi: https://doi.org/10.1088/0029-5515/39/12/302.
+        [1] I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B.
+            Editors, “Chapter 2: Plasma confinement and transport,” Nuclear Fusion,
+            vol. 39, no. 12, pp. 2175-2249, Dec. 1999,
+            doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
-            - Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a
-              sequence of papers in Nuclear Fusion,” Nuclear Fusion, vol. 48, no. 9,
-              pp. 099801-099801, Aug. 2008,
-              doi: https://doi.org/10.1088/0029-5515/48/9/099801.
+        [2] Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a
+            sequence of papers in Nuclear Fusion,” Nuclear Fusion, vol. 48, no. 9,
+            pp. 099801-099801, Aug. 2008,
+            doi: https://doi.org/10.1088/0029-5515/48/9/099801.
         """
         return (
             0.0564e0
@@ -3289,17 +3292,17 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         p_plasma_loss_mw :
             Net Heating power [MW]
         rmajor :
             Plasma major radius [m]
         kappa_ipb :
-            IPB specific plasma separatrix elongation
+            IPB specific plasma separatrix elongation [-]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
 
         Returns
         -------
@@ -3313,15 +3316,15 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B.
-              Editors, “Chapter 2: Plasma confinement and transport,” Nuclear Fusion,
-              vol. 39, no. 12, pp. 2175-2249, Dec. 1999,
-              doi: https://doi.org/10.1088/0029-5515/39/12/302.
+        [1] I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B.
+            Editors, “Chapter 2: Plasma confinement and transport,” Nuclear Fusion,
+            vol. 39, no. 12, pp. 2175-2249, Dec. 1999,
+            doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
-            - Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a
-              sequence of papers in Nuclear Fusion,” Nuclear Fusion, vol. 48, no. 9,
-              pp. 099801-099801, Aug. 2008,
-              doi: https://doi.org/10.1088/0029-5515/48/9/099801.
+        [2] Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a
+            sequence of papers in Nuclear Fusion,” Nuclear Fusion, vol. 48, no. 9,
+            pp. 099801-099801, Aug. 2008,
+            doi: https://doi.org/10.1088/0029-5515/48/9/099801.
         """
         return (
             0.0587e0
@@ -3353,13 +3356,13 @@ class PlasmaConfinementTime(Model):
         rmajor :
             Plasma major radius [m]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         p_plasma_loss_mw :
             Net Heating power [MW]
         iotabar :
-            Rotational transform
+            Rotational transform [-]
 
         Returns
         -------
@@ -3368,9 +3371,9 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - U. Stroth et al., “Energy confinement scaling from the international
-              stellarator database,” vol. 36, no. 8, pp. 1063-1077, Aug. 1996,
-              doi: https://doi.org/10.1088/0029-5515/36/8/i11.
+        [1] U. Stroth et al., “Energy confinement scaling from the international
+            stellarator database,” vol. 36, no. 8, pp. 1063-1077, Aug. 1996,
+            doi: https://doi.org/10.1088/0029-5515/36/8/i11.
         """
         return (
             0.079e0
@@ -3400,13 +3403,13 @@ class PlasmaConfinementTime(Model):
         rmajor :
             Plasma major radius [m]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         p_plasma_loss_mw :
             Net Heating power [MW]
         iotabar :
-            Rotational transform
+            Rotational transform [-]
 
         Returns
         -------
@@ -3415,10 +3418,10 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - H. Yamada et al., “Characterization of energy confinement in net-current
-              free plasmas using the extended International Stellarator Database,”
-              vol. 45, no. 12, pp. 1684-1693, Nov. 2005,
-              doi: https://doi.org/10.1088/0029-5515/45/12/024.
+        [1] H. Yamada et al., “Characterization of energy confinement in net-current
+            free plasmas using the extended International Stellarator Database,”
+            vol. 45, no. 12, pp. 1684-1693, Nov. 2005,
+            doi: https://doi.org/10.1088/0029-5515/45/12/024.
         """
         return (
             0.134e0
@@ -3450,17 +3453,17 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         p_plasma_loss_mw :
             Net Heating power [MW]
         rmajor :
             Plasma major radius [m]
         kappa95 :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
 
         Returns
         -------
@@ -3469,10 +3472,10 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T. C. Luce, C. C. Petty, and J. G. Cordey, “Application of dimensionless
-              parameter scaling techniques to the design and interpretation of magnetic
-              fusion experiments,” Plasma Physics and Controlled Fusion, vol. 50, no. 4,
-              p. 043001, Mar. 2008, doi: https://doi.org/10.1088/0741-3335/50/4/043001.
+        [1] T. C. Luce, C. C. Petty, and J. G. Cordey, “Application of dimensionless
+            parameter scaling techniques to the design and interpretation of magnetic
+            fusion experiments,” Plasma Physics and Controlled Fusion, vol. 50, no. 4,
+            p. 043001, Mar. 2008, doi: https://doi.org/10.1088/0741-3335/50/4/043001.
         """
         return (
             0.028e0
@@ -3504,9 +3507,9 @@ class PlasmaConfinementTime(Model):
         rmajor :
             Plasma major radius [m]
         kappa_ipb :
-            IPB specific plasma separatrix elongation
+            IPB specific plasma separatrix elongation [-]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         p_plasma_loss_mw :
@@ -3524,16 +3527,16 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - A. Murari, E. Peluso, Michela Gelfusa, I. Lupelli, and P. Gaudio,
+        [1] A. Murari, E. Peluso, Michela Gelfusa, I. Lupelli, and P. Gaudio,
              “A new approach to the formulation and validation of scaling expressions
              for plasma confinement in tokamaks,” Nuclear Fusion, vol. 55, no. 7,
              pp. 073009-073009, Jun. 2015,
              doi: https://doi.org/10.1088/0029-5515/55/7/073009.
 
-            - Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy,
-              “Corrections to a sequence of papers in Nuclear Fusion,” Nuclear Fusion,
-              vol. 48, no. 9, pp. 099801-099801, Aug. 2008,
-              doi: https://doi.org/10.1088/0029-5515/48/9/099801.
+        [2] Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy,
+            “Corrections to a sequence of papers in Nuclear Fusion,” Nuclear Fusion,
+            vol. 48, no. 9, pp. 099801-099801, Aug. 2008,
+            doi: https://doi.org/10.1088/0029-5515/48/9/099801.
         """
         return (
             0.0367
@@ -3573,15 +3576,15 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         p_plasma_loss_mw :
             Net Heating power [MW]
         rmajor :
             Plasma major radius [m]
         kappa_ipb :
-            IPB specific plasma separatrix elongation
+            IPB specific plasma separatrix elongation [-]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
 
         Returns
         -------
@@ -3595,14 +3598,14 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - C. C. Petty, “Sizing up plasmas using dimensionless parameters,”
-              Physics of Plasmas, vol. 15, no. 8, Aug. 2008,
-              doi: https://doi.org/10.1063/1.2961043.
+        [1] C. C. Petty, “Sizing up plasmas using dimensionless parameters,”
+            Physics of Plasmas, vol. 15, no. 8, Aug. 2008,
+            doi: https://doi.org/10.1063/1.2961043.
 
-            - Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy,
-              “Corrections to a sequence of papers in Nuclear Fusion,” Nuclear Fusion,
-              vol. 48, no. 9, pp. 099801-099801, Aug. 2008,
-              doi: https://doi.org/10.1088/0029-5515/48/9/099801.
+        [2] Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy,
+            “Corrections to a sequence of papers in Nuclear Fusion,” Nuclear Fusion,
+            vol. 48, no. 9, pp. 099801-099801, Aug. 2008,
+            doi: https://doi.org/10.1088/0029-5515/48/9/099801.
         """
         return (
             0.052e0
@@ -3634,11 +3637,11 @@ class PlasmaConfinementTime(Model):
         Parameters
         ----------
         plasma_current :
-            Plasma current [MA]
+            Plasma current [A]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line :
-            Line averaged electron density [m**-3]
+            Line averaged electron density [m⁻³]
         p_plasma_loss_mw :
             Net Heating power [MW]
         rmajor :
@@ -3646,15 +3649,15 @@ class PlasmaConfinementTime(Model):
         rminor :
             Plasma minor radius [m]
         q :
-            Safety factor
+            Safety factor [-]
         qstar :
-            Equivalent cylindrical edge safety factor
+            Equivalent cylindrical edge safety factor [-]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         kappa_ipb :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
 
         Returns
         -------
@@ -3663,10 +3666,10 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - P. T. Lang, C. Angioni, R. M. M. Dermott, R. Fischer, and H. Zohm,
-              “Pellet Induced High Density Phases during ELM Suppression in
-              ASDEX Upgrade,” 24th IAEA Conference Fusion Energy, 2012, Oct. 2012,
-              Available: https://www.researchgate.net/publication/274456104_Pellet_Induced_High_Density_Phases_during_ELM_Suppression_in_ASDEX_Upgrade
+        [1] P. T. Lang, C. Angioni, R. M. M. Dermott, R. Fischer, and H. Zohm,
+            “Pellet Induced High Density Phases during ELM Suppression in
+            ASDEX Upgrade,” 24th IAEA Conference Fusion Energy, 2012, Oct. 2012,
+            Available: https://www.researchgate.net/publication/274456104_Pellet_Induced_High_Density_Phases_during_ELM_Suppression_in_ASDEX_Upgrade
         """
         qratio = q / qstar
         n_gw = 1.0e14 * plasma_current / (np.pi * rminor * rminor)
@@ -3702,7 +3705,7 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         p_plasma_loss_mw :
             Net Heating power [MW]
 
@@ -3713,10 +3716,10 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - A. E. Hubbard et al., “Physics and performance of the I-mode regime over
-              an expanded operating space on Alcator C-Mod,” Nuclear Fusion, vol. 57,
-              no. 12, p. 126039, Oct. 2017,
-              doi: https://doi.org/10.1088/1741-4326/aa8570.
+        [1] A. E. Hubbard et al., “Physics and performance of the I-mode regime over
+            an expanded operating space on Alcator C-Mod,” Nuclear Fusion, vol. 57,
+            no. 12, p. 126039, Oct. 2017,
+            doi: https://doi.org/10.1088/1741-4326/aa8570.
         """
         return (
             0.014e0
@@ -3742,7 +3745,7 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         p_plasma_loss_mw :
             Net Heating power [MW]
 
@@ -3753,10 +3756,10 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - A. E. Hubbard et al., “Physics and performance of the I-mode regime over
-              an expanded operating space on Alcator C-Mod,” Nuclear Fusion, vol. 57,
-              no. 12, p. 126039, Oct. 2017,
-              doi: https://doi.org/10.1088/1741-4326/aa8570.
+        [1] A. E. Hubbard et al., “Physics and performance of the I-mode regime over
+            an expanded operating space on Alcator C-Mod,” Nuclear Fusion, vol. 57,
+            no. 12, p. 126039, Oct. 2017,
+            doi: https://doi.org/10.1088/1741-4326/aa8570.
         """
         return (
             0.014e0
@@ -3782,7 +3785,7 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         p_plasma_loss_mw :
             Net Heating power [MW]
 
@@ -3793,10 +3796,10 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - A. E. Hubbard et al., “Physics and performance of the I-mode regime over
-              an expanded operating space on Alcator C-Mod,” Nuclear Fusion, vol. 57,
-              no. 12, p. 126039, Oct. 2017,
-              doi: https://doi.org/10.1088/1741-4326/aa8570.
+        [1] A. E. Hubbard et al., “Physics and performance of the I-mode regime over
+            an expanded operating space on Alcator C-Mod,” Nuclear Fusion, vol. 57,
+            no. 12, p. 126039, Oct. 2017,
+            doi: https://doi.org/10.1088/1741-4326/aa8570.
         """
         return (
             0.014e0
@@ -3826,17 +3829,17 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         p_plasma_loss_mw :
             Net Heating power [MW]
         rmajor :
             Plasma major radius [m]
         kappa_ipb :
-            IPB specific plasma separatrix elongation
+            IPB specific plasma separatrix elongation [-]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
 
         Returns
         -------
@@ -3856,11 +3859,11 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - J. E. Menard, “Compact steady-state tokamak performance dependence on
-              magnet and core physics limits,”
-              Philosophical Transactions of the Royal Society A, vol. 377, no. 2141,
-              pp. 20170440-20170440, Feb. 2019,
-              doi: https://doi.org/10.1098/rsta.2017.0440.
+        [1] J. E. Menard, “Compact steady-state tokamak performance dependence on
+            magnet and core physics limits,”
+            Philosophical Transactions of the Royal Society A, vol. 377, no. 2141,
+            pp. 20170440-20170440, Feb. 2019,
+            doi: https://doi.org/10.1098/rsta.2017.0440.
         """
         return (
             0.095e0
@@ -3895,17 +3898,17 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         p_plasma_loss_mw :
             Net Heating power [MW]
         rmajor :
             Plasma major radius [m]
         kappa_ipb :
-            IPB specific plasma separatrix elongation
+            IPB specific plasma separatrix elongation [-]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
 
         Returns
         -------
@@ -3918,11 +3921,11 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - J. E. Menard, “Compact steady-state tokamak performance dependence on
-              magnet and core physics limits,”
-              Philosophical Transactions of the Royal Society A, vol. 377, no. 2141,
-              pp. 20170440-20170440, Feb. 2019,
-              doi: https://doi.org/10.1098/rsta.2017.0440.
+        [1] J. E. Menard, “Compact steady-state tokamak performance dependence on
+            magnet and core physics limits,”
+            Philosophical Transactions of the Royal Society A, vol. 377, no. 2141,
+            pp. 20170440-20170440, Feb. 2019,
+            doi: https://doi.org/10.1098/rsta.2017.0440.
         """
         # Equivalent to A > 2.5, use Petty scaling
         if (1.0e0 / aspect) <= 0.4e0:
@@ -3992,7 +3995,7 @@ class PlasmaConfinementTime(Model):
         rmajor :
             Plasma major radius [m]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
 
         Returns
         -------
@@ -4001,11 +4004,11 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - P. F. Buxton, L. Connor, A. E. Costley, Mikhail Gryaznevich, and
-              S. McNamara, “On the energy confinement time in spherical tokamaks:
-              implications for the design of pilot plants and fusion reactors,”
-              vol. 61, no. 3, pp. 035006-035006, Jan. 2019,
-              doi: https://doi.org/10.1088/1361-6587/aaf7e5.
+        [1] P. F. Buxton, L. Connor, A. E. Costley, Mikhail Gryaznevich, and
+            S. McNamara, “On the energy confinement time in spherical tokamaks:
+            implications for the design of pilot plants and fusion reactors,”
+            vol. 61, no. 3, pp. 035006-035006, Jan. 2019,
+            doi: https://doi.org/10.1088/1361-6587/aaf7e5.
         """
         return (
             0.21e0
@@ -4037,19 +4040,19 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_19 :
-            Central line-averaged electron density in units of 10**19 m**-3
+            Central line-averaged electron density [10¹⁹ m⁻³]
         p_plasma_loss_mw :
             Thermal power lost due to transport through the LCFS [MW]
         rmajor :
             Plasma major radius [m]
         triang :
-            Triangularity
+            Triangularity [-]
         kappa_ipb :
-            IPB specific plasma separatrix elongation
+            IPB specific plasma separatrix elongation [-]
         eps :
-            Inverse aspect ratio
+            Inverse aspect ratio [-]
         aion :
-            Average mass of all ions (amu)
+            Average mass of all ions [amu]
 
         Returns
         -------
@@ -4065,10 +4068,10 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - G. Verdoolaege et al., “The updated ITPA global H-mode confinement
-              database: description and analysis,” Nuclear Fusion, vol. 61, no. 7,
-              pp. 076006-076006, Jan. 2021,
-              doi: https://doi.org/10.1088/1741-4326/abdb91.
+        [1] G. Verdoolaege et al., “The updated ITPA global H-mode confinement
+            database: description and analysis,” Nuclear Fusion, vol. 61, no. 7,
+            pp. 076006-076006, Jan. 2021,
+            doi: https://doi.org/10.1088/1741-4326/abdb91.
         """
         return (
             0.0534
@@ -4105,15 +4108,15 @@ class PlasmaConfinementTime(Model):
         p_plasma_loss_mw :
             Thermal power lost due to transport through the LCFS [MW]
         nd_plasma_electron_line_19 :
-            Central line-averaged electron density in units of 10**19 m**-3
+            Central line-averaged electron density [10¹⁹ m⁻³]
         aion :
-            Average mass of all ions (amu)
+            Average mass of all ions [amu]
         rmajor :
             Plasma major radius [m]
         triang :
-            Triangularity
+            Triangularity [-]
         kappa_ipb :
-            IPB specific plasma separatrix elongation
+            IPB specific plasma separatrix elongation [-]
 
         Returns
         -------
@@ -4129,9 +4132,9 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T. Luda et al., “Validation of a full-plasma integrated modeling approach
-              on ASDEX Upgrade,” Nuclear Fusion, vol. 61, no. 12, pp. 126048-126048,
-              Nov. 2021, doi: https://doi.org/10.1088/1741-4326/ac3293.
+        [1] T. Luda et al., “Validation of a full-plasma integrated modeling approach
+            on ASDEX Upgrade,” Nuclear Fusion, vol. 61, no. 12, pp. 126048-126048,
+            Nov. 2021, doi: https://doi.org/10.1088/1741-4326/ac3293.
         """
         return (
             0.0670
@@ -4163,7 +4166,7 @@ class PlasmaConfinementTime(Model):
         p_plasma_loss_mw :
             Thermal power lost due to transport through the LCFS [MW]
         nd_plasma_electron_line_19 :
-            Central line-averaged electron density in units of 10¹⁹ m⁻³
+            Central line-averaged electron density [10¹⁹ m⁻³]
 
         Returns
         -------
@@ -4180,8 +4183,8 @@ class PlasmaConfinementTime(Model):
         References
         ----------
         [1] Y. Chen et al., “Energy confinement scaling in the NCST spherical
-        tokamak,” AIP Advances, vol. 16, no. 3, pp. 035043-035043,
-        Mar. 2026, doi: https://doi.org/10.1063/5.0311657.
+            tokamak,” AIP Advances, vol. 16, no. 3, pp. 035043-035043,
+            Mar. 2026, doi: https://doi.org/10.1063/5.0311657.
         """
         return (
             0.11
@@ -4209,7 +4212,7 @@ class PlasmaConfinementTime(Model):
         p_plasma_loss_mw :
             Thermal power lost due to transport through the LCFS [MW]
         nd_plasma_electron_line_19 :
-            Central line-averaged electron density in units of 10¹⁹ m⁻³
+            Central line-averaged electron density [10¹⁹ m⁻³]
 
         Returns
         -------
@@ -4218,8 +4221,8 @@ class PlasmaConfinementTime(Model):
         References
         ----------
         [1] Priyansh Lunia, A.O. Nelson, and C. Paz-Soldan, "Energy Confinement
-        Time Scaling Law Derived from Paz-Soldan NF 2024",
-        doi: https://arxiv.org/abs/2509.04279v2
+            Time Scaling Law Derived from Paz-Soldan NF 2024",
+            doi: https://arxiv.org/abs/2509.04279v2
         """
         return (
             0.0821

@@ -509,7 +509,13 @@ class ConfinementTimeModel(IntEnum):
         -0.91,
     )
 
-    def __new__(cls, value: int, full_name: str, mode: ConfinementMode = None, loss_power_exponent: float = 0.0):
+    def __new__(
+        cls,
+        value: int,
+        full_name: str,
+        mode: ConfinementMode = None,
+        loss_power_exponent: float = 0.0,
+    ):
         """Create a new instance of ConfinementTimeModel.
 
         Parameters
