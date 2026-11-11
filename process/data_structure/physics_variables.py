@@ -195,327 +195,269 @@ class ConfinementMode(IntEnum):
 class ConfinementTimeModel(IntEnum):
     """Confinement time (τ_E) model types"""
 
-    USER_INPUT = (0, "User input electron confinement   ", None, None)
+    USER_INPUT = (0, "User input electron confinement   ", None)
     NEO_ALCATOR = (
         1,
         f"Neo-Alcator                ({ConfinementMode.OHMIC.abbreviation})",
         ConfinementMode.OHMIC,
-        None,
     )
     MIRNOV = (
         2,
         f"Mirnov                         ({ConfinementMode.H_MODE.abbreviation})",
         ConfinementMode.H_MODE,
-        None,
     )
     MEREZHKIN_MUHKOVATOV = (
         3,
         f"Merezkhin-Muhkovatov    ({ConfinementMode.OHMIC.abbreviation})({ConfinementMode.L_MODE.abbreviation})",
         ConfinementMode.OHMIC | ConfinementMode.L_MODE,
-        None,
     )
     SHIMOMURA = (
         4,
         f"Shimomura                      ({ConfinementMode.H_MODE.abbreviation})",
         ConfinementMode.H_MODE,
-        None,
     )
     KAYE_GOLDSTON = (
         5,
         f"Kaye-Goldston                  ({ConfinementMode.L_MODE.abbreviation})",
         ConfinementMode.L_MODE,
-        -0.58,
     )
     ITER_89P = (
         6,
         f"ITER 89-P                      ({ConfinementMode.L_MODE.abbreviation})",
         ConfinementMode.L_MODE,
-        -0.5,
     )
     ITER_89_0 = (
         7,
         f"ITER 89-O                      ({ConfinementMode.L_MODE.abbreviation})",
         ConfinementMode.L_MODE,
-        -1.0,
     )
     REBUT_LALLIA = (
         8,
         f"Rebut-Lallia                   ({ConfinementMode.L_MODE.abbreviation})",
         ConfinementMode.L_MODE,
-        -1.0,
     )
     GOLDSTON = (
         9,
         f"Goldston                       ({ConfinementMode.L_MODE.abbreviation})",
         ConfinementMode.L_MODE,
-        -0.5,
     )
     T_10 = (
         10,
         f"T10                            ({ConfinementMode.L_MODE.abbreviation})",
         ConfinementMode.L_MODE,
-        -0.4,
     )
     JAERI = (
         11,
         f"JAERI / Odajima-Shimomura      ({ConfinementMode.L_MODE.abbreviation})",
         ConfinementMode.L_MODE,
-        -1.0,
     )
     KAYE_BIG = (
         12,
         f"Kaye-Big Complex               ({ConfinementMode.L_MODE.abbreviation})",
         ConfinementMode.L_MODE,
-        -0.5,
     )
     ITER_H90_P = (
         13,
         f"ITER H90-P                     ({ConfinementMode.H_MODE.abbreviation})",
         ConfinementMode.H_MODE,
-        -0.5,
     )
     MINIMUM_OF_ITER_89P_AND_ITER_89_0 = (
         14,
         f"ITER 89-P & 89-O min           ({ConfinementMode.L_MODE.abbreviation})",
         ConfinementMode.L_MODE,
-        None,
     )
     RIEDEL_L = (
         15,
         f"Riedel                         ({ConfinementMode.L_MODE.abbreviation})",
         ConfinementMode.L_MODE,
-        -0.537,
     )
     CHRISTIANSEN = (
         16,
         f"Christiansen                   ({ConfinementMode.L_MODE.abbreviation})",
         ConfinementMode.L_MODE,
-        -0.79,
     )
     LACKNER_GOTTARDI = (
         17,
         f"Lackner-Gottardi               ({ConfinementMode.L_MODE.abbreviation})",
         ConfinementMode.L_MODE,
-        -0.6,
     )
     NEO_KAYE = (
         18,
         f"Neo-Kaye                       ({ConfinementMode.L_MODE.abbreviation})",
         ConfinementMode.L_MODE,
-        -0.59,
     )
     RIEDEL_H = (
         19,
         f"Riedel                         ({ConfinementMode.H_MODE.abbreviation})",
         ConfinementMode.H_MODE,
-        -0.486,
     )
     ITER_H90_P_AMENDED = (
         20,
         f"ITER H90-P amended             ({ConfinementMode.H_MODE.abbreviation})",
         ConfinementMode.H_MODE,
-        -0.47,
     )
     SUDO_ET_AL = (
         21,
         f"LHD                        ({ConfinementMode.STELLARATOR.abbreviation})",
         ConfinementMode.STELLARATOR,
-        -0.58,
     )
     GYRO_REDUCED_BOHM = (
         22,
         f"Gyro-reduced Bohm          ({ConfinementMode.STELLARATOR.abbreviation})",
         ConfinementMode.STELLARATOR,
-        -0.6,
     )
     LACKNER_GOTTARDI_STELLARATOR = (
         23,
         f"Lackner-Gottardi           ({ConfinementMode.STELLARATOR.abbreviation})",
         ConfinementMode.STELLARATOR,
-        -0.6,
     )
     ITER_93H = (
         24,
         f"ITER-93H  ELM-free             ({ConfinementMode.H_MODE.abbreviation})",
         ConfinementMode.H_MODE,
-        -0.67,
     )
     TITAN_REMOVED = (
         25,
         "TITAN RFP OBSOLETE                (N/A)",
-        None,
         None,
     )
     ITER_H97P = (
         26,
         f"ITER H-97P ELM-free            ({ConfinementMode.H_MODE.abbreviation})",
         ConfinementMode.H_MODE,
-        -0.67,
     )
     ITER_H97P_ELMY = (
         27,
         f"ITER H-97P ELMy                ({ConfinementMode.H_MODE.abbreviation})",
         ConfinementMode.H_MODE,
-        -0.66,
     )
     ITER_96P = (
         28,
         f"ITER-96P (ITER-97L)            ({ConfinementMode.L_MODE.abbreviation})",
         ConfinementMode.L_MODE,
-        -0.73,
     )
     VALOVIC_ELMY = (
         29,
         f"Valovic modified ELMy          ({ConfinementMode.H_MODE.abbreviation})",
         ConfinementMode.H_MODE,
-        -0.68,
     )
     KAYE = (
         30,
         f"Kaye 98 modified               ({ConfinementMode.L_MODE.abbreviation})",
         ConfinementMode.L_MODE,
-        -0.73,
     )
     ITER_PB98P_Y = (
         31,
         f"ITERH-PB98P(y)                 ({ConfinementMode.H_MODE.abbreviation})",
         ConfinementMode.H_MODE,
-        -0.66,
     )
     IPB98_Y = (
         32,
         f"IPB98(y)                       ({ConfinementMode.H_MODE.abbreviation})",
         ConfinementMode.H_MODE,
-        -0.63,
     )
     ITER_IPB98Y1 = (
         33,
         f"IPB98(y,1)                     ({ConfinementMode.H_MODE.abbreviation})",
         ConfinementMode.H_MODE,
-        -0.65,
     )
     ITER_IPB98Y2 = (
         34,
         f"IPB98(y,2)                     ({ConfinementMode.H_MODE.abbreviation})",
         ConfinementMode.H_MODE,
-        -0.69,
     )
     ITER_IPB98Y3 = (
         35,
         f"IPB98(y,3)                     ({ConfinementMode.H_MODE.abbreviation})",
         ConfinementMode.H_MODE,
-        -0.69,
     )
     ITER_IPB98Y4 = (
         36,
         f"IPB98(y,4)                     ({ConfinementMode.H_MODE.abbreviation})",
         ConfinementMode.H_MODE,
-        -0.7,
     )
     ISS95_STELLARATOR = (
         37,
         f"ISS95                      ({ConfinementMode.STELLARATOR.abbreviation})",
         ConfinementMode.STELLARATOR,
-        -0.59,
     )
     ISS04_STELLARATOR = (
         38,
         f"ISS04                      ({ConfinementMode.STELLARATOR.abbreviation})",
         ConfinementMode.STELLARATOR,
-        -0.61,
     )
     DS03 = (
         39,
         f"DS03 beta-independent          ({ConfinementMode.H_MODE.abbreviation})",
         ConfinementMode.H_MODE,
-        -0.55,
     )
     MURARI = (
         40,
         f'Murari "Non-power law"         ({ConfinementMode.H_MODE.abbreviation})',
         ConfinementMode.H_MODE,
-        -0.735,
     )
     PETTY08 = (
         41,
         f"Petty 2008                     ({ConfinementMode.H_MODE.abbreviation})",
         ConfinementMode.H_MODE,
-        -0.47,
     )
     LANG_HIGH_DENSITY = (
         42,
         f"Lang high density              ({ConfinementMode.H_MODE.abbreviation})",
         ConfinementMode.H_MODE,
-        -0.74,
     )
     HUBBARD_NOMINAL = (
         43,
         f"Hubbard 2017 - nominal         ({ConfinementMode.I_MODE.abbreviation})",
         ConfinementMode.I_MODE,
-        -0.29,
     )
     HUBBARD_LOWER = (
         44,
         f"Hubbard 2017 - lower           ({ConfinementMode.I_MODE.abbreviation})",
         ConfinementMode.I_MODE,
-        -0.33,
     )
     HUBBARD_UPPER = (
         45,
         f"Hubbard 2017 - upper           ({ConfinementMode.I_MODE.abbreviation})",
         ConfinementMode.I_MODE,
-        -0.25,
     )
     MENARD_NSTX = (
         46,
         f"Menard NSTX                    ({ConfinementMode.H_MODE.abbreviation})",
         ConfinementMode.H_MODE,
-        -0.73,
     )
     MENARD_NSTX_PETTY08_HYBRID = (
         47,
         f"Menard NSTX-Petty08 hybrid     ({ConfinementMode.H_MODE.abbreviation})",
         ConfinementMode.H_MODE,
-        None,
     )
     NSTX_GYRO_BOHM = (
         48,
         f"Buxton NSTX gyro-Bohm          ({ConfinementMode.H_MODE.abbreviation})",
         ConfinementMode.H_MODE,
-        -0.38,
     )
     ITPA20 = (
         49,
         f"ITPA20                         ({ConfinementMode.H_MODE.abbreviation})",
         ConfinementMode.H_MODE,
-        -0.6687,
     )
     ITPA20_IL = (
         50,
         f"ITPA20-IL                      ({ConfinementMode.H_MODE.abbreviation})",
         ConfinementMode.H_MODE,
-        -0.6442,
     )
     NCST = (
         51,
         f"NCST                           ({ConfinementMode.L_MODE.abbreviation})",
         ConfinementMode.L_MODE,
-        -0.07,
     )
     PAZ_SOLDAN_NT = (
         52,
         f"Paz-Soldan Neg Triang          ({ConfinementMode.L_MODE.abbreviation})",
         ConfinementMode.L_MODE,
-        -0.91,
     )
 
-    def __new__(
-        cls,
-        value: int,
-        full_name: str,
-        mode: ConfinementMode = None,
-        loss_power_exponent: float = 0.0,
-    ):
+    def __new__(cls, value: int, full_name: str, mode: ConfinementMode = None):
         """Create a new instance of ConfinementTimeModel.
 
         Parameters
@@ -526,8 +468,6 @@ class ConfinementTimeModel(IntEnum):
             The full name of the confinement time model
         mode : ConfinementMode
             The confinement mode associated with the model
-        loss_power_exponent : float
-            The exponent of the loss power term, if applicable
 
         Returns
         -------
@@ -538,13 +478,7 @@ class ConfinementTimeModel(IntEnum):
         obj._value_ = value
         obj.full_name = full_name
         obj.mode = mode
-        obj._loss_power_exponent = loss_power_exponent
         return obj
-
-    @DynamicClassAttribute
-    def loss_power_exponent(self):
-        """Exponent of the loss power term"""
-        return self._loss_power_exponent
 
 
 @unique
