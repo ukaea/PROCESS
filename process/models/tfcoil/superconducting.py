@@ -5168,11 +5168,28 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
             inboard_areas_fractions.f_a_tf_coil_inboard_insulation
         )
 
+        superconductor_margin_properties = self.tf_step_superconductor_properties(
+            a_tf_turn=self.data.tfcoil.a_tf_turn,
+            b_tf_inboard_peak=self.data.tfcoil.b_tf_inboard_peak_with_ripple,
+            cur_tf_turn=self.data.tfcoil.c_tf_turn,
+            temp_tf_peak=self.data.tfcoil.temp_tf_operating
+            + self.data.tfcoil.temp_tf_superconductor_margin_min,
+            i_tf_superconductor=self.data.tfcoil.i_tf_sc_mat,
+            dr_tf_hts_tape=self.data.superconducting_tfcoil.dr_tf_hts_tape,
+            dx_tf_hts_tape_rebco=self.data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
+            dx_tf_hts_tape_total=self.data.superconducting_tfcoil.dx_tf_hts_tape_total,
+            n_tf_turn_superconducting_strands=self.data.superconducting_tfcoil.n_tf_turn_superconducting_strands,
+        )
+
+        self.data.tfcoil.j_tf_wp_temp_margin_min = (
+            superconductor_margin_properties.j_tf_wp_critical
+        )
+
         superconductor_critical_properties = self.tf_step_superconductor_properties(
             a_tf_turn=self.data.tfcoil.a_tf_turn,
             b_tf_inboard_peak=self.data.tfcoil.b_tf_inboard_peak_with_ripple,
             cur_tf_turn=self.data.tfcoil.c_tf_turn,
-            temp_tf_peak=self.data.tfcoil.tftmp,
+            temp_tf_peak=self.data.tfcoil.temp_tf_operating,
             i_tf_superconductor=self.data.tfcoil.i_tf_sc_mat,
             dr_tf_hts_tape=self.data.superconducting_tfcoil.dr_tf_hts_tape,
             dx_tf_hts_tape_rebco=self.data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
@@ -5206,22 +5223,29 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
             superconductor_critical_properties.c_turn_cables_critical
         )
 
-        if self.data.tfcoil.i_str_wp == 0:
-            strain = self.data.tfcoil.str_tf_con_res
-        else:
-            strain = self.data.tfcoil.str_wp
+        match AvailabilityModel(self.data.costs.i_plant_availability):
+            # Only calculate temperature margin if required
+            case AvailabilityModel.MORRIS | AvailabilityModel.ST:
+                if self.data.tfcoil.i_str_wp == 0:
+                    strain = self.data.tfcoil.str_tf_con_res
+                else:
+                    strain = self.data.tfcoil.str_wp
 
-        self.data.tfcoil.temp_tf_superconductor_margin = self.calculate_superconductor_temperature_margin(  # noqa: E501
-            i_tf_superconductor=self.data.tfcoil.i_tf_sc_mat,
-            j_superconductor=self.data.superconducting_tfcoil.j_tf_superconductor,
-            b_tf_inboard_peak=self.data.tfcoil.b_tf_inboard_peak_with_ripple,
-            strain=strain,
-            bc20m=self.data.superconducting_tfcoil.b_tf_superconductor_critical_zero_temp_strain,
-            tc0m=self.data.superconducting_tfcoil.temp_tf_superconductor_critical_zero_field_strain,
-            c0=1.0e10,
-            temp_tf_coolant_peak_field=self.data.tfcoil.tftmp,
-            data=self.data,
-        )
+                temp_margin = self.calculate_superconductor_temperature_margin(
+                    i_tf_superconductor=self.data.tfcoil.i_tf_sc_mat,
+                    j_superconductor=d_sc_tf.j_tf_superconductor,
+                    b_tf_inboard_peak=self.data.tfcoil.b_tf_inboard_peak_with_ripple,
+                    strain=strain,
+                    bc20m=d_sc_tf.b_tf_superconductor_critical_zero_temp_strain,
+                    tc0m=d_sc_tf.temp_tf_superconductor_critical_zero_field_strain,
+                    c0=1.0e10,
+                    temp_tf_coolant_peak_field=self.data.tfcoil.temp_tf_operating,
+                    data=self.data,
+                )
+            case AvailabilityModel.USER_INPUT | AvailabilityModel.WARD_TAYLOR:
+                temp_margin = self.data.tfcoil.temp_tf_superconductor_margin_min
+
+        self.data.tfcoil.temp_tf_superconductor_margin = temp_margin
 
         # Do current density protection calculation
         # Only setup for Nb3Sn at present.
@@ -5244,7 +5268,7 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
                 t_tf_quench_dump=self.data.tfcoil.t_tf_superconductor_quench,
                 f_a_tf_turn_cable_copper=self.data.tfcoil.f_a_tf_turn_cable_copper,
                 f_a_tf_turn_cable_space_cooling=d_sc_tf.f_a_tf_turn_cable_space_cooling,
-                temp_tf_coolant_peak_field=self.data.tfcoil.tftmp,
+                temp_tf_coolant_peak_field=self.data.tfcoil.temp_tf_operating,
                 temp_tf_conductor_quench_max=self.data.tfcoil.temp_tf_conductor_quench_max,
                 b_tf_inboard_peak=self.data.tfcoil.b_tf_inboard_peak_with_ripple,
                 cu_rrr=self.data.tfcoil.rrr_tf_cu,
@@ -5912,15 +5936,6 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
         # which should be equal to jcrit(thelium+tmarg)
         #  when we have found the desired value of tmarg
         j_superconductor = f_c_tf_turn_operating_critical * j_superconductor_critical
-
-        # Temperature margin
-        current_sharing_t = superconductors.current_sharing_rebco(
-            b_tf_inboard_peak, j_superconductor
-        )
-        tmarg = current_sharing_t - temp_tf_peak
-        self.data.tfcoil.temp_margin = (
-            tmarg  # Only used in the availabilty routine - see comment to Issue #526
-        )
 
         return TFSuperconductorLimits(
             j_tf_wp_critical=j_tf_wp_critical,

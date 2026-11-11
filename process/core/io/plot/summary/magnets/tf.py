@@ -970,6 +970,242 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
     _plot_turn_panels(axis, get, turn, fig=fig)
 
 
+def plot_tf_step_vertical_tape_turn(
+    axis: plt.Axes,
+    fig: plt.Figure,
+    mfile: MFile,
+    scan: int,
+    dr_tf_turn: float,
+    dx_tf_turn: float,
+    dia_tf_turn_coolant_channel: float,
+    dx_tf_turn_insulation: float,
+    dr_tf_turn_tape_stack: float,
+    dx_tf_turn_tape_stack: float,
+    x_tf_turn_coolant_channel_centre: float,
+    dr_tf_turn_stabiliser: float,
+) -> None:
+    """
+    Plots TF coil STEP styled vertical tape turn structure.
+    """
+    axis.add_patch(
+        Rectangle(
+            [0, 0],
+            dr_tf_turn,
+            dx_tf_turn,
+            facecolor="red",
+            edgecolor="black",
+        ),
+    )
+    # Plot the steel conduit
+    axis.add_patch(
+        Rectangle(
+            [dx_tf_turn_insulation, dx_tf_turn_insulation],
+            (dr_tf_turn - 2 * dx_tf_turn_insulation),
+            (dx_tf_turn - 2 * dx_tf_turn_insulation),
+            facecolor="#b87333",
+            edgecolor="#8B4000",
+        ),
+    )
+
+    # Plot the coolant channel
+    axis.add_patch(
+        Circle(
+            [(dr_tf_turn / 2), x_tf_turn_coolant_channel_centre],
+            dia_tf_turn_coolant_channel / 2,
+            facecolor="white",
+            edgecolor="black",
+        ),
+    )
+
+    # Outline of the space available for the tape stack
+    axis.add_patch(
+        Rectangle(
+            [(dr_tf_turn_stabiliser * 0.1 + dx_tf_turn_insulation), (dx_tf_turn * 0.5)],
+            (dr_tf_turn_tape_stack),
+            (dx_tf_turn_tape_stack),
+            facecolor="none",
+            edgecolor="black",
+            linewidth=1,
+        ),
+    )
+
+    # Tapes are packed from the bottom of the stack at the pitch used by the model
+    # to count them. Layer thicknesses are scaled so each tape sums to that pitch.
+    dx_hts_tape_total = mfile.get("dx_tf_hts_tape_total", scan=scan)
+    dx_hts_tape_rebco = mfile.get("dx_tf_hts_tape_rebco", scan=scan)
+    dx_hts_tape_copper = mfile.get("dx_tf_hts_tape_copper", scan=scan)
+    dx_hts_tape_hastelloy = mfile.get("dx_tf_hts_tape_hastelloy", scan=scan)
+    tape_scale = dx_hts_tape_total / (
+        dx_hts_tape_rebco + dx_hts_tape_copper + dx_hts_tape_hastelloy
+    )
+    dr_hts_tape = mfile.get("dr_tf_hts_tape", scan=scan)
+
+    for i in range(int(mfile.get("n_tf_turn_superconducting_strands", scan=scan))):
+        plot_hts_tape_geometry(
+            axis=axis,
+            r_left=(dr_tf_turn / 2) - (dr_hts_tape / 2),
+            z_bottom=(dx_tf_turn * 0.5) + i * dx_hts_tape_total,
+            dr_hts_tape=dr_hts_tape,
+            dx_hts_tape_rebco=dx_hts_tape_rebco * tape_scale,
+            dx_hts_tape_copper=dx_hts_tape_copper * tape_scale,
+            dx_hts_tape_hastelloy=dx_hts_tape_hastelloy * tape_scale,
+            show_legend=False,
+        )
+
+    axis.set_xlim(-dr_tf_turn * 0.05, dr_tf_turn * 1.05)
+    axis.set_ylim(-dx_tf_turn * 0.05, dx_tf_turn * 1.05)
+
+    axis.minorticks_on()
+    axis.set_title("WP Turn Structure")
+    axis.set_xlabel("r [m]")
+    axis.set_ylabel("x [m]")
+
+    # Add info about the steel casing surrounding the WP
+    textstr_turn_insulation = f"$\\mathbf{{Turn \\ Insulation:}}$\n\n$\\Delta r:${mfile.get('t_tf_superconductor_quench', scan=scan):.3e} m"
+
+    axis.text(
+        0.5,
+        0.9,
+        textstr_turn_insulation,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "red",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    textstr_turn = (
+        f"$\\mathbf{{Turn:}}$\n\n"
+        f"$\\Delta r$: {mfile.get('dr_tf_turn', scan=scan):.3e} m\n"
+        f"$\\Delta x$: {mfile.get('dx_tf_turn', scan=scan):.3e} m"
+    )
+
+    axis.text(
+        0.65,
+        0.9,
+        textstr_turn,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    textstr_turn_strand_space = (
+        f"$\\mathbf{{Strand \\ Space:}}$\n\n"
+        f"$\\Delta r:$ {mfile.get('dr_tf_turn_tape_stack', scan=scan):.3e} m\n"
+        f"$\\Delta x:$ {mfile.get('dx_tf_turn_tape_stack', scan=scan):.3e} m\n"
+        f"Tape stack space area: {mfile.get('a_tf_turn_tape_stack', scan=scan):.3e} m$^2$\n"
+        f"Strands per turn: {mfile.get('n_tf_turn_superconducting_strands', scan=scan)}"
+    )
+
+    axis.text(
+        0.525,
+        0.7,
+        textstr_turn_strand_space,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "royalblue",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    textstr_stabiliser = (
+        f"$\\mathbf{{Stabiliser:}}$\n\n"
+        f"$\\Delta r$: {mfile.get('dr_tf_turn_stabiliser', scan=scan):.3e} m\n"
+        f"$\\Delta x$: {mfile.get('dx_tf_turn_stabiliser', scan=scan):.3e} m\n"
+        f"Stabiliser area: {mfile.get('a_tf_turn_stabiliser', scan=scan):.3e} m$^2$"
+    )
+
+    axis.text(
+        0.575,
+        0.55,
+        textstr_stabiliser,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "#b87333",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # Add info about the steel casing surrounding the WP
+    textstr_turn_cooling = (
+        f"$\\mathbf{{Cooling:}}$\n\n"
+        f"$\\varnothing$: {mfile.get('dia_tf_turn_coolant_channel', scan=scan):.3e} m\n"
+        f"Total area of all coolant channels: {mfile.get('a_tf_wp_coolant_channels', scan=scan):.4f} m$^2$"
+    )
+
+    axis.text(
+        0.5,
+        0.8,
+        textstr_turn_cooling,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "white",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    textstr_superconductor = (
+        f"$\\mathbf{{Superconductor:}}$\n \n"
+        f"Superconductor used: {SuperconductorModel(mfile.get('i_tf_sc_mat', scan=scan)).full_name}\n"
+        f"Critical field at zero \ntemperature and strain: {mfile.get('b_tf_superconductor_critical_zero_temp_strain', scan=scan):.4f} T\n"
+        f"Critical temperature at \nzero field and strain: {mfile.get('temp_tf_superconductor_critical_zero_field_strain', scan=scan):.4f} K\n"
+        f"Temperature at conductor: {mfile.get('tftmp', scan=scan):.4f} K\n"
+        f"Field at conductor: {mfile.get('b_tf_inboard_peak_with_ripple', scan=scan):.4f} T\n"
+        f"Superconductor critical current density at \noperating conditions: {mfile.get('j_tf_superconductor_critical', scan=scan):.2e} A/m$^2$\n"
+        f"$I_{{\\text{{TF,turn critical}}}}$: {mfile.get('c_turn_cables_critical', scan=scan):,.2f} A\n"
+        f"$I_{{\\text{{TF,turn}}}}$: {mfile.get('c_tf_turn', scan=scan):,.2f} A\n"
+        f"Critcal current ratio: {mfile.get('f_c_tf_turn_operating_critical', scan=scan):,.4f}\n"
+        f"Superconductor temperature \nmargin: {mfile.get('temp_tf_superconductor_margin', scan=scan):,.4f} K\n"
+        f"\n$\\mathbf{{Quench:}}$\n \n"
+        f"Quench dump time: {mfile.get('t_tf_superconductor_quench', scan=scan):.4e} s\n"
+        f"Quench detection time: {mfile.get('t_tf_quench_detection', scan=scan):.4e} s\n"
+        f"User input max temperature \nduring quench: {mfile.get('temp_tf_conductor_quench_max', scan=scan):.2f} K\n"
+        f"Required maxium WP current \ndensity for heat protection:\n{mfile.get('j_tf_wp_quench_heat_max', scan=scan):.2e} A/m$^2$\n"
+    )
+    axis.text(
+        0.75,
+        0.9,
+        textstr_superconductor,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "#6dd3f7",  # light blue for superconductors
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+
 def _dimension(
     axis,
     start,
