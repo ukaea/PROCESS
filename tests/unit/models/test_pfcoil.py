@@ -16,6 +16,7 @@ from numpy.testing import assert_array_almost_equal
 from process.core import constants
 from process.data_structure.pfcoil_variables import (
     N_PF_COILS_IN_GROUP_MAX,
+    N_PF_FIELD_CONSTRAINT_POINTS_MAX,
     CSUseModel,
     PFConductorModel,
 )
@@ -90,7 +91,7 @@ class RsidParam(NamedTuple):
             bzssq_exp=7.188474446020582e-05,
             bznrm_exp=0.0,
             ssq_exp=0.0006400910095285954,
-            nptsmx=32,
+            nptsmx=N_PF_FIELD_CONSTRAINT_POINTS_MAX,
             npts=32,
             nfix=14,
             n_pf_coil_groups=4,
@@ -2888,7 +2889,7 @@ class EFCParam(NamedTuple):
     [
         EFCParam(
             n_pf_groups_max=10,
-            nptsmx=32,
+            nptsmx=N_PF_FIELD_CONSTRAINT_POINTS_MAX,
             nfixmx=64,
             npts=32,
             rpts=np.array([
@@ -3059,7 +3060,7 @@ class MTRXParam(NamedTuple):
         MTRXParam(
             lrow1=74,
             lcol1=10,
-            nptsmx=32,
+            nptsmx=N_PF_FIELD_CONSTRAINT_POINTS_MAX,
             npts=32,
             rpts=np.array([
                 6.0547741935483881,
