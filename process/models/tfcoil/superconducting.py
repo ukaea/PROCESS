@@ -2297,7 +2297,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         self.generic_tf_coil_area_and_masses()
         self.superconducting_tf_coil_areas_and_masses()
 
-        self.run_and_output_stress(output)
+        self.run_and_output_stress(output=output)
 
         self.vv_stress_on_quench()
 
@@ -3456,7 +3456,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         self.generic_tf_coil_area_and_masses()
         self.superconducting_tf_coil_areas_and_masses()
 
-        self.run_and_output_stress(output)
+        self.run_and_output_stress(output=output)
         self.vv_stress_on_quench()
 
         # Do current density protection calculation
