@@ -1033,9 +1033,6 @@ class PhysicsData:
     hfact_no_radiation: float = 1.0
     """No radiation corrected H factor on energy confinement times"""
 
-    hstar: float = 1.0
-    """H* non-radiation corrected H factor on energy confinement times"""
-
     t_plasma_energy_confinement_max: float = 10.0
     """Maximum allowed energy confinement time (s)"""
 

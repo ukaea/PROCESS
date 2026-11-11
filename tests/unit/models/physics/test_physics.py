@@ -3204,20 +3204,6 @@ def test_radiation_corrected_h_factors(
     assert getattr(selected, factor_names[radiation_model]) == pytest.approx(
         kwargs["hfact"]
     )
-    if radiation_model == ConfinementRadiationLossModel.NO_RADIATION:
-        expected_hstar = kwargs["hfact"]
-    else:
-        radiation_power = (
-            full_radiation_density * kwargs["vol_plasma"]
-            if radiation_model == ConfinementRadiationLossModel.FULL_RADIATION
-            else 50.0
-        )
-        expected_hstar = (
-            kwargs["hfact"]
-            * (selected.p_plasma_loss_mw / (selected.p_plasma_loss_mw + radiation_power))
-            ** 0.31
-        )
-    assert selected.hstar == pytest.approx(expected_hstar)
 
     for model, name in zip(ConfinementRadiationLossModel, factor_names, strict=True):
         monkeypatch.setattr(data, "i_rad_loss", model)
