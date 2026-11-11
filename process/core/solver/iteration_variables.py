@@ -24,7 +24,7 @@ class IterationVariable:
     name: str
     """The name of the variable"""
     module: str | Any
-    """The module that this variable should be set on."""
+    """The data structure that this variable should be set on."""
     lower_bound: float
     """The default lower bound of the iteration variable"""
     upper_bound: float
