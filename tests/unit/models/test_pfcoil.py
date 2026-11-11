@@ -2725,7 +2725,7 @@ class OhCalcParam(NamedTuple):
     poisson_steel: Any = None
     a_cs_poloidal: float = None
     a_cs_toroidal: float = None
-    exp_b_pf_coil_peak: Any = None
+    exp_b_pf_coil_inner_peak: Any = None
     exp_j_cs_critical_flat_top_end: Any = None
 
 
@@ -2778,7 +2778,7 @@ class OhCalcParam(NamedTuple):
             poisson_steel=3.0e-1,
             a_cs_poloidal=10.3868352,
             a_cs_toroidal=12.2710609,
-            exp_b_pf_coil_peak=13.069711729713154,
+            exp_b_pf_coil_inner_peak=13.069711729713154,
             exp_j_cs_critical_flat_top_end=54154076.702704564,
         )
     ],
@@ -2859,7 +2859,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, cs_coil, ohcalcparam):
 
     assert (
         pytest.approx(cs_coil.data.pf_coil.b_pf_coil_inner_peak[4])
-        == ohcalcparam.exp_b_pf_coil_peak
+        == ohcalcparam.exp_b_pf_coil_inner_peak
     )
     assert (
         pytest.approx(cs_coil.data.pf_coil.j_cs_critical_flat_top_end)
