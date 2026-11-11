@@ -855,6 +855,13 @@ class Physics(Model):
         )
         self.data.physics.p_plasma_loss_mw = confinement_time_data.p_plasma_loss_mw
         self.data.physics.hstar = confinement_time_data.hstar
+        self.data.physics.hfact_full_radiation = (
+            confinement_time_data.hfact_full_radiation
+        )
+        self.data.physics.hfact_core_radiation = (
+            confinement_time_data.hfact_core_radiation
+        )
+        self.data.physics.hfact_no_radiation = confinement_time_data.hfact_no_radiation
 
         # Total transport power from scaling law (MW)
         self.data.physics.p_electron_transport_loss_mw = (

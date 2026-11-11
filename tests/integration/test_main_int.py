@@ -3,6 +3,9 @@
 import json
 from shutil import copy
 
+import pytest
+
+from process.core.io.mfile.base import MFile
 from process.main import process_cli
 
 
@@ -117,3 +120,24 @@ def test_single_run_with_mfilejson(temp_data, cli_runner):
     expected_keys = ["rmajor", "b_plasma_toroidal_on_axis", "beta_total_vol_avg"]
     for key in expected_keys:
         assert key in json_data, f"Expected key '{key}' not found in the JSON file"
+
+
+@pytest.mark.parametrize(
+    ("radiation_model", "factor_name"),
+    [
+        (0, "hfact_full_radiation"),
+        (1, "hfact_core_radiation"),
+        (2, "hfact_no_radiation"),
+    ],
+)
+def test_radiation_h_factor_output(temp_data, cli_runner, radiation_model, factor_name):
+    """The reported H-factor matches the input for the selected radiation model."""
+    input_path = temp_data / "large_tokamak_eval.IN.DAT"
+    with input_path.open("a") as input_file:
+        input_file.write(f"\ni_rad_loss = {radiation_model}\n")
+
+    cli_runner(process_cli, args=["-i", str(input_path)])
+
+    mfile = MFile(temp_data / "large_tokamak_eval.MFILE.DAT")
+    assert mfile.get("i_rad_loss") == radiation_model
+    assert mfile.get(factor_name) == pytest.approx(mfile.get("hfact"), rel=1e-4)
