@@ -50,6 +50,7 @@ from process.core.io.plot.summary.magnets.tf import (
     plot_tf_coil_structure,
     plot_tf_corc_cable_summary_box,
     plot_tf_croco_turn,
+    plot_tf_step_vertical_tape_turn,
     plot_tf_stress,
 )
 from process.core.io.plot.summary.plasma.confinement import (
@@ -594,6 +595,28 @@ def main_plot(
             ax20 = pages["cable"].add_subplot(325, aspect="equal")
             ax20.set_position([0.025, 0.5, 0.4, 0.4])
             plot_tf_cable_in_conduit_turn(ax20, m_file, scan)
+        elif (
+            m_file.get("i_tf_turn_type", scan=scan)
+            == SuperconductingTFTurnType.STEP_STACKED_TAPE
+        ):
+            plot_tf_step_vertical_tape_turn(
+                axis=pages["cable"].add_subplot(221, aspect="equal"),
+                fig=pages["cable"],
+                mfile=m_file,
+                scan=scan,
+                dr_tf_turn=m_file.get("dr_tf_turn", scan=scan),
+                dx_tf_turn=m_file.get("dx_tf_turn", scan=scan),
+                dia_tf_turn_coolant_channel=m_file.get(
+                    "dia_tf_turn_coolant_channel", scan=scan
+                ),
+                dx_tf_turn_insulation=m_file.get("dx_tf_turn_insulation", scan=scan),
+                dr_tf_turn_tape_stack=m_file.get("dr_tf_turn_tape_stack", scan=scan),
+                dx_tf_turn_tape_stack=m_file.get("dx_tf_turn_tape_stack", scan=scan),
+                x_tf_turn_coolant_channel_centre=m_file.get(
+                    "x_tf_turn_coolant_channel_centre", scan=scan
+                ),
+                dr_tf_turn_stabiliser=m_file.get("dr_tf_turn_stabiliser", scan=scan),
+            )
 
         if (
             m_file.get("i_tf_turn_type", scan=scan)
@@ -622,18 +645,7 @@ def main_plot(
                 show_legend=True,
             )
             plot_tf_corc_cable_summary_box(plot_205, pages["cable"], m_file, scan)
-            ax_hts_tape = pages["cable"].add_subplot(339)
-            ax_hts_tape.set_position([0.75, 0.1, 0.2, 0.2])
-            plot_hts_tape_geometry(
-                axis=ax_hts_tape,
-                r_left=0.0,
-                z_bottom=0.0,
-                dr_hts_tape=m_file.get("dr_tf_hts_tape", scan=scan),
-                dx_hts_tape_rebco=m_file.get("dx_tf_hts_tape_rebco", scan=scan),
-                dx_hts_tape_copper=m_file.get("dx_tf_hts_tape_copper", scan=scan),
-                dx_hts_tape_hastelloy=m_file.get("dx_tf_hts_tape_hastelloy", scan=scan),
-                show_legend=True,
-            )
+
         elif (
             m_file.get("i_tf_turn_type", scan=scan)
             == SuperconductingTFTurnType.CABLE_IN_CONDUIT
@@ -660,6 +672,23 @@ def main_plot(
                 a_tf_turn=m_file.get("a_tf_turn", scan=scan),
                 axes_1=_add_page("quench_time_evo").add_subplot(211),
                 axes_2=pages["quench_time_evo"].add_subplot(212),
+            )
+        if (
+            m_file.get("i_tf_turn_type", scan=scan)
+            == SuperconductingTFTurnType.STEP_STACKED_TAPE
+            or SuperconductingTFTurnType.CROSS_CONDUCTOR
+        ):
+            ax_hts_tape = pages["cable"].add_subplot(339)
+            ax_hts_tape.set_position([0.75, 0.1, 0.2, 0.2])
+            plot_hts_tape_geometry(
+                axis=ax_hts_tape,
+                r_left=0.0,
+                z_bottom=0.0,
+                dr_hts_tape=m_file.get("dr_tf_hts_tape", scan=scan),
+                dx_hts_tape_rebco=m_file.get("dx_tf_hts_tape_rebco", scan=scan),
+                dx_hts_tape_copper=m_file.get("dx_tf_hts_tape_copper", scan=scan),
+                dx_hts_tape_hastelloy=m_file.get("dx_tf_hts_tape_hastelloy", scan=scan),
+                show_legend=True,
             )
     else:
         ax19 = _add_page("tf_wp").add_subplot(211, aspect="equal")
