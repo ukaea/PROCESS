@@ -51,9 +51,9 @@ def _bounds_additional_actions(name, value: list[float], _config, data: DataStru
     # Need to set the values of bounds which are not specified in the IN.DAT to their
     # default values specified in INPUT_VARIABLES - the unspecified bounds are ±9e99
     for i, v in enumerate(value):
-        if name == "boundl" and v == 9e-99:  # noqa: RUF069
+        if name == "boundl" and np.isclose(v, 9e-99):
             value[i] = float(data.numerics.boundl[i])
-        if name == "boundu" and v == 9e99:  # noqa: RUF069
+        if name == "boundu" and np.isclose(v, 9e99):
             value[i] = float(data.numerics.boundu[i])
 
 
