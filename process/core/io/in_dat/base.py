@@ -380,7 +380,7 @@ def get_parameters(data, use_string_values=True):
         "ixc",
         "boundu",
         "boundl",
-    ]  # try including boundl and boundu in here again and debugging
+    ]
     # Parameters to exclude
 
     # Change module keys from DICT_MODULE: replace spaces with underscores and
