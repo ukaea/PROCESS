@@ -1021,9 +1021,9 @@ class InDat:
             exceptions, obs_vars_in_in_dat, updated_indat_lines, changes_made
         )
 
-        # Split bounds dict into boundu and boundl arrays
-        # Set so all unspecified values are unrealistic
-        # parse_input_file will update these with default bounds
+        # Split bounds dict into boundu and boundl arrays.
+        # Set so all unspecified values are default values.
+        # parse_input_file will update these with default bounds.
         self.data["boundl"] = copy.copy(self.data["bounds"])
         self.data["boundu"] = copy.copy(self.data["bounds"])
         self.data["boundl"].value = [9e-99] * N_ITERATION_VARIABLES_MAX
@@ -1033,14 +1033,14 @@ class InDat:
             if "l" in bounds:
                 # NOTE -1 to index correct element
                 try:
-                    self.data["boundl"].value[int(itv_index) - 1] = bounds["l"]
+                    self.data["boundl"].value[int(itv_index) - 1] = float(bounds["l"])
                 except ValueError as e:
                     raise ProcessValidationError(
                         "The bounds need to be of the form boundl(index) = value"
                     ) from e
             if "u" in bounds:
                 try:
-                    self.data["boundu"].value[int(itv_index) - 1] = bounds["u"]
+                    self.data["boundu"].value[int(itv_index) - 1] = float(bounds["u"])
                 except ValueError as e:
                     raise ProcessValidationError(
                         "The bounds need to be of the form boundu(index) = value"

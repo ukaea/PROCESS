@@ -47,14 +47,15 @@ def _icc_additional_actions(_name, value: list[int], _config, data: DataStructur
         data.numerics.n_constraints += 1
 
 
-def _bounds_additional_actions(name, value: list[int], _config, data: DataStructure):
-    # Need to set unspecified bounds to their default values instead of the unrealistic
-    # values used as placeholders - the unspecified bounds are ±9e99
+def _bounds_additional_actions(name, value: list[float], _config, data: DataStructure):
+    # Need to set the values of bounds which are not specified in the IN.DAT to their
+    # default values specified in INPUT_VARIABLES - the unspecified bounds are ±9e99
     for i, v in enumerate(value):
-        if name == "boundl" and v == -9e99:  # noqa: RUF069
-            value[i] = data.numerics.boundl[i]
+        if name == "boundl" and v == 9e-99:  # noqa: RUF069
+            value[i] = float(data.numerics.boundl[i])
         if name == "boundu" and v == 9e99:  # noqa: RUF069
-            value[i] = data.numerics.boundu[i]
+            value[i] = float(data.numerics.boundu[i])
+    return value
 
 
 @dataclass(slots=True)
@@ -1295,12 +1296,20 @@ def set_on_datastructure(variable_name, info, data_structure_obj, variables):
     if variable_config.additional_actions is not None:
         # intentionally passing the variable name as in the input file,
         # not the module target name.
-        variable_config.additional_actions(
-            variable_name,
-            clean_variable_value,
-            variable_config,
-            data_structure_obj,
-        )
+        if variable_name in {"boundl", "boundu"}:
+            clean_variable_value = variable_config.additional_actions(
+                variable_name,
+                clean_variable_value,
+                variable_config,
+                data_structure_obj,
+            )
+        else:
+            variable_config.additional_actions(
+                variable_name,
+                clean_variable_value,
+                variable_config,
+                data_structure_obj,
+            )
 
     # check if the target name in the module is different to the variable name
     # in the input file
