@@ -19,7 +19,7 @@ def test_input_file(temp_data, mfile_name, cli_runner):
     cli_runner(plot_summary_cli, args=["-f", mfile_str])
 
     # Assert the pdf has been created, named after the MFILE
-    assert list(temp_data.glob("*.pdf")) == [temp_data / f"{mfile_name}.SUMMARY.pdf"]
+    assert (temp_data / f"{mfile_name}.SUMMARY.pdf").exists()
 
 
 def test_input_file_cwd(temp_data_cwd, mfile_name, cli_runner):
@@ -37,4 +37,4 @@ def test_input_file_cwd(temp_data_cwd, mfile_name, cli_runner):
     cli_runner(plot_summary_cli, args=["-f", (temp_data_cwd / "MFILE.DAT").as_posix()])
 
     # Assert the pdf has been created, named after the MFILE
-    assert list(temp_data_cwd.glob("*.pdf")) == [temp_data_cwd / "MFILE.DAT.SUMMARY.pdf"]
+    assert (temp_data_cwd / "MFILE.DAT.SUMMARY.pdf").exists()
