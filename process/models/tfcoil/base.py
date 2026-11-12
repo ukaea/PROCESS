@@ -8,7 +8,7 @@ import logging
 from dataclasses import dataclass
 from enum import IntEnum, unique
 from types import DynamicClassAttribute
-from typing import TYPE_CHECKING, NamedTuple
+from typing import TYPE_CHECKING, NamedTuple, TypeVar
 
 import numba
 import numpy as np
@@ -27,6 +27,8 @@ from process.models.engineering.materials import (
 )
 
 if TYPE_CHECKING:
+    import numpy.typing as npt
+
     from process.core.data_structure.base import DataStructure
 
 logger = logging.getLogger(__name__)
@@ -135,6 +137,50 @@ class YoungsModulusComponents(NamedTuple):
     """Transverse component of Young's modulus [Pa]"""
 
 
+@dataclass
+class TFStressResults:
+    """Stress results for tf coils"""
+
+    sig_tf_max: RTZPoint
+    sig_tf_vmises_max: npt.NDArray
+    s_shear_tf_peak: npt.NDArray
+    deflect: npt.NDArray
+    eyoung: YoungsModulusComponents
+    eyoung_wp: YoungsModulusComponents
+    poisson_wp_trans: float
+    radial_array: float
+    s_shear_cea_tf_cond: float
+    poisson_wp_axial: float
+    sig_tf: RTZPoint
+    sig_tf_smeared: RTZPoint
+    s_shear_tf: float
+    sig_tf_vmises: float
+    str_tf: RTZPoint
+    n_radial_array: int
+    n_tf_bucking: int
+    sig_tf_wp: float
+    sig_tf_case: float
+    sig_tf_cs_bucked: float
+    str_wp: float
+    casestr: float
+    insstrain: float
+    sig_tf_wp_av_z: float
+
+
+wrapperT = TypeVar("wrapperT")
+
+
+def _wrap_output(wrapper: wrapperT):
+
+    def _wrap(func):
+        def wrapped(*args, **kwargs) -> wrapperT:
+            return wrapper(*func(*args, **kwargs))
+
+        return wrapped
+
+    return _wrap
+
+
 class TFCoil(Model):
     """Calculates the parameters of a resistive TF coil system for a fusion
     power plant
@@ -236,6 +282,122 @@ class TFCoil(Model):
     def output(self):
         """Run main tfcoil subroutine and write output."""
         self.cntrpst(output=True)
+
+    def run_and_output_stress(self, *, output: bool = True):
+        """
+        Run the TF coil model and
+        print the results of the stress calculations.
+        """
+        self.data.tfcoil.n_rad_per_layer = 500
+
+        d_sc_tf = self.data.superconducting_tfcoil
+
+        try:
+            stress_data = self.stresscl(
+                n_tf_layer=int(self.data.tfcoil.n_tf_stress_layers),
+                n_radial_array=int(self.data.tfcoil.n_rad_per_layer),
+                n_tf_wp_stress_layers=int(self.data.tfcoil.n_tf_wp_stress_layers),
+                i_tf_bucking=int(self.data.tfcoil.i_tf_bucking),
+                r_tf_inboard_in=float(self.data.build.r_tf_inboard_in),
+                dr_bore=self.data.build.dr_bore,
+                dr_cs=self.data.build.dr_cs,
+                i_tf_inside_cs=self.data.build.i_tf_inside_cs,
+                dr_tf_inboard=self.data.build.dr_tf_inboard,
+                dr_cs_tf_gap=self.data.build.dr_cs_tf_gap,
+                i_pf_conductor=self.data.pf_coil.i_pf_conductor,
+                j_cs_flat_top_end=self.data.pf_coil.j_cs_flat_top_end,
+                j_cs_pulse_start=self.data.pf_coil.j_cs_pulse_start,
+                c_pf_coil_turn_peak_input=self.data.pf_coil.c_pf_coil_turn_peak_input,
+                n_pf_coils_in_group=self.data.pf_coil.n_pf_coils_in_group,
+                f_dr_dz_cs_turn=self.data.pf_coil.f_dr_dz_cs_turn,
+                radius_cs_turn_corners=self.data.pf_coil.radius_cs_turn_corners,
+                f_a_cs_turn_steel=self.data.pf_coil.f_a_cs_turn_steel,
+                eyoung_steel=self.data.tfcoil.eyoung_steel,
+                poisson_steel=self.data.tfcoil.poisson_steel,
+                eyoung_cond_axial=self.data.tfcoil.eyoung_cond_axial,
+                poisson_cond_axial=self.data.tfcoil.poisson_cond_axial,
+                eyoung_cond_trans=self.data.tfcoil.eyoung_cond_trans,
+                poisson_cond_trans=self.data.tfcoil.poisson_cond_trans,
+                eyoung_ins=self.data.tfcoil.eyoung_ins,
+                poisson_ins=self.data.tfcoil.poisson_ins,
+                dx_tf_turn_insulation=self.data.tfcoil.dx_tf_turn_insulation,
+                eyoung_copper=self.data.tfcoil.eyoung_copper,
+                poisson_copper=self.data.tfcoil.poisson_copper,
+                i_tf_sup=self.data.tfcoil.i_tf_sup,
+                eyoung_res_tf_buck=self.data.tfcoil.eyoung_res_tf_buck,
+                r_tf_wp_inboard_inner=d_sc_tf.r_tf_wp_inboard_inner,
+                tan_theta_coil=d_sc_tf.tan_theta_coil,
+                rad_tf_coil_inboard_toroidal_half=d_sc_tf.rad_tf_coil_inboard_toroidal_half,
+                r_tf_wp_inboard_outer=d_sc_tf.r_tf_wp_inboard_outer,
+                a_tf_coil_inboard_steel=d_sc_tf.a_tf_coil_inboard_steel,
+                a_tf_plasma_case=d_sc_tf.a_tf_plasma_case,
+                a_tf_coil_nose_case=d_sc_tf.a_tf_coil_nose_case,
+                dx_tf_wp_insertion_gap=self.data.tfcoil.dx_tf_wp_insertion_gap,
+                dx_tf_wp_insulation=self.data.tfcoil.dx_tf_wp_insulation,
+                n_tf_coil_turns=self.data.tfcoil.n_tf_coil_turns,
+                i_tf_turns_integer=int(self.data.tfcoil.i_tf_turns_integer),
+                dx_tf_turn_cable_space_average=d_sc_tf.dx_tf_turn_cable_space_average,
+                dr_tf_turn_cable_space=d_sc_tf.dr_tf_turn_cable_space,
+                dia_tf_turn_coolant_channel=self.data.tfcoil.dia_tf_turn_coolant_channel,
+                f_a_tf_turn_cable_copper=self.data.tfcoil.f_a_tf_turn_cable_copper,
+                dx_tf_turn_steel=self.data.tfcoil.dx_tf_turn_steel,
+                dx_tf_side_case_average=d_sc_tf.dx_tf_side_case_average,
+                dx_tf_wp_toroidal_average=d_sc_tf.dx_tf_wp_toroidal_average,
+                a_tf_coil_inboard_insulation=d_sc_tf.a_tf_coil_inboard_insulation,
+                a_tf_wp_steel=self.data.tfcoil.a_tf_wp_steel,
+                a_tf_wp_conductor=self.data.tfcoil.a_tf_wp_conductor,
+                a_tf_wp_with_insulation=d_sc_tf.a_tf_wp_with_insulation,
+                eyoung_al=self.data.tfcoil.eyoung_al,
+                poisson_al=self.data.tfcoil.poisson_al,
+                fcoolcp=self.data.tfcoil.fcoolcp,
+                n_tf_graded_layers=self.data.tfcoil.n_tf_graded_layers,
+                c_tf_total=self.data.tfcoil.c_tf_total,
+                dr_tf_plasma_case=self.data.tfcoil.dr_tf_plasma_case,
+                i_tf_stress_model=self.data.tfcoil.i_tf_stress_model,
+                vforce_inboard_tot=d_sc_tf.vforce_inboard_tot,
+                i_tf_tresca=self.data.tfcoil.i_tf_tresca,
+                a_tf_coil_inboard_case=self.data.tfcoil.a_tf_coil_inboard_case,
+                vforce=self.data.tfcoil.vforce,
+                a_tf_turn_steel=self.data.tfcoil.a_tf_turn_steel,
+                a_cs_poloidal=self.data.pf_coil.a_cs_poloidal,
+            )
+        except ValueError as e:
+            if e.args[1] == 245 and e.args[2] == 0:
+                logger.warning(
+                    "Invalid stress model (r_tf_inboard = 0), stress constraint "
+                    "switched off"
+                )
+                self.data.tfcoil.sig_tf_case = 0.0
+                self.data.tfcoil.sig_tf_wp = 0.0
+        else:
+            self.data.tfcoil.sig_tf_wp = stress_data.sig_tf_wp
+            self.data.tfcoil.sig_tf_case = (
+                self.data.tfcoil.sig_tf_case
+                if self.data.tfcoil.sig_tf_case is None
+                else stress_data.sig_tf_case
+            )
+            self.data.tfcoil.sig_tf_cs_bucked = (
+                self.data.tfcoil.sig_tf_cs_bucked
+                if self.data.tfcoil.sig_tf_cs_bucked is None
+                else stress_data.sig_tf_cs_bucked
+            )
+            self.data.tfcoil.str_wp = (
+                self.data.tfcoil.str_wp
+                if self.data.tfcoil.str_wp is None
+                else stress_data.str_wp
+            )
+            self.data.tfcoil.casestr = (
+                self.data.tfcoil.casestr
+                if self.data.tfcoil.casestr is None
+                else stress_data.casestr
+            )
+            self.data.tfcoil.insstrain = (
+                self.data.tfcoil.insstrain
+                if self.data.tfcoil.insstrain is None
+                else stress_data.insstrain
+            )
+            if output:
+                self.out_stress(stress_data)
 
     @staticmethod
     def tf_global_geometry(
@@ -2261,6 +2423,7 @@ class TFCoil(Model):
         )
 
     @staticmethod
+    @_wrap_output(TFStressResults)
     @numba.njit(cache=True)
     def stresscl(  # noqa: PLR0917
         n_tf_layer,
@@ -3305,68 +3468,15 @@ class TFCoil(Model):
             sig_tf_wp_av_z,
         )
 
-    def out_stress(  # noqa: PLR0917
-        self,
-        sig_tf_max,
-        sig_tf_vmises_max,
-        s_shear_tf_peak,
-        deflect,
-        eyoung,
-        eyoung_wp,
-        poisson_wp_trans,
-        radial_array,
-        s_shear_cea_tf_cond,
-        poisson_wp_axial,
-        sig_tf,
-        sig_tf_smeared,
-        s_shear_tf,
-        sig_tf_vmises,
-        str_tf,
-        n_radial_array,
-        n_tf_bucking,
-        sig_tf_wp_av_z,
-    ):
+    def out_stress(self, tf_stress: TFStressResults):
         """Subroutine showing the writing the TF midplane stress analysis
         in the output file and the stress distribution in the SIG_TF.json
         file used to plot stress distributions
 
         Parameters
         ----------
-        sig_tf_max :
-
-        sig_tf_vmises_max :
-
-        s_shear_tf_peak :
-
-        deflect :
-
-        eyoung :
-
-        eyoung_wp :
-
-        poisson_wp_trans :
-
-        radial_array :
-
-        s_shear_cea_tf_cond :
-
-        poisson_wp_axial :
-
-        sig_tf :
-
-        sig_tf_smeared:
-
-        s_shear_tf :
-
-        sig_tf_vmises :
-
-        str_tf:
-
-        n_radial_array :
-
-        n_tf_bucking :
-
-        sig_tf_wp_av_z :
+        tf_stress:
+            results of the TF stress calculation
 
         """
 
@@ -3473,22 +3583,22 @@ class TFCoil(Model):
         po.write(
             self.outfile,
             f"  Radial stress \t\t\t (MPa) \t\t"
-            f"{table_format_arrays(sig_tf_max.r, 1e-6)}",
+            f"{table_format_arrays(tf_stress.sig_tf_max.r, 1e-6)}",
         )
         po.write(
             self.outfile,
             f"  Toroidal stress \t\t\t (MPa) \t\t"
-            f"{table_format_arrays(sig_tf_max.t, 1e-6)}",
+            f"{table_format_arrays(tf_stress.sig_tf_max.t, 1e-6)}",
         )
         po.write(
             self.outfile,
             f"  Vertical stress \t\t\t (MPa) \t\t"
-            f"{table_format_arrays(sig_tf_max.z, 1e-6)}",
+            f"{table_format_arrays(tf_stress.sig_tf_max.z, 1e-6)}",
         )
         po.write(
             self.outfile,
             f"  Von-Mises stress \t\t\t (MPa) \t\t"
-            f"{table_format_arrays(sig_tf_vmises_max, 1e-6)}",
+            f"{table_format_arrays(tf_stress.sig_tf_vmises_max, 1e-6)}",
         )
 
         if (
@@ -3498,81 +3608,81 @@ class TFCoil(Model):
             po.write(
                 self.outfile,
                 f"  Shear (CEA Tresca) \t\t\t (MPa) \t\t"
-                f"{table_format_arrays(s_shear_tf_peak, 1e-6)}",
+                f"{table_format_arrays(tf_stress.s_shear_tf_peak, 1e-6)}",
             )
         else:
             po.write(
                 self.outfile,
                 f"  Shear (Tresca) \t\t\t (MPa) \t\t"
-                f"{table_format_arrays(s_shear_tf_peak, 1e-6)}",
+                f"{table_format_arrays(tf_stress.s_shear_tf_peak, 1e-6)}",
             )
 
         po.write(self.outfile, "")
         po.write(
             self.outfile,
             f"  Toroidal modulus \t\t\t (GPa) \t\t"
-            f"{table_format_arrays(eyoung.trans, 1e-9)}",
+            f"{table_format_arrays(tf_stress.eyoung.trans, 1e-9)}",
         )
         po.write(
             self.outfile,
             f"  Vertical modulus \t\t\t (GPa) \t\t"
-            f"{table_format_arrays(eyoung.axial, 1e-9)}",
+            f"{table_format_arrays(tf_stress.eyoung.axial, 1e-9)}",
         )
         po.write(self.outfile, "")
         po.ovarre(
             self.outfile,
             "WP transverse modulus (GPa)",
             "(eyoung_wp_trans*1.0d-9)",
-            eyoung_wp.trans * 1.0e-9,
+            tf_stress.eyoung_wp.trans * 1.0e-9,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "WP vertical modulus (GPa)",
             "(eyoung_wp_axial*1.0d-9)",
-            eyoung_wp.axial * 1.0e-9,
+            tf_stress.eyoung_wp.axial * 1.0e-9,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "WP transverse Poissons ratio",
             "(poisson_wp_trans)",
-            poisson_wp_trans,
+            tf_stress.poisson_wp_trans,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "WP vertical-transverse Pois. rat.",
             "(poisson_wp_axial)",
-            poisson_wp_axial,
+            tf_stress.poisson_wp_axial,
             "OP ",
         )
 
         # MFILE.DAT data
-        for ii in range(n_tf_bucking + 2):
+        for ii in range(tf_stress.n_tf_bucking + 2):
             po.ovarre(
                 constants.MFILE,
                 f"Radial    stress at maximum shear of layer {ii + 1} (Pa)",
                 f"(sig_tf_r_max({ii + 1}))",
-                sig_tf_max.r[ii],
+                tf_stress.sig_tf_max.r[ii],
             )
             po.ovarre(
                 constants.MFILE,
                 f"toroidal  stress at maximum shear of layer {ii + 1} (Pa)",
                 f"(sig_tf_t_max({ii + 1}))",
-                sig_tf_max.t[ii],
+                tf_stress.sig_tf_max.t[ii],
             )
             po.ovarre(
                 constants.MFILE,
                 f"Vertical  stress at maximum shear of layer {ii + 1} (Pa)",
                 f"(sig_tf_z_max({ii + 1}))",
-                sig_tf_max.z[ii],
+                tf_stress.sig_tf_max.z[ii],
             )
             po.ovarre(
                 constants.MFILE,
                 f"Von-Mises stress at maximum shear of layer {ii + 1} (Pa)",
                 f"(sig_tf_vmises_max({ii + 1}))",
-                sig_tf_vmises_max[ii],
+                tf_stress.sig_tf_vmises_max[ii],
             )
             if (
                 self.data.tfcoil.i_tf_tresca == 1
@@ -3582,46 +3692,46 @@ class TFCoil(Model):
                     constants.MFILE,
                     f"Maximum shear stress for CEA Tresca yield criterion {ii + 1} (Pa)",
                     f"(s_shear_tf_peak({ii + 1}))",
-                    s_shear_tf_peak[ii],
+                    tf_stress.s_shear_tf_peak[ii],
                 )
             else:
                 po.ovarre(
                     constants.MFILE,
                     f"Maximum shear stress for the Tresca yield criterion {ii + 1} (Pa)",
                     f"(s_shear_tf_peak({ii + 1}))",
-                    s_shear_tf_peak[ii],
+                    tf_stress.s_shear_tf_peak[ii],
                 )
 
         # SIG_TF.json storage
         sig_file_data = {
-            "Points per layers": n_radial_array,
-            "Radius (m)": radial_array,
-            "Radial stress (MPa)": sig_tf.r * 1e-6,
-            "Toroidal stress (MPa)": sig_tf.t * 1e-6,
-            "Vertical stress (MPa)": sig_tf.z * 1e-6,
-            "Radial smear stress (MPa)": sig_tf_smeared.r * 1e-6,
-            "Toroidal smear stress (MPa)": sig_tf_smeared.t * 1e-6,
-            "Vertical smear stress (MPa)": sig_tf_smeared.z * 1e-6,
-            "Von-Mises stress (MPa)": sig_tf_vmises * 1e-6,
+            "Points per layers": tf_stress.n_radial_array,
+            "Radius (m)": tf_stress.radial_array,
+            "Radial stress (MPa)": tf_stress.sig_tf.r * 1e-6,
+            "Toroidal stress (MPa)": tf_stress.sig_tf.t * 1e-6,
+            "Vertical stress (MPa)": tf_stress.sig_tf.z * 1e-6,
+            "Radial smear stress (MPa)": tf_stress.sig_tf_smeared.r * 1e-6,
+            "Toroidal smear stress (MPa)": tf_stress.sig_tf_smeared.t * 1e-6,
+            "Vertical smear stress (MPa)": tf_stress.sig_tf_smeared.z * 1e-6,
+            "Von-Mises stress (MPa)": tf_stress.sig_tf_vmises * 1e-6,
             "CEA Tresca stress (MPa)": (
-                s_shear_cea_tf_cond * 1e-6
+                tf_stress.s_shear_cea_tf_cond * 1e-6
                 if self.data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING
-                else s_shear_tf * 1e-6
+                else tf_stress.s_shear_tf * 1e-6
             ),
-            "rad. displacement (mm)": deflect * 1e3,
+            "rad. displacement (mm)": tf_stress.deflect * 1e3,
         }
         if self.data.tfcoil.i_tf_stress_model != 1:
             sig_file_data = {
                 **sig_file_data,
-                "Radial strain": str_tf.r,
-                "Toroidal strain": str_tf.t,
-                "Vertical strain": str_tf.z,
+                "Radial strain": tf_stress.str_tf.r,
+                "Toroidal strain": tf_stress.str_tf.t,
+                "Vertical strain": tf_stress.str_tf.z,
             }
 
         if self.data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             sig_file_data = {
                 **sig_file_data,
-                "WP smeared stress (MPa)": sig_tf_wp_av_z * 1.0e-6,
+                "WP smeared stress (MPa)": tf_stress.sig_tf_wp_av_z * 1.0e-6,
             }
 
         sig_file_data = {
@@ -3643,7 +3753,7 @@ class TFCoil(Model):
                 self.outfile,
                 "Maximum radial deflection at midplane (m)",
                 "(deflect)",
-                deflect[n_radial_array - 1],
+                tf_stress.deflect[tf_stress.n_radial_array - 1],
                 "OP ",
             )
             po.ovarre(

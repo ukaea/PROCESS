@@ -1220,32 +1220,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    (
-        _,
-        _,
-        _,
-        _,
-        _,
-        _,
-        _,
-        _,
-        _,
-        _,
-        _,
-        _,
-        _,
-        _,
-        _,
-        _,
-        _,
-        sig_tf_wp,
-        sig_tf_case,
-        _,
-        str_wp,
-        casestr,
-        insstrain,
-        _,
-    ) = tfcoil.stresscl(
+    stress = tfcoil.stresscl(
         n_tf_layer=stressclparam.n_tf_layer,
         n_radial_array=stressclparam.n_radial_array,
         n_tf_wp_stress_layers=stressclparam.n_tf_wp_stress_layers,
@@ -1314,15 +1289,17 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         a_cs_poloidal=stressclparam.a_cs_poloidal,
     )
 
-    assert casestr == pytest.approx(stressclparam.expected_casestr, rel=0.01)
+    assert stress.casestr == pytest.approx(stressclparam.expected_casestr, rel=0.01)
 
-    assert sig_tf_case == pytest.approx(stressclparam.expected_sig_tf_case, rel=0.01)
+    assert stress.sig_tf_case == pytest.approx(
+        stressclparam.expected_sig_tf_case, rel=0.01
+    )
 
-    assert sig_tf_wp == pytest.approx(stressclparam.expected_sig_tf_wp, rel=0.01)
+    assert stress.sig_tf_wp == pytest.approx(stressclparam.expected_sig_tf_wp, rel=0.01)
 
-    assert insstrain == pytest.approx(stressclparam.expected_insstrain, rel=0.01)
+    assert stress.insstrain == pytest.approx(stressclparam.expected_insstrain, rel=0.01)
 
-    assert str_wp == pytest.approx(stressclparam.expected_str_wp, rel=0.01)
+    assert stress.str_wp == pytest.approx(stressclparam.expected_str_wp, rel=0.01)
 
 
 class PlaneStressParam(NamedTuple):
