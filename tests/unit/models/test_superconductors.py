@@ -275,3 +275,25 @@ def test_calculate_croco_cable_geometry(
         dx_hts_tape_hastelloy,
     )
     assert result == expected
+
+
+def test_critical_current_density_dispatch():
+    """Enum dispatch must match the underlying critical surface functions."""
+    assert SuperconductorModel.ITER_NB3SN.critical_current_density(
+        12.0, 4.75, 0.002
+    ) == pytest.approx(
+        superconductors.itersc(4.75, 12.0, 0.002, 32.97, 16.06)[0],
+    )
+    assert SuperconductorModel.CROCO_REBCO.critical_current_density(
+        10.0, 20.0
+    ) == pytest.approx(superconductors.jcrit_rebco(20.0, 10.0, 90.0, 132.5)[0])
+    assert SuperconductorModel.DURHAM_REBCO.critical_current_density(
+        10.0, 20.0, 0.001
+    ) == pytest.approx(superconductors.gl_rebco(20.0, 10.0, 0.001, 430.0, 185.0)[0])
+    assert SuperconductorModel.BI2212.critical_current_density(
+        10.0, 4.5
+    ) == pytest.approx(superconductors.bi2212(10.0, 0.0, 4.5, 1.0)[0])
+
+
+def test_every_model_has_critical_current_density():
+    assert set(superconductors._CRITICAL_CURRENT_DENSITY) == set(SuperconductorModel)
