@@ -56,7 +56,7 @@ def cs_coil(process_models):
 
 
 def test_init_pfcoil(pfcoil):
-    """Test initialisation of Fortran module variables.
+    """Test initialisation of module variables.
 
     :param pfcoil: PFCoil object
     :type pfcoil: process.pfcoil.PFCoil

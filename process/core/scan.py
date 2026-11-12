@@ -212,7 +212,7 @@ class ScanVariables(ScanVariable, Enum):
 
 
 class Scan:
-    """Perform a parameter scan using the Fortran scan module."""
+    """Perform a parameter scan using the scan module."""
 
     def __init__(self, models: Model, solver: str, data: DataStructure):
         """Immediately run the run_scan() method.

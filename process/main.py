@@ -1,4 +1,5 @@
-"""
+"""Run `PROCESS` by calling physics and engineering models.
+
 Power Reactor Optimisation Code for Environmental and Safety Studies
 
 This is a systems code that evaluates various physics and
@@ -14,9 +15,7 @@ the USA were J.D.Galambos and P.C.Shipe.
 The code was transferred to Culham Laboratory, Oxfordshire, UK, in
 April 1992, and the physics models were updated by P.J.Knight to
 include the findings of the Culham reactor studies documented in
-Culham Report AEA FUS 172 (1992). The standard of the Fortran has
-been thoroughly upgraded since that time, and a number of additional
-models have been added.
+Culham Report AEA FUS 172 (1992).
 
 During 2012, PROCESS was upgraded from FORTRAN 77 to Fortran 95,
 to facilitate the restructuring of the code into proper modules
@@ -410,13 +409,12 @@ class SingleRun:
                 "in the analysis folder",
             )
 
-        # Set the input file in the Fortran
         self.data.globals.fileprefix = self.input_path.resolve()
 
     def set_output(self):
         """Set the output file name.
 
-        Set Path object on the Process object, and set the prefix in the Fortran.
+        Set Path object on the Process object
         """
         self.output_path = Path(self.data.globals.output_prefix + "OUT.DAT")
 
@@ -472,11 +470,7 @@ class SingleRun:
 
     @staticmethod
     def finish():
-        """Run the finish subroutine to close files open in the Fortran.
-
-        Files being handled by Fortran must be closed before attempting to
-        write to them using Python, otherwise only parts are written.
-        """
+        """Run the finish subroutine to close files that are open at the end of a run."""
         oheadr(constants.NOUT, "End of PROCESS Output")
         oheadr(constants.IOTTY, "End of PROCESS Output")
         oheadr(constants.NOUT, "Copy of PROCESS Input Follows")
@@ -636,14 +630,14 @@ class SingleRun:
 class Models:
     """Creates instances of physics and engineering model classes.
 
-    Creates objects to interface with corresponding Fortran physics and
+    Creates objects to interface with corresponding physics and
     engineering modules.
     """
 
     def __init__(self, data: DataStructure):
         """Create physics and engineering model objects.
 
-        This also initialises module variables in the Fortran for that module.
+        This also initialises module variables for each model.
         """
         self.data = data
 

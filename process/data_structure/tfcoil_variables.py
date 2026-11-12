@@ -327,7 +327,6 @@ class TFData:
 
     n_tf_stress_layers: int = 0
     """Number of layers considered for the inboard TF stress calculations
-    set in initial.f90 from i_tf_bucking and n_tf_graded_layers
     """
 
     n_tf_wp_stress_layers: int = 5

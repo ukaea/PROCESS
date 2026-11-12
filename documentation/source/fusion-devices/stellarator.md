@@ -82,7 +82,7 @@ ixc = 169 * Achievable Temperature of the ECRH at the ignition point
 
 ## Code specifics
 
-The stellarator model is largely contained within source file `stellarator.f90`.
+The stellarator model is contained within the `process/models/stellarator/` directory.
 
 The model call is in the following order
 
