@@ -55,7 +55,6 @@ def _bounds_additional_actions(name, value: list[float], _config, data: DataStru
             value[i] = float(data.numerics.boundl[i])
         if name == "boundu" and v == 9e99:  # noqa: RUF069
             value[i] = float(data.numerics.boundu[i])
-    return value
 
 
 @dataclass(slots=True)
@@ -1296,20 +1295,12 @@ def set_on_datastructure(variable_name, info, data_structure_obj, variables):
     if variable_config.additional_actions is not None:
         # intentionally passing the variable name as in the input file,
         # not the module target name.
-        if variable_name in {"boundl", "boundu"}:
-            clean_variable_value = variable_config.additional_actions(
-                variable_name,
-                clean_variable_value,
-                variable_config,
-                data_structure_obj,
-            )
-        else:
-            variable_config.additional_actions(
-                variable_name,
-                clean_variable_value,
-                variable_config,
-                data_structure_obj,
-            )
+        variable_config.additional_actions(
+            variable_name,
+            clean_variable_value,
+            variable_config,
+            data_structure_obj,
+        )
 
     # check if the target name in the module is different to the variable name
     # in the input file
