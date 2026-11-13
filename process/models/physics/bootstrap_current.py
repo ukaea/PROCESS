@@ -2023,15 +2023,11 @@ class SauterBootstrapCurrent(Model):
             n_charge_plasma_effective=charge_profile,
         )
 
-        # $f^{32\_ei}_{teff}(\nu_{e*})$, Eq.15e
-        f32ei_teff = f_trapped / (
-            (1.0 + (1.0 + 0.6 * f_trapped) * np.sqrt(electron_collisionality))
-            + (
-                0.85
-                * (1.0 - 0.37 * f_trapped)
-                * electron_collisionality
-                * (1.0 + charge_profile)
-            )
+        # f³²ᵉⁱ_{teff}(νₑ⁎), Eq.15e # noqa: RUF003
+        f32ei_teff = self._calculate_f_teff_32ei_coefficient(
+            f_trapped_particles=f_trapped,
+            normalised_electron_collisionality=electron_collisionality,
+            n_charge_plasma_effective=charge_profile,
         )
 
         # $F_{32\_ee}(X)$, Eq.15b
@@ -2395,6 +2391,56 @@ class SauterBootstrapCurrent(Model):
                 * (1.0 - 0.37 * f_trapped_particles)
                 * normalised_electron_collisionality
                 / np.sqrt(n_charge_plasma_effective)
+            )
+        )
+
+    @staticmethod
+    def _calculate_f_teff_32ei_coefficient(
+        f_trapped_particles: float | np.ndarray,
+        normalised_electron_collisionality: float | np.ndarray,
+        n_charge_plasma_effective: float | np.ndarray,
+    ) -> float | np.ndarray:
+        """Calculate the effective trapped particle fraction coefficient f³²ᵉⁱ_{teff}
+        as a function of normalised electron collisionality and effective charge profile.
+
+        Parameters
+        ----------
+        f_trapped_particles :
+            Trapped particle fraction (fₜ) [-].
+        normalised_electron_collisionality :
+            Normalised electron collisionality (νₑ⁎) [-].
+        n_charge_plasma_effective :
+            Effective charge profile (Z_eff) [-].
+
+        Returns
+        -------
+        float | np.ndarray:
+            The effective trapped particle fraction coefficient f³²ᵉⁱ_{teff}(νₑ⁎).
+
+        Notes
+        -----
+        - This equation is given by Eq.15e in reference [1]
+
+        References
+        ----------
+        [1] O. Sauter, C. Angioni, Y. R. Lin-Liu;
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime.
+        Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
+
+        """  # noqa: RUF002
+        # f³²ᵉⁱ_{teff}(νₑ⁎), Eq.15e # noqa: RUF003
+        return f_trapped_particles / (
+            (
+                1.0
+                + (1.0 + 0.6 * f_trapped_particles)
+                * np.sqrt(normalised_electron_collisionality)
+            )
+            + (
+                0.85
+                * (1.0 - 0.37 * f_trapped_particles)
+                * normalised_electron_collisionality
+                * (1.0 + n_charge_plasma_effective)
             )
         )
 
