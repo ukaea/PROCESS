@@ -161,7 +161,7 @@ class TFStressResults:
     sig_tf_wp: float
     sig_tf_case: float
     sig_tf_cs_bucked: float
-    str_wp: float
+    strain_z_tf_inboard_wp: float
     casestr: float
     insstrain: float
     sig_tf_wp_av_z: float
@@ -381,10 +381,10 @@ class TFCoil(Model):
                 if self.data.tfcoil.sig_tf_cs_bucked is None
                 else stress_data.sig_tf_cs_bucked
             )
-            self.data.tfcoil.str_wp = (
-                self.data.tfcoil.str_wp
-                if self.data.tfcoil.str_wp is None
-                else stress_data.str_wp
+            self.data.tfcoil.strain_z_tf_inboard_wp = (
+                self.data.tfcoil.strain_z_tf_inboard_wp
+                if self.data.tfcoil.strain_z_tf_inboard_wp is None
+                else stress_data.strain_z_tf_inboard_wp
             )
             self.data.tfcoil.casestr = (
                 self.data.tfcoil.casestr

@@ -994,6 +994,33 @@ class SuperconductingTFCoil(TFCoil):
             tf_total_width,
         )
 
+    @staticmethod
+    def _get_tf_superconductor_strain(data: DataStructure) -> float:
+        """Return the TF superconductor strain selected in the data.
+
+        Returns
+        -------
+        float
+            The TF superconductor strain.
+
+        Raises
+        ------
+        ProcessValueError
+            If the strain type is unknown.
+        """
+        match StrainTFSuperconductorType(
+            data.superconducting_tfcoil.i_strain_tf_superconductor
+        ):
+            case StrainTFSuperconductorType.RESIDUAL_MANUFACTURING_STRAIN:
+                return data.tfcoil.strain_tf_superconductor_residual
+            case StrainTFSuperconductorType.VERTICAL_WP_STRAIN:
+                return data.tfcoil.strain_z_tf_inboard_wp
+            case _:
+                raise ProcessValueError(
+                    f"Unknown strain type: "
+                    f"{data.superconducting_tfcoil.i_strain_tf_superconductor}"
+                )
+
     def output_tf_superconductor_info(self):
         """
         Output TF superconductor information
@@ -1004,18 +1031,7 @@ class SuperconductingTFCoil(TFCoil):
             If the strain type is unknown.
         """
         d_sc_tf = self.data.superconducting_tfcoil
-
-        match StrainTFSuperconductorType(
-            self.data.superconducting_tfcoil.i_strain_tf_superconductor
-        ):
-            case StrainTFSuperconductorType.RESIDUAL_MANUFACTURING_STRAIN:
-                strain = self.data.tfcoil.strain_tf_superconductor_residual
-            case StrainTFSuperconductorType.VERTICAL_WP_STRAIN:
-                strain = self.data.tfcoil.strain_z_tf_inboard_wp
-            case _:
-                raise ProcessValueError(
-                    f"Unknown strain type: {self.data.superconducting_tfcoil.i_strain_tf_superconductor}"  # noqa: E501
-                )
+        strain = self._get_tf_superconductor_strain(self.data)
 
         try:
             temp_margin = self.calculate_superconductor_temperature_margin(
@@ -2064,164 +2080,6 @@ class SuperconductingTFCoil(TFCoil):
                 self.data.tfcoil.len_tf_coil / tfleng_sph
             )
 
-    def run_and_output_stress(self) -> None:
-        """
-        Run the superconducting TF coil model and
-        print the results of the stress calculations.
-        """
-        self.data.tfcoil.n_rad_per_layer = 500
-        d_sc_tf = self.data.superconducting_tfcoil
-
-        try:  # noqa: PLW0717
-            (
-                sig_tf_max,
-                sig_tf_vmises_max,
-                s_shear_tf_peak,
-                deflect,
-                eyoung,
-                eyoung_wp,
-                poisson_wp_trans,
-                radial_array,
-                s_shear_cea_tf_cond,
-                poisson_wp_axial,
-                sig_tf,
-                sig_tf_smeared,
-                s_shear_tf,
-                sig_tf_vmises,
-                str_tf,
-                n_radial_array,
-                n_tf_bucking,
-                self.data.tfcoil.sig_tf_wp,
-                sig_tf_case,
-                sig_tf_cs_bucked,
-                str_wp,
-                casestr,
-                insstrain,
-                sig_tf_wp_av_z,
-            ) = self.stresscl(
-                n_tf_layer=int(self.data.tfcoil.n_tf_stress_layers),
-                n_radial_array=int(self.data.tfcoil.n_rad_per_layer),
-                n_tf_wp_stress_layers=int(self.data.tfcoil.n_tf_wp_stress_layers),
-                i_tf_bucking=int(self.data.tfcoil.i_tf_bucking),
-                r_tf_inboard_in=float(self.data.build.r_tf_inboard_in),
-                dr_bore=self.data.build.dr_bore,
-                dr_cs=self.data.build.dr_cs,
-                i_tf_inside_cs=self.data.build.i_tf_inside_cs,
-                dr_tf_inboard=self.data.build.dr_tf_inboard,
-                dr_cs_tf_gap=self.data.build.dr_cs_tf_gap,
-                i_pf_conductor=self.data.pf_coil.i_pf_conductor,
-                j_cs_flat_top_end=self.data.pf_coil.j_cs_flat_top_end,
-                j_cs_pulse_start=self.data.pf_coil.j_cs_pulse_start,
-                c_pf_coil_turn_peak_input=self.data.pf_coil.c_pf_coil_turn_peak_input,
-                n_pf_coils_in_group=self.data.pf_coil.n_pf_coils_in_group,
-                f_dr_dz_cs_turn=self.data.pf_coil.f_dr_dz_cs_turn,
-                radius_cs_turn_corners=self.data.pf_coil.radius_cs_turn_corners,
-                f_a_cs_turn_steel=self.data.pf_coil.f_a_cs_turn_steel,
-                eyoung_steel=self.data.tfcoil.eyoung_steel,
-                poisson_steel=self.data.tfcoil.poisson_steel,
-                eyoung_cond_axial=self.data.tfcoil.eyoung_cond_axial,
-                poisson_cond_axial=self.data.tfcoil.poisson_cond_axial,
-                eyoung_cond_trans=self.data.tfcoil.eyoung_cond_trans,
-                poisson_cond_trans=self.data.tfcoil.poisson_cond_trans,
-                eyoung_ins=self.data.tfcoil.eyoung_ins,
-                poisson_ins=self.data.tfcoil.poisson_ins,
-                dx_tf_turn_insulation=self.data.tfcoil.dx_tf_turn_insulation,
-                eyoung_copper=self.data.tfcoil.eyoung_copper,
-                poisson_copper=self.data.tfcoil.poisson_copper,
-                i_tf_sup=self.data.tfcoil.i_tf_sup,
-                eyoung_res_tf_buck=self.data.tfcoil.eyoung_res_tf_buck,
-                r_tf_wp_inboard_inner=d_sc_tf.r_tf_wp_inboard_inner,
-                tan_theta_coil=d_sc_tf.tan_theta_coil,
-                rad_tf_coil_inboard_toroidal_half=d_sc_tf.rad_tf_coil_inboard_toroidal_half,
-                r_tf_wp_inboard_outer=d_sc_tf.r_tf_wp_inboard_outer,
-                a_tf_coil_inboard_steel=d_sc_tf.a_tf_coil_inboard_steel,
-                a_tf_plasma_case=d_sc_tf.a_tf_plasma_case,
-                a_tf_coil_nose_case=d_sc_tf.a_tf_coil_nose_case,
-                dx_tf_wp_insertion_gap=self.data.tfcoil.dx_tf_wp_insertion_gap,
-                dx_tf_wp_insulation=self.data.tfcoil.dx_tf_wp_insulation,
-                n_tf_coil_turns=self.data.tfcoil.n_tf_coil_turns,
-                i_tf_turns_integer=int(self.data.tfcoil.i_tf_turns_integer),
-                dx_tf_turn_cable_space_average=d_sc_tf.dx_tf_turn_cable_space_average,
-                dr_tf_turn_cable_space=d_sc_tf.dr_tf_turn_cable_space,
-                dia_tf_turn_coolant_channel=self.data.tfcoil.dia_tf_turn_coolant_channel,
-                f_a_tf_turn_cable_copper=self.data.tfcoil.f_a_tf_turn_cable_copper,
-                dx_tf_turn_steel=self.data.tfcoil.dx_tf_turn_steel,
-                dx_tf_side_case_average=d_sc_tf.dx_tf_side_case_average,
-                dx_tf_wp_toroidal_average=d_sc_tf.dx_tf_wp_toroidal_average,
-                a_tf_coil_inboard_insulation=d_sc_tf.a_tf_coil_inboard_insulation,
-                a_tf_wp_steel=self.data.tfcoil.a_tf_wp_steel,
-                a_tf_wp_conductor=self.data.tfcoil.a_tf_wp_conductor,
-                a_tf_wp_with_insulation=d_sc_tf.a_tf_wp_with_insulation,
-                eyoung_al=self.data.tfcoil.eyoung_al,
-                poisson_al=self.data.tfcoil.poisson_al,
-                fcoolcp=self.data.tfcoil.fcoolcp,
-                n_tf_graded_layers=self.data.tfcoil.n_tf_graded_layers,
-                c_tf_total=self.data.tfcoil.c_tf_total,
-                dr_tf_plasma_case=self.data.tfcoil.dr_tf_plasma_case,
-                i_tf_stress_model=self.data.tfcoil.i_tf_stress_model,
-                vforce_inboard_tot=d_sc_tf.vforce_inboard_tot,
-                i_tf_tresca=self.data.tfcoil.i_tf_tresca,
-                a_tf_coil_inboard_case=self.data.tfcoil.a_tf_coil_inboard_case,
-                vforce=self.data.tfcoil.vforce,
-                a_tf_turn_steel=self.data.tfcoil.a_tf_turn_steel,
-                a_cs_poloidal=self.data.pf_coil.a_cs_poloidal,
-            )
-
-            self.data.tfcoil.sig_tf_case = (
-                self.data.tfcoil.sig_tf_case
-                if self.data.tfcoil.sig_tf_case is None
-                else sig_tf_case
-            )
-
-            self.data.tfcoil.sig_tf_cs_bucked = (
-                self.data.tfcoil.sig_tf_cs_bucked
-                if self.data.tfcoil.sig_tf_cs_bucked is None
-                else sig_tf_cs_bucked
-            )
-
-            self.data.tfcoil.str_wp = (
-                self.data.tfcoil.str_wp if self.data.tfcoil.str_wp is None else str_wp
-            )
-
-            self.data.tfcoil.casestr = (
-                self.data.tfcoil.casestr if self.data.tfcoil.casestr is None else casestr
-            )
-
-            self.data.tfcoil.insstrain = (
-                self.data.tfcoil.insstrain
-                if self.data.tfcoil.insstrain is None
-                else insstrain
-            )
-
-            self.out_stress(
-                sig_tf_max,
-                sig_tf_vmises_max,
-                s_shear_tf_peak,
-                deflect,
-                eyoung,
-                eyoung_wp,
-                poisson_wp_trans,
-                radial_array,
-                s_shear_cea_tf_cond,
-                poisson_wp_axial,
-                sig_tf,
-                sig_tf_smeared,
-                s_shear_tf,
-                sig_tf_vmises,
-                str_tf,
-                n_radial_array,
-                n_tf_bucking,
-                sig_tf_wp_av_z,
-            )
-        except ValueError as e:
-            if e.args[1] == 245 and e.args[2] == 0:
-                logger.warning(
-                    "Invalid stress model (r_tf_inboard = 0), stress constraint "
-                    "switched off"
-                )
-                self.data.tfcoil.sig_tf_case = 0.0e0
-                self.data.tfcoil.sig_tf_wp = 0.0e0
-
     @staticmethod
     def calculate_superconductor_temperature_margin(
         i_tf_superconductor: int,
@@ -2715,17 +2573,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         match AvailabilityModel(self.data.costs.i_plant_availability):
             # Only calculate temperature margin if required
             case AvailabilityModel.MORRIS | AvailabilityModel.ST:
-                match StrainTFSuperconductorType(
-                    self.data.superconducting_tfcoil.i_strain_tf_superconductor
-                ):
-                    case StrainTFSuperconductorType.RESIDUAL_MANUFACTURING_STRAIN:
-                        strain = self.data.tfcoil.strain_tf_superconductor_residual
-                    case StrainTFSuperconductorType.VERTICAL_WP_STRAIN:
-                        strain = self.data.tfcoil.strain_z_tf_inboard_wp
-                    case _:
-                        raise ProcessValueError(
-                            f"Unknown strain type: {self.data.superconducting_tfcoil.i_strain_tf_superconductor}"  # noqa: E501
-                        )
+                strain = self._get_tf_superconductor_strain(self.data)
 
                 temp_margin = self.calculate_superconductor_temperature_margin(
                     i_tf_superconductor=self.data.tfcoil.i_tf_sc_mat,
@@ -2874,18 +2722,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
                 "superconductors."
             )
 
-        match StrainTFSuperconductorType(
-            data.superconducting_tfcoil.i_strain_tf_superconductor
-        ):
-            case StrainTFSuperconductorType.RESIDUAL_MANUFACTURING_STRAIN:
-                strain = tfcoil.strain_tf_superconductor_residual
-            case StrainTFSuperconductorType.VERTICAL_WP_STRAIN:
-                strain = tfcoil.strain_z_tf_inboard_wp
-            case _:
-                raise ProcessValueError(
-                    f"Unknown strain type: "
-                    f"{data.superconducting_tfcoil.i_strain_tf_superconductor}"
-                )
+        strain = SuperconductingTFCoil._get_tf_superconductor_strain(data)
         non_copper_fraction = 1.0 - f_a_tf_turn_cable_copper
         conductor_fraction = 1.0 - min(f_a_tf_turn_cable_space_cooling, 0.99)
 
@@ -3895,17 +3732,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         match AvailabilityModel(self.data.costs.i_plant_availability):
             # Only calculate temperature margin if required
             case AvailabilityModel.MORRIS | AvailabilityModel.ST:
-                match StrainTFSuperconductorType(
-                    self.data.superconducting_tfcoil.i_strain_tf_superconductor
-                ):
-                    case StrainTFSuperconductorType.RESIDUAL_MANUFACTURING_STRAIN:
-                        strain = self.data.tfcoil.strain_tf_superconductor_residual
-                    case StrainTFSuperconductorType.VERTICAL_WP_STRAIN:
-                        strain = self.data.tfcoil.strain_z_tf_inboard_wp
-                    case _:
-                        raise ProcessValueError(
-                            f"Unknown strain type: {self.data.superconducting_tfcoil.i_strain_tf_superconductor}"  # noqa: E501
-                        )
+                strain = self._get_tf_superconductor_strain(self.data)
 
                 temp_margin = self.calculate_superconductor_temperature_margin(
                     i_tf_superconductor=self.data.tfcoil.i_tf_sc_mat,
@@ -4140,10 +3967,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                 "superconductors."
             )
 
-        if self.data.superconducting_tfcoil.i_strain_tf_superconductor == 0:
-            strain = self.data.tfcoil.strain_tf_superconductor_residual
-        else:
-            strain = self.data.tfcoil.strain_z_tf_inboard_wp
+        strain = self._get_tf_superconductor_strain(self.data)
 
         match SuperconductorModel(i_tf_superconductor):
             # =================================================================

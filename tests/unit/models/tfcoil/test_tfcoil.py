@@ -1299,7 +1299,9 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
 
     assert stress.insstrain == pytest.approx(stressclparam.expected_insstrain, rel=0.01)
 
-    assert stress.str_wp == pytest.approx(stressclparam.expected_str_wp, rel=0.01)
+    assert stress.strain_z_tf_inboard_wp == pytest.approx(
+        stressclparam.expected_str_wp, rel=0.01
+    )
 
 
 class PlaneStressParam(NamedTuple):
