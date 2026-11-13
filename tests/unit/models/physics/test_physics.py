@@ -6,7 +6,11 @@ import numpy as np
 import pytest
 
 from process.core import constants
-from process.data_structure.physics_variables import PlasmaIgnitionModel
+from process.data_structure.physics_variables import (
+    ConfinementRadiationLossModel,
+    ConfinementTimeModel,
+    PlasmaIgnitionModel,
+)
 from process.models.physics.impurity_radiation import initialise_imprad
 from process.models.physics.physics import (
     DetailedPhysics,
@@ -3104,6 +3108,15 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
         confinementtimeparam.expected_p_plasma_loss_mw
     )
 
+    factor_names = (
+        "hfact_full_radiation",
+        "hfact_core_radiation",
+        "hfact_no_radiation",
+    )
+    assert getattr(
+        confinement_time_data, factor_names[confinementtimeparam.i_rad_loss]
+    ) == pytest.approx(confinementtimeparam.hfact)
+
     assert confinement_time_data.pden_electron_transport_loss_mw == pytest.approx(
         confinementtimeparam.expected_pden_electron_transport_loss_mw
     )
@@ -3123,6 +3136,84 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
     assert confinement_time_data.t_ion_energy_confinement == pytest.approx(
         confinementtimeparam.expected_t_ion_energy_confinement
     )
+
+
+@pytest.mark.parametrize("radiation_model", list(ConfinementRadiationLossModel))
+@pytest.mark.parametrize(
+    "scaling",
+    [
+        ConfinementTimeModel.USER_INPUT,
+        ConfinementTimeModel.ITER_IPB98Y2,
+        ConfinementTimeModel.ITER_89_0,
+        ConfinementTimeModel.REBUT_LALLIA,
+        ConfinementTimeModel.JAERI,
+        ConfinementTimeModel.MINIMUM_OF_ITER_89P_AND_ITER_89_0,
+        ConfinementTimeModel.MENARD_NSTX_PETTY08_HYBRID,
+    ],
+)
+@pytest.mark.parametrize("ignited", list(PlasmaIgnitionModel))
+@pytest.mark.parametrize("full_radiation_density", [0.1, 0.4])
+def test_radiation_corrected_h_factors(
+    physics, monkeypatch, radiation_model, scaling, ignited, full_radiation_density
+):
+    """Each reported H-factor reproduces the selected confinement time."""
+    data = physics.data.physics
+    monkeypatch.setattr(data, "i_rad_loss", radiation_model)
+    monkeypatch.setattr(data, "tauee_in", 2.0)
+    monkeypatch.setattr(data, "pden_plasma_rad_vol_avg_mw", full_radiation_density)
+    monkeypatch.setattr(data, "p_plasma_ohmic_mw", 5.0)
+    monkeypatch.setattr(data, "f_p_alpha_plasma_deposited", 0.9)
+    monkeypatch.setattr(data, "pden_plasma_sync_vol_avg_mw", 0.01)
+    monkeypatch.setattr(data, "p_plasma_core_rad_reduced_mw", 40.0)
+    factor_names = (
+        "hfact_full_radiation",
+        "hfact_core_radiation",
+        "hfact_no_radiation",
+    )
+    for name in factor_names:
+        monkeypatch.setattr(data, name, -1.0)
+
+    kwargs = {
+        "m_fuel_amu": 2.5,
+        "p_alpha_total_mw": 100.0,
+        "aspect": 2.0,
+        "b_plasma_toroidal_on_axis": 5.0,
+        "nd_plasma_electrons_vol_avg": 8e19,
+        "nd_plasma_electron_line": 9e19,
+        "eps": 0.5,
+        "hfact": 1.7,
+        "i_confinement_time": scaling,
+        "i_plasma_ignited": ignited,
+        "kappa": 1.8,
+        "kappa95": 1.6,
+        "p_non_alpha_charged_mw": 2.0,
+        "p_hcd_injected_total_mw": 20.0,
+        "plasma_current": 15e6,
+        "pden_plasma_core_rad_reduced_vol_avg_mw": 0.04,
+        "rmajor": 8.0,
+        "rminor": 4.0,
+        "temp_plasma_electron_density_weighted_kev": 12.0,
+        "q95": 3.5,
+        "qstar": 3.0,
+        "vol_plasma": 1000.0,
+        "zeff": 2.0,
+        "eden_plasma_electrons_thermal_vol_avg": 2e5,
+        "eden_plasma_ions_thermal_vol_avg": 1e5,
+    }
+    selected = physics.confinement.calculate_confinement_time(**kwargs)
+    assert getattr(selected, factor_names[radiation_model]) == pytest.approx(
+        kwargs["hfact"]
+    )
+
+    for model, name in zip(ConfinementRadiationLossModel, factor_names, strict=True):
+        monkeypatch.setattr(data, "i_rad_loss", model)
+        kwargs["hfact"] = getattr(selected, name)
+        equivalent = physics.confinement.calculate_confinement_time(**kwargs)
+        assert equivalent.t_electron_energy_confinement == pytest.approx(
+            selected.t_electron_energy_confinement
+        )
+
+    assert tuple(getattr(data, name) for name in factor_names) == (-1.0,) * 3
 
 
 def test_calculate_plasma_masses(physics):

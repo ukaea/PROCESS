@@ -387,6 +387,9 @@ def plot_main_plasma_information(
         "$\\mathbf{Confinement:}$\n\n"
         f"Confinement scaling law: {value('tauelaw')}\n"
         f"Confinement $H$ factor: {value('hfact'):.4f}\n"
+        f"$H_{{\\text{{no,rad}}}}$: {value('hfact_no_radiation'):.4f} | "
+        f"$H_{{\\text{{core,rad}}}}$: {value('hfact_core_radiation'):.4f} | "
+        f"$H_{{\\text{{full,rad}}}}$: {value('hfact_full_radiation'):.4f} \n"
         f"Energy confinement time from scaling: {value('t_energy_confinement'):.4f} s\n"
         f"Fusion double product: {value('ntau'):.4e} s/m³\n"
         f"Lawson Triple product: {value('nttau'):.4e} keV·s/m³\n"
@@ -546,15 +549,15 @@ def plot_main_plasma_information(
     add_panel(axis, 0.025, 0.975, 0.325, 0.180, text_beta, box_style("lightblue"))
     add_panel(axis, 0.025, 0.780, 0.335, 0.195, text_volt_sec, box_style("lightgreen"))
     add_panel(axis, 0.350, 0.120, 0.165, 0.09, text_div, box_style("orange"))
-    add_panel(axis, 0.025, 0.570, 0.325, 0.155, text_confinement, box_style("gainsboro"))
-    add_panel(axis, 0.025, 0.400, 0.185, 0.165, text_reactions, box_style("red", 0.6))
-    add_panel(axis, 0.025, 0.220, 0.255, 0.16, text_fuelling, box_style("khaki"))
+    add_panel(axis, 0.025, 0.570, 0.325, 0.175, text_confinement, box_style("gainsboro"))
+    add_panel(axis, 0.025, 0.38, 0.185, 0.165, text_reactions, box_style("red", 0.6))
+    add_panel(axis, 0.025, 0.2, 0.255, 0.16, text_fuelling, box_style("khaki"))
     add_panel(axis, 0.805, 0.335, 0.170, 0.310, text_ions, ion_box, text_x_offset=0.045)
     add_panel(axis, 0.720, 0.975, 0.255, 0.130, text_currents, box_style("#C8A2C8"))
     add_panel(axis, 0.5325, 0.140, 0.2575, 0.115, text_fields, box_style("royalblue"))
     add_panel(axis, 0.71, 0.830, 0.265, 0.145, text_rad, rad_box, text_x_offset=0.03)
-    add_panel(axis, 0.220, 0.400, 0.110, 0.080, text_lh, box_style("peachpuff"))
-    add_panel(axis, 0.220, 0.310, 0.130, 0.075, text_density_limit, box_style("pink"))
+    add_panel(axis, 0.220, 0.38, 0.110, 0.080, text_lh, box_style("peachpuff"))
+    add_panel(axis, 0.220, 0.29, 0.130, 0.075, text_density_limit, box_style("pink"))
 
 
 def plot_detailed_plasma_parameters(axis: plt.Axes, mfile: MFile, scan: int):

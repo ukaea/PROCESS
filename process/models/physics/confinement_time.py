@@ -39,8 +39,12 @@ class ConfinementTimeData:
     """Plasma energy confinement time in seconds."""
     p_plasma_loss_mw: float
     """Total plasma loss power in MW."""
-    hstar: float
-    """Non-radiation corrected H factor on energy confinement times"""
+    hfact_full_radiation: float
+    """Full radiation corrected H factor on energy confinement times"""
+    hfact_core_radiation: float
+    """Core radiation corrected H factor on energy confinement times"""
+    hfact_no_radiation: float
+    """No radiation corrected H factor on energy confinement times"""
 
 
 class PlasmaConfinementTime(Model):
@@ -154,7 +158,7 @@ class PlasmaConfinementTime(Model):
         # ========================================================================
 
         # Calculate heating power (MW)
-        p_plasma_loss_mw = (
+        p_plasma_heating_mw = (
             self.data.physics.f_p_alpha_plasma_deposited * p_alpha_total_mw
             + p_non_alpha_charged_mw
             + self.data.physics.p_plasma_ohmic_mw
@@ -162,7 +166,9 @@ class PlasmaConfinementTime(Model):
 
         # If the device is not ignited, add the injected auxiliary power
         if PlasmaIgnitionModel(i_plasma_ignited) == PlasmaIgnitionModel.NON_IGNITED:
-            p_plasma_loss_mw += p_hcd_injected_total_mw
+            p_plasma_heating_mw += p_hcd_injected_total_mw
+
+        p_plasma_loss_mw = p_plasma_heating_mw
 
         # Include the radiation as a loss term based on radiation model
         try:  # noqa: PLW0717
@@ -192,6 +198,16 @@ class PlasmaConfinementTime(Model):
 
         # Ensure heating power is positive (shouldn't be necessary)
         p_plasma_loss_mw = max(p_plasma_loss_mw, 1.0e-3)
+        p_plasma_loss_full_radiation_mw = max(
+            p_plasma_heating_mw
+            - self.data.physics.pden_plasma_rad_vol_avg_mw * vol_plasma,
+            1.0e-3,
+        )
+        p_plasma_loss_core_radiation_mw = max(
+            p_plasma_heating_mw - pden_plasma_core_rad_reduced_vol_avg_mw * vol_plasma,
+            1.0e-3,
+        )
+        p_plasma_loss_no_radiation_mw = max(p_plasma_heating_mw, 1.0e-3)
 
         # ========================================================================
 
@@ -227,672 +243,444 @@ class PlasmaConfinementTime(Model):
                 i_confinement_time=i_confinement_time,
             ) from e
 
-        match model:
-            # ====================================================================
+        def scaling_time(p_plasma_loss_mw: float) -> float:
+            match model:
+                # ====================================================================
 
-            # User defined confinement time
-            case ConfinementTimeModel.USER_INPUT:
-                # t_electron_energy_confinement is an input
-                t_electron_confinement = self.data.physics.tauee_in
+                # User defined confinement time
+                case ConfinementTimeModel.USER_INPUT:
+                    # t_electron_energy_confinement is an input
+                    t_electron_confinement = self.data.physics.tauee_in
 
-            # ====================================================================
+                # ====================================================================
 
-            # Nec-Alcator(NA) OH scaling
-            case ConfinementTimeModel.NEO_ALCATOR:
-                # t_electron_energy_confinement is an input
-                t_electron_confinement = self.neo_alcator_confinement_time(
-                    n20, rminor, rmajor, qstar
-                )
-
-            # ====================================================================
-
-            # "Mirnov"-like scaling (H-mode)
-            case ConfinementTimeModel.MIRNOV:  # Mirnov scaling (H-mode)
-                t_electron_confinement = self.mirnov_confinement_time(
-                    rminor, kappa95, cur_plasma_ma
-                )
-
-            # ====================================================================
-
-            # Merezhkin-Mukhovatov (MM) OH/L-mode scaling
-            case ConfinementTimeModel.MEREZHKIN_MUHKOVATOV:
-                t_electron_confinement = self.merezhkin_muhkovatov_confinement_time(
-                    rmajor,
-                    rminor,
-                    kappa95,
-                    qstar,
-                    nd_plasma_electron_line_20,
-                    m_fuel_amu,
-                    temp_plasma_electron_density_weighted_kev,
-                )
-
-            # ====================================================================
-
-            # Shimomura (S) optimized H-mode scaling
-            case ConfinementTimeModel.SHIMOMURA:
-                t_electron_confinement = self.shimomura_confinement_time(
-                    rmajor, rminor, b_plasma_toroidal_on_axis, kappa95, m_fuel_amu
-                )
-
-            # ====================================================================
-
-            # Kaye-Goldston scaling (L-mode)
-            case ConfinementTimeModel.KAYE_GOLDSTON:
-                t_electron_confinement = self.kaye_goldston_confinement_time(
-                    cur_plasma_ma,
-                    rmajor,
-                    rminor,
-                    kappa,
-                    nd_plasma_electron_line_20,
-                    b_plasma_toroidal_on_axis,
-                    m_fuel_amu,
-                    p_plasma_loss_mw,
-                )
-
-            # ====================================================================
-
-            # ITER Power scaling - ITER 89-P (L-mode)
-            case ConfinementTimeModel.ITER_89P:
-                t_electron_confinement = self.iter_89p_confinement_time(
-                    cur_plasma_ma,
-                    rmajor,
-                    rminor,
-                    kappa,
-                    nd_plasma_electron_line_20,
-                    b_plasma_toroidal_on_axis,
-                    m_fuel_amu,
-                    p_plasma_loss_mw,
-                )
-
-            # ====================================================================
-
-            # ITER Offset linear scaling - ITER 89-O (L-mode)
-            case ConfinementTimeModel.ITER_89_0:
-                t_electron_confinement = self.iter_89_0_confinement_time(
-                    cur_plasma_ma,
-                    rmajor,
-                    rminor,
-                    kappa,
-                    nd_plasma_electron_line_20,
-                    b_plasma_toroidal_on_axis,
-                    m_fuel_amu,
-                    p_plasma_loss_mw,
-                )
-
-            # ====================================================================
-
-            # Rebut-Lallia offset linear scaling (L-mode)
-            case ConfinementTimeModel.REBUT_LALLIA:
-                t_electron_confinement = self.rebut_lallia_confinement_time(
-                    rminor,
-                    rmajor,
-                    kappa,
-                    m_fuel_amu,
-                    cur_plasma_ma,
-                    zeff,
-                    nd_plasma_electron_line_20,
-                    b_plasma_toroidal_on_axis,
-                    p_plasma_loss_mw,
-                )
-
-            # ====================================================================
-
-            # Goldston scaling (L-mode)
-            case ConfinementTimeModel.GOLDSTON:  # Goldston scaling (L-mode)
-                t_electron_confinement = self.goldston_confinement_time(
-                    cur_plasma_ma,
-                    rmajor,
-                    rminor,
-                    kappa95,
-                    m_fuel_amu,
-                    p_plasma_loss_mw,
-                )
-
-            # ====================================================================
-
-            # T-10 scaling (L-mode)
-            case ConfinementTimeModel.T_10:
-                t_electron_confinement = self.t10_confinement_time(
-                    nd_plasma_electron_line_20,
-                    rmajor,
-                    qstar,
-                    b_plasma_toroidal_on_axis,
-                    rminor,
-                    kappa95,
-                    p_plasma_loss_mw,
-                    zeff,
-                    cur_plasma_ma,
-                )
-
-            # ====================================================================
-
-            # JAERI / Odajima-Shimomura L-mode scaling
-            case ConfinementTimeModel.JAERI:  # JAERI scaling
-                t_electron_confinement = self.jaeri_confinement_time(
-                    kappa95,
-                    rminor,
-                    m_fuel_amu,
-                    n20,
-                    cur_plasma_ma,
-                    b_plasma_toroidal_on_axis,
-                    rmajor,
-                    qstar,
-                    zeff,
-                    p_plasma_loss_mw,
-                )
-
-            # ====================================================================
-
-            # Kaye "big"  L-mode scaling (based only on big tokamak data)
-            case ConfinementTimeModel.KAYE_BIG:
-                t_electron_confinement = self.kaye_big_confinement_time(
-                    rmajor,
-                    rminor,
-                    b_plasma_toroidal_on_axis,
-                    kappa95,
-                    cur_plasma_ma,
-                    n20,
-                    m_fuel_amu,
-                    p_plasma_loss_mw,
-                )
-
-            # ====================================================================
-
-            # ITER H90-P H-mode scaling
-            case ConfinementTimeModel.ITER_H90_P:
-                t_electron_confinement = self.iter_h90_p_confinement_time(
-                    cur_plasma_ma,
-                    rmajor,
-                    rminor,
-                    kappa,
-                    nd_plasma_electron_line_20,
-                    b_plasma_toroidal_on_axis,
-                    m_fuel_amu,
-                    p_plasma_loss_mw,
-                )
-
-            # ====================================================================
-
-            # Minimum of ITER 89-P and ITER 89-O
-            case ConfinementTimeModel.MINIMUM_OF_ITER_89P_AND_ITER_89_0:
-                t_electron_confinement = min(
-                    self.iter_89p_confinement_time(
-                        cur_plasma_ma,
-                        rmajor,
-                        rminor,
-                        kappa,
-                        nd_plasma_electron_line_20,
-                        b_plasma_toroidal_on_axis,
-                        m_fuel_amu,
-                        p_plasma_loss_mw,
-                    ),
-                    self.iter_89_0_confinement_time(
-                        cur_plasma_ma,
-                        rmajor,
-                        rminor,
-                        kappa,
-                        nd_plasma_electron_line_20,
-                        b_plasma_toroidal_on_axis,
-                        m_fuel_amu,
-                        p_plasma_loss_mw,
-                    ),
-                )
-
-            # ====================================================================
-
-            # Riedel scaling (L-mode)
-            case ConfinementTimeModel.RIEDEL_L:
-                t_electron_confinement = self.riedel_l_confinement_time(
-                    cur_plasma_ma,
-                    rmajor,
-                    rminor,
-                    kappa95,
-                    nd_plasma_electron_line_20,
-                    b_plasma_toroidal_on_axis,
-                    p_plasma_loss_mw,
-                )
-
-            # ====================================================================
-
-            # Christiansen et al scaling (L-mode)
-            case ConfinementTimeModel.CHRISTIANSEN:
-                t_electron_confinement = self.christiansen_confinement_time(
-                    cur_plasma_ma,
-                    rmajor,
-                    rminor,
-                    kappa95,
-                    nd_plasma_electron_line_20,
-                    b_plasma_toroidal_on_axis,
-                    p_plasma_loss_mw,
-                    m_fuel_amu,
-                )
-
-            # ====================================================================
-
-            # Lackner-Gottardi scaling (L-mode)
-            case ConfinementTimeModel.LACKNER_GOTTARDI:
-                t_electron_confinement = self.lackner_gottardi_confinement_time(
-                    cur_plasma_ma,
-                    rmajor,
-                    rminor,
-                    kappa95,
-                    nd_plasma_electron_line_20,
-                    b_plasma_toroidal_on_axis,
-                    p_plasma_loss_mw,
-                )
-
-            # ====================================================================
-
-            # Neo-Kaye scaling (L-mode)
-            case ConfinementTimeModel.NEO_KAYE:
-                t_electron_confinement = self.neo_kaye_confinement_time(
-                    cur_plasma_ma,
-                    rmajor,
-                    rminor,
-                    kappa95,
-                    nd_plasma_electron_line_20,
-                    b_plasma_toroidal_on_axis,
-                    p_plasma_loss_mw,
-                )
-
-            # ======== ================================================================
-
-            # Riedel scaling (H-mode)
-            case ConfinementTimeModel.RIEDEL_H:
-                t_electron_confinement = self.riedel_h_confinement_time(
-                    cur_plasma_ma,
-                    rmajor,
-                    rminor,
-                    kappa95,
-                    nd_plasma_electron_line_20,
-                    b_plasma_toroidal_on_axis,
-                    m_fuel_amu,
-                    p_plasma_loss_mw,
-                )
-
-            # ====================================================================
-
-            # Amended version of ITER H90-P law
-            case ConfinementTimeModel.ITER_H90_P_AMENDED:
-                t_electron_confinement = self.iter_h90_p_amended_confinement_time(
-                    cur_plasma_ma,
-                    b_plasma_toroidal_on_axis,
-                    m_fuel_amu,
-                    rmajor,
-                    p_plasma_loss_mw,
-                    kappa,
-                )
-
-            # ====================================================================
-
-            # Sudo et al. scaling (stellarators/heliotron)
-            case ConfinementTimeModel.SUDO_ET_AL:
-                t_electron_confinement = self.sudo_et_al_confinement_time(
-                    rmajor,
-                    rminor,
-                    nd_plasma_electron_line_20,
-                    b_plasma_toroidal_on_axis,
-                    p_plasma_loss_mw,
-                )
-
-            # ====================================================================
-
-            # Gyro-reduced Bohm scaling
-            case ConfinementTimeModel.GYRO_REDUCED_BOHM:
-                t_electron_confinement = self.gyro_reduced_bohm_confinement_time(
-                    b_plasma_toroidal_on_axis,
-                    nd_plasma_electron_line_20,
-                    p_plasma_loss_mw,
-                    rminor,
-                    rmajor,
-                )
-
-            # ====================================================================
-
-            # Lackner-Gottardi stellarator scaling
-            case ConfinementTimeModel.LACKNER_GOTTARDI_STELLARATOR:
-                t_electron_confinement = (
-                    self.lackner_gottardi_stellarator_confinement_time(
-                        rmajor,
-                        rminor,
-                        nd_plasma_electron_line_20,
-                        b_plasma_toroidal_on_axis,
-                        p_plasma_loss_mw,
-                        q95,
+                # Nec-Alcator(NA) OH scaling
+                case ConfinementTimeModel.NEO_ALCATOR:
+                    # t_electron_energy_confinement is an input
+                    t_electron_confinement = self.neo_alcator_confinement_time(
+                        n20, rminor, rmajor, qstar
                     )
-                )
 
-            # ====================================================================
+                # ====================================================================
 
-            # ITER_93 ELM-free H-mode scaling
-            case ConfinementTimeModel.ITER_93H:
-                t_electron_confinement = self.iter_93h_confinement_time(
-                    cur_plasma_ma,
-                    b_plasma_toroidal_on_axis,
-                    p_plasma_loss_mw,
-                    m_fuel_amu,
-                    rmajor,
-                    nd_plasma_electron_line_20,
-                    aspect,
-                    kappa,
-                )
+                # "Mirnov"-like scaling (H-mode)
+                case ConfinementTimeModel.MIRNOV:  # Mirnov scaling (H-mode)
+                    t_electron_confinement = self.mirnov_confinement_time(
+                        rminor, kappa95, cur_plasma_ma
+                    )
 
-            # ====================================================================
-            # Scaling removed
-            case ConfinementTimeModel.TITAN_REMOVED:
-                raise ProcessValueError("Scaling removed")
-            # ====================================================================
+                # ====================================================================
 
-            # ELM-free: ITERH-97P
-            case ConfinementTimeModel.ITER_H97P:
-                t_electron_confinement = self.iter_h97p_confinement_time(
-                    cur_plasma_ma,
-                    b_plasma_toroidal_on_axis,
-                    p_plasma_loss_mw,
-                    nd_plasma_electron_line_19,
-                    rmajor,
-                    aspect,
-                    kappa,
-                    m_fuel_amu,
-                )
+                # Merezhkin-Mukhovatov (MM) OH/L-mode scaling
+                case ConfinementTimeModel.MEREZHKIN_MUHKOVATOV:
+                    t_electron_confinement = self.merezhkin_muhkovatov_confinement_time(
+                        rmajor,
+                        rminor,
+                        kappa95,
+                        qstar,
+                        nd_plasma_electron_line_20,
+                        m_fuel_amu,
+                        temp_plasma_electron_density_weighted_kev,
+                    )
 
-            # ====================================================================
+                # ====================================================================
 
-            # ELMy: ITERH-97P(y)
-            case ConfinementTimeModel.ITER_H97P_ELMY:
-                t_electron_confinement = self.iter_h97p_elmy_confinement_time(
-                    cur_plasma_ma,
-                    b_plasma_toroidal_on_axis,
-                    p_plasma_loss_mw,
-                    nd_plasma_electron_line_19,
-                    rmajor,
-                    aspect,
-                    kappa,
-                    m_fuel_amu,
-                )
+                # Shimomura (S) optimized H-mode scaling
+                case ConfinementTimeModel.SHIMOMURA:
+                    t_electron_confinement = self.shimomura_confinement_time(
+                        rmajor, rminor, b_plasma_toroidal_on_axis, kappa95, m_fuel_amu
+                    )
 
-            # ====================================================================
+                # ====================================================================
 
-            # ITER-96P (= ITER-97L) L-mode scaling
-            case ConfinementTimeModel.ITER_96P:
-                t_electron_confinement = self.iter_96p_confinement_time(
-                    cur_plasma_ma,
-                    b_plasma_toroidal_on_axis,
-                    kappa95,
-                    rmajor,
-                    aspect,
-                    nd_plasma_electron_line_19,
-                    m_fuel_amu,
-                    p_plasma_loss_mw,
-                )
+                # Kaye-Goldston scaling (L-mode)
+                case ConfinementTimeModel.KAYE_GOLDSTON:
+                    t_electron_confinement = self.kaye_goldston_confinement_time(
+                        cur_plasma_ma,
+                        rmajor,
+                        rminor,
+                        kappa,
+                        nd_plasma_electron_line_20,
+                        b_plasma_toroidal_on_axis,
+                        m_fuel_amu,
+                        p_plasma_loss_mw,
+                    )
 
-            # ====================================================================
+                # ====================================================================
 
-            # Valovic modified ELMy-H mode scaling
-            # WARNING: No reference found for this scaling. This may not be its real name
-            case ConfinementTimeModel.VALOVIC_ELMY:
-                t_electron_confinement = self.valovic_elmy_confinement_time(
-                    cur_plasma_ma,
-                    b_plasma_toroidal_on_axis,
-                    nd_plasma_electron_line_19,
-                    m_fuel_amu,
-                    rmajor,
-                    rminor,
-                    kappa,
-                    p_plasma_loss_mw,
-                )
+                # ITER Power scaling - ITER 89-P (L-mode)
+                case ConfinementTimeModel.ITER_89P:
+                    t_electron_confinement = self.iter_89p_confinement_time(
+                        cur_plasma_ma,
+                        rmajor,
+                        rminor,
+                        kappa,
+                        nd_plasma_electron_line_20,
+                        b_plasma_toroidal_on_axis,
+                        m_fuel_amu,
+                        p_plasma_loss_mw,
+                    )
 
-            # ====================================================================
+                # ====================================================================
 
-            # Kaye PPPL Workshop April 1998 L-mode scaling
-            # WARNING: No reference found for this scaling. This may not be its real name
-            case ConfinementTimeModel.KAYE:
-                t_electron_confinement = self.kaye_confinement_time(
-                    cur_plasma_ma,
-                    b_plasma_toroidal_on_axis,
-                    kappa,
-                    rmajor,
-                    aspect,
-                    nd_plasma_electron_line_19,
-                    m_fuel_amu,
-                    p_plasma_loss_mw,
-                )
+                # ITER Offset linear scaling - ITER 89-O (L-mode)
+                case ConfinementTimeModel.ITER_89_0:
+                    t_electron_confinement = self.iter_89_0_confinement_time(
+                        cur_plasma_ma,
+                        rmajor,
+                        rminor,
+                        kappa,
+                        nd_plasma_electron_line_20,
+                        b_plasma_toroidal_on_axis,
+                        m_fuel_amu,
+                        p_plasma_loss_mw,
+                    )
 
-            # ====================================================================
+                # ====================================================================
 
-            # ITERH-PB98P(y), ELMy H-mode scaling
-            # WARNING: No reference found for this scaling. This may not be its real name
-            case ConfinementTimeModel.ITER_PB98P_Y:
-                t_electron_confinement = self.iter_pb98py_confinement_time(
-                    cur_plasma_ma,
-                    b_plasma_toroidal_on_axis,
-                    nd_plasma_electron_line_19,
-                    p_plasma_loss_mw,
-                    rmajor,
-                    self.data.physics.kappa_ipb,
-                    aspect,
-                    m_fuel_amu,
-                )
+                # Rebut-Lallia offset linear scaling (L-mode)
+                case ConfinementTimeModel.REBUT_LALLIA:
+                    t_electron_confinement = self.rebut_lallia_confinement_time(
+                        rminor,
+                        rmajor,
+                        kappa,
+                        m_fuel_amu,
+                        cur_plasma_ma,
+                        zeff,
+                        nd_plasma_electron_line_20,
+                        b_plasma_toroidal_on_axis,
+                        p_plasma_loss_mw,
+                    )
 
-            # ====================================================================
+                # ====================================================================
 
-            # IPB98(y), ELMy H-mode scaling
-            case ConfinementTimeModel.IPB98_Y:
-                t_electron_confinement = self.iter_ipb98y_confinement_time(
-                    cur_plasma_ma,
-                    b_plasma_toroidal_on_axis,
-                    nd_plasma_electron_line_19,
-                    p_plasma_loss_mw,
-                    rmajor,
-                    kappa,
-                    aspect,
-                    m_fuel_amu,
-                )
+                # Goldston scaling (L-mode)
+                case ConfinementTimeModel.GOLDSTON:  # Goldston scaling (L-mode)
+                    t_electron_confinement = self.goldston_confinement_time(
+                        cur_plasma_ma,
+                        rmajor,
+                        rminor,
+                        kappa95,
+                        m_fuel_amu,
+                        p_plasma_loss_mw,
+                    )
 
-            # ====================================================================
+                # ====================================================================
 
-            # IPB98(y,1), ELMy H-mode scaling
-            case ConfinementTimeModel.ITER_IPB98Y1:
-                t_electron_confinement = self.iter_ipb98y1_confinement_time(
-                    cur_plasma_ma,
-                    b_plasma_toroidal_on_axis,
-                    nd_plasma_electron_line_19,
-                    p_plasma_loss_mw,
-                    rmajor,
-                    self.data.physics.kappa_ipb,
-                    aspect,
-                    m_fuel_amu,
-                )
+                # T-10 scaling (L-mode)
+                case ConfinementTimeModel.T_10:
+                    t_electron_confinement = self.t10_confinement_time(
+                        nd_plasma_electron_line_20,
+                        rmajor,
+                        qstar,
+                        b_plasma_toroidal_on_axis,
+                        rminor,
+                        kappa95,
+                        p_plasma_loss_mw,
+                        zeff,
+                        cur_plasma_ma,
+                    )
 
-            # ====================================================================
+                # ====================================================================
 
-            # IPB98(y,2), ELMy H-mode scaling
-            case ConfinementTimeModel.ITER_IPB98Y2:
-                t_electron_confinement = self.iter_ipb98y2_confinement_time(
-                    cur_plasma_ma,
-                    b_plasma_toroidal_on_axis,
-                    nd_plasma_electron_line_19,
-                    p_plasma_loss_mw,
-                    rmajor,
-                    self.data.physics.kappa_ipb,
-                    aspect,
-                    m_fuel_amu,
-                )
+                # JAERI / Odajima-Shimomura L-mode scaling
+                case ConfinementTimeModel.JAERI:  # JAERI scaling
+                    t_electron_confinement = self.jaeri_confinement_time(
+                        kappa95,
+                        rminor,
+                        m_fuel_amu,
+                        n20,
+                        cur_plasma_ma,
+                        b_plasma_toroidal_on_axis,
+                        rmajor,
+                        qstar,
+                        zeff,
+                        p_plasma_loss_mw,
+                    )
 
-            # ====================================================================
+                # ====================================================================
 
-            # IPB98(y,3), ELMy H-mode scaling
-            case ConfinementTimeModel.ITER_IPB98Y3:
-                t_electron_confinement = self.iter_ipb98y3_confinement_time(
-                    cur_plasma_ma,
-                    b_plasma_toroidal_on_axis,
-                    nd_plasma_electron_line_19,
-                    p_plasma_loss_mw,
-                    rmajor,
-                    self.data.physics.kappa_ipb,
-                    aspect,
-                    m_fuel_amu,
-                )
+                # Kaye "big"  L-mode scaling (based only on big tokamak data)
+                case ConfinementTimeModel.KAYE_BIG:
+                    t_electron_confinement = self.kaye_big_confinement_time(
+                        rmajor,
+                        rminor,
+                        b_plasma_toroidal_on_axis,
+                        kappa95,
+                        cur_plasma_ma,
+                        n20,
+                        m_fuel_amu,
+                        p_plasma_loss_mw,
+                    )
 
-            # ====================================================================
+                # ====================================================================
 
-            # IPB98(y,4), ELMy H-mode scaling
-            case ConfinementTimeModel.ITER_IPB98Y4:
-                t_electron_confinement = self.iter_ipb98y4_confinement_time(
-                    cur_plasma_ma,
-                    b_plasma_toroidal_on_axis,
-                    nd_plasma_electron_line_19,
-                    p_plasma_loss_mw,
-                    rmajor,
-                    self.data.physics.kappa_ipb,
-                    aspect,
-                    m_fuel_amu,
-                )
+                # ITER H90-P H-mode scaling
+                case ConfinementTimeModel.ITER_H90_P:
+                    t_electron_confinement = self.iter_h90_p_confinement_time(
+                        cur_plasma_ma,
+                        rmajor,
+                        rminor,
+                        kappa,
+                        nd_plasma_electron_line_20,
+                        b_plasma_toroidal_on_axis,
+                        m_fuel_amu,
+                        p_plasma_loss_mw,
+                    )
 
-            # ====================================================================
+                # ====================================================================
 
-            # ISS95 stellarator scaling
-            case ConfinementTimeModel.ISS95_STELLARATOR:
-                # dummy argument q95 is actual argument iotabar for stellarators
-                iotabar = q95
-                t_electron_confinement = self.iss95_stellarator_confinement_time(
-                    rminor,
-                    rmajor,
-                    nd_plasma_electron_line_19,
-                    b_plasma_toroidal_on_axis,
-                    p_plasma_loss_mw,
-                    iotabar,
-                )
+                # Minimum of ITER 89-P and ITER 89-O
+                case ConfinementTimeModel.MINIMUM_OF_ITER_89P_AND_ITER_89_0:
+                    t_electron_confinement = min(
+                        self.iter_89p_confinement_time(
+                            cur_plasma_ma,
+                            rmajor,
+                            rminor,
+                            kappa,
+                            nd_plasma_electron_line_20,
+                            b_plasma_toroidal_on_axis,
+                            m_fuel_amu,
+                            p_plasma_loss_mw,
+                        ),
+                        self.iter_89_0_confinement_time(
+                            cur_plasma_ma,
+                            rmajor,
+                            rminor,
+                            kappa,
+                            nd_plasma_electron_line_20,
+                            b_plasma_toroidal_on_axis,
+                            m_fuel_amu,
+                            p_plasma_loss_mw,
+                        ),
+                    )
 
-            # ====================================================================
+                # ====================================================================
 
-            # ISS04 stellarator scaling
-            case ConfinementTimeModel.ISS04_STELLARATOR:
-                # dummy argument q95 is actual argument iotabar for stellarators
-                iotabar = q95
-                t_electron_confinement = self.iss04_stellarator_confinement_time(
-                    rminor,
-                    rmajor,
-                    nd_plasma_electron_line_19,
-                    b_plasma_toroidal_on_axis,
-                    p_plasma_loss_mw,
-                    iotabar,
-                )
+                # Riedel scaling (L-mode)
+                case ConfinementTimeModel.RIEDEL_L:
+                    t_electron_confinement = self.riedel_l_confinement_time(
+                        cur_plasma_ma,
+                        rmajor,
+                        rminor,
+                        kappa95,
+                        nd_plasma_electron_line_20,
+                        b_plasma_toroidal_on_axis,
+                        p_plasma_loss_mw,
+                    )
 
-            # ====================================================================
+                # ====================================================================
 
-            # DS03 beta-independent H-mode scaling
-            case ConfinementTimeModel.DS03:
-                t_electron_confinement = self.ds03_confinement_time(
-                    cur_plasma_ma,
-                    b_plasma_toroidal_on_axis,
-                    nd_plasma_electron_line_19,
-                    p_plasma_loss_mw,
-                    rmajor,
-                    kappa95,
-                    aspect,
-                    m_fuel_amu,
-                )
+                # Christiansen et al scaling (L-mode)
+                case ConfinementTimeModel.CHRISTIANSEN:
+                    t_electron_confinement = self.christiansen_confinement_time(
+                        cur_plasma_ma,
+                        rmajor,
+                        rminor,
+                        kappa95,
+                        nd_plasma_electron_line_20,
+                        b_plasma_toroidal_on_axis,
+                        p_plasma_loss_mw,
+                        m_fuel_amu,
+                    )
 
-            # ====================================================================
+                # ====================================================================
 
-            #  Murari "Non-power law" scaling
-            case ConfinementTimeModel.MURARI:
-                t_electron_confinement = self.murari_confinement_time(
-                    cur_plasma_ma,
-                    rmajor,
-                    self.data.physics.kappa_ipb,
-                    nd_plasma_electron_line_19,
-                    b_plasma_toroidal_on_axis,
-                    p_plasma_loss_mw,
-                )
+                # Lackner-Gottardi scaling (L-mode)
+                case ConfinementTimeModel.LACKNER_GOTTARDI:
+                    t_electron_confinement = self.lackner_gottardi_confinement_time(
+                        cur_plasma_ma,
+                        rmajor,
+                        rminor,
+                        kappa95,
+                        nd_plasma_electron_line_20,
+                        b_plasma_toroidal_on_axis,
+                        p_plasma_loss_mw,
+                    )
 
-            # ====================================================================
+                # ====================================================================
 
-            # Petty08, beta independent dimensionless scaling
-            case ConfinementTimeModel.PETTY08:
-                t_electron_confinement = self.petty08_confinement_time(
-                    cur_plasma_ma,
-                    b_plasma_toroidal_on_axis,
-                    nd_plasma_electron_line_19,
-                    p_plasma_loss_mw,
-                    rmajor,
-                    self.data.physics.kappa_ipb,
-                    aspect,
-                )
+                # Neo-Kaye scaling (L-mode)
+                case ConfinementTimeModel.NEO_KAYE:
+                    t_electron_confinement = self.neo_kaye_confinement_time(
+                        cur_plasma_ma,
+                        rmajor,
+                        rminor,
+                        kappa95,
+                        nd_plasma_electron_line_20,
+                        b_plasma_toroidal_on_axis,
+                        p_plasma_loss_mw,
+                    )
 
-            # ====================================================================
+                # ====================================================================
 
-            # Lang high density relevant confinement scaling
-            case ConfinementTimeModel.LANG_HIGH_DENSITY:
-                t_electron_confinement = self.lang_high_density_confinement_time(
-                    plasma_current,
-                    b_plasma_toroidal_on_axis,
-                    nd_plasma_electron_line,
-                    p_plasma_loss_mw,
-                    rmajor,
-                    rminor,
-                    q95,
-                    qstar,
-                    aspect,
-                    m_fuel_amu,
-                    self.data.physics.kappa_ipb,
-                )
+                # Riedel scaling (H-mode)
+                case ConfinementTimeModel.RIEDEL_H:
+                    t_electron_confinement = self.riedel_h_confinement_time(
+                        cur_plasma_ma,
+                        rmajor,
+                        rminor,
+                        kappa95,
+                        nd_plasma_electron_line_20,
+                        b_plasma_toroidal_on_axis,
+                        m_fuel_amu,
+                        p_plasma_loss_mw,
+                    )
 
-            # ====================================================================
+                # ====================================================================
 
-            # Hubbard 2017 I-mode confinement time scaling - nominal
-            case ConfinementTimeModel.HUBBARD_NOMINAL:
-                t_electron_confinement = self.hubbard_nominal_confinement_time(
-                    cur_plasma_ma,
-                    b_plasma_toroidal_on_axis,
-                    nd_plasma_electron_line_20,
-                    p_plasma_loss_mw,
-                )
+                # Amended version of ITER H90-P law
+                case ConfinementTimeModel.ITER_H90_P_AMENDED:
+                    t_electron_confinement = self.iter_h90_p_amended_confinement_time(
+                        cur_plasma_ma,
+                        b_plasma_toroidal_on_axis,
+                        m_fuel_amu,
+                        rmajor,
+                        p_plasma_loss_mw,
+                        kappa,
+                    )
 
-            # ====================================================================
+                # ====================================================================
 
-            # Hubbard 2017 I-mode confinement time scaling - lower
-            case ConfinementTimeModel.HUBBARD_LOWER:
-                t_electron_confinement = self.hubbard_lower_confinement_time(
-                    cur_plasma_ma,
-                    b_plasma_toroidal_on_axis,
-                    nd_plasma_electron_line_20,
-                    p_plasma_loss_mw,
-                )
+                # Sudo et al. scaling (stellarators/heliotron)
+                case ConfinementTimeModel.SUDO_ET_AL:
+                    t_electron_confinement = self.sudo_et_al_confinement_time(
+                        rmajor,
+                        rminor,
+                        nd_plasma_electron_line_20,
+                        b_plasma_toroidal_on_axis,
+                        p_plasma_loss_mw,
+                    )
 
-            # ====================================================================
+                # ====================================================================
 
-            # Hubbard 2017 I-mode confinement time scaling - upper
-            case ConfinementTimeModel.HUBBARD_UPPER:
-                t_electron_confinement = self.hubbard_upper_confinement_time(
-                    cur_plasma_ma,
-                    b_plasma_toroidal_on_axis,
-                    nd_plasma_electron_line_20,
-                    p_plasma_loss_mw,
-                )
+                # Gyro-reduced Bohm scaling
+                case ConfinementTimeModel.GYRO_REDUCED_BOHM:
+                    t_electron_confinement = self.gyro_reduced_bohm_confinement_time(
+                        b_plasma_toroidal_on_axis,
+                        nd_plasma_electron_line_20,
+                        p_plasma_loss_mw,
+                        rminor,
+                        rmajor,
+                    )
 
-            # ====================================================================
+                # ====================================================================
 
-            # Menard NSTX, ELMy H-mode scaling
-            case ConfinementTimeModel.MENARD_NSTX:
-                t_electron_confinement = self.menard_nstx_confinement_time(
-                    cur_plasma_ma,
-                    b_plasma_toroidal_on_axis,
-                    nd_plasma_electron_line_19,
-                    p_plasma_loss_mw,
-                    rmajor,
-                    self.data.physics.kappa_ipb,
-                    aspect,
-                    m_fuel_amu,
-                )
+                # Lackner-Gottardi stellarator scaling
+                case ConfinementTimeModel.LACKNER_GOTTARDI_STELLARATOR:
+                    t_electron_confinement = (
+                        self.lackner_gottardi_stellarator_confinement_time(
+                            rmajor,
+                            rminor,
+                            nd_plasma_electron_line_20,
+                            b_plasma_toroidal_on_axis,
+                            p_plasma_loss_mw,
+                            q95,
+                        )
+                    )
 
-            # ====================================================================
+                # ====================================================================
 
-            # Menard NSTX-Petty08 Hybrid
-            case ConfinementTimeModel.MENARD_NSTX_PETTY08_HYBRID:
-                t_electron_confinement = (
-                    self.menard_nstx_petty08_hybrid_confinement_time(
+                # ITER_93 ELM-free H-mode scaling
+                case ConfinementTimeModel.ITER_93H:
+                    t_electron_confinement = self.iter_93h_confinement_time(
+                        cur_plasma_ma,
+                        b_plasma_toroidal_on_axis,
+                        p_plasma_loss_mw,
+                        m_fuel_amu,
+                        rmajor,
+                        nd_plasma_electron_line_20,
+                        aspect,
+                        kappa,
+                    )
+
+                # ====================================================================
+                # Scaling removed
+                case ConfinementTimeModel.TITAN_REMOVED:
+                    raise ProcessValueError("Scaling removed")
+                # ====================================================================
+
+                # ELM-free: ITERH-97P
+                case ConfinementTimeModel.ITER_H97P:
+                    t_electron_confinement = self.iter_h97p_confinement_time(
+                        cur_plasma_ma,
+                        b_plasma_toroidal_on_axis,
+                        p_plasma_loss_mw,
+                        nd_plasma_electron_line_19,
+                        rmajor,
+                        aspect,
+                        kappa,
+                        m_fuel_amu,
+                    )
+
+                # ====================================================================
+
+                # ELMy: ITERH-97P(y)
+                case ConfinementTimeModel.ITER_H97P_ELMY:
+                    t_electron_confinement = self.iter_h97p_elmy_confinement_time(
+                        cur_plasma_ma,
+                        b_plasma_toroidal_on_axis,
+                        p_plasma_loss_mw,
+                        nd_plasma_electron_line_19,
+                        rmajor,
+                        aspect,
+                        kappa,
+                        m_fuel_amu,
+                    )
+
+                # ====================================================================
+
+                # ITER-96P (= ITER-97L) L-mode scaling
+                case ConfinementTimeModel.ITER_96P:
+                    t_electron_confinement = self.iter_96p_confinement_time(
+                        cur_plasma_ma,
+                        b_plasma_toroidal_on_axis,
+                        kappa95,
+                        rmajor,
+                        aspect,
+                        nd_plasma_electron_line_19,
+                        m_fuel_amu,
+                        p_plasma_loss_mw,
+                    )
+
+                # ====================================================================
+
+                # Valovic modified ELMy-H mode scaling
+                # WARNING: No reference found; this may not be its real name.
+                case ConfinementTimeModel.VALOVIC_ELMY:
+                    t_electron_confinement = self.valovic_elmy_confinement_time(
+                        cur_plasma_ma,
+                        b_plasma_toroidal_on_axis,
+                        nd_plasma_electron_line_19,
+                        m_fuel_amu,
+                        rmajor,
+                        rminor,
+                        kappa,
+                        p_plasma_loss_mw,
+                    )
+
+                # ====================================================================
+
+                # Kaye PPPL Workshop April 1998 L-mode scaling
+                # WARNING: No reference found; this may not be its real name.
+                case ConfinementTimeModel.KAYE:
+                    t_electron_confinement = self.kaye_confinement_time(
+                        cur_plasma_ma,
+                        b_plasma_toroidal_on_axis,
+                        kappa,
+                        rmajor,
+                        aspect,
+                        nd_plasma_electron_line_19,
+                        m_fuel_amu,
+                        p_plasma_loss_mw,
+                    )
+
+                # ====================================================================
+
+                # ITERH-PB98P(y), ELMy H-mode scaling
+                # WARNING: No reference found; this may not be its real name.
+                case ConfinementTimeModel.ITER_PB98P_Y:
+                    t_electron_confinement = self.iter_pb98py_confinement_time(
                         cur_plasma_ma,
                         b_plasma_toroidal_on_axis,
                         nd_plasma_electron_line_19,
@@ -902,121 +690,327 @@ class PlasmaConfinementTime(Model):
                         aspect,
                         m_fuel_amu,
                     )
-                )
 
-            # ====================================================================
+                # ====================================================================
 
-            # NSTX gyro-Bohm (Buxton)
-            case ConfinementTimeModel.NSTX_GYRO_BOHM:
-                t_electron_confinement = self.nstx_gyro_bohm_confinement_time(
-                    cur_plasma_ma,
-                    b_plasma_toroidal_on_axis,
-                    p_plasma_loss_mw,
-                    rmajor,
-                    nd_plasma_electron_line_20,
-                )
+                # IPB98(y), ELMy H-mode scaling
+                case ConfinementTimeModel.IPB98_Y:
+                    t_electron_confinement = self.iter_ipb98y_confinement_time(
+                        cur_plasma_ma,
+                        b_plasma_toroidal_on_axis,
+                        nd_plasma_electron_line_19,
+                        p_plasma_loss_mw,
+                        rmajor,
+                        kappa,
+                        aspect,
+                        m_fuel_amu,
+                    )
 
-            # ====================================================================
+                # ====================================================================
 
-            # ITPA20 H-mode scaling
-            case ConfinementTimeModel.ITPA20:
-                t_electron_confinement = self.itpa20_confinement_time(
-                    cur_plasma_ma,
-                    b_plasma_toroidal_on_axis,
-                    nd_plasma_electron_line_19,
-                    p_plasma_loss_mw,
-                    rmajor,
-                    self.data.physics.triang,
-                    self.data.physics.kappa_ipb,
-                    eps,
-                    self.data.physics.m_ions_total_amu,
-                )
+                # IPB98(y,1), ELMy H-mode scaling
+                case ConfinementTimeModel.ITER_IPB98Y1:
+                    t_electron_confinement = self.iter_ipb98y1_confinement_time(
+                        cur_plasma_ma,
+                        b_plasma_toroidal_on_axis,
+                        nd_plasma_electron_line_19,
+                        p_plasma_loss_mw,
+                        rmajor,
+                        self.data.physics.kappa_ipb,
+                        aspect,
+                        m_fuel_amu,
+                    )
 
-            # ====================================================================
+                # ====================================================================
 
-            # ITPA20-IL confinement time scaling
-            case ConfinementTimeModel.ITPA20_IL:
-                t_electron_confinement = self.itpa20_il_confinement_time(
-                    cur_plasma_ma,
-                    b_plasma_toroidal_on_axis,
-                    p_plasma_loss_mw,
-                    nd_plasma_electron_line_19,
-                    self.data.physics.m_ions_total_amu,
-                    rmajor,
-                    self.data.physics.triang,
-                    self.data.physics.kappa_ipb,
-                )
+                # IPB98(y,2), ELMy H-mode scaling
+                case ConfinementTimeModel.ITER_IPB98Y2:
+                    t_electron_confinement = self.iter_ipb98y2_confinement_time(
+                        cur_plasma_ma,
+                        b_plasma_toroidal_on_axis,
+                        nd_plasma_electron_line_19,
+                        p_plasma_loss_mw,
+                        rmajor,
+                        self.data.physics.kappa_ipb,
+                        aspect,
+                        m_fuel_amu,
+                    )
 
-            # ==========================================================================
-            # NCST spherical tokamak L-mode confinement time scaling
-            case ConfinementTimeModel.NCST:
-                t_electron_confinement = self.ncst_confinement_time(
-                    cur_plasma_ma=cur_plasma_ma,
-                    b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
-                    p_plasma_loss_mw=p_plasma_loss_mw,
-                    nd_plasma_electron_line_19=nd_plasma_electron_line_19,
-                )
+                # ====================================================================
 
-            # ====================================================================
+                # IPB98(y,3), ELMy H-mode scaling
+                case ConfinementTimeModel.ITER_IPB98Y3:
+                    t_electron_confinement = self.iter_ipb98y3_confinement_time(
+                        cur_plasma_ma,
+                        b_plasma_toroidal_on_axis,
+                        nd_plasma_electron_line_19,
+                        p_plasma_loss_mw,
+                        rmajor,
+                        self.data.physics.kappa_ipb,
+                        aspect,
+                        m_fuel_amu,
+                    )
 
-            # Paz-Soldan negative triangularity confinement time scaling
-            case ConfinementTimeModel.PAZ_SOLDAN_NT:
-                t_electron_confinement = self.paz_soldan_nt_confinement_time(
-                    cur_plasma_ma=cur_plasma_ma,
-                    b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
-                    p_plasma_loss_mw=p_plasma_loss_mw,
-                    nd_plasma_electron_line_19=nd_plasma_electron_line_19,
-                )
+                # ====================================================================
 
-            # ====================================================================
+                # IPB98(y,4), ELMy H-mode scaling
+                case ConfinementTimeModel.ITER_IPB98Y4:
+                    t_electron_confinement = self.iter_ipb98y4_confinement_time(
+                        cur_plasma_ma,
+                        b_plasma_toroidal_on_axis,
+                        nd_plasma_electron_line_19,
+                        p_plasma_loss_mw,
+                        rmajor,
+                        self.data.physics.kappa_ipb,
+                        aspect,
+                        m_fuel_amu,
+                    )
 
-            case _:
-                raise ProcessValueError(
-                    "Illegal value for i_confinement_time",
-                    i_confinement_time=i_confinement_time,
-                )
+                # ====================================================================
+
+                # ISS95 stellarator scaling
+                case ConfinementTimeModel.ISS95_STELLARATOR:
+                    # dummy argument q95 is actual argument iotabar for stellarators
+                    iotabar = q95
+                    t_electron_confinement = self.iss95_stellarator_confinement_time(
+                        rminor,
+                        rmajor,
+                        nd_plasma_electron_line_19,
+                        b_plasma_toroidal_on_axis,
+                        p_plasma_loss_mw,
+                        iotabar,
+                    )
+
+                # ====================================================================
+
+                # ISS04 stellarator scaling
+                case ConfinementTimeModel.ISS04_STELLARATOR:
+                    # dummy argument q95 is actual argument iotabar for stellarators
+                    iotabar = q95
+                    t_electron_confinement = self.iss04_stellarator_confinement_time(
+                        rminor,
+                        rmajor,
+                        nd_plasma_electron_line_19,
+                        b_plasma_toroidal_on_axis,
+                        p_plasma_loss_mw,
+                        iotabar,
+                    )
+
+                # ====================================================================
+
+                # DS03 beta-independent H-mode scaling
+                case ConfinementTimeModel.DS03:
+                    t_electron_confinement = self.ds03_confinement_time(
+                        cur_plasma_ma,
+                        b_plasma_toroidal_on_axis,
+                        nd_plasma_electron_line_19,
+                        p_plasma_loss_mw,
+                        rmajor,
+                        kappa95,
+                        aspect,
+                        m_fuel_amu,
+                    )
+
+                # ====================================================================
+
+                #  Murari "Non-power law" scaling
+                case ConfinementTimeModel.MURARI:
+                    t_electron_confinement = self.murari_confinement_time(
+                        cur_plasma_ma,
+                        rmajor,
+                        self.data.physics.kappa_ipb,
+                        nd_plasma_electron_line_19,
+                        b_plasma_toroidal_on_axis,
+                        p_plasma_loss_mw,
+                    )
+
+                # ====================================================================
+
+                # Petty08, beta independent dimensionless scaling
+                case ConfinementTimeModel.PETTY08:
+                    t_electron_confinement = self.petty08_confinement_time(
+                        cur_plasma_ma,
+                        b_plasma_toroidal_on_axis,
+                        nd_plasma_electron_line_19,
+                        p_plasma_loss_mw,
+                        rmajor,
+                        self.data.physics.kappa_ipb,
+                        aspect,
+                    )
+
+                # ====================================================================
+
+                # Lang high density relevant confinement scaling
+                case ConfinementTimeModel.LANG_HIGH_DENSITY:
+                    t_electron_confinement = self.lang_high_density_confinement_time(
+                        plasma_current,
+                        b_plasma_toroidal_on_axis,
+                        nd_plasma_electron_line,
+                        p_plasma_loss_mw,
+                        rmajor,
+                        rminor,
+                        q95,
+                        qstar,
+                        aspect,
+                        m_fuel_amu,
+                        self.data.physics.kappa_ipb,
+                    )
+
+                # ====================================================================
+
+                # Hubbard 2017 I-mode confinement time scaling - nominal
+                case ConfinementTimeModel.HUBBARD_NOMINAL:
+                    t_electron_confinement = self.hubbard_nominal_confinement_time(
+                        cur_plasma_ma,
+                        b_plasma_toroidal_on_axis,
+                        nd_plasma_electron_line_20,
+                        p_plasma_loss_mw,
+                    )
+
+                # ====================================================================
+
+                # Hubbard 2017 I-mode confinement time scaling - lower
+                case ConfinementTimeModel.HUBBARD_LOWER:
+                    t_electron_confinement = self.hubbard_lower_confinement_time(
+                        cur_plasma_ma,
+                        b_plasma_toroidal_on_axis,
+                        nd_plasma_electron_line_20,
+                        p_plasma_loss_mw,
+                    )
+
+                # ====================================================================
+
+                # Hubbard 2017 I-mode confinement time scaling - upper
+                case ConfinementTimeModel.HUBBARD_UPPER:
+                    t_electron_confinement = self.hubbard_upper_confinement_time(
+                        cur_plasma_ma,
+                        b_plasma_toroidal_on_axis,
+                        nd_plasma_electron_line_20,
+                        p_plasma_loss_mw,
+                    )
+
+                # ====================================================================
+
+                # Menard NSTX, ELMy H-mode scaling
+                case ConfinementTimeModel.MENARD_NSTX:
+                    t_electron_confinement = self.menard_nstx_confinement_time(
+                        cur_plasma_ma,
+                        b_plasma_toroidal_on_axis,
+                        nd_plasma_electron_line_19,
+                        p_plasma_loss_mw,
+                        rmajor,
+                        self.data.physics.kappa_ipb,
+                        aspect,
+                        m_fuel_amu,
+                    )
+
+                # ====================================================================
+
+                # Menard NSTX-Petty08 Hybrid
+                case ConfinementTimeModel.MENARD_NSTX_PETTY08_HYBRID:
+                    t_electron_confinement = (
+                        self.menard_nstx_petty08_hybrid_confinement_time(
+                            cur_plasma_ma,
+                            b_plasma_toroidal_on_axis,
+                            nd_plasma_electron_line_19,
+                            p_plasma_loss_mw,
+                            rmajor,
+                            self.data.physics.kappa_ipb,
+                            aspect,
+                            m_fuel_amu,
+                        )
+                    )
+
+                # ====================================================================
+
+                # NSTX gyro-Bohm (Buxton)
+                case ConfinementTimeModel.NSTX_GYRO_BOHM:
+                    t_electron_confinement = self.nstx_gyro_bohm_confinement_time(
+                        cur_plasma_ma,
+                        b_plasma_toroidal_on_axis,
+                        p_plasma_loss_mw,
+                        rmajor,
+                        nd_plasma_electron_line_20,
+                    )
+
+                # ====================================================================
+
+                # ITPA20 H-mode scaling
+                case ConfinementTimeModel.ITPA20:
+                    t_electron_confinement = self.itpa20_confinement_time(
+                        cur_plasma_ma,
+                        b_plasma_toroidal_on_axis,
+                        nd_plasma_electron_line_19,
+                        p_plasma_loss_mw,
+                        rmajor,
+                        self.data.physics.triang,
+                        self.data.physics.kappa_ipb,
+                        eps,
+                        self.data.physics.m_ions_total_amu,
+                    )
+
+                # ====================================================================
+
+                # ITPA20-IL confinement time scaling
+                case ConfinementTimeModel.ITPA20_IL:
+                    t_electron_confinement = self.itpa20_il_confinement_time(
+                        cur_plasma_ma,
+                        b_plasma_toroidal_on_axis,
+                        p_plasma_loss_mw,
+                        nd_plasma_electron_line_19,
+                        self.data.physics.m_ions_total_amu,
+                        rmajor,
+                        self.data.physics.triang,
+                        self.data.physics.kappa_ipb,
+                    )
+
+                # ====================================================================
+                # NCST spherical tokamak L-mode confinement time scaling
+                case ConfinementTimeModel.NCST:
+                    t_electron_confinement = self.ncst_confinement_time(
+                        cur_plasma_ma=cur_plasma_ma,
+                        b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+                        p_plasma_loss_mw=p_plasma_loss_mw,
+                        nd_plasma_electron_line_19=nd_plasma_electron_line_19,
+                    )
+
+                # ====================================================================
+
+                # Paz-Soldan negative triangularity confinement time scaling
+                case ConfinementTimeModel.PAZ_SOLDAN_NT:
+                    t_electron_confinement = self.paz_soldan_nt_confinement_time(
+                        cur_plasma_ma=cur_plasma_ma,
+                        b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+                        p_plasma_loss_mw=p_plasma_loss_mw,
+                        nd_plasma_electron_line_19=nd_plasma_electron_line_19,
+                    )
+
+                # ====================================================================
+
+                case _:
+                    raise ProcessValueError(
+                        "Illegal value for i_confinement_time",
+                        i_confinement_time=i_confinement_time,
+                    )
+
+            return t_electron_confinement
+
+        t_electron_confinement = scaling_time(p_plasma_loss_mw)
+
+        def equivalent_h_factor(loss_power_mw: float) -> float:
+            if loss_power_mw == p_plasma_loss_mw:
+                return hfact
+            return hfact * t_electron_confinement / scaling_time(loss_power_mw)
+
+        hfact_full_radiation = equivalent_h_factor(p_plasma_loss_full_radiation_mw)
+        hfact_core_radiation = equivalent_h_factor(p_plasma_loss_core_radiation_mw)
+        hfact_no_radiation = equivalent_h_factor(p_plasma_loss_no_radiation_mw)
 
         # Apply H-factor correction to chosen scaling
         t_electron_energy_confinement = hfact * t_electron_confinement
 
         # Ion energy confinement time
         t_ion_energy_confinement = t_electron_energy_confinement
-
-        # Calculate H* non-radiation corrected H factor
-        # Note: we will assume the IPB-98y2 scaling.
-        match ConfinementRadiationLossModel(self.data.physics.i_rad_loss):
-            case ConfinementRadiationLossModel.REDUCED_CORE_ONLY:
-                hstar = (
-                    hfact
-                    * (
-                        p_plasma_loss_mw
-                        / (
-                            p_plasma_loss_mw
-                            + self.data.physics.pden_plasma_sync_vol_avg_mw * vol_plasma
-                            + self.data.physics.p_plasma_core_rad_reduced_mw
-                        )
-                    )
-                    ** 0.31
-                )
-            case ConfinementRadiationLossModel.FULL_RADIATION:
-                hstar = (
-                    hfact
-                    * (
-                        p_plasma_loss_mw
-                        / (
-                            p_plasma_loss_mw
-                            + self.data.physics.pden_plasma_rad_vol_avg_mw * vol_plasma
-                        )
-                    )
-                    ** 0.31
-                )
-            case ConfinementRadiationLossModel.NO_RADIATION:
-                hstar = hfact
-            case _:
-                raise ProcessValueError(
-                    "Illegal value for i_rad_loss",
-                    i_rad_loss=self.data.physics.i_rad_loss,
-                )
 
         # Calculation of the transport power loss terms
         # Transport losses in Watts/m3 are 3/2 * n.e.T / tau , with T in eV
@@ -1054,7 +1048,9 @@ class PlasmaConfinementTime(Model):
             t_ion_energy_confinement=t_ion_energy_confinement,
             t_plasma_energy_confinement=t_energy_confinement,
             p_plasma_loss_mw=p_plasma_loss_mw,
-            hstar=hstar,
+            hfact_full_radiation=hfact_full_radiation,
+            hfact_core_radiation=hfact_core_radiation,
+            hfact_no_radiation=hfact_no_radiation,
         )
 
     @staticmethod
@@ -1218,6 +1214,26 @@ class PlasmaConfinementTime(Model):
         po.ovarre(
             self.outfile, "Confinement H factor", "(hfact)", self.data.physics.hfact
         )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Full radiation corrected H factor",
+            "(hfact_full_radiation)",
+            self.data.physics.hfact_full_radiation,
+        )
+        po.ovarre(
+            self.outfile,
+            "Core radiation corrected H factor",
+            "(hfact_core_radiation)",
+            self.data.physics.hfact_core_radiation,
+        )
+        po.ovarre(
+            self.outfile,
+            "No radiation corrected H factor",
+            "(hfact_no_radiation)",
+            self.data.physics.hfact_no_radiation,
+        )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "Global thermal energy confinement time, from scaling (τₑ) (s)",
@@ -1314,14 +1330,6 @@ class PlasmaConfinementTime(Model):
             )
 
         po.ocmmnt(self.outfile, f"  (Radiation correction: {model.description})")
-        po.ovarre(
-            self.outfile,
-            "H* non-radiation corrected",
-            "(hstar)",
-            self.data.physics.hstar,
-            "OP",
-        )
-        po.ocmmnt(self.outfile, "  (H* assumes IPB98(y,2), ELMy H-mode scaling)")
 
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
@@ -1474,13 +1482,13 @@ class PlasmaConfinementTime(Model):
         Parameters
         ----------
         dene20 :
-            Volume averaged electron density in units of 10**20 m**-3
+            Volume averaged electron density [10²⁰ m⁻³]
         rminor :
             Plasma minor radius [m]
         rmajor :
             Plasma major radius [m]
         qstar :
-            Equivalent cylindrical edge safety factor
+            Equivalent cylindrical edge safety factor [-]
 
         Returns
         -------
@@ -1490,9 +1498,9 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria) and
-              ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
-              Feb. 1990.
+        [1] N. A. Uckan, International Atomic Energy Agency, Vienna (Austria) and
+            ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
+            Feb. 1990.
         """
         return 0.07e0 * dene20 * rminor * rmajor * rmajor * qstar
 
@@ -1507,7 +1515,7 @@ class PlasmaConfinementTime(Model):
         rminor :
             Plasma minor radius [m]
         kappa95 :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         cur_plasma_ma :
             Plasma current [MA]
 
@@ -1518,9 +1526,9 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria) and
-              ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
-              Feb. 1990.
+        [1] N. A. Uckan, International Atomic Energy Agency, Vienna (Austria) and
+            ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
+            Feb. 1990.
         """
         return 0.2e0 * rminor * np.sqrt(kappa95) * cur_plasma_ma
 
@@ -1543,13 +1551,13 @@ class PlasmaConfinementTime(Model):
         rminor :
             Plasma minor radius [m]
         kappa95 :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         qstar :
-            Equivalent cylindrical edge safety factor
+            Equivalent cylindrical edge safety factor [-]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         ten :
             Electron temperature [keV]
 
@@ -1561,9 +1569,9 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and
-              ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
-              Feb. 1990.
+        [1] N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and
+            ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
+            Feb. 1990.
         """
         return (
             3.5e-3
@@ -1595,9 +1603,9 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         kappa95 :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
 
         Returns
         -------
@@ -1606,9 +1614,9 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and
-              ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
-              Feb. 1990.
+        [1] N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and
+            ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
+            Feb. 1990.
         """
         return (
             0.045e0
@@ -1635,15 +1643,15 @@ class PlasmaConfinementTime(Model):
         Parameters
         ----------
         kappa95 :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         cur_plasma_ma :
             Plasma current [MA]
         n20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Volume averaged electron density [10²⁰ m⁻³]
         rmajor :
             Plasma major radius [m]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         rminor :
@@ -1658,15 +1666,15 @@ class PlasmaConfinementTime(Model):
 
         Notes
         -----
-            - An isotope correction factor (M_i/1.5)^0.5 is added to the original
-              scaling to reflect the fact that the empirical fits to the data were
-              from experiments with H and D  mixture, M_i = 1.5
+        - An isotope correction factor (M_i/1.5)^0.5 is added to the original
+        scaling to reflect the fact that the empirical fits to the data were
+        from experiments with H and D  mixture, M_i = 1.5
 
         References
         ----------
-            - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and
-              ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
-              Feb. 1990.
+        [1] N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and
+            ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
+            Feb. 1990.
         """
         return (
             0.055e0
@@ -1704,13 +1712,13 @@ class PlasmaConfinementTime(Model):
         rminor :
             Plasma minor radius [m]
         kappa :
-            Plasma elongation
+            Plasma elongation [-]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         p_plasma_loss_mw :
             Net Heating power [MW]
 
@@ -1722,12 +1730,12 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
-              AEA FUS 172, 1992
+        [1] T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
+            AEA FUS 172, 1992
 
-            - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and
-              ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
-              Feb. 1990.
+        [2] N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and
+            ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
+            Feb. 1990.
         """
         return (
             0.048e0
@@ -1764,13 +1772,13 @@ class PlasmaConfinementTime(Model):
         rminor :
             Plasma minor radius [m]
         kappa :
-            Plasma elongation
+            Plasma elongation [-]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         p_plasma_loss_mw :
             Net Heating power [MW]
 
@@ -1781,8 +1789,8 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
-              AEA FUS 172, 1992
+        [1] T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
+            AEA FUS 172, 1992
         """
         term1 = (
             0.04e0
@@ -1826,15 +1834,15 @@ class PlasmaConfinementTime(Model):
         rmajor :
             Plasma major radius [m]
         kappa :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         cur_plasma_ma :
             Plasma current [MA]
         zeff :
-            Effective charge
+            Effective charge [-]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         p_plasma_loss_mw :
@@ -1848,8 +1856,8 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
-              AEA FUS 172, 1992
+        [1] T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
+            AEA FUS 172, 1992
         """
         rll = (rminor**2 * rmajor * kappa) ** (1.0e0 / 3.0e0)
         term1 = 1.2e-2 * cur_plasma_ma * rll**1.5e0 / np.sqrt(zeff)
@@ -1884,9 +1892,9 @@ class PlasmaConfinementTime(Model):
         rminor :
             Plasma minor radius [m]
         kappa95 :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         p_plasma_loss_mw :
             Net Heating power [MW]
 
@@ -1897,9 +1905,9 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and
-              ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
-              Feb. 1990.
+        [1] N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and
+            ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
+            Feb. 1990.
         """
         return (
             0.037e0
@@ -1928,21 +1936,21 @@ class PlasmaConfinementTime(Model):
         Parameters
         ----------
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         rmajor :
             Plasma major radius [m]
         qstar :
-            Equivalent cylindrical edge safety factor
+            Equivalent cylindrical edge safety factor [-]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         rminor :
             Plasma minor radius [m]
         kappa95 :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         p_plasma_loss_mw :
             Net Heating power [MW]
         zeff :
-            Effective charge
+            Effective charge [-]
         cur_plasma_ma :
             Plasma current [MA]
 
@@ -1953,9 +1961,9 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and
-              ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
-              Feb. 1990.
+        [1] N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and
+            ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
+            Feb. 1990.
         """
         denfac = (
             nd_plasma_electron_line_20
@@ -1998,13 +2006,13 @@ class PlasmaConfinementTime(Model):
         Parameters
         ----------
         kappa95 :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         rminor :
             Plasma minor radius [m]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         n20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Volume averaged electron density [10²⁰ m⁻³]
         cur_plasma_ma :
             Plasma current [MA]
         b_plasma_toroidal_on_axis :
@@ -2012,9 +2020,9 @@ class PlasmaConfinementTime(Model):
         rmajor :
             Plasma major radius [m]
         qstar :
-            Equivalent cylindrical edge safety factor
+            Equivalent cylindrical edge safety factor [-]
         zeff :
-            Effective charge
+            Effective charge [-]
         p_plasma_loss_mw :
             Net Heating power [MW]
 
@@ -2025,9 +2033,9 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria) and
-              ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
-              Feb. 1990.
+        [1] N. A. Uckan, International Atomic Energy Agency, Vienna (Austria) and
+            ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
+            Feb. 1990.
         """
         gjaeri = (
             zeff**0.4e0
@@ -2071,13 +2079,13 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         kappa95 :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         cur_plasma_ma :
             Plasma current [MA]
         n20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Volume averaged electron density [10²⁰ m⁻³]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         p_plasma_loss_mw :
             Net Heating power [MW]
 
@@ -2089,9 +2097,9 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria) and
-              ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
-              Feb. 1990.
+        [1] N. A. Uckan, International Atomic Energy Agency, Vienna (Austria) and
+            ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10.
+            Feb. 1990.
         """
         return (
             0.105e0
@@ -2127,13 +2135,13 @@ class PlasmaConfinementTime(Model):
         rminor :
             Plasma minor radius [m]
         kappa :
-            Plasma elongation
+            Plasma elongation [-]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         p_plasma_loss_mw :
             Net Heating power [MW]
 
@@ -2145,8 +2153,8 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
-              AEA FUS 172, 1992
+        [1] T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
+            AEA FUS 172, 1992
         """
         return (
             0.064e0
@@ -2181,9 +2189,9 @@ class PlasmaConfinementTime(Model):
         rminor :
             Plasma minor radius [m]
         kappa95 :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         p_plasma_loss_mw :
@@ -2196,8 +2204,8 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
-              AEA FUS 172, 1992
+        [1] T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
+            AEA FUS 172, 1992
         """
         return (
             0.044e0
@@ -2232,15 +2240,15 @@ class PlasmaConfinementTime(Model):
         rminor :
             Plasma minor radius [m]
         kappa95 :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         p_plasma_loss_mw :
             Net Heating power [MW]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
 
         Returns
         -------
@@ -2249,8 +2257,8 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
-              AEA FUS 172, 1992
+        [1] T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
+            AEA FUS 172, 1992
         """
         return (
             0.24e0
@@ -2284,9 +2292,9 @@ class PlasmaConfinementTime(Model):
         rminor :
             Plasma minor radius [m]
         kappa95 :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         p_plasma_loss_mw :
@@ -2299,8 +2307,8 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
-              AEA FUS 172, 1992
+        [1] T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
+            AEA FUS 172, 1992
         """
         qhat = (
             (1.0e0 + kappa95**2)
@@ -2341,9 +2349,9 @@ class PlasmaConfinementTime(Model):
         rminor :
             Plasma minor radius [m]
         kappa95 :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         p_plasma_loss_mw :
@@ -2357,8 +2365,8 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
-              AEA FUS 172, 1992
+        [1] T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
+            AEA FUS 172, 1992
         """
         return (
             0.063e0
@@ -2393,13 +2401,13 @@ class PlasmaConfinementTime(Model):
         rminor :
             Plasma minor radius [m]
         kappa95 :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         p_plasma_loss_mw :
             Net Heating power [MW]
 
@@ -2410,8 +2418,8 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
-              AEA FUS 172, 1992
+        [1] T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
+            AEA FUS 172, 1992
         """
         return (
             0.1e0
@@ -2443,13 +2451,13 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         rmajor :
             Plasma major radius [m]
         p_plasma_loss_mw :
             Net Heating power [MW]
         kappa :
-            Plasma elongation
+            Plasma elongation [-]
 
         Returns
         -------
@@ -2458,9 +2466,9 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - J. P. Christiansen et al., “Global energy confinement H-mode database
-              for ITER,” Nuclear Fusion, vol. 32, no. 2, pp. 291-338, Feb. 1992,
-              doi: https://doi.org/10.1088/0029-5515/32/2/i11.
+        [1] J. P. Christiansen et al., “Global energy confinement H-mode database
+            for ITER,” Nuclear Fusion, vol. 32, no. 2, pp. 291-338, Feb. 1992,
+            doi: https://doi.org/10.1088/0029-5515/32/2/i11.
         """
         return (
             0.082e0
@@ -2488,7 +2496,7 @@ class PlasmaConfinementTime(Model):
         rminor :
             Plasma minor radius [m]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         p_plasma_loss_mw :
@@ -2501,9 +2509,9 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - S. Sudo et al., “Scalings of energy confinement and density limit in
-              stellarator/heliotron devices,” Nuclear Fusion, vol. 30, no. 1,
-              pp. 11-21, Jan. 1990, doi: https://doi.org/10.1088/0029-5515/30/1/002.
+        [1] S. Sudo et al., “Scalings of energy confinement and density limit in
+            stellarator/heliotron devices,” Nuclear Fusion, vol. 30, no. 1,
+            pp. 11-21, Jan. 1990, doi: https://doi.org/10.1088/0029-5515/30/1/002.
         """
         return (
             0.17e0
@@ -2529,7 +2537,7 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         p_plasma_loss_mw :
             Net Heating power [MW]
         rminor :
@@ -2544,8 +2552,8 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - Goldston, R. J., H. Biglari, and G. W. Hammett. "E x B/B 2 vs. μ B/B as
-              the Cause of Transport in Tokamaks." Bull. Am. Phys. Soc 34 (1989): 1964.
+        [1] Goldston, R. J., H. Biglari, and G. W. Hammett. "E x B/B 2 vs. μ B/B as
+            the Cause of Transport in Tokamaks." Bull. Am. Phys. Soc 34 (1989): 1964.
         """
         return (
             0.25e0
@@ -2574,13 +2582,13 @@ class PlasmaConfinementTime(Model):
         rminor :
             Plasma minor radius [m]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         p_plasma_loss_mw :
             Net Heating power [MW]
         q :
-            Edge safety factor
+            Edge safety factor [-]
 
         Returns
         -------
@@ -2589,9 +2597,9 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - K. Lackner and N. A. O. Gottardi, “Tokamak confinement in relation to
-              plateau scaling,” Nuclear Fusion, vol. 30, no. 4, pp. 767-770, Apr. 1990,
-              doi: https://doi.org/10.1088/0029-5515/30/4/018.
+        [1] K. Lackner and N. A. O. Gottardi, “Tokamak confinement in relation to
+            plateau scaling,” Nuclear Fusion, vol. 30, no. 4, pp. 767-770, Apr. 1990,
+            doi: https://doi.org/10.1088/0029-5515/30/4/018.
         """
         return (
             0.17e0
@@ -2625,15 +2633,15 @@ class PlasmaConfinementTime(Model):
         p_plasma_loss_mw :
             Net Heating power [MW]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         rmajor :
             Plasma major radius [m]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         kappa :
-            Plasma elongation
+            Plasma elongation [-]
 
         Returns
         -------
@@ -2642,9 +2650,9 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - K. Thomsen et al., “ITER H mode confinement database update,”
-              vol. 34, no. 1, pp. 131-167, Jan. 1994,
-              doi: https://doi.org/10.1088/0029-5515/34/1/i10.
+        [1] K. Thomsen et al., “ITER H mode confinement database update,”
+            vol. 34, no. 1, pp. 131-167, Jan. 1994,
+            doi: https://doi.org/10.1088/0029-5515/34/1/i10.
         """
         return (
             0.036e0
@@ -2680,15 +2688,15 @@ class PlasmaConfinementTime(Model):
         p_plasma_loss_mw :
             Net Heating power [MW]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         rmajor :
             Plasma major radius [m]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         kappa :
-            Plasma elongation
+            Plasma elongation [-]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
 
         Returns
         -------
@@ -2697,10 +2705,10 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - I. C. Database and M. W. G. (presented Cordey), “Energy confinement
-              scaling and the extrapolation to ITER,”
-              Plasma Physics and Controlled Fusion, vol. 39, no. 12B, pp. B115-B127,
-              Dec. 1997, doi: https://doi.org/10.1088/0741-3335/39/12b/009.
+        [1] I. C. Database and M. W. G. (presented Cordey), “Energy confinement
+            scaling and the extrapolation to ITER,”
+            Plasma Physics and Controlled Fusion, vol. 39, no. 12B, pp. B115-B127,
+            Dec. 1997, doi: https://doi.org/10.1088/0741-3335/39/12b/009.
         """
         return (
             0.031e0
@@ -2736,15 +2744,15 @@ class PlasmaConfinementTime(Model):
         p_plasma_loss_mw :
             Net Heating power [MW]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         rmajor :
             Plasma major radius [m]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         kappa :
-            Plasma elongation
+            Plasma elongation [-]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
 
         Returns
         -------
@@ -2753,14 +2761,14 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - I. C. Database and M. W. G. (presented Cordey), “Energy confinement
-              scaling and the extrapolation to ITER,”
-              Plasma Physics and Controlled Fusion, vol. 39, no. 12B, pp. B115-B127,
-              Dec. 1997, doi: https://doi.org/10.1088/0741-3335/39/12b/009.
+        [1] I. C. Database and M. W. G. (presented Cordey), “Energy confinement
+            scaling and the extrapolation to ITER,”
+            Plasma Physics and Controlled Fusion, vol. 39, no. 12B, pp. B115-B127,
+            Dec. 1997, doi: https://doi.org/10.1088/0741-3335/39/12b/009.
 
-            - International Atomic Energy Agency, Vienna (Austria), "Technical basis
-              for the ITER final design report, cost review and safety analysis (FDR)",
-              no.16. Dec. 1998.
+        [2] International Atomic Energy Agency, Vienna (Austria), "Technical basis
+            for the ITER final design report, cost review and safety analysis (FDR)",
+            no.16. Dec. 1998.
         """
         return (
             0.029e0
@@ -2794,15 +2802,15 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         kappa95 :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         rmajor :
             Plasma major radius [m]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         p_plasma_loss_mw :
             Net Heating power [MW]
 
@@ -2817,7 +2825,7 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - S. B. Kaye et al., “ITER L mode confinement database,”
+        [1] S. B. Kaye et al., “ITER L mode confinement database,”
             Nuclear Fusion, vol. 37, no. 9, pp. 1303-1328, Sep. 1997,
             doi: https://doi.org/10.1088/0029-5515/37/9/i10.
         """
@@ -2853,15 +2861,15 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         rmajor :
             Plasma major radius [m]
         rminor :
             Plasma minor radius [m]
         kappa :
-            Plasma elongation
+            Plasma elongation [-]
         p_plasma_loss_mw :
             Net Heating power [MW]
 
@@ -2902,15 +2910,15 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         kappa :
-            Plasma elongation
+            Plasma elongation [-]
         rmajor :
             Plasma major radius [m]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         p_plasma_loss_mw :
             Net Heating power [MW]
 
@@ -2921,7 +2929,7 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - Kaye PPPL Workshop April 1998
+        [1] Kaye PPPL Workshop April 1998
         """
         return (
             0.021e0
@@ -2955,17 +2963,17 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         p_plasma_loss_mw :
             Net Heating power [MW]
         rmajor :
             Plasma major radius [m]
         kappa :
-            Plasma separatrix elongation
+            Plasma separatrix elongation [-]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
 
         Returns
         -------
@@ -3004,17 +3012,17 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         p_plasma_loss_mw :
             Net Heating power [MW]
         rmajor :
             Plasma major radius [m]
         kappa :
-            IPB sprcific plasma separatrix elongation
+            IPB sprcific plasma separatrix elongation [-]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
 
         Returns
         -------
@@ -3029,15 +3037,15 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B.
-              Editors, “Chapter 2: Plasma confinement and transport,” Nuclear Fusion,
-              vol. 39, no. 12, pp. 2175-2249, Dec. 1999,
-              doi: https://doi.org/10.1088/0029-5515/39/12/302.
+        [1] I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B.
+            Editors, “Chapter 2: Plasma confinement and transport,” Nuclear Fusion,
+            vol. 39, no. 12, pp. 2175-2249, Dec. 1999,
+            doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
-            - Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a
-              sequence of papers in Nuclear Fusion,” Nuclear Fusion, vol. 48, no. 9,
-              pp. 099801-099801, Aug. 2008,
-              doi: https://doi.org/10.1088/0029-5515/48/9/099801.
+        [2] Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a
+            sequence of papers in Nuclear Fusion,” Nuclear Fusion, vol. 48, no. 9,
+            pp. 099801-099801, Aug. 2008,
+            doi: https://doi.org/10.1088/0029-5515/48/9/099801.
         """
         return (
             0.0365e0
@@ -3071,17 +3079,17 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         p_plasma_loss_mw :
             Net Heating power [MW]
         rmajor :
             Plasma major radius [m]
         kappa_ipb :
-            IPB specific plasma separatrix elongation
+            IPB specific plasma separatrix elongation [-]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
 
         Returns
         -------
@@ -3095,15 +3103,15 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B.
-              Editors, “Chapter 2: Plasma confinement and transport,” Nuclear Fusion,
-              vol. 39, no. 12, pp. 2175-2249, Dec. 1999,
-              doi: https://doi.org/10.1088/0029-5515/39/12/302.
+        [1] I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B.
+            Editors, “Chapter 2: Plasma confinement and transport,” Nuclear Fusion,
+            vol. 39, no. 12, pp. 2175-2249, Dec. 1999,
+            doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
-            - Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a
-              sequence of papers in Nuclear Fusion,” Nuclear Fusion, vol. 48, no. 9,
-              pp. 099801-099801, Aug. 2008,
-              doi: https://doi.org/10.1088/0029-5515/48/9/099801.
+        [2] Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a
+            sequence of papers in Nuclear Fusion,” Nuclear Fusion, vol. 48, no. 9,
+            pp. 099801-099801, Aug. 2008,
+            doi: https://doi.org/10.1088/0029-5515/48/9/099801.
         """
         return (
             0.0503e0
@@ -3137,17 +3145,17 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         p_plasma_loss_mw :
             Net Heating power [MW]
         rmajor :
             Plasma major radius [m]
         kappa_ipb :
-            IPB specific plasma separatrix elongation
+            IPB specific plasma separatrix elongation [-]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
 
         Returns
         -------
@@ -3161,15 +3169,15 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B.
-              Editors, “Chapter 2: Plasma confinement and transport,” Nuclear Fusion,
-              vol. 39, no. 12, pp. 2175-2249, Dec. 1999,
-              doi: https://doi.org/10.1088/0029-5515/39/12/302.
+        [1] I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B.
+            Editors, “Chapter 2: Plasma confinement and transport,” Nuclear Fusion,
+            vol. 39, no. 12, pp. 2175-2249, Dec. 1999,
+            doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
-            - Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a
-              sequence of papers in Nuclear Fusion,” Nuclear Fusion, vol. 48, no. 9,
-              pp. 099801-099801, Aug. 2008,
-              doi: https://doi.org/10.1088/0029-5515/48/9/099801.
+        [2] Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a
+            sequence of papers in Nuclear Fusion,” Nuclear Fusion, vol. 48, no. 9,
+            pp. 099801-099801, Aug. 2008,
+            doi: https://doi.org/10.1088/0029-5515/48/9/099801.
         """
         return (
             0.0562e0
@@ -3203,17 +3211,17 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         p_plasma_loss_mw :
             Net Heating power [MW]
         rmajor :
             Plasma major radius [m]
         kappa_ipb :
-            IPB specific plasma separatrix elongation
+            IPB specific plasma separatrix elongation [-]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
 
         Returns
         -------
@@ -3227,15 +3235,15 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B.
-              Editors, “Chapter 2: Plasma confinement and transport,” Nuclear Fusion,
-              vol. 39, no. 12, pp. 2175-2249, Dec. 1999,
-              doi: https://doi.org/10.1088/0029-5515/39/12/302.
+        [1] I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B.
+            Editors, “Chapter 2: Plasma confinement and transport,” Nuclear Fusion,
+            vol. 39, no. 12, pp. 2175-2249, Dec. 1999,
+            doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
-            - Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a
-              sequence of papers in Nuclear Fusion,” Nuclear Fusion, vol. 48, no. 9,
-              pp. 099801-099801, Aug. 2008,
-              doi: https://doi.org/10.1088/0029-5515/48/9/099801.
+        [2] Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a
+            sequence of papers in Nuclear Fusion,” Nuclear Fusion, vol. 48, no. 9,
+            pp. 099801-099801, Aug. 2008,
+            doi: https://doi.org/10.1088/0029-5515/48/9/099801.
         """
         return (
             0.0564e0
@@ -3269,17 +3277,17 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         p_plasma_loss_mw :
             Net Heating power [MW]
         rmajor :
             Plasma major radius [m]
         kappa_ipb :
-            IPB specific plasma separatrix elongation
+            IPB specific plasma separatrix elongation [-]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
 
         Returns
         -------
@@ -3293,15 +3301,15 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B.
-              Editors, “Chapter 2: Plasma confinement and transport,” Nuclear Fusion,
-              vol. 39, no. 12, pp. 2175-2249, Dec. 1999,
-              doi: https://doi.org/10.1088/0029-5515/39/12/302.
+        [1] I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B.
+            Editors, “Chapter 2: Plasma confinement and transport,” Nuclear Fusion,
+            vol. 39, no. 12, pp. 2175-2249, Dec. 1999,
+            doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
-            - Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a
-              sequence of papers in Nuclear Fusion,” Nuclear Fusion, vol. 48, no. 9,
-              pp. 099801-099801, Aug. 2008,
-              doi: https://doi.org/10.1088/0029-5515/48/9/099801.
+        [2] Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a
+            sequence of papers in Nuclear Fusion,” Nuclear Fusion, vol. 48, no. 9,
+            pp. 099801-099801, Aug. 2008,
+            doi: https://doi.org/10.1088/0029-5515/48/9/099801.
         """
         return (
             0.0587e0
@@ -3333,13 +3341,13 @@ class PlasmaConfinementTime(Model):
         rmajor :
             Plasma major radius [m]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         p_plasma_loss_mw :
             Net Heating power [MW]
         iotabar :
-            Rotational transform
+            Rotational transform [-]
 
         Returns
         -------
@@ -3348,9 +3356,9 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - U. Stroth et al., “Energy confinement scaling from the international
-              stellarator database,” vol. 36, no. 8, pp. 1063-1077, Aug. 1996,
-              doi: https://doi.org/10.1088/0029-5515/36/8/i11.
+        [1] U. Stroth et al., “Energy confinement scaling from the international
+            stellarator database,” vol. 36, no. 8, pp. 1063-1077, Aug. 1996,
+            doi: https://doi.org/10.1088/0029-5515/36/8/i11.
         """
         return (
             0.079e0
@@ -3380,13 +3388,13 @@ class PlasmaConfinementTime(Model):
         rmajor :
             Plasma major radius [m]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         p_plasma_loss_mw :
             Net Heating power [MW]
         iotabar :
-            Rotational transform
+            Rotational transform [-]
 
         Returns
         -------
@@ -3395,10 +3403,10 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - H. Yamada et al., “Characterization of energy confinement in net-current
-              free plasmas using the extended International Stellarator Database,”
-              vol. 45, no. 12, pp. 1684-1693, Nov. 2005,
-              doi: https://doi.org/10.1088/0029-5515/45/12/024.
+        [1] H. Yamada et al., “Characterization of energy confinement in net-current
+            free plasmas using the extended International Stellarator Database,”
+            vol. 45, no. 12, pp. 1684-1693, Nov. 2005,
+            doi: https://doi.org/10.1088/0029-5515/45/12/024.
         """
         return (
             0.134e0
@@ -3430,17 +3438,17 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         p_plasma_loss_mw :
             Net Heating power [MW]
         rmajor :
             Plasma major radius [m]
         kappa95 :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
 
         Returns
         -------
@@ -3449,10 +3457,10 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T. C. Luce, C. C. Petty, and J. G. Cordey, “Application of dimensionless
-              parameter scaling techniques to the design and interpretation of magnetic
-              fusion experiments,” Plasma Physics and Controlled Fusion, vol. 50, no. 4,
-              p. 043001, Mar. 2008, doi: https://doi.org/10.1088/0741-3335/50/4/043001.
+        [1] T. C. Luce, C. C. Petty, and J. G. Cordey, “Application of dimensionless
+            parameter scaling techniques to the design and interpretation of magnetic
+            fusion experiments,” Plasma Physics and Controlled Fusion, vol. 50, no. 4,
+            p. 043001, Mar. 2008, doi: https://doi.org/10.1088/0741-3335/50/4/043001.
         """
         return (
             0.028e0
@@ -3484,9 +3492,9 @@ class PlasmaConfinementTime(Model):
         rmajor :
             Plasma major radius [m]
         kappa_ipb :
-            IPB specific plasma separatrix elongation
+            IPB specific plasma separatrix elongation [-]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         p_plasma_loss_mw :
@@ -3504,16 +3512,16 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - A. Murari, E. Peluso, Michela Gelfusa, I. Lupelli, and P. Gaudio,
+        [1] A. Murari, E. Peluso, Michela Gelfusa, I. Lupelli, and P. Gaudio,
              “A new approach to the formulation and validation of scaling expressions
              for plasma confinement in tokamaks,” Nuclear Fusion, vol. 55, no. 7,
              pp. 073009-073009, Jun. 2015,
              doi: https://doi.org/10.1088/0029-5515/55/7/073009.
 
-            - Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy,
-              “Corrections to a sequence of papers in Nuclear Fusion,” Nuclear Fusion,
-              vol. 48, no. 9, pp. 099801-099801, Aug. 2008,
-              doi: https://doi.org/10.1088/0029-5515/48/9/099801.
+        [2] Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy,
+            “Corrections to a sequence of papers in Nuclear Fusion,” Nuclear Fusion,
+            vol. 48, no. 9, pp. 099801-099801, Aug. 2008,
+            doi: https://doi.org/10.1088/0029-5515/48/9/099801.
         """
         return (
             0.0367
@@ -3553,15 +3561,15 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         p_plasma_loss_mw :
             Net Heating power [MW]
         rmajor :
             Plasma major radius [m]
         kappa_ipb :
-            IPB specific plasma separatrix elongation
+            IPB specific plasma separatrix elongation [-]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
 
         Returns
         -------
@@ -3575,14 +3583,14 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - C. C. Petty, “Sizing up plasmas using dimensionless parameters,”
-              Physics of Plasmas, vol. 15, no. 8, Aug. 2008,
-              doi: https://doi.org/10.1063/1.2961043.
+        [1] C. C. Petty, “Sizing up plasmas using dimensionless parameters,”
+            Physics of Plasmas, vol. 15, no. 8, Aug. 2008,
+            doi: https://doi.org/10.1063/1.2961043.
 
-            - Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy,
-              “Corrections to a sequence of papers in Nuclear Fusion,” Nuclear Fusion,
-              vol. 48, no. 9, pp. 099801-099801, Aug. 2008,
-              doi: https://doi.org/10.1088/0029-5515/48/9/099801.
+        [2] Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy,
+            “Corrections to a sequence of papers in Nuclear Fusion,” Nuclear Fusion,
+            vol. 48, no. 9, pp. 099801-099801, Aug. 2008,
+            doi: https://doi.org/10.1088/0029-5515/48/9/099801.
         """
         return (
             0.052e0
@@ -3614,11 +3622,11 @@ class PlasmaConfinementTime(Model):
         Parameters
         ----------
         plasma_current :
-            Plasma current [MA]
+            Plasma current [A]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line :
-            Line averaged electron density [m**-3]
+            Line averaged electron density [m⁻³]
         p_plasma_loss_mw :
             Net Heating power [MW]
         rmajor :
@@ -3626,15 +3634,15 @@ class PlasmaConfinementTime(Model):
         rminor :
             Plasma minor radius [m]
         q :
-            Safety factor
+            Safety factor [-]
         qstar :
-            Equivalent cylindrical edge safety factor
+            Equivalent cylindrical edge safety factor [-]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
         kappa_ipb :
-            Plasma elongation at 95% flux surface
+            Plasma elongation at 95% flux surface [-]
 
         Returns
         -------
@@ -3643,10 +3651,10 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - P. T. Lang, C. Angioni, R. M. M. Dermott, R. Fischer, and H. Zohm,
-              “Pellet Induced High Density Phases during ELM Suppression in
-              ASDEX Upgrade,” 24th IAEA Conference Fusion Energy, 2012, Oct. 2012,
-              Available: https://www.researchgate.net/publication/274456104_Pellet_Induced_High_Density_Phases_during_ELM_Suppression_in_ASDEX_Upgrade
+        [1] P. T. Lang, C. Angioni, R. M. M. Dermott, R. Fischer, and H. Zohm,
+            “Pellet Induced High Density Phases during ELM Suppression in
+            ASDEX Upgrade,” 24th IAEA Conference Fusion Energy, 2012, Oct. 2012,
+            Available: https://www.researchgate.net/publication/274456104_Pellet_Induced_High_Density_Phases_during_ELM_Suppression_in_ASDEX_Upgrade
         """
         qratio = q / qstar
         n_gw = 1.0e14 * plasma_current / (np.pi * rminor * rminor)
@@ -3682,7 +3690,7 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         p_plasma_loss_mw :
             Net Heating power [MW]
 
@@ -3693,10 +3701,10 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - A. E. Hubbard et al., “Physics and performance of the I-mode regime over
-              an expanded operating space on Alcator C-Mod,” Nuclear Fusion, vol. 57,
-              no. 12, p. 126039, Oct. 2017,
-              doi: https://doi.org/10.1088/1741-4326/aa8570.
+        [1] A. E. Hubbard et al., “Physics and performance of the I-mode regime over
+            an expanded operating space on Alcator C-Mod,” Nuclear Fusion, vol. 57,
+            no. 12, p. 126039, Oct. 2017,
+            doi: https://doi.org/10.1088/1741-4326/aa8570.
         """
         return (
             0.014e0
@@ -3722,7 +3730,7 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         p_plasma_loss_mw :
             Net Heating power [MW]
 
@@ -3733,10 +3741,10 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - A. E. Hubbard et al., “Physics and performance of the I-mode regime over
-              an expanded operating space on Alcator C-Mod,” Nuclear Fusion, vol. 57,
-              no. 12, p. 126039, Oct. 2017,
-              doi: https://doi.org/10.1088/1741-4326/aa8570.
+        [1] A. E. Hubbard et al., “Physics and performance of the I-mode regime over
+            an expanded operating space on Alcator C-Mod,” Nuclear Fusion, vol. 57,
+            no. 12, p. 126039, Oct. 2017,
+            doi: https://doi.org/10.1088/1741-4326/aa8570.
         """
         return (
             0.014e0
@@ -3762,7 +3770,7 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
         p_plasma_loss_mw :
             Net Heating power [MW]
 
@@ -3773,10 +3781,10 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - A. E. Hubbard et al., “Physics and performance of the I-mode regime over
-              an expanded operating space on Alcator C-Mod,” Nuclear Fusion, vol. 57,
-              no. 12, p. 126039, Oct. 2017,
-              doi: https://doi.org/10.1088/1741-4326/aa8570.
+        [1] A. E. Hubbard et al., “Physics and performance of the I-mode regime over
+            an expanded operating space on Alcator C-Mod,” Nuclear Fusion, vol. 57,
+            no. 12, p. 126039, Oct. 2017,
+            doi: https://doi.org/10.1088/1741-4326/aa8570.
         """
         return (
             0.014e0
@@ -3806,17 +3814,17 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         p_plasma_loss_mw :
             Net Heating power [MW]
         rmajor :
             Plasma major radius [m]
         kappa_ipb :
-            IPB specific plasma separatrix elongation
+            IPB specific plasma separatrix elongation [-]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
 
         Returns
         -------
@@ -3836,11 +3844,11 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - J. E. Menard, “Compact steady-state tokamak performance dependence on
-              magnet and core physics limits,”
-              Philosophical Transactions of the Royal Society A, vol. 377, no. 2141,
-              pp. 20170440-20170440, Feb. 2019,
-              doi: https://doi.org/10.1098/rsta.2017.0440.
+        [1] J. E. Menard, “Compact steady-state tokamak performance dependence on
+            magnet and core physics limits,”
+            Philosophical Transactions of the Royal Society A, vol. 377, no. 2141,
+            pp. 20170440-20170440, Feb. 2019,
+            doi: https://doi.org/10.1098/rsta.2017.0440.
         """
         return (
             0.095e0
@@ -3875,17 +3883,17 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_19 :
-            Line averaged electron density in units of 10**19 m**-3
+            Line averaged electron density [10¹⁹ m⁻³]
         p_plasma_loss_mw :
             Net Heating power [MW]
         rmajor :
             Plasma major radius [m]
         kappa_ipb :
-            IPB specific plasma separatrix elongation
+            IPB specific plasma separatrix elongation [-]
         aspect :
-            Aspect ratio
+            Aspect ratio [-]
         afuel :
-            Fuel atomic mass number
+            Fuel atomic mass number [-]
 
         Returns
         -------
@@ -3898,11 +3906,11 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - J. E. Menard, “Compact steady-state tokamak performance dependence on
-              magnet and core physics limits,”
-              Philosophical Transactions of the Royal Society A, vol. 377, no. 2141,
-              pp. 20170440-20170440, Feb. 2019,
-              doi: https://doi.org/10.1098/rsta.2017.0440.
+        [1] J. E. Menard, “Compact steady-state tokamak performance dependence on
+            magnet and core physics limits,”
+            Philosophical Transactions of the Royal Society A, vol. 377, no. 2141,
+            pp. 20170440-20170440, Feb. 2019,
+            doi: https://doi.org/10.1098/rsta.2017.0440.
         """
         # Equivalent to A > 2.5, use Petty scaling
         if (1.0e0 / aspect) <= 0.4e0:
@@ -3972,7 +3980,7 @@ class PlasmaConfinementTime(Model):
         rmajor :
             Plasma major radius [m]
         nd_plasma_electron_line_20 :
-            Line averaged electron density in units of 10**20 m**-3
+            Line averaged electron density [10²⁰ m⁻³]
 
         Returns
         -------
@@ -3981,11 +3989,11 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - P. F. Buxton, L. Connor, A. E. Costley, Mikhail Gryaznevich, and
-              S. McNamara, “On the energy confinement time in spherical tokamaks:
-              implications for the design of pilot plants and fusion reactors,”
-              vol. 61, no. 3, pp. 035006-035006, Jan. 2019,
-              doi: https://doi.org/10.1088/1361-6587/aaf7e5.
+        [1] P. F. Buxton, L. Connor, A. E. Costley, Mikhail Gryaznevich, and
+            S. McNamara, “On the energy confinement time in spherical tokamaks:
+            implications for the design of pilot plants and fusion reactors,”
+            vol. 61, no. 3, pp. 035006-035006, Jan. 2019,
+            doi: https://doi.org/10.1088/1361-6587/aaf7e5.
         """
         return (
             0.21e0
@@ -4017,19 +4025,19 @@ class PlasmaConfinementTime(Model):
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
         nd_plasma_electron_line_19 :
-            Central line-averaged electron density in units of 10**19 m**-3
+            Central line-averaged electron density [10¹⁹ m⁻³]
         p_plasma_loss_mw :
             Thermal power lost due to transport through the LCFS [MW]
         rmajor :
             Plasma major radius [m]
         triang :
-            Triangularity
+            Triangularity [-]
         kappa_ipb :
-            IPB specific plasma separatrix elongation
+            IPB specific plasma separatrix elongation [-]
         eps :
-            Inverse aspect ratio
+            Inverse aspect ratio [-]
         aion :
-            Average mass of all ions (amu)
+            Average mass of all ions [amu]
 
         Returns
         -------
@@ -4045,10 +4053,10 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - G. Verdoolaege et al., “The updated ITPA global H-mode confinement
-              database: description and analysis,” Nuclear Fusion, vol. 61, no. 7,
-              pp. 076006-076006, Jan. 2021,
-              doi: https://doi.org/10.1088/1741-4326/abdb91.
+        [1] G. Verdoolaege et al., “The updated ITPA global H-mode confinement
+            database: description and analysis,” Nuclear Fusion, vol. 61, no. 7,
+            pp. 076006-076006, Jan. 2021,
+            doi: https://doi.org/10.1088/1741-4326/abdb91.
         """
         return (
             0.0534
@@ -4085,15 +4093,15 @@ class PlasmaConfinementTime(Model):
         p_plasma_loss_mw :
             Thermal power lost due to transport through the LCFS [MW]
         nd_plasma_electron_line_19 :
-            Central line-averaged electron density in units of 10**19 m**-3
+            Central line-averaged electron density [10¹⁹ m⁻³]
         aion :
-            Average mass of all ions (amu)
+            Average mass of all ions [amu]
         rmajor :
             Plasma major radius [m]
         triang :
-            Triangularity
+            Triangularity [-]
         kappa_ipb :
-            IPB specific plasma separatrix elongation
+            IPB specific plasma separatrix elongation [-]
 
         Returns
         -------
@@ -4109,9 +4117,9 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T. Luda et al., “Validation of a full-plasma integrated modeling approach
-              on ASDEX Upgrade,” Nuclear Fusion, vol. 61, no. 12, pp. 126048-126048,
-              Nov. 2021, doi: https://doi.org/10.1088/1741-4326/ac3293.
+        [1] T. Luda et al., “Validation of a full-plasma integrated modeling approach
+            on ASDEX Upgrade,” Nuclear Fusion, vol. 61, no. 12, pp. 126048-126048,
+            Nov. 2021, doi: https://doi.org/10.1088/1741-4326/ac3293.
         """
         return (
             0.0670
@@ -4143,7 +4151,7 @@ class PlasmaConfinementTime(Model):
         p_plasma_loss_mw :
             Thermal power lost due to transport through the LCFS [MW]
         nd_plasma_electron_line_19 :
-            Central line-averaged electron density in units of 10¹⁹ m⁻³
+            Central line-averaged electron density [10¹⁹ m⁻³]
 
         Returns
         -------
@@ -4160,8 +4168,8 @@ class PlasmaConfinementTime(Model):
         References
         ----------
         [1] Y. Chen et al., “Energy confinement scaling in the NCST spherical
-        tokamak,” AIP Advances, vol. 16, no. 3, pp. 035043-035043,
-        Mar. 2026, doi: https://doi.org/10.1063/5.0311657.
+            tokamak,” AIP Advances, vol. 16, no. 3, pp. 035043-035043,
+            Mar. 2026, doi: https://doi.org/10.1063/5.0311657.
         """
         return (
             0.11
@@ -4189,7 +4197,7 @@ class PlasmaConfinementTime(Model):
         p_plasma_loss_mw :
             Thermal power lost due to transport through the LCFS [MW]
         nd_plasma_electron_line_19 :
-            Central line-averaged electron density in units of 10¹⁹ m⁻³
+            Central line-averaged electron density [10¹⁹ m⁻³]
 
         Returns
         -------
@@ -4198,8 +4206,8 @@ class PlasmaConfinementTime(Model):
         References
         ----------
         [1] Priyansh Lunia, A.O. Nelson, and C. Paz-Soldan, "Energy Confinement
-        Time Scaling Law Derived from Paz-Soldan NF 2024",
-        doi: https://arxiv.org/abs/2509.04279v2
+            Time Scaling Law Derived from Paz-Soldan NF 2024",
+            doi: https://arxiv.org/abs/2509.04279v2
         """
         return (
             0.0821
