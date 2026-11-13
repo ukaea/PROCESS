@@ -602,7 +602,16 @@ class PlasmaBootstrapCurrent(Model):
             A tuple containing the bootstrap current fraction and the bootstrap current
             density profile.
         """
-        return self.sauter_bootstrap.bootstrap_fraction_sauter(plasma_profile)
+        return self.sauter_bootstrap.bootstrap_fraction_sauter(
+            plasma_profile=plasma_profile,
+            a_plasma_poloidal=self.data.physics.a_plasma_poloidal,
+            rminor=self.data.physics.rminor,
+            rmajor=self.data.physics.rmajor,
+            n_charge_plasma_effective_vol_avg=self.data.physics.n_charge_plasma_effective_vol_avg,
+            nd_plasma_electron_profile=self.plasma_profile.neprofile.profile_y,
+            temp_plasma_electron_profile_kev=self.plasma_profile.teprofile.profile_y,
+            temp_plasma_ion_profile_kev=self.plasma_profile.tiprofile.profile_y,
+        )
 
     def bootstrap_fraction_nevins(
         self,
@@ -1446,7 +1455,24 @@ class PlasmaBootstrapCurrent(Model):
 
 
 class SauterBootstrapCurrent(Model):
-    """Class to calculate the bootstrap current using the Sauter et al formula."""
+    """Class to calculate the bootstrap current using the Sauter et al formula.
+
+
+    References
+    ----------
+    [1] O. Sauter, C. Angioni, Y. R. Lin-Liu;
+    Neoclassical conductivity and bootstrap current formulas for general
+    axisymmetric equilibria and arbitrary collisionality regime. Phys. Plasmas
+    1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
+
+    [2] O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
+    Neoclassical conductivity and bootstrap current formulas for general
+    axisymmetric equilibria and arbitrary collisionality regime
+    [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12):
+    5140. https://doi.org/10.1063/1.1517052
+
+
+    """
 
     def run(self):
         """SauterBootstrapCurrent model isn't run"""
@@ -1454,13 +1480,39 @@ class SauterBootstrapCurrent(Model):
     def output(self):
         """SauterBootstrapCurrent model doesn't have any output"""
 
-    def bootstrap_fraction_sauter(self, plasma_profile: PlasmaProfile) -> float:
+    def bootstrap_fraction_sauter(
+        self,
+        plasma_profile: PlasmaProfile,
+        a_plasma_poloidal: float,
+        rminor: float,
+        rmajor: float,
+        n_charge_plasma_effective_vol_avg: float,
+        nd_plasma_electron_profile: np.ndarray,
+        temp_plasma_electron_profile_kev: np.ndarray,
+        temp_plasma_ion_profile_kev: np.ndarray,
+    ) -> tuple[float, np.ndarray]:
         """Calculate the bootstrap current fraction from the Sauter et al scaling.
 
         Parameters
         ----------
         plasma_profile : PlasmaProfile
             The plasma profile object.
+        a_plasma_poloidal : float
+            The poloidal cross-sectional area of the plasma [m²].
+        rminor : float
+            The minor radius of the plasma (a) [m].
+        rmajor : float
+            The major radius of the plasma (R₀) [m].
+        n_charge_plasma_effective_vol_avg : float
+            The volume-averaged effective charge of the plasma (Z_eff) [-].
+        nd_plasma_electron_profile : np.ndarray
+            The electron density profile of the plasma [m⁻³].
+        temp_plasma_electron_profile_kev : np.ndarray
+            The electron temperature profile of the plasma [keV].
+        temp_plasma_ion_profile_kev : np.ndarray
+            The ion temperature profile of the plasma [keV].
+
+
 
         Returns
         -------
@@ -1472,33 +1524,18 @@ class SauterBootstrapCurrent(Model):
         This function calculates the bootstrap current fraction using the Sauter,
         Angioni, and Lin-Liu scaling.
 
-        References
-        ----------
-        O. Sauter, C. Angioni, Y. R. Lin-Liu;
-        Neoclassical conductivity and bootstrap current formulas for general
-        axisymmetric equilibria and arbitrary collisionality regime. Phys. Plasmas
-        1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
-
-        O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
-        Neoclassical conductivity and bootstrap current formulas for general
-        axisymmetric equilibria and arbitrary collisionality regime
-        [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12):
-        5140. https://doi.org/10.1063/1.1517052
-
-        Note: The code was supplied by Emiliano Fable, IPP Garching
-        (private communication).
         """
         # Radial points from 0 to 1 separated by 1/profile_size
         roa = plasma_profile.neprofile.profile_x
 
         # Local circularised minor radius
-        rho = np.sqrt(self.data.physics.a_plasma_poloidal / np.pi) * roa
+        rho = np.sqrt(a_plasma_poloidal / np.pi) * roa
 
         # Square root of local aspect ratio
-        sqeps = np.sqrt(roa * (self.data.physics.rminor / self.data.physics.rmajor))
+        sqeps = np.sqrt(roa * (rminor / rmajor))
 
         # Calculate electron and ion density profiles
-        ne = plasma_profile.neprofile.profile_y * 1e-19
+        ne = nd_plasma_electron_profile * 1e-19
 
         # Prevent log(0) in Sauter bootstrap calculation
         ne = np.maximum(ne, 1.0e-6)
@@ -1508,13 +1545,11 @@ class SauterBootstrapCurrent(Model):
             / self.data.physics.nd_plasma_electrons_vol_avg
         ) * ne
 
-        # Calculate electron and ion temperature profiles
-        tempe = plasma_profile.teprofile.profile_y
-        tempi = plasma_profile.tiprofile.profile_y
-
         # Flat Zeff profile assumed
         # Return tempi like array object filled with zeff
-        zeff = np.full_like(tempi, self.data.physics.n_charge_plasma_effective_vol_avg)
+        zeff = np.full_like(
+            temp_plasma_ion_profile_kev, n_charge_plasma_effective_vol_avg
+        )
 
         # inverse_q = 1/safety factor
         # Parabolic q profile assumed
@@ -1540,8 +1575,12 @@ class SauterBootstrapCurrent(Model):
         da = 2 * np.pi * rho[radial_elements - 1] * drho  # area of annulus
 
         # Create the partial derivatives using numpy gradient (central differences)
-        dlogte_drho = np.gradient(np.log(tempe), rho)[radial_elements - 1]
-        dlogti_drho = np.gradient(np.log(tempi), rho)[radial_elements - 1]
+        dlogte_drho = np.gradient(np.log(temp_plasma_electron_profile_kev), rho)[
+            radial_elements - 1
+        ]
+        dlogti_drho = np.gradient(np.log(temp_plasma_ion_profile_kev), rho)[
+            radial_elements - 1
+        ]
         dlogne_drho = np.gradient(np.log(ne), rho)[radial_elements - 1]
 
         jboot = (
@@ -1555,8 +1594,8 @@ class SauterBootstrapCurrent(Model):
                     self.data.physics.triang,
                     ne,
                     ni,
-                    tempe,
-                    tempi,
+                    temp_plasma_electron_profile_kev,
+                    temp_plasma_ion_profile_kev,
                     inverse_q,
                     rho,
                     zeff,
@@ -1571,8 +1610,8 @@ class SauterBootstrapCurrent(Model):
                     self.data.physics.triang,
                     ne,
                     ni,
-                    tempe,
-                    tempi,
+                    temp_plasma_electron_profile_kev,
+                    temp_plasma_ion_profile_kev,
                     inverse_q,
                     rho,
                     zeff,
@@ -1587,8 +1626,8 @@ class SauterBootstrapCurrent(Model):
                     self.data.physics.triang,
                     inverse_q,
                     sqeps,
-                    tempi,
-                    tempe,
+                    temp_plasma_ion_profile_kev,
+                    temp_plasma_electron_profile_kev,
                     amain,
                     zmain,
                     ni,
