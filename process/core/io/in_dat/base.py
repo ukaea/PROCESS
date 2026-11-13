@@ -900,7 +900,7 @@ class INVariable:
         return (
             f"{type(self).__name__}(name={self.name!r}, value={self.value!r}, "
             f"v_type={self.v_type!r}, "
-            f"comment={self.comment!r}"
+            f"comment={self.comment!r})"
         )
 
     @property
