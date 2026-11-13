@@ -686,7 +686,8 @@ def plot_magnetic_fields_in_plasma(axis: plt.Axes, mfile: MFile, scan: int):
         0.1,
         0.025,
         f"$B_{{\\text{{T,inboard}}}}={mfile.get('b_plasma_inboard_toroidal', scan=scan):.2f}$ T\n"  # noqa: E501
-        f"$B_{{\\text{{total,inboard}}}}={mfile.get('b_plasma_inboard_total', scan=scan):.2f}$ T",  # noqa: E501
+        f"$B_{{\\text{{total,inboard}}}}={mfile.get('b_plasma_inboard_total', scan=scan):.2f}$ T\n"  # noqa: E501
+        f"$\\theta_{{\\text{{inboard}}}}={mfile.get('deg_b_plasma_inboard_flux_midplane', scan=scan):.2f}^\\circ$",  # noqa: E501
         verticalalignment="center",
         horizontalalignment="center",
         transform=axis.transAxes,
@@ -698,7 +699,8 @@ def plot_magnetic_fields_in_plasma(axis: plt.Axes, mfile: MFile, scan: int):
         0.9,
         0.1,
         f"$B_{{\\text{{T,outboard}}}}={mfile.get('b_plasma_outboard_toroidal', scan=scan):.2f}$ T\n"  # noqa: E501
-        f"$B_{{\\text{{total,outboard}}}}={mfile.get('b_plasma_outboard_total', scan=scan):.2f}$ T",  # noqa: E501
+        f"$B_{{\\text{{total,outboard}}}}={mfile.get('b_plasma_outboard_total', scan=scan):.2f}$ T\n"  # noqa: E501
+        f"$\\theta_{{\\text{{outboard}}}}={mfile.get('deg_b_plasma_outboard_flux_midplane', scan=scan):.2f}^\\circ$",  # noqa: E501
         verticalalignment="center",
         horizontalalignment="center",
         transform=axis.transAxes,

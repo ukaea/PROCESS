@@ -737,7 +737,7 @@ class PhysicsData:
     """leading coefficient for NB beta fraction"""
 
     b_plasma_surface_poloidal_average: float = 0.0
-    """Plasma surface average poloidal field (T)"""
+    """Plasma surface average poloidal field (⟨Bₚ(a)⟩) (T)"""
 
     b_plasma_toroidal_on_axis: float = 5.68
     """Plasma toroidal field on axis (Bᴛ(R₀)) [T] (`iteration variable 2`)"""
@@ -759,6 +759,12 @@ class PhysicsData:
 
     b_plasma_inboard_total: float = 0.0
     """Plasma inboard total magnetic field (Bₜₒₜ(R₀-a)) [T]"""
+
+    deg_b_plasma_outboard_flux_midplane: float = 0.0
+    """Plasma outboard midplane flux angle (tan⁻¹(⟨Bₚ(a)⟩/Bᴛ(R₀+a))) [deg]"""
+
+    deg_b_plasma_inboard_flux_midplane: float = 0.0
+    """Plasma inboard midplane flux angle (tan⁻¹(⟨Bₚ(a)⟩/Bₜ(R₀-a))) [deg]"""
 
     e_plasma_magnetic_stored: float = 0.0
     """Plasma stored magnetic energy [J]"""
