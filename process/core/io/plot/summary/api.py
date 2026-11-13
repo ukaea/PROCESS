@@ -99,6 +99,7 @@ from process.core.io.plot.summary.profiles.atomic import (
     plot_resistivity_profile,
     plot_velocity_profile,
 )
+from process.core.io.plot.summary.profiles.bootstrap import plot_sauter_bootstrap_summary
 from process.core.io.plot.summary.profiles.plasma import (
     plot_beta_profiles,
     plot_cumulative_plasma_thermal_energy_profiles,
@@ -288,6 +289,12 @@ def main_plot(
     ax13 = pages["profiles"].add_subplot(4, 3, 12)
     ax13.set_position([0.7, 0.105, 0.25, 0.15])
     plot_qprofile(ax13, demo_ranges, m_file, scan)
+
+    plot_sauter_bootstrap_summary(
+        _add_page("sauter").add_subplot(111),
+        m_file,
+        scan,
+    )
 
     ax_line_brem = _add_page("rad_contour").add_subplot(325)
     plot_line_brem_loss_function_profile(
