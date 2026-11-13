@@ -490,6 +490,9 @@ OBS_VARS = {
     "tftmp": "temp_tf_operating",
     "ccl0_ma": "cur_pf_group_flux_swing_cancellation_ma",
     "ccls_ma": "cur_pf_group_equilibrium_ma",
+    "str_wp": "strain_z_tf_inboard_wp",
+    "i_str_wp": "i_strain_tf_superconductor",
+    "str_tf_con_res": "strain_tf_superconductor_residual",
 }
 
 OBS_VARS_HELP = {
