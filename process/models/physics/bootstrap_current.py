@@ -1906,10 +1906,11 @@ class SauterBootstrapCurrent(Model):
             radial_elements, rmajor, zeff, inverse_q, sqeps, tempe, ne
         )
 
-        # $f^{31}_{teff}(\nu_{e*})$, Eq.14b
-        f31_teff = f_trapped / (
-            (1.0 + (1.0 - 0.1 * f_trapped) * np.sqrt(electron_collisionality))
-            + (0.5 * (1.0 - f_trapped) * electron_collisionality) / charge_profile
+        # f³¹_{teff}(νₑ⁎), Eq.14b # noqa: RUF003
+        f31_teff = self._calculate_f_teff_31_coefficient(
+            f_trapped_particles=f_trapped,
+            normalised_electron_collisionality=electron_collisionality,
+            n_charge_plasma_effective=charge_profile,
         )
 
         l31_coefficient = (
@@ -2304,6 +2305,52 @@ class SauterBootstrapCurrent(Model):
                 inverse_q,
                 rho,
             )
+        )
+
+    @staticmethod
+    def _calculate_f_teff_31_coefficient(
+        f_trapped_particles: float | np.ndarray,
+        normalised_electron_collisionality: float | np.ndarray,
+        n_charge_plasma_effective: float | np.ndarray,
+    ) -> float | np.ndarray:
+        """Calculate the effective trapped particle fraction coefficient f³¹_{teff} as a
+        function of electron collisionality and effective charge profile.
+
+        Parameters
+        ----------
+        f_trapped_particles :
+            Trapped particle fraction (fₜ) [-].
+        normalised_electron_collisionality :
+            Normalised electron collisionality (νₑ⁎) [-].
+        n_charge_plasma_effective :
+            Plasma effective charge (Z_eff) [-].
+
+        Returns
+        -------
+        float | np.ndarray:
+            The effective trapped particle fraction coefficient f³¹_{teff}.
+
+        Notes
+        -----
+        - This equation is given by Eq.14b in reference [1]
+
+        References
+        ----------
+        [1] O. Sauter, C. Angioni, Y. R. Lin-Liu;
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime.
+        Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
+
+        """  # noqa: RUF002
+        # f³¹_{teff}(νₑ⁎), Eq.14b # noqa: RUF003
+        return f_trapped_particles / (
+            (
+                1.0
+                + (1.0 - 0.1 * f_trapped_particles)
+                * np.sqrt(normalised_electron_collisionality)
+            )
+            + (0.5 * (1.0 - f_trapped_particles) * normalised_electron_collisionality)
+            / n_charge_plasma_effective
         )
 
     @staticmethod
