@@ -41,6 +41,29 @@ def croco_sctfcoil(process_models):
     return process_models.croco_sctfcoil
 
 
+@pytest.mark.parametrize(
+    ("strain_type", "expected_strain"),
+    [
+        (StrainTFSuperconductorType.RESIDUAL_MANUFACTURING_STRAIN, -0.005),
+        (StrainTFSuperconductorType.VERTICAL_WP_STRAIN, 0.001),
+    ],
+)
+def test_get_tf_superconductor_strain(
+    sctfcoil, monkeypatch, strain_type, expected_strain
+):
+    monkeypatch.setattr(
+        sctfcoil.data.superconducting_tfcoil,
+        "i_strain_tf_superconductor",
+        strain_type,
+    )
+    monkeypatch.setattr(
+        sctfcoil.data.tfcoil, "strain_tf_superconductor_residual", -0.005
+    )
+    monkeypatch.setattr(sctfcoil.data.tfcoil, "strain_z_tf_inboard_wp", 0.001)
+
+    assert sctfcoil._get_tf_superconductor_strain(sctfcoil.data) == expected_strain
+
+
 class ProtectParam(NamedTuple):
     aio: Any = None
 
