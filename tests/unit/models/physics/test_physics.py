@@ -479,6 +479,7 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
         m_ions_total_amu=physics.data.physics.m_ions_total_amu,
         f_plasma_fuel_helium3=physics.data.physics.f_plasma_fuel_helium3,
         b_plasma_toroidal_on_axis=(physics.data.physics.b_plasma_toroidal_on_axis),
+        plasma_current=physics.data.physics.plasma_current,
     )
 
     assert bfs == pytest.approx(bootstrapfractionsauterparam.expected_bfs)

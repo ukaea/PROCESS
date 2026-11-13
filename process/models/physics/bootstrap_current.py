@@ -138,7 +138,7 @@ class PlasmaBootstrapCurrent(Model):
         (
             self.data.current_drive.f_c_plasma_bootstrap_sauter,
             self.data.physics.j_plasma_bootstrap_sauter_profile,
-        ) = self.bootstrap_fraction_sauter(self.plasma_profile)
+        ) = self.bootstrap_fraction_sauter()
         self.data.current_drive.f_c_plasma_bootstrap_sauter *= (
             self.data.current_drive.cboot
         )
@@ -613,6 +613,7 @@ class PlasmaBootstrapCurrent(Model):
             m_ions_total_amu=self.data.physics.m_ions_total_amu,
             f_plasma_fuel_helium3=self.data.physics.f_plasma_fuel_helium3,
             b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
+            plasma_current=self.data.physics.plasma_current,
         )
 
     def bootstrap_fraction_nevins(
@@ -1500,6 +1501,7 @@ class SauterBootstrapCurrent(Model):
         m_ions_total_amu: float,
         f_plasma_fuel_helium3: float,
         b_plasma_toroidal_on_axis: float,
+        plasma_current: float,
     ) -> tuple[float, np.ndarray]:
         """Calculate the bootstrap current fraction from the Sauter et al scaling.
 
@@ -1535,6 +1537,8 @@ class SauterBootstrapCurrent(Model):
             The fraction of helium-3 in the plasma fuel [-].
         b_plasma_toroidal_on_axis : float
             The toroidal magnetic field on the plasma axis (B₀) [T].
+        plasma_current : float
+            The total plasma current (I_p) [A].
 
 
 
@@ -1581,7 +1585,7 @@ class SauterBootstrapCurrent(Model):
         # Calculate total bootstrap current (MA) by summing along profiles
         # Looping from 2 because _calculate_l31_coefficient() etc should return 0
         # @ j == 1
-        radial_elements = np.arange(2, self.data.physics.n_plasma_profile_elements)
+        radial_elements = np.arange(2, len(ne))
 
         # Change in localised minor radius to be used as delta term in derivative
         drho = rho[radial_elements] - rho[radial_elements - 1]
@@ -1631,7 +1635,7 @@ class SauterBootstrapCurrent(Model):
             * (
                 self._calculate_l31_coefficient(
                     radial_elements=radial_elements,
-                    number_of_elements=self.data.physics.n_plasma_profile_elements,
+                    number_of_elements=len(ne),
                     rmajor=rmajor,
                     b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
                     f_trapped_particles=f_trapped_particles,
@@ -1647,7 +1651,7 @@ class SauterBootstrapCurrent(Model):
                 * dlogne_drho
                 + self._calculate_l31_32_coefficient(
                     radial_elements=radial_elements,
-                    number_of_elements=self.data.physics.n_plasma_profile_elements,
+                    number_of_elements=len(ne),
                     rmajor=rmajor,
                     b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
                     f_trapped_particles=f_trapped_particles,
@@ -1663,7 +1667,7 @@ class SauterBootstrapCurrent(Model):
                 * dlogte_drho
                 + self._calculate_l34_alpha_31_coefficient(
                     radial_elements=radial_elements,
-                    number_of_elements=self.data.physics.n_plasma_profile_elements,
+                    number_of_elements=len(ne),
                     rmajor=rmajor,
                     b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
                     f_trapped_particles=f_trapped_particles,
@@ -1688,7 +1692,7 @@ class SauterBootstrapCurrent(Model):
             )
         )  # A/m2
 
-        return (np.sum(da * jboot, axis=0) / self.data.physics.plasma_current), jboot
+        return (np.sum(da * jboot, axis=0) / plasma_current), jboot
 
     @staticmethod
     @nb.njit(cache=True)
