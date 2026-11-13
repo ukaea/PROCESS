@@ -2216,10 +2216,8 @@ class SauterBootstrapCurrent(Model):
             + ((0.2 / (charge_profile + 1.0)) * f34_teff**4)
         )
 
-        # $\alpha_0$, Eq.17a
-        alpha_0 = (-1.17 * (1.0 - f_trapped)) / (
-            1.0 - (0.22 * f_trapped) - 0.19 * f_trapped**2
-        )
+        # α₀, Eq.17a
+        alpha_0 = self._calculate_alpha_0_coefficient(f_trapped_particles=f_trapped)
 
         # Calculate the ion collisionality
         ion_collisionality = self._ion_collisionality_sauter(
@@ -2442,6 +2440,39 @@ class SauterBootstrapCurrent(Model):
                 * normalised_electron_collisionality
                 * (1.0 + n_charge_plasma_effective)
             )
+        )
+
+    @staticmethod
+    def _calculate_alpha_0_coefficient(
+        f_trapped_particles: float | np.ndarray,
+    ) -> float | np.ndarray:
+        """Calculate the (α₀) coefficient. The collisionless (banana-regime) limit of
+        the ion-temperature-gradient bootstrap coefficient.
+
+        Parameters
+        ----------
+        f_trapped_particles :
+            Trapped particle fraction (fₜ) [-].
+
+        Returns
+        -------
+        float | np.ndarray:
+            The (α₀) coefficient.
+
+        Notes
+        -----
+        - This equation is given by Eq.17a in reference [1]
+
+        References
+        ----------
+        [1] O. Sauter, C. Angioni, Y. R. Lin-Liu;
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime.
+        Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
+        """
+        # α₀, Eq.17a
+        return (-1.17 * (1.0 - f_trapped_particles)) / (
+            1.0 - (0.22 * f_trapped_particles) - (0.19 * f_trapped_particles**2)
         )
 
     @staticmethod
