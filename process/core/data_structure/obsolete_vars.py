@@ -66,10 +66,10 @@ OBS_VARS = {
     "eyzwp": "eyoung_wp_z_eff",
     "strncon_cs": "str_cs_con_res",
     "strncon_pf": "str_pf_con_res",
-    "strncon_tf": "str_tf_con_res",
-    "i_strain_wp": "i_str_wp",
+    "strncon_tf": "strain_tf_superconductor_residual",
+    "i_strain_wp": "i_strain_tf_superconductor",
     "strain_wp_max": "str_wp_max",
-    "strain_wp": "str_wp",
+    "strain_wp": "strain_z_tf_inboard_wp",
     "rad_fraction": "rad_fraction_total",
     "pcoreradmw": "p_plasma_core_rad_reduced_mw",
     "pedgeradmw": "p_plasma_edge_rad_mw",
@@ -490,6 +490,9 @@ OBS_VARS = {
     "tftmp": "temp_tf_operating",
     "ccl0_ma": "cur_pf_group_flux_swing_cancellation_ma",
     "ccls_ma": "cur_pf_group_equilibrium_ma",
+    "str_wp": "strain_z_tf_inboard_wp",
+    "i_str_wp": "i_strain_tf_superconductor",
+    "str_tf_con_res": "strain_tf_superconductor_residual",
 }
 
 OBS_VARS_HELP = {

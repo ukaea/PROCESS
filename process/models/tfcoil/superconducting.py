@@ -12,7 +12,10 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.data_structure.base import DataStructure
 from process.core.exceptions import ProcessValueError
-from process.data_structure.superconducting_tf_coil_variables import TFWPIntegerTurnType
+from process.data_structure.superconducting_tf_coil_variables import (
+    StrainTFSuperconductorType,
+    TFWPIntegerTurnType,
+)
 from process.models import superconductors
 from process.models.availability import AvailabilityModel
 from process.models.superconductors import (
@@ -991,14 +994,44 @@ class SuperconductingTFCoil(TFCoil):
             tf_total_width,
         )
 
-    def output_tf_superconductor_info(self):
-        """Output TF superconductor information"""
-        d_sc_tf = self.data.superconducting_tfcoil
+    @staticmethod
+    def _get_tf_superconductor_strain(data: DataStructure) -> float:
+        """Return the TF superconductor strain selected in the data.
 
-        if self.data.tfcoil.i_str_wp == 0:
-            strain = self.data.tfcoil.str_tf_con_res
-        else:
-            strain = self.data.tfcoil.str_wp
+        Returns
+        -------
+        float
+            The TF superconductor strain.
+
+        Raises
+        ------
+        ProcessValueError
+            If the strain type is unknown.
+        """
+        match StrainTFSuperconductorType(
+            data.superconducting_tfcoil.i_strain_tf_superconductor
+        ):
+            case StrainTFSuperconductorType.RESIDUAL_MANUFACTURING_STRAIN:
+                return data.tfcoil.strain_tf_superconductor_residual
+            case StrainTFSuperconductorType.VERTICAL_WP_STRAIN:
+                return data.tfcoil.strain_z_tf_inboard_wp
+            case _:
+                raise ProcessValueError(
+                    f"Unknown strain type: "
+                    f"{data.superconducting_tfcoil.i_strain_tf_superconductor}"
+                )
+
+    def output_tf_superconductor_info(self):
+        """
+        Output TF superconductor information
+
+        Raises
+        ------
+        ProcessValueError
+            If the strain type is unknown.
+        """
+        d_sc_tf = self.data.superconducting_tfcoil
+        strain = self._get_tf_superconductor_strain(self.data)
 
         try:
             temp_margin = self.calculate_superconductor_temperature_margin(
@@ -1075,14 +1108,14 @@ class SuperconductingTFCoil(TFCoil):
         po.ovarre(
             self.outfile,
             "Residual manufacturing strain on superconductor",
-            "(str_tf_con_res)",
-            self.data.tfcoil.str_tf_con_res,
+            "(strain_tf_superconductor_residual)",
+            self.data.tfcoil.strain_tf_superconductor_residual,
         )
         po.ovarre(
             self.outfile,
             "Self-consistent strain on superconductor",
-            "(str_wp)",
-            self.data.tfcoil.str_wp,
+            "(strain_z_tf_inboard_wp)",
+            self.data.tfcoil.strain_z_tf_inboard_wp,
         )
         po.oblnkl(self.outfile)
         po.ovarre(
@@ -2283,6 +2316,11 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         ----------
         output : bool
             If True, print the results of the calculations.
+
+        Raises
+        ------
+        ProcessValueError
+            If the TF coil configuration is invalid.
         """
         d_sc_tf = self.data.superconducting_tfcoil
 
@@ -2535,10 +2573,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         match AvailabilityModel(self.data.costs.i_plant_availability):
             # Only calculate temperature margin if required
             case AvailabilityModel.MORRIS | AvailabilityModel.ST:
-                if self.data.tfcoil.i_str_wp == 0:
-                    strain = self.data.tfcoil.str_tf_con_res
-                else:
-                    strain = self.data.tfcoil.str_wp
+                strain = self._get_tf_superconductor_strain(self.data)
 
                 temp_margin = self.calculate_superconductor_temperature_margin(
                     i_tf_superconductor=self.data.tfcoil.i_tf_sc_mat,
@@ -2687,7 +2722,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
                 "superconductors."
             )
 
-        strain = tfcoil.str_tf_con_res if tfcoil.i_str_wp == 0 else tfcoil.str_wp
+        strain = SuperconductingTFCoil._get_tf_superconductor_strain(data)
         non_copper_fraction = 1.0 - f_a_tf_turn_cable_copper
         conductor_fraction = 1.0 - min(f_a_tf_turn_cable_space_cooling, 0.99)
 
@@ -3697,10 +3732,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         match AvailabilityModel(self.data.costs.i_plant_availability):
             # Only calculate temperature margin if required
             case AvailabilityModel.MORRIS | AvailabilityModel.ST:
-                if self.data.tfcoil.i_str_wp == 0:
-                    strain = self.data.tfcoil.str_tf_con_res
-                else:
-                    strain = self.data.tfcoil.str_wp
+                strain = self._get_tf_superconductor_strain(self.data)
 
                 temp_margin = self.calculate_superconductor_temperature_margin(
                     i_tf_superconductor=self.data.tfcoil.i_tf_sc_mat,
@@ -3935,10 +3967,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                 "superconductors."
             )
 
-        if self.data.tfcoil.i_str_wp == 0:
-            strain = self.data.tfcoil.str_tf_con_res
-        else:
-            strain = self.data.tfcoil.str_wp
+        strain = self._get_tf_superconductor_strain(self.data)
 
         match SuperconductorModel(i_tf_superconductor):
             # =================================================================

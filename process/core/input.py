@@ -771,7 +771,9 @@ INPUT_VARIABLES = {
     "stcl": InputVariable("buildings", float, range=(0.0, 10.0)),
     "str_cs_con_res": InputVariable("tfcoil", float, range=(-0.02, 0.02)),
     "str_pf_con_res": InputVariable("tfcoil", float, range=(-0.02, 0.02)),
-    "str_tf_con_res": InputVariable("tfcoil", float, range=(-0.02, 0.02)),
+    "strain_tf_superconductor_residual": InputVariable(
+        "tfcoil", float, range=(-0.02, 0.02)
+    ),
     "str_wp_max": InputVariable("tfcoil", float, range=(0.0, 0.3)),
     "t_plant_pulse_dwell": InputVariable("times", float, range=(0.0, 100000000.0)),
     "t_plant_pulse_burn": InputVariable("times", float, range=(0.0, 100000000.0)),
@@ -1018,7 +1020,9 @@ INPUT_VARIABLES = {
     "i_rad_loss": InputVariable("physics", int, choices=[0, 1, 2]),
     "i_shield_mat": InputVariable("fwbs", int, choices=[0, 1]),
     "i_single_null": InputVariable("physics", int, choices=[0, 1]),
-    "i_str_wp": InputVariable("tfcoil", int, choices=[0, 1]),
+    "i_strain_tf_superconductor": InputVariable(
+        "superconducting_tfcoil", int, choices=[0, 1]
+    ),
     "i_r_pf_outside_tf_placement": InputVariable("pf_coil", int, choices=[0, 1]),
     "i_tf_bucking": InputVariable("tfcoil", int, range=(0, 3)),
     "i_tf_case_geom": InputVariable("tfcoil", int, choices=[0, 1]),

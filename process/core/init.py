@@ -32,7 +32,10 @@ from process.data_structure.physics_variables import (
     DivertorNumberModels,
 )
 from process.data_structure.stellarator_variables import StellaratorModel
-from process.data_structure.superconducting_tf_coil_variables import TFWPIntegerTurnType
+from process.data_structure.superconducting_tf_coil_variables import (
+    StrainTFSuperconductorType,
+    TFWPIntegerTurnType,
+)
 from process.models.pfcoil import PFLocationTypes
 from process.models.physics.profiles import (
     DensityProfilePedestalType,
@@ -1294,15 +1297,21 @@ def check_process(inputs, data):  # noqa: ARG001
             "temp_tf_cryo should be lower than temp_tf_operating"
         )
 
-    # Cannot use TF coil strain limit if i_str_wp is off:
+    # Cannot use TF coil strain limit if i_strain_tf_superconductor is off:
     if (
-        data.numerics.icc[
-            : data.numerics.n_equality_constraints
-            + data.numerics.n_inequality_constraints
-        ]
-        == 88
-    ).any() and data.tfcoil.i_str_wp == 0:
-        raise ProcessValidationError("Can't use constraint 88 if i_strain_tf == 0")
+        (
+            data.numerics.icc[
+                : data.numerics.n_equality_constraints
+                + data.numerics.n_inequality_constraints
+            ]
+            == 88
+        ).any()
+        and data.superconducting_tfcoil.i_strain_tf_superconductor
+        == StrainTFSuperconductorType.RESIDUAL_MANUFACTURING_STRAIN
+    ):
+        raise ProcessValidationError(
+            "Can't use constraint 88 if i_strain_tf == RESIDUAL_MANUFACTURING_STRAIN"
+        )
 
 
 def set_active_constraints(data: DataStructure):
