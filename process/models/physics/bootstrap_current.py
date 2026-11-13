@@ -2224,12 +2224,12 @@ class SauterBootstrapCurrent(Model):
             radial_elements, rmajor, inverse_q, sqeps, tempi, amain, zmain, ni
         )
 
-        # $\alpha(\nu_{i*})$, Eq.17b
-        alpha = (
-            (alpha_0 + (0.25 * (1.0 - f_trapped**2)) * np.sqrt(ion_collisionality))
-            / (1.0 + (0.5 * np.sqrt(ion_collisionality)))
-            + (0.315 * ion_collisionality**2 * f_trapped**6)
-        ) / (1.0 + (0.15 * ion_collisionality**2 * f_trapped**6))
+        # α(νᵢ⁎), Eq.17b # noqa: RUF003
+        alpha = self._calculate_alpha_coefficient(
+            alpha_0=alpha_0,
+            f_trapped_particles=f_trapped,
+            normalised_ion_collisionality=ion_collisionality,
+        )
 
         # Corrections suggested by Fable, 15/05/2015
         # Below calculates the L34 * alpha + L31 coefficient
@@ -2474,6 +2474,59 @@ class SauterBootstrapCurrent(Model):
         return (-1.17 * (1.0 - f_trapped_particles)) / (
             1.0 - (0.22 * f_trapped_particles) - (0.19 * f_trapped_particles**2)
         )
+
+    @staticmethod
+    def _calculate_alpha_coefficient(
+        alpha_0: float | np.ndarray,
+        f_trapped_particles: float | np.ndarray,
+        normalised_ion_collisionality: float | np.ndarray,
+    ) -> float | np.ndarray:
+        """Calculate the (α) coefficient, the finite-collisionality correction to the
+        ion-temperature-gradient contribution to the bootstrap current.
+
+        Parameters
+        ----------
+        alpha_0 :
+            The (α₀) coefficient [-].
+        f_trapped_particles :
+            Trapped particle fraction (fₜ) [-].
+        normalised_ion_collisionality :
+            Normalised ion collisionality (νᵢ⁎) [-].
+
+        Returns
+        -------
+        float | np.ndarray:
+            The (α) coefficient.
+
+        Notes
+        -----
+        - This equation is originally given by Eq.17b in reference [1], though an error
+        concerning the sign of the 0.315 term is corrected to be positive in
+        reference [2].
+
+        References
+        ----------
+        [1] O. Sauter, C. Angioni, Y. R. Lin-Liu;
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime.
+        Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
+
+        [2] O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime
+        [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140.
+        https://doi.org/10.1063/1.1517052
+        """  # noqa: RUF002
+        # α(νᵢ⁎), Eq.17b # noqa: RUF003
+        return (
+            (
+                alpha_0
+                + (0.25 * (1.0 - f_trapped_particles**2))
+                * np.sqrt(normalised_ion_collisionality)
+            )
+            / (1.0 + (0.5 * np.sqrt(normalised_ion_collisionality)))
+            + (0.315 * normalised_ion_collisionality**2 * f_trapped_particles**6)
+        ) / (1.0 + (0.15 * normalised_ion_collisionality**2 * f_trapped_particles**6))
 
     @staticmethod
     @nb.njit(cache=True)
