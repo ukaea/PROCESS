@@ -1609,6 +1609,34 @@ class SauterBootstrapCurrent(Model):
         ]
         dlogne_drho = np.gradient(np.log(ne), rho)[radial_elements - 1]
 
+        # Calculate trapped particle fraction
+        f_trapped_particles = self._trapped_particle_fraction_sauter(
+            radial_elements=radial_elements, triang=triang, sqeps=sqeps
+        )
+
+        # Calculated electron collisionality; nu_e*
+        normalised_electron_collisionality = self._electron_collisionality_sauter(
+            radial_elements=radial_elements,
+            rmajor=rmajor,
+            zeff=zeff,
+            inverse_q=inverse_q,
+            sqeps=sqeps,
+            tempe=temp_plasma_electron_profile_kev,
+            ne=ne,
+        )
+
+        # Calculate the ion collisionality
+        normalised_ion_collisionality = self._ion_collisionality_sauter(
+            radial_elements=radial_elements,
+            rmajor=rmajor,
+            inverse_q=inverse_q,
+            sqeps=sqeps,
+            tempi=temp_plasma_ion_profile_kev,
+            amain=amain,
+            zeff=zmain,
+            ni=ni,
+        )
+
         jboot = (
             0.5
             * (
@@ -1617,7 +1645,8 @@ class SauterBootstrapCurrent(Model):
                     number_of_elements=self.data.physics.n_plasma_profile_elements,
                     rmajor=rmajor,
                     b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
-                    triang=triang,
+                    f_trapped_particles=f_trapped_particles,
+                    normalised_electron_collisionality=normalised_electron_collisionality,
                     ne=ne,
                     ni=ni,
                     tempe=temp_plasma_electron_profile_kev,
@@ -1625,7 +1654,6 @@ class SauterBootstrapCurrent(Model):
                     inverse_q=inverse_q,
                     rho=rho,
                     zeff=zeff,
-                    sqeps=sqeps,
                 )
                 * dlogne_drho
                 + self._calculate_l31_32_coefficient(
@@ -1633,7 +1661,7 @@ class SauterBootstrapCurrent(Model):
                     number_of_elements=self.data.physics.n_plasma_profile_elements,
                     rmajor=rmajor,
                     b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
-                    triang=triang,
+                    f_trapped_particles=f_trapped_particles,
                     ne=ne,
                     ni=ni,
                     tempe=temp_plasma_electron_profile_kev,
@@ -1641,7 +1669,7 @@ class SauterBootstrapCurrent(Model):
                     inverse_q=inverse_q,
                     rho=rho,
                     zeff=zeff,
-                    sqeps=sqeps,
+                    normalised_electron_collisionality=normalised_electron_collisionality,
                 )
                 * dlogte_drho
                 + self._calculate_l34_alpha_31_coefficient(
@@ -1649,13 +1677,12 @@ class SauterBootstrapCurrent(Model):
                     number_of_elements=self.data.physics.n_plasma_profile_elements,
                     rmajor=rmajor,
                     b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
-                    triang=triang,
+                    f_trapped_particles=f_trapped_particles,
+                    normalised_electron_collisionality=normalised_electron_collisionality,
+                    normalised_ion_collisionality=normalised_ion_collisionality,
                     inverse_q=inverse_q,
-                    sqeps=sqeps,
                     tempi=temp_plasma_ion_profile_kev,
                     tempe=temp_plasma_electron_profile_kev,
-                    amain=amain,
-                    zmain=zmain,
                     ni=ni,
                     ne=ne,
                     rho=rho,
@@ -1898,7 +1925,8 @@ class SauterBootstrapCurrent(Model):
         number_of_elements: int,
         rmajor: float,
         b_plasma_toroidal_on_axis: float,
-        triang: float,
+        f_trapped_particles: np.ndarray,
+        normalised_electron_collisionality: np.ndarray,
         ne: np.ndarray,
         ni: np.ndarray,
         tempe: np.ndarray,
@@ -1906,7 +1934,6 @@ class SauterBootstrapCurrent(Model):
         inverse_q: np.ndarray,
         rho: np.ndarray,
         zeff: np.ndarray,
-        sqeps: np.ndarray,
     ) -> float:
         """L31 coefficient before Grad(ln(ne)) in the Sauter bootstrap scaling.
 
@@ -1920,8 +1947,10 @@ class SauterBootstrapCurrent(Model):
             Plasma major radius (m).
         b_plasma_toroidal_on_axis : float
             Toroidal field on axis (T).
-        triang : float
-            Plasma triangularity.
+        f_trapped_particles : np.ndarray
+            Trapped particle fraction at the selected radial elements.
+        normalised_electron_collisionality : np.ndarray
+            Electron collisionality at the selected radial elements.
         ne : np.ndarray
             Electron density profile (/m³).
         ni : np.ndarray
@@ -1936,8 +1965,6 @@ class SauterBootstrapCurrent(Model):
             Normalized minor radius profile.
         zeff : np.ndarray
             Effective charge profile.
-        sqeps : np.ndarray
-            Square root of inverse aspect ratio profile.
 
         Returns
         -------
@@ -1961,20 +1988,10 @@ class SauterBootstrapCurrent(Model):
         # Prevents first element being 0
         charge_profile = zeff[radial_elements - 1]
 
-        # Calculate trapped particle fraction
-        f_trapped = self._trapped_particle_fraction_sauter(
-            radial_elements, triang, sqeps
-        )
-
-        # Calculated electron collisionality; nu_e*
-        electron_collisionality = self._electron_collisionality_sauter(
-            radial_elements, rmajor, zeff, inverse_q, sqeps, tempe, ne
-        )
-
         # f³¹_{teff}(νₑ⁎), Eq.14b # noqa: RUF003
         f31_teff = self._calculate_f_teff_31_coefficient(
-            f_trapped_particles=f_trapped,
-            normalised_electron_collisionality=electron_collisionality,
+            f_trapped_particles=f_trapped_particles,
+            normalised_electron_collisionality=normalised_electron_collisionality,
             n_charge_plasma_effective=charge_profile,
         )
 
@@ -2004,7 +2021,7 @@ class SauterBootstrapCurrent(Model):
         number_of_elements: int,
         rmajor: float,
         b_plasma_toroidal_on_axis: float,
-        triang: float,
+        f_trapped_particles: np.ndarray,
         ne: np.ndarray,
         ni: np.ndarray,
         tempe: np.ndarray,
@@ -2012,7 +2029,7 @@ class SauterBootstrapCurrent(Model):
         inverse_q: np.ndarray,
         rho: np.ndarray,
         zeff: np.ndarray,
-        sqeps: np.ndarray,
+        normalised_electron_collisionality: np.ndarray,
     ) -> float:
         """L31 & L32 coefficient before Grad(ln(Te)) in the Sauter bootstrap current
         scaling.
@@ -2030,8 +2047,8 @@ class SauterBootstrapCurrent(Model):
             Plasma major radius (m).
         b_plasma_toroidal_on_axis : float
             Toroidal field on axis (T).
-        triang : float
-            Plasma triangularity.
+        f_trapped_particles : np.ndarray
+            Trapped particle fraction profile.
         ne : np.ndarray
             Electron density profile (/m³).
         ni : np.ndarray
@@ -2046,8 +2063,8 @@ class SauterBootstrapCurrent(Model):
             Normalized minor radius profile.
         zeff : np.ndarray
             Effective charge profile.
-        sqeps : np.ndarray
-            Square root of inverse aspect ratio profile.
+        normalised_electron_collisionality : np.ndarray
+            Normalised electron collisionality profile.
 
         Returns
         -------
@@ -2071,27 +2088,17 @@ class SauterBootstrapCurrent(Model):
         # Prevents first element being 0
         charge_profile = zeff[radial_elements - 1]
 
-        # Calculate trapped particle fraction
-        f_trapped = self._trapped_particle_fraction_sauter(
-            radial_elements, triang, sqeps
-        )
-
-        # Calculated electron collisionality; nu_e*
-        electron_collisionality = self._electron_collisionality_sauter(
-            radial_elements, rmajor, zeff, inverse_q, sqeps, tempe, ne
-        )
-
         # f³²ᵉᵉ_{teff}(νₑ⁎), Eq.15d # noqa: RUF003
         f32ee_teff = self._calculate_f_teff_32ee_coefficient(
-            f_trapped_particles=f_trapped,
-            normalised_electron_collisionality=electron_collisionality,
+            f_trapped_particles=f_trapped_particles,
+            normalised_electron_collisionality=normalised_electron_collisionality,
             n_charge_plasma_effective=charge_profile,
         )
 
         # f³²ᵉⁱ_{teff}(νₑ⁎), Eq.15e # noqa: RUF003
         f32ei_teff = self._calculate_f_teff_32ei_coefficient(
-            f_trapped_particles=f_trapped,
-            normalised_electron_collisionality=electron_collisionality,
+            f_trapped_particles=f_trapped_particles,
+            normalised_electron_collisionality=normalised_electron_collisionality,
             n_charge_plasma_effective=charge_profile,
         )
 
@@ -2118,19 +2125,19 @@ class SauterBootstrapCurrent(Model):
             inverse_q,
             rho,
         ) * (big_f32ee_teff + big_f32ei_teff) + self._calculate_l31_coefficient(
-            radial_elements,
-            number_of_elements,
-            rmajor,
-            b_plasma_toroidal_on_axis,
-            triang,
-            ne,
-            ni,
-            tempe,
-            tempi,
-            inverse_q,
-            rho,
-            zeff,
-            sqeps,
+            radial_elements=radial_elements,
+            number_of_elements=number_of_elements,
+            rmajor=rmajor,
+            b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+            f_trapped_particles=f_trapped_particles,
+            normalised_electron_collisionality=normalised_electron_collisionality,
+            ne=ne,
+            ni=ni,
+            tempe=tempe,
+            tempi=tempi,
+            inverse_q=inverse_q,
+            rho=rho,
+            zeff=zeff,
         ) * self._beta_poloidal_sauter(
             radial_elements,
             number_of_elements,
@@ -2159,13 +2166,12 @@ class SauterBootstrapCurrent(Model):
         number_of_elements: int,
         rmajor: float,
         b_plasma_toroidal_on_axis: float,
-        triang: float,
+        f_trapped_particles: np.ndarray,
+        normalised_electron_collisionality: np.ndarray,
+        normalised_ion_collisionality: np.ndarray,
         inverse_q: np.ndarray,
-        sqeps: np.ndarray,
         tempi: np.ndarray,
         tempe: np.ndarray,
-        amain: float,
-        zmain: float,
         ni: np.ndarray,
         ne: np.ndarray,
         rho: np.ndarray,
@@ -2187,20 +2193,18 @@ class SauterBootstrapCurrent(Model):
             Plasma major radius (m).
         b_plasma_toroidal_on_axis : float
             Toroidal field on axis (T).
-        triang : float
-            Plasma triangularity.
+        f_trapped_particles : np.ndarray
+            Trapped particle fraction profile.
+        normalised_electron_collisionality : np.ndarray
+            Normalised electron collisionality profile.
         inverse_q : np.ndarray
             Inverse safety factor profile.
-        sqeps : np.ndarray
-            Square root of inverse aspect ratio profile.
+        normalised_ion_collisionality : np.ndarray
+            Normalised ion collisionality profile.
         tempi : np.ndarray
             Ion temperature profile (keV).
         tempe : np.ndarray
             Electron temperature profile (keV).
-        amain : float
-            Atomic mass of the main ion.
-        zmain : float
-            Charge of the main ion.
         ni : np.ndarray
             Ion density profile (/m³).
         ne : np.ndarray
@@ -2232,20 +2236,10 @@ class SauterBootstrapCurrent(Model):
         # Prevents first element being 0
         charge_profile = zeff[radial_elements - 1]
 
-        # Calculate trapped particle fraction
-        f_trapped = self._trapped_particle_fraction_sauter(
-            radial_elements, triang, sqeps
-        )
-
-        # Calculated electron collisionality; nu_e*
-        electron_collisionality = self._electron_collisionality_sauter(
-            radial_elements, rmajor, zeff, inverse_q, sqeps, tempe, ne
-        )
-
         # f³⁴_{teff}(νₑ⁎), Eq.16b, # noqa: RUF003
         f34_teff = self._calculate_f_teff_34_coefficient(
-            f_trapped_particles=f_trapped,
-            normalised_electron_collisionality=electron_collisionality,
+            f_trapped_particles=f_trapped_particles,
+            normalised_electron_collisionality=normalised_electron_collisionality,
             n_charge_plasma_effective=charge_profile,
         )
 
@@ -2255,18 +2249,15 @@ class SauterBootstrapCurrent(Model):
         )
 
         # α₀, Eq.17a
-        alpha_0 = self._calculate_alpha_0_coefficient(f_trapped_particles=f_trapped)
-
-        # Calculate the ion collisionality
-        ion_collisionality = self._ion_collisionality_sauter(
-            radial_elements, rmajor, inverse_q, sqeps, tempi, amain, zmain, ni
+        alpha_0 = self._calculate_alpha_0_coefficient(
+            f_trapped_particles=f_trapped_particles
         )
 
         # α(νᵢ⁎), Eq.17b # noqa: RUF003
         alpha = self._calculate_alpha_coefficient(
             alpha_0=alpha_0,
-            f_trapped_particles=f_trapped,
-            normalised_ion_collisionality=ion_collisionality,
+            f_trapped_particles=f_trapped_particles,
+            normalised_ion_collisionality=normalised_ion_collisionality,
         )
 
         # Corrections suggested by Fable, 15/05/2015
@@ -2295,19 +2286,19 @@ class SauterBootstrapCurrent(Model):
                 rho,
             )
         ) * (l34_coefficient * alpha) + self._calculate_l31_coefficient(
-            radial_elements,
-            number_of_elements,
-            rmajor,
-            b_plasma_toroidal_on_axis,
-            triang,
-            ne,
-            ni,
-            tempe,
-            tempi,
-            inverse_q,
-            rho,
-            zeff,
-            sqeps,
+            radial_elements=radial_elements,
+            number_of_elements=number_of_elements,
+            rmajor=rmajor,
+            b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+            f_trapped_particles=f_trapped_particles,
+            normalised_electron_collisionality=normalised_electron_collisionality,
+            ne=ne,
+            ni=ni,
+            tempe=tempe,
+            tempi=tempi,
+            inverse_q=inverse_q,
+            rho=rho,
+            zeff=zeff,
         ) * (
             1.0
             - self._beta_poloidal_sauter(
