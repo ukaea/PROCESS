@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from dataclasses import dataclass
 from enum import IntEnum, unique
 from types import DynamicClassAttribute
 from typing import TYPE_CHECKING
@@ -135,13 +136,11 @@ class PlasmaBootstrapCurrent(Model):
             )
         )
 
-        (
-            self.data.current_drive.f_c_plasma_bootstrap_sauter,
-            self.data.physics.j_plasma_bootstrap_sauter_profile,
-        ) = self.bootstrap_fraction_sauter()
-        self.data.current_drive.f_c_plasma_bootstrap_sauter *= (
-            self.data.current_drive.cboot
+        sauter_outputs = self.bootstrap_fraction_sauter()
+        self.data.current_drive.f_c_plasma_bootstrap_sauter = (
+            sauter_outputs.f_cur_plasma_bootstrap * self.data.current_drive.cboot
         )
+        self.data.physics.j_plasma_bootstrap_sauter_profile = sauter_outputs.j_bootstrap
 
         self.data.current_drive.f_c_plasma_bootstrap_sakai = (
             self.data.current_drive.cboot
@@ -587,14 +586,13 @@ class PlasmaBootstrapCurrent(Model):
 
     def bootstrap_fraction_sauter(
         self,
-    ) -> tuple[float, np.ndarray]:
+    ) -> SauterBootstrapCurrentParams:
         """Get the bootstrap current fraction using Sauter et al scaling.
 
         Returns
         -------
-        tuple[float, np.ndarray]
-            A tuple containing the bootstrap current fraction and the bootstrap current
-            density profile.
+        SauterBootstrapCurrentParams
+            The calculated bootstrap current parameters.
         """
         return self.sauter_bootstrap.bootstrap_fraction_sauter(
             a_plasma_poloidal=self.data.physics.a_plasma_poloidal,
@@ -1457,6 +1455,17 @@ class PlasmaBootstrapCurrent(Model):
         )
 
 
+@dataclass
+class SauterBootstrapCurrentParams:
+    """Output parameters for the Sauter bootstrap current calculation."""
+
+    f_cur_plasma_bootstrap: float
+    j_bootstrap: float | np.ndarray
+    f_trapped_particles: float | np.ndarray
+    normalised_electron_collisionality: float | np.ndarray
+    normalised_ion_collisionality: float | np.ndarray
+
+
 class SauterBootstrapCurrent(Model):
     """Class to calculate the bootstrap current using the Sauter et al formula.
 
@@ -1502,7 +1511,7 @@ class SauterBootstrapCurrent(Model):
         f_plasma_fuel_helium3: float,
         b_plasma_toroidal_on_axis: float,
         plasma_current: float,
-    ) -> tuple[float, np.ndarray]:
+    ) -> SauterBootstrapCurrentParams:
         """Calculate the bootstrap current fraction from the Sauter et al scaling.
 
         Parameters
@@ -1544,8 +1553,8 @@ class SauterBootstrapCurrent(Model):
 
         Returns
         -------
-        tuple[float, np.ndarray]
-            The bootstrap current fraction and current density profile.
+        SauterBootstrapCurrentParams
+            The calculated bootstrap current parameters.
 
         Notes
         -----
@@ -1692,7 +1701,13 @@ class SauterBootstrapCurrent(Model):
             )
         )  # A/m2
 
-        return (np.sum(da * jboot, axis=0) / plasma_current), jboot
+        return SauterBootstrapCurrentParams(
+            f_cur_plasma_bootstrap=np.sum(da * jboot, axis=0) / plasma_current,
+            j_bootstrap=jboot,
+            f_trapped_particles=f_trapped_particles,
+            normalised_electron_collisionality=normalised_electron_collisionality,
+            normalised_ion_collisionality=normalised_ion_collisionality,
+        )
 
     @staticmethod
     @nb.njit(cache=True)

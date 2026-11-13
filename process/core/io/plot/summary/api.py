@@ -291,9 +291,9 @@ def main_plot(
     plot_qprofile(ax13, demo_ranges, m_file, scan)
 
     plot_sauter_bootstrap_summary(
-        _add_page("sauter").add_subplot(111),
-        m_file,
-        scan,
+        fig=_add_page("sauter"),
+        mfile=m_file,
+        scan=scan,
     )
 
     ax_line_brem = _add_page("rad_contour").add_subplot(325)

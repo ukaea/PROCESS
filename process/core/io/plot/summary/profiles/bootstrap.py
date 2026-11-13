@@ -15,14 +15,14 @@ if TYPE_CHECKING:
     from process.core.io.mfile import MFile
 
 
-def plot_sauter_bootstrap_summary(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_sauter_bootstrap_summary(fig: plt.Figure, mfile: MFile, scan: int):
     """Plot the Sauter bootstrap current summary for a given MFile and scan."""
     rho, nd_electron_profile, temp_electron_profile_kev = profiles_with_pedestal(
         mfile=mfile, scan=scan
     )
     sauter = SauterBootstrapCurrent()
 
-    _, j_boot_profile = sauter.bootstrap_fraction_sauter(
+    sauter_params = sauter.bootstrap_fraction_sauter(
         a_plasma_poloidal=mfile.get("a_plasma_poloidal"),
         rminor=mfile.get("rminor"),
         rmajor=mfile.get("rmajor"),
@@ -41,7 +41,18 @@ def plot_sauter_bootstrap_summary(axis: plt.Axes, mfile: MFile, scan: int):
         b_plasma_toroidal_on_axis=mfile.get("b_plasma_toroidal_on_axis"),
         plasma_current=mfile.get("plasma_current"),
     )
+    j_profile = fig.add_subplot(221)
 
-    axis.plot(
-        np.linspace(0, 1, len(rho) - 2), j_boot_profile, label="Sauter Bootstrap Current"
+    j_profile.plot(
+        np.linspace(0, 1, len(rho) - 2),
+        sauter_params.j_bootstrap,
+        label="Sauter Bootstrap Current",
+    )
+
+    axes_trapped = fig.add_subplot(222)
+
+    axes_trapped.plot(
+        np.linspace(0, 1, len(rho) - 2),
+        sauter_params.f_trapped_particles,
+        label="Trapped Fraction",
     )
