@@ -586,15 +586,9 @@ class PlasmaBootstrapCurrent(Model):
         return (q / q95) * (al1 * (a1 + (pratio * (a1 + alphai * a2))) + al2 * a2)
 
     def bootstrap_fraction_sauter(
-        self, plasma_profile: PlasmaProfile
+        self,
     ) -> tuple[float, np.ndarray]:
         """Get the bootstrap current fraction using Sauter et al scaling.
-
-        Parameters
-        ----------
-        plasma_profile : PlasmaProfile
-            The plasma profile object containing the necessary plasma parameters for the
-            Sauter bootstrap calculation.
 
         Returns
         -------
@@ -603,13 +597,13 @@ class PlasmaBootstrapCurrent(Model):
             density profile.
         """
         return self.sauter_bootstrap.bootstrap_fraction_sauter(
-            plasma_profile=plasma_profile,
             a_plasma_poloidal=self.data.physics.a_plasma_poloidal,
             rminor=self.data.physics.rminor,
             rmajor=self.data.physics.rmajor,
             triang=self.data.physics.triang,
             n_charge_plasma_effective_vol_avg=self.data.physics.n_charge_plasma_effective_vol_avg,
             nd_plasma_electron_profile=self.plasma_profile.neprofile.profile_y,
+            roa=self.plasma_profile.neprofile.profile_x,
             temp_plasma_electron_profile_kev=self.plasma_profile.teprofile.profile_y,
             temp_plasma_ion_profile_kev=self.plasma_profile.tiprofile.profile_y,
             nd_plasma_ions_total_vol_avg=self.data.physics.nd_plasma_ions_total_vol_avg,
@@ -1490,13 +1484,13 @@ class SauterBootstrapCurrent(Model):
 
     def bootstrap_fraction_sauter(
         self,
-        plasma_profile: PlasmaProfile,
         a_plasma_poloidal: float,
         rminor: float,
         rmajor: float,
         triang: float,
         n_charge_plasma_effective_vol_avg: float,
         nd_plasma_electron_profile: np.ndarray,
+        roa: np.ndarray,
         temp_plasma_electron_profile_kev: np.ndarray,
         temp_plasma_ion_profile_kev: np.ndarray,
         nd_plasma_ions_total_vol_avg: float,
@@ -1511,8 +1505,6 @@ class SauterBootstrapCurrent(Model):
 
         Parameters
         ----------
-        plasma_profile : PlasmaProfile
-            The plasma profile object.
         a_plasma_poloidal : float
             The poloidal cross-sectional area of the plasma [m²].
         rminor : float
@@ -1557,9 +1549,6 @@ class SauterBootstrapCurrent(Model):
         Angioni, and Lin-Liu scaling.
 
         """
-        # Radial points from 0 to 1 separated by 1/profile_size
-        roa = plasma_profile.neprofile.profile_x
-
         # Local circularised minor radius
         rho = np.sqrt(a_plasma_poloidal / np.pi) * roa
 

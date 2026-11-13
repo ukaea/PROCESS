@@ -461,7 +461,6 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
 
     physics.plasma_profile.run()
     bfs, _ = physics.plasma_bootstrap_current.sauter_bootstrap.bootstrap_fraction_sauter(
-        plasma_profile=physics.plasma_profile,
         a_plasma_poloidal=physics.data.physics.a_plasma_poloidal,
         rminor=physics.data.physics.rminor,
         rmajor=physics.data.physics.rmajor,
@@ -470,6 +469,7 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
             physics.data.physics.n_charge_plasma_effective_vol_avg
         ),
         nd_plasma_electron_profile=physics.plasma_profile.neprofile.profile_y,
+        roa=physics.plasma_profile.neprofile.profile_x,
         temp_plasma_electron_profile_kev=(physics.plasma_profile.teprofile.profile_y),
         temp_plasma_ion_profile_kev=physics.plasma_profile.tiprofile.profile_y,
         nd_plasma_ions_total_vol_avg=(physics.data.physics.nd_plasma_ions_total_vol_avg),
