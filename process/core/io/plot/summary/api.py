@@ -69,7 +69,9 @@ from process.core.io.plot.summary.plasma.physics import (
     plot_magnetic_fields_in_plasma,
     plot_max_normalised_beta_comparison,
     plot_physics_info,
+    plot_plasma_composition_bar,
     plot_plasma_current_comparison,
+    plot_plasma_mass_composition_bar,
     plot_plasma_outboard_toroidal_ripple_map,
     plot_radiation_power_contributions,
 )
@@ -288,6 +290,14 @@ def main_plot(
     ax13 = pages["profiles"].add_subplot(4, 3, 12)
     ax13.set_position([0.7, 0.105, 0.25, 0.15])
     plot_qprofile(ax13, demo_ranges, m_file, scan)
+
+    plot_plasma_composition_bar(
+        _add_page("plasma_composition").add_subplot(121), m_file, scan
+    )
+    plot_plasma_mass_composition_bar(
+        pages["plasma_composition"].add_subplot(122), m_file, scan
+    )
+    pages["plasma_composition"].subplots_adjust(wspace=0.5)
 
     ax_line_brem = _add_page("rad_contour").add_subplot(325)
     plot_line_brem_loss_function_profile(

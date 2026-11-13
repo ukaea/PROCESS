@@ -1130,3 +1130,201 @@ def plot_radiation_power_contributions(axis: plt.Axes, mfile: MFile, scan: int):
         fontsize=9,
         bbox={"boxstyle": "round", "facecolor": "white", "alpha": 0.8},
     )
+
+
+def plot_plasma_composition_bar(axis: plt.Axes, mfile: MFile, scan: int):
+    """Plot particle numbers on a logarithmic scale with total percentages.
+
+    Parameters
+    ----------
+    axis : plt.Axes
+        axis object to add plot to
+    mfile : MFile
+        MFile object containing the plasma particle numbers.
+    scan : int
+        scan number to use
+
+    """
+    colour_electrons, colour_fuel, colour_alpha, colour_imp = (
+        "tab:blue",
+        "tab:orange",
+        "tab:red",
+        "black",
+    )
+
+    contributions = [
+        (
+            "Electrons",
+            mfile.get("n_plasma_electrons", scan=scan),
+            colour_electrons,
+        ),
+        (
+            "Deuterium",
+            mfile.get("n_plasma_deuterons", scan=scan),
+            colour_fuel,
+        ),
+        (
+            "Tritium",
+            mfile.get("n_plasma_tritons", scan=scan),
+            colour_fuel,
+        ),
+        (
+            "Helium",
+            mfile.get("n_plasma_helions", scan=scan),
+            colour_fuel,
+        ),
+        (
+            "Alpha Particles",
+            mfile.get("n_plasma_alpha_particles", scan=scan),
+            colour_alpha,
+        ),
+    ]
+    contributions.extend(
+        (
+            ion_species.label.replace("_", ""),
+            mfile.get(f"n_plasma_{ion_species.full_name}_ions", scan=scan),
+            colour_imp,
+        )
+        for ion_species in IonSpecies
+        if ion_species.is_impurity
+    )
+
+    # Only show non-zero contributions, largest at the top
+    contributions = sorted(
+        (c for c in contributions if c[1] > 0.0), key=operator.itemgetter(1)
+    )
+    labels = [c[0] for c in contributions]
+    counts = [c[1] for c in contributions]
+    total = sum(counts)
+    axis.set_xscale("log")
+    bars = axis.barh(labels, counts, color=[c[2] for c in contributions])
+    bar_labels = axis.bar_label(
+        bars,
+        labels=[f"{count:.3e} ({100.0 * count / total:#.4g}%)" for count in counts],
+        padding=3,
+        fontsize=8,
+    )
+    for text in bar_labels:
+        text.set_bbox({
+            "boxstyle": "round,pad=0.2",
+            "facecolor": "white",
+            "edgecolor": "none",
+            "alpha": 1.0,
+        })
+        text.set_zorder(10)
+    if counts:
+        axis.axvline(total, color="red", linestyle="--", linewidth=0.8)
+        axis.set_xlim(min(counts) / 10.0, total * 10.0)
+    else:
+        axis.set_xlim(1.0, 10.0)
+    axis.set_xlabel("Number of Particles")
+    axis.set_title("Plasma Composition by Number of Particles")
+    axis.xaxis.grid(True, alpha=0.2)
+    axis.legend(
+        handles=[
+            mpl.patches.Patch(color=colour_electrons, label="Electrons"),
+            mpl.patches.Patch(color=colour_fuel, label="Fuel"),
+            mpl.patches.Patch(color=colour_alpha, label="Alpha Particles"),
+            mpl.patches.Patch(color=colour_imp, label="Impurities (Z>2)"),
+        ],
+        loc="lower right",
+    )
+
+
+def plot_plasma_mass_composition_bar(axis: plt.Axes, mfile: MFile, scan: int):
+    """Plot plasma mass composition on a logarithmic scale with total percentages.
+
+    Parameters
+    ----------
+    axis : plt.Axes
+        axis object to add plot to
+    mfile : MFile
+        MFile object containing the plasma particle numbers.
+    scan : int
+        scan number to use
+
+    """
+    colour_electrons, colour_fuel, colour_alpha, colour_imp = (
+        "tab:blue",
+        "tab:orange",
+        "tab:red",
+        "black",
+    )
+
+    contributions = [
+        (
+            "Electrons",
+            mfile.get("m_plasma_electron", scan=scan),
+            colour_electrons,
+        ),
+        (
+            "Deuterium",
+            mfile.get("m_plasma_deuterons", scan=scan),
+            colour_fuel,
+        ),
+        (
+            "Tritium",
+            mfile.get("m_plasma_tritons", scan=scan),
+            colour_fuel,
+        ),
+        (
+            "Helium",
+            mfile.get("m_plasma_helions", scan=scan),
+            colour_fuel,
+        ),
+        (
+            "Alpha Particles",
+            mfile.get("m_plasma_alpha", scan=scan),
+            colour_alpha,
+        ),
+    ]
+    contributions.extend(
+        (
+            ion_species.label.replace("_", ""),
+            mfile.get(f"m_plasma_{ion_species.full_name}", scan=scan),
+            colour_imp,
+        )
+        for ion_species in IonSpecies
+        if ion_species.is_impurity
+    )
+
+    # Only show non-zero contributions, largest at the top
+    contributions = sorted(
+        (c for c in contributions if c[1] > 0.0), key=operator.itemgetter(1)
+    )
+    labels = [c[0] for c in contributions]
+    counts = [c[1] for c in contributions]
+    total = mfile.get("m_plasma", scan=scan)
+    axis.set_xscale("log")
+    bars = axis.barh(labels, counts, color=[c[2] for c in contributions])
+    bar_labels = axis.bar_label(
+        bars,
+        labels=[f"{count:.3e} ({100.0 * count / total:#.4g}%)" for count in counts],
+        padding=3,
+        fontsize=8,
+    )
+    for text in bar_labels:
+        text.set_bbox({
+            "boxstyle": "round,pad=0.2",
+            "facecolor": "white",
+            "edgecolor": "none",
+            "alpha": 1.0,
+        })
+        text.set_zorder(10)
+    if counts:
+        axis.axvline(total, color="red", linestyle="--", linewidth=0.8)
+        axis.set_xlim(min(counts) / 10.0, total * 10.0)
+    else:
+        axis.set_xlim(1.0, 10.0)
+    axis.set_xlabel("Mass [kg]")
+    axis.set_title("Plasma Composition by Mass")
+    axis.xaxis.grid(True, alpha=0.2)
+    axis.legend(
+        handles=[
+            mpl.patches.Patch(color=colour_electrons, label="Electrons"),
+            mpl.patches.Patch(color=colour_fuel, label="Fuel"),
+            mpl.patches.Patch(color=colour_alpha, label="Alpha Particles"),
+            mpl.patches.Patch(color=colour_imp, label="Impurities (Z>2)"),
+        ],
+        loc="lower right",
+    )
