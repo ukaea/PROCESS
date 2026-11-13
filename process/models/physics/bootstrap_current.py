@@ -2045,24 +2045,9 @@ class SauterBootstrapCurrent(Model):
             + (1.2 / (1.0 + 0.5 * charge_profile) * f32ee_teff**4)
         )
 
-        # $F_{32\_ei}(Y)$, Eq.15c
-        big_f32ei_teff = (
-            (
-                -(0.56 + 1.93 * charge_profile)
-                / charge_profile
-                / (1.0 + 0.44 * charge_profile)
-                * (f32ei_teff - f32ei_teff**4)
-            )
-            + (
-                4.95
-                / (1.0 + 2.48 * charge_profile)
-                * (
-                    f32ei_teff**2
-                    - f32ei_teff**4
-                    - 0.55 * (f32ei_teff**3 - f32ei_teff**4)
-                )
-            )
-            - (1.2 / (1.0 + 0.5 * charge_profile) * f32ei_teff**4)
+        # F₃₂ₑᵢ(Y), Eq.15c
+        big_f32ei_teff = self._calculate_f_32_ei_factor(
+            n_charge_plasma_effective=charge_profile, y=f32ei_teff
         )
 
         # big_f32ee_teff + big_f32ei_teff = L32 coefficient
@@ -2577,6 +2562,53 @@ class SauterBootstrapCurrent(Model):
             / (1.0 + (0.5 * np.sqrt(normalised_ion_collisionality)))
             + (0.315 * normalised_ion_collisionality**2 * f_trapped_particles**6)
         ) / (1.0 + (0.15 * normalised_ion_collisionality**2 * f_trapped_particles**6))
+
+    @staticmethod
+    def _calculate_f_32_ei_factor(
+        n_charge_plasma_effective: float | np.ndarray,
+        y: float | np.ndarray,
+    ) -> float | np.ndarray:
+        """Calculate the F₃₂ₑᵢ(Y) factor, the electron-ion friction correction factor
+        for the electron temperature-gradient bootstrap coefficient L₃₂.
+
+        Parameters
+        ----------
+        n_charge_plasma_effective : float | np.ndarray
+            Effective plasma charge (Z_eff) [-].
+        y : float | np.ndarray
+            Normalized parameter Y [-].
+
+        Returns
+        -------
+        float | np.ndarray
+            The F₃₂ₑᵢ(Y) factor.
+
+        Notes
+        -----
+        - This equation is originally given by Eq.15c in reference [1].
+
+        References
+        ----------
+        [1] O. Sauter, C. Angioni, Y. R. Lin-Liu;
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime.
+        Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
+        """
+        # F₃₂ₑᵢ(Y), Eq.15c
+        return (
+            (
+                -(0.56 + 1.93 * n_charge_plasma_effective)
+                / n_charge_plasma_effective
+                / (1.0 + 0.44 * n_charge_plasma_effective)
+                * (y - y**4)
+            )
+            + (
+                4.95
+                / (1.0 + 2.48 * n_charge_plasma_effective)
+                * (y**2 - y**4 - 0.55 * (y**3 - y**4))
+            )
+            - (1.2 / (1.0 + 0.5 * n_charge_plasma_effective) * y**4)
+        )
 
     @staticmethod
     @nb.njit(cache=True)
