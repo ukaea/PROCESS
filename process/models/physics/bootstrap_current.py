@@ -607,10 +607,18 @@ class PlasmaBootstrapCurrent(Model):
             a_plasma_poloidal=self.data.physics.a_plasma_poloidal,
             rminor=self.data.physics.rminor,
             rmajor=self.data.physics.rmajor,
+            triang=self.data.physics.triang,
             n_charge_plasma_effective_vol_avg=self.data.physics.n_charge_plasma_effective_vol_avg,
             nd_plasma_electron_profile=self.plasma_profile.neprofile.profile_y,
             temp_plasma_electron_profile_kev=self.plasma_profile.teprofile.profile_y,
             temp_plasma_ion_profile_kev=self.plasma_profile.tiprofile.profile_y,
+            nd_plasma_ions_total_vol_avg=self.data.physics.nd_plasma_ions_total_vol_avg,
+            nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
+            q0=self.data.physics.q0,
+            q95=self.data.physics.q95,
+            m_ions_total_amu=self.data.physics.m_ions_total_amu,
+            f_plasma_fuel_helium3=self.data.physics.f_plasma_fuel_helium3,
+            b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
         )
 
     def bootstrap_fraction_nevins(
@@ -1486,10 +1494,18 @@ class SauterBootstrapCurrent(Model):
         a_plasma_poloidal: float,
         rminor: float,
         rmajor: float,
+        triang: float,
         n_charge_plasma_effective_vol_avg: float,
         nd_plasma_electron_profile: np.ndarray,
         temp_plasma_electron_profile_kev: np.ndarray,
         temp_plasma_ion_profile_kev: np.ndarray,
+        nd_plasma_ions_total_vol_avg: float,
+        nd_plasma_electrons_vol_avg: float,
+        q0: float,
+        q95: float,
+        m_ions_total_amu: float,
+        f_plasma_fuel_helium3: float,
+        b_plasma_toroidal_on_axis: float,
     ) -> tuple[float, np.ndarray]:
         """Calculate the bootstrap current fraction from the Sauter et al scaling.
 
@@ -1503,6 +1519,8 @@ class SauterBootstrapCurrent(Model):
             The minor radius of the plasma (a) [m].
         rmajor : float
             The major radius of the plasma (R₀) [m].
+        triang : float
+            The triangularity of the plasma [-].
         n_charge_plasma_effective_vol_avg : float
             The volume-averaged effective charge of the plasma (Z_eff) [-].
         nd_plasma_electron_profile : np.ndarray
@@ -1511,6 +1529,20 @@ class SauterBootstrapCurrent(Model):
             The electron temperature profile of the plasma [keV].
         temp_plasma_ion_profile_kev : np.ndarray
             The ion temperature profile of the plasma [keV].
+        nd_plasma_ions_total_vol_avg : float
+            The volume-averaged total ion density of the plasma [m⁻³].
+        nd_plasma_electrons_vol_avg : float
+            The volume-averaged electron density of the plasma [m⁻³].
+        q0 : float
+            The central safety factor [-].
+        q95 : float
+            The edge safety factor at 95% of the minor radius [-].
+        m_ions_total_amu : float
+            The total ion mass in atomic mass units (amu) [-].
+        f_plasma_fuel_helium3 : float
+            The fraction of helium-3 in the plasma fuel [-].
+        b_plasma_toroidal_on_axis : float
+            The toroidal magnetic field on the plasma axis (B₀) [T].
 
 
 
@@ -1540,10 +1572,7 @@ class SauterBootstrapCurrent(Model):
         # Prevent log(0) in Sauter bootstrap calculation
         ne = np.maximum(ne, 1.0e-6)
 
-        ni = (
-            self.data.physics.nd_plasma_ions_total_vol_avg
-            / self.data.physics.nd_plasma_electrons_vol_avg
-        ) * ne
+        ni = (nd_plasma_ions_total_vol_avg / nd_plasma_electrons_vol_avg) * ne
 
         # Flat Zeff profile assumed
         # Return tempi like array object filled with zeff
@@ -1553,15 +1582,12 @@ class SauterBootstrapCurrent(Model):
 
         # inverse_q = 1/safety factor
         # Parabolic q profile assumed
-        inverse_q = 1 / (
-            self.data.physics.q0
-            + (self.data.physics.q95 - self.data.physics.q0) * roa**2
-        )
+        inverse_q = 1 / (q0 + (q95 - q0) * roa**2)
         # Create new array of average mass of fuel portion of ions
-        amain = np.full_like(inverse_q, self.data.physics.m_ions_total_amu)
+        amain = np.full_like(inverse_q, m_ions_total_amu)
 
         # Create new array of average main ion charge
-        zmain = np.full_like(inverse_q, 1.0 + self.data.physics.f_plasma_fuel_helium3)
+        zmain = np.full_like(inverse_q, 1.0 + f_plasma_fuel_helium3)
 
         # Calculate total bootstrap current (MA) by summing along profiles
         # Looping from 2 because _calculate_l31_coefficient() etc should return 0
@@ -1587,60 +1613,60 @@ class SauterBootstrapCurrent(Model):
             0.5
             * (
                 self._calculate_l31_coefficient(
-                    radial_elements,
-                    self.data.physics.n_plasma_profile_elements,
-                    self.data.physics.rmajor,
-                    self.data.physics.b_plasma_toroidal_on_axis,
-                    self.data.physics.triang,
-                    ne,
-                    ni,
-                    temp_plasma_electron_profile_kev,
-                    temp_plasma_ion_profile_kev,
-                    inverse_q,
-                    rho,
-                    zeff,
-                    sqeps,
+                    radial_elements=radial_elements,
+                    number_of_elements=self.data.physics.n_plasma_profile_elements,
+                    rmajor=rmajor,
+                    b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+                    triang=triang,
+                    ne=ne,
+                    ni=ni,
+                    tempe=temp_plasma_electron_profile_kev,
+                    tempi=temp_plasma_ion_profile_kev,
+                    inverse_q=inverse_q,
+                    rho=rho,
+                    zeff=zeff,
+                    sqeps=sqeps,
                 )
                 * dlogne_drho
                 + self._calculate_l31_32_coefficient(
-                    radial_elements,
-                    self.data.physics.n_plasma_profile_elements,
-                    self.data.physics.rmajor,
-                    self.data.physics.b_plasma_toroidal_on_axis,
-                    self.data.physics.triang,
-                    ne,
-                    ni,
-                    temp_plasma_electron_profile_kev,
-                    temp_plasma_ion_profile_kev,
-                    inverse_q,
-                    rho,
-                    zeff,
-                    sqeps,
+                    radial_elements=radial_elements,
+                    number_of_elements=self.data.physics.n_plasma_profile_elements,
+                    rmajor=rmajor,
+                    b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+                    triang=triang,
+                    ne=ne,
+                    ni=ni,
+                    tempe=temp_plasma_electron_profile_kev,
+                    tempi=temp_plasma_ion_profile_kev,
+                    inverse_q=inverse_q,
+                    rho=rho,
+                    zeff=zeff,
+                    sqeps=sqeps,
                 )
                 * dlogte_drho
                 + self._calculate_l34_alpha_31_coefficient(
-                    radial_elements,
-                    self.data.physics.n_plasma_profile_elements,
-                    self.data.physics.rmajor,
-                    self.data.physics.b_plasma_toroidal_on_axis,
-                    self.data.physics.triang,
-                    inverse_q,
-                    sqeps,
-                    temp_plasma_ion_profile_kev,
-                    temp_plasma_electron_profile_kev,
-                    amain,
-                    zmain,
-                    ni,
-                    ne,
-                    rho,
-                    zeff,
+                    radial_elements=radial_elements,
+                    number_of_elements=self.data.physics.n_plasma_profile_elements,
+                    rmajor=rmajor,
+                    b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+                    triang=triang,
+                    inverse_q=inverse_q,
+                    sqeps=sqeps,
+                    tempi=temp_plasma_ion_profile_kev,
+                    tempe=temp_plasma_electron_profile_kev,
+                    amain=amain,
+                    zmain=zmain,
+                    ni=ni,
+                    ne=ne,
+                    rho=rho,
+                    zeff=zeff,
                 )
                 * dlogti_drho
             )
             * 1.0e6
             * (
-                -self.data.physics.b_plasma_toroidal_on_axis
-                / (0.2 * np.pi * self.data.physics.rmajor)
+                -b_plasma_toroidal_on_axis
+                / (0.2 * np.pi * rmajor)
                 * rho[radial_elements - 1]
                 * inverse_q[radial_elements - 1]
             )

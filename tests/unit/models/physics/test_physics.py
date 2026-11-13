@@ -417,7 +417,7 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
     This test was generated using data from
     large_tokamak_nof.IN.DAT.
 
-    :param bootstrapfractionsauterparam: the data used to mock and assert in this test.
+    :param bootstrapfractionsauterparam: data used to mock and assert in this test.
     :type bootstrapfractionsauterparam: bootstrapfractionsauterparam
 
     :param monkeypatch: pytest fixture used to mock module/class variables
@@ -454,12 +454,31 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
         "n_plasma_profile_elements",
     ]:
         monkeypatch.setattr(
-            physics.data.physics, field, getattr(bootstrapfractionsauterparam, field)
+            physics.data.physics,
+            field,
+            getattr(bootstrapfractionsauterparam, field),
         )
 
     physics.plasma_profile.run()
-    bfs, _ = physics.plasma_bootstrap_current.bootstrap_fraction_sauter(
-        physics.plasma_profile
+    bfs, _ = physics.plasma_bootstrap_current.sauter_bootstrap.bootstrap_fraction_sauter(
+        plasma_profile=physics.plasma_profile,
+        a_plasma_poloidal=physics.data.physics.a_plasma_poloidal,
+        rminor=physics.data.physics.rminor,
+        rmajor=physics.data.physics.rmajor,
+        triang=physics.data.physics.triang,
+        n_charge_plasma_effective_vol_avg=(
+            physics.data.physics.n_charge_plasma_effective_vol_avg
+        ),
+        nd_plasma_electron_profile=physics.plasma_profile.neprofile.profile_y,
+        temp_plasma_electron_profile_kev=(physics.plasma_profile.teprofile.profile_y),
+        temp_plasma_ion_profile_kev=physics.plasma_profile.tiprofile.profile_y,
+        nd_plasma_ions_total_vol_avg=(physics.data.physics.nd_plasma_ions_total_vol_avg),
+        nd_plasma_electrons_vol_avg=(physics.data.physics.nd_plasma_electrons_vol_avg),
+        q0=physics.data.physics.q0,
+        q95=physics.data.physics.q95,
+        m_ions_total_amu=physics.data.physics.m_ions_total_amu,
+        f_plasma_fuel_helium3=physics.data.physics.f_plasma_fuel_helium3,
+        b_plasma_toroidal_on_axis=(physics.data.physics.b_plasma_toroidal_on_axis),
     )
 
     assert bfs == pytest.approx(bootstrapfractionsauterparam.expected_bfs)
