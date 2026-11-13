@@ -594,15 +594,12 @@ class Power(Model):
                 * abs(self.data.pf_coil.c_pf_coil_turn_peak_input[idx_circuit])
                 / self.data.pf_power.pfckts
             )
-
-        #  PF wall plug power dissipated in power supply for ohmic heating (MW)
-        #  This is additional to that required for moving stored energy around
-        # p_pf_electric_supplies_mw = self.data.physics.p_plasma_ohmic_mw
-        # / self.data.pf_coil.etapsu
-        wall_plug_ohmicmw = self.data.physics.p_plasma_ohmic_mw * (
-            1.0e0 / self.data.pf_coil.etapsu - 1.0e0
+        # PF wall-plug power required for ohmic heating (MW)
+        wall_plug_ohmicmw = (
+            self.data.physics.p_plasma_ohmic_mw / self.data.pf_coil.etapsu
         )
-        # Total mean wall plug power dissipated in PFC and CS power supplies. Issue #713
+
+        # Total mean PF/CS electrical demand
         self.data.pf_coil.p_pf_electric_supplies_mw = wall_plug_ohmicmw + pfpowermw
 
         #  Output Section
@@ -1678,6 +1675,7 @@ class Power(Model):
         # by the cooling system (MW)
         self.data.heat_transport.p_plant_secondary_heat_mw = (
             self.data.power.p_plant_core_systems_elec_mw
+            - self.data.physics.p_plasma_ohmic_mw
             + self.data.heat_transport.p_hcd_electric_loss_mw
             + self.data.heat_transport.p_coolant_pump_loss_total_mw
             + self.data.heat_transport.p_div_secondary_heat_mw
