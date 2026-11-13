@@ -1914,7 +1914,7 @@ class SauterBootstrapCurrent(Model):
         )
 
         # L₃₁ Eq.14a
-        l31_coefficient = self._calculate_l_31_coefficient(
+        l31_coefficient = self._calculate_f_31_factor(
             n_charge_plasma_effective=charge_profile,
             x=f31_teff,
         )
@@ -2184,12 +2184,9 @@ class SauterBootstrapCurrent(Model):
             n_charge_plasma_effective=charge_profile,
         )
 
-        # Eq.16a
-        l34_coefficient = (
-            ((1.0 + (1.4 / (charge_profile + 1.0))) * f34_teff)
-            - ((1.9 / (charge_profile + 1.0)) * f34_teff**2)
-            + ((0.3 / (charge_profile + 1.0)) * f34_teff**3)
-            + ((0.2 / (charge_profile + 1.0)) * f34_teff**4)
+        # L₃₄ Eq.16a
+        l34_coefficient = self._calculate_f_31_factor(
+            n_charge_plasma_effective=charge_profile, x=f34_teff
         )
 
         # α₀, Eq.17a
@@ -2646,10 +2643,10 @@ class SauterBootstrapCurrent(Model):
         )
 
     @staticmethod
-    def _calculate_l_31_coefficient(
+    def _calculate_f_31_factor(
         n_charge_plasma_effective: float | np.ndarray, x: float | np.ndarray
     ) -> float | np.ndarray:
-        """Calculate the L₃₁ pressure gradient coefficient.
+        """Calculate the F₃₁ factor. Used to find L₃₁ and L₃₄.
 
         Parameters
         ----------
@@ -2661,7 +2658,7 @@ class SauterBootstrapCurrent(Model):
         Returns
         -------
         float | np.ndarray
-            The L₃₁ pressure gradient coefficient.
+            The F₃₁ factor.
 
         Notes
         -----
@@ -2674,7 +2671,7 @@ class SauterBootstrapCurrent(Model):
         axisymmetric equilibria and arbitrary collisionality regime.
         Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
         """
-        # L₃₁ Eq.14a
+        # F₃₁ Eq.14a
         return (
             ((1.0 + 1.4 / (n_charge_plasma_effective + 1.0)) * x)
             - (1.9 / (n_charge_plasma_effective + 1.0) * x**2)
