@@ -1913,10 +1913,10 @@ class SauterBootstrapCurrent(Model):
             n_charge_plasma_effective=charge_profile,
         )
 
-        l31_coefficient = (
-            ((1.0 + 1.4 / (charge_profile + 1.0)) * f31_teff)
-            - (1.9 / (charge_profile + 1.0) * f31_teff**2)
-            + ((0.3 * f31_teff**3 + 0.2 * f31_teff**4) / (charge_profile + 1.0))
+        # L₃₁ Eq.14a
+        l31_coefficient = self._calculate_l_31_coefficient(
+            n_charge_plasma_effective=charge_profile,
+            x=f31_teff,
         )
 
         # Corrections suggested by Fable, 15/05/2015
@@ -2643,6 +2643,42 @@ class SauterBootstrapCurrent(Model):
                 / (1.0 + 0.22 * n_charge_plasma_effective)
             )
             + (1.2 / (1.0 + 0.5 * n_charge_plasma_effective) * x**4)
+        )
+
+    @staticmethod
+    def _calculate_l_31_coefficient(
+        n_charge_plasma_effective: float | np.ndarray, x: float | np.ndarray
+    ) -> float | np.ndarray:
+        """Calculate the L₃₁ pressure gradient coefficient.
+
+        Parameters
+        ----------
+        n_charge_plasma_effective : float | np.ndarray
+            Effective plasma charge (Z_eff) [-].
+        x : float | np.ndarray
+            Normalized parameter X [-].
+
+        Returns
+        -------
+        float | np.ndarray
+            The L₃₁ pressure gradient coefficient.
+
+        Notes
+        -----
+        - This equation is originally given by Eq.14a in reference [1].
+
+        References
+        ----------
+        [1] O. Sauter, C. Angioni, Y. R. Lin-Liu;
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime.
+        Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
+        """
+        # L₃₁ Eq.14a
+        return (
+            ((1.0 + 1.4 / (n_charge_plasma_effective + 1.0)) * x)
+            - (1.9 / (n_charge_plasma_effective + 1.0) * x**2)
+            + ((0.3 * x**3 + 0.2 * x**4) / (n_charge_plasma_effective + 1.0))
         )
 
     @staticmethod
