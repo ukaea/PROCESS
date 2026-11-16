@@ -257,29 +257,30 @@ $$
 +R_{p e}\left(\mathcal{L}_{31}+\mathcal{L}_{32}\right) \frac{\partial \ln T_e}{\partial \psi}+\left(1-R_{p e}\right) \times\left(1+\frac{\mathcal{L}_{34}}{\mathcal{L}_{31}} \alpha\right) \mathcal{L}_{31} \frac{\partial \ln T_i}{\partial \psi}\right]
 $$
 
-Note that the above $\left\langle j_{\|} B\right\rangle$ given by Sauter et.al.[^4]   gives the component of the current density in the direction of the field – not the toroidal component of the current.  The error is second order in the pitch angle, but can be important, especially in the outboard region of a low aspect ratio tokamak, where the pitch angle is large.  Moreover this error will always have the effect of overestimating the current. This is accounted for via poloidal correction function implemented as: [`beta_poloidal_sauter()`](#calculate-electron-only-poloidal-beta-correction-beta_poloidal_sauter) and[`beta_poloidal_total_sauter()`](#calculate-ion-and-electron-poloidal-beta-correction-beta_poloidal_total_sauter)
+The paper gives a flux-surface-averaged parallel current, including an ohmic
+term. PROCESS calculates only the bootstrap contribution and treats its local
+current density as a toroidal current density for integration. The pressure
+terms below are not an explicit parallel-to-toroidal projection, and this
+approximation does not evaluate the exact flux-surface geometry.
 
-The correction is of the form:
-
-$$
-I_{\phi}^{\text{bs}} = 2\pi \int d\psi \frac{q(\psi)}{\langle B^{2}\rangle} \left\langle j_{\|} B\right\rangle
-$$
-
-where $q(\psi)$ is the safety factor.
-
-The reconstructed implementation in PROCESS looks as such:
+The PROCESS approximation is
 
 $$
-\frac{I_{\text{b}}}{I_{\text{P}}} = \sum_2^{\rho_{\text{max}}} \left(2\pi\left[\rho\right]_{-1} \times \left(\left[\rho\right] -\left[\rho\right]_{-1}\right)  \right) \times  \\
-\left(0.5 \times \left[\mathcal{L}_{31} \frac{\partial \ln n_e}{\partial \psi} 
-+\left(\mathcal{L}_{31} + \mathcal{L}_{32}\right) \frac{\partial \ln T_e}{\partial \psi} 
-+ \left(1 + \frac{\mathcal{L}_{34}}{\mathcal{L}_{31}} \alpha\right) \mathcal{L}_{31} \frac{\partial \ln T_i}{\partial \psi}\right] \times \\
- 1 \times 10^6 \times \frac{-B_{0}\left[\rho\right]_{-1}\left[\frac{1}{q}\right]_{-1}}{0.2\pi R_0}\right)
+j_{\rm bs}=-\frac{B_p}{(B_p^{\rm reg})^2}
+\left[
+p_{\rm total}\mathcal L_{31}\frac{\partial\ln n_e}{\partial\rho}
++p_e(\mathcal L_{31}+\mathcal L_{32})\frac{\partial\ln T_e}{\partial\rho}
++p_i(\mathcal L_{31}+\alpha\mathcal L_{34})\frac{\partial\ln T_i}{\partial\rho}
+\right],
+\qquad
+\frac{I_{\rm bs}}{I_p}\simeq\frac{\sum_j 2\pi\rho_j\Delta\rho_j j_{{\rm bs},j}}{I_p}.
 $$
 
-In this case square brackets denote profile arrays. The $-1$ subscript denotes the previous array element in the summation.
-
-It is not known fully if the $\left(\sigma_{\text {neo }}\left\langle E_{\|} B\right\rangle-I(\psi) p(\psi)\right)$ term is properly implemented into the `PROCESS` version. The $R_{pe}$ value is assumingly taken to be 0.5 as it is stated to approximately to be in Sauter et.al[^4].
+Here $p_e$, $p_i$ and $p_{\rm total}$ are the approximated pressures
+described below. The model uses the circular approximation
+$B_p=B_0\rho/(R_0q)$ and
+$B_p^{\rm reg}=(B_0\rho/R_0)|1/q+10^{-4}|$. The $10^{-4}$ offset
+retains the existing regularisation in the denominator only.
 
 !!! warning "Validity of the Sauter Bootstrap Scaling"
 
@@ -312,7 +313,7 @@ $$
 
 This returns the dimensionless $\mathcal{L}_{31}$ coefficient, exposed in
 `SauterBootstrapCurrentParams.l31_coefficient`. In `bootstrap_fraction_sauter()`,
-it is multiplied by the total poloidal beta.
+it is multiplied by the total pressure.
 
 ---------------
 
@@ -337,7 +338,7 @@ $$
 
 `SauterBootstrapCurrentParams` returns the L31 and L32 profiles separately as
 `l31_coefficient` and `l32_coefficient`. In `bootstrap_fraction_sauter()`, their
-sum is multiplied by the electron-only poloidal beta.
+sum is multiplied by the electron pressure.
 
 ---------------
 
@@ -367,15 +368,15 @@ The definition of $\alpha\left(\nu_{i *}\right)$ is that found in the erratum pa
 `SauterBootstrapCurrentParams` returns the L34, $\alpha_0$, and $\alpha$ profiles
 separately as `l34_coefficient`, `alpha_0`, and `alpha`. In
 `bootstrap_fraction_sauter()`, the ion-temperature term uses
-$\mathcal{L}_{31}+\mathcal{L}_{34}\alpha$ and is multiplied by the difference
-between total and electron-only poloidal beta.
+$\mathcal{L}_{31}+\mathcal{L}_{34}\alpha$ and is multiplied by the ion
+pressure.
 
 The three gradient terms are combined there as
 
 $$
-\beta_{p,\mathrm{total}}\mathcal{L}_{31}\frac{\partial\ln n_e}{\partial\rho}
-+\beta_{p,e}(\mathcal{L}_{31}+\mathcal{L}_{32})\frac{\partial\ln T_e}{\partial\rho}
-+(\beta_{p,\mathrm{total}}-\beta_{p,e})(\mathcal{L}_{34}\alpha+\mathcal{L}_{31})\frac{\partial\ln T_i}{\partial\rho}
+p_{\mathrm{total}}\mathcal{L}_{31}\frac{\partial\ln n_e}{\partial\rho}
++p_e(\mathcal{L}_{31}+\mathcal{L}_{32})\frac{\partial\ln T_e}{\partial\rho}
++p_i(\mathcal{L}_{34}\alpha+\mathcal{L}_{31})\frac{\partial\ln T_i}{\partial\rho}
 $$
 
 
@@ -412,45 +413,24 @@ used by this calculation.
 
 ----------------
 
-#### Calculate electron only poloidal beta correction | `_beta_poloidal_sauter()`
+#### Calculate the pressures
 
-This function returns an electron only local poloidal beta correction dependant on the array index of the profile.
-
-If the current index is not equal to the size value (or end of the array) then the following is returned:
+The implementation estimates the electron and ion pressures as
 
 $$
-\frac{1.6\times 10^{-4}\pi R \left(n_{\text{e}}+n_{\text{e-1}}\right)\times \left(T_{\text{e}}+T_{\text{e-1}}\right)}{\left(B_{\text{T}}\rho_{-1}\left|\left(\frac{1}{q}\right)_{-1}+1\times 10^{-4}\right|\right)^2}
+p_s=1.6\times10^3\,\bar n_s\bar T_s\ {\rm Pa},
+\quad s\in\{e,i\},
+\qquad p_{\rm total}=p_e+p_i.
 $$
 
-Otherwise the following is returned:
+Here density is in units of $10^{19}$ m$^{-3}$, temperature in keV, and each
+bar denotes the arithmetic mean of two neighbouring profile values. The code
+uses the product of those means rather than the mean of the pressures. The
+conversion factor is rounded to retain the previous calculation.
 
-$$
-\frac{6.4\times 10^{-4}\pi R \left(n_{\text{e-1}}T_{\text{e-1}}\right)}{\left(B_{\text{T}}\rho_{-1}\left|\left(\frac{1}{q}\right)_{-1}+1\times 10^{-4}\right|\right)^2}
-$$
-
-The $-1$ subscript in this case refers to the value of the variable in the previous array index value
-
-
-
----------------
-
-#### Calculate ion and electron poloidal beta correction | `_beta_poloidal_total_sauter()`
-
-This function returns the local poloidal beta correction with both electron and ion pressure dependant on the array index of the profile.
-
-If the current index is not equal to the size value (or end of the array) then the following is returned:
-
-$$
-\frac{1.6\times 10^{-4}\pi R \left[\left(\left(n_{\text{e}}+n_{\text{e-1}}\right)\times \left(T_{\text{e}}+T_{\text{e-1}}\right)\right)+\left(\left(n_{\text{i}}+n_{\text{i-1}}\right)\times \left(T_{\text{i}}+T_{\text{i-1}}\right)\right)\right]}{\left(B_{\text{T}}\rho_{-1}\left|\left(\frac{1}{q}\right)_{-1}+1\times 10^{-4}\right|\right)^2}
-$$
-
-Otherwise the following is returned:
-
-$$
-\frac{6.4\times 10^{-4}\pi R \left[\left(n_{\text{e-1}}T_{\text{e-1}}\right)+\left(n_{\text{i-1}}T_{\text{i-1}}\right)\right]}{\left(B_{\text{T}}\rho_{-1}\left|\left(\frac{1}{q}\right)_{-1}+1\times 10^{-4}\right|\right)^2}
-$$
-
-The $-1$ subscript in this case refers to the value of the variable in the previous array index value
+The electron pressure ratio is represented implicitly by
+$R_{pe}=p_e/p_{\rm total}$, and the ion ratio by
+$1-R_{pe}=p_i/p_{\rm total}$.
 
 
 ------------------

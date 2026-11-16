@@ -1645,7 +1645,7 @@ class SauterBootstrapCurrent(Model):
         normalised_electron_collisionality = self._electron_collisionality_sauter(
             radial_elements=radial_elements,
             rmajor=rmajor,
-            zeff=zeff,
+            zeff=zmain,
             inverse_q=inverse_q,
             sqrt_inverse_aspect=sqrt_inverse_aspect,
             tempe=temp_plasma_electron_profile_kev,
@@ -1690,47 +1690,43 @@ class SauterBootstrapCurrent(Model):
             normalised_ion_collisionality=normalised_ion_collisionality,
         )
 
-        beta_poloidal_electron = self._beta_poloidal_sauter(
-            radial_elements,
-            len(ne),
-            rmajor,
-            b_plasma_toroidal_on_axis,
-            ne,
-            temp_plasma_electron_profile_kev,
-            inverse_q,
-            rho,
+        previous = radial_elements - 1
+        ne_mid = 0.5 * (ne[radial_elements] + ne[previous])
+        ni_mid = 0.5 * (ni[radial_elements] + ni[previous])
+        te_mid = 0.5 * (
+            temp_plasma_electron_profile_kev[radial_elements]
+            + temp_plasma_electron_profile_kev[previous]
         )
-        beta_poloidal_total = self._beta_poloidal_total_sauter(
-            radial_elements,
-            len(ne),
-            rmajor,
-            b_plasma_toroidal_on_axis,
-            ne,
-            ni,
-            temp_plasma_electron_profile_kev,
-            temp_plasma_ion_profile_kev,
-            inverse_q,
-            rho,
+        ti_mid = 0.5 * (
+            temp_plasma_ion_profile_kev[radial_elements]
+            + temp_plasma_ion_profile_kev[previous]
+        )
+        # Retain the original rounded conversion from 10¹⁹ m⁻³ and keV to Pa.
+        pressure_electron = 1.6e3 * ne_mid * te_mid
+        pressure_ion = 1.6e3 * ni_mid * ti_mid
+        pressure_total = pressure_electron + pressure_ion
+
+        # With the assumed circular geometry, Bp ≈ B0 * rho / (R * q).
+        field_scale = b_plasma_toroidal_on_axis * rho[previous] / rmajor
+        poloidal_field = field_scale * inverse_q[previous]
+        # The 1/q offset regularises the denominator only.
+        poloidal_field_regularised = field_scale * np.abs(inverse_q[previous] + 1.0e-4)
+
+        # Ion density follows the electron density, so both share this gradient.
+        density_gradient_term = pressure_total * l31_coefficient * dlogne_drho
+        electron_temperature_term = (
+            pressure_electron * (l31_coefficient + l32_coefficient) * dlogte_drho
+        )
+        ion_temperature_term = (
+            pressure_ion * (l31_coefficient + l34_coefficient * alpha) * dlogti_drho
         )
 
+        # This inherited Bp/Bp_reg² approximation is not an explicit
+        # parallel-to-toroidal current projection.
         jboot = (
-            0.5
-            * (
-                beta_poloidal_total * l31_coefficient * dlogne_drho
-                + beta_poloidal_electron
-                * (l31_coefficient + l32_coefficient)
-                * dlogte_drho
-                + (beta_poloidal_total - beta_poloidal_electron)
-                * (l31_coefficient + l34_coefficient * alpha)
-                * dlogti_drho
-            )
-            * 1.0e6
-            * (
-                -b_plasma_toroidal_on_axis
-                / (0.2 * np.pi * rmajor)
-                * rho[radial_elements - 1]
-                * inverse_q[radial_elements - 1]
-            )
+            -poloidal_field
+            / poloidal_field_regularised**2
+            * (density_gradient_term + electron_temperature_term + ion_temperature_term)
         )  # A/m2
 
         return SauterBootstrapCurrentParams(
@@ -2423,143 +2419,6 @@ class SauterBootstrapCurrent(Model):
             ((1.0 + 1.4 / (n_charge_plasma_effective + 1.0)) * x)
             - (1.9 / (n_charge_plasma_effective + 1.0) * x**2)
             + ((0.3 * x**3 + 0.2 * x**4) / (n_charge_plasma_effective + 1.0))
-        )
-
-    @staticmethod
-    @nb.njit(cache=True)
-    def _beta_poloidal_sauter(
-        radial_elements: np.ndarray,
-        nr: int,
-        rmajor: float,
-        b_plasma_toroidal_on_axis: float,
-        ne: np.ndarray,
-        tempe: np.ndarray,
-        inverse_q: np.ndarray,
-        rho: np.ndarray,
-    ) -> np.ndarray:
-        """Calculate the local beta poloidal using only electron profiles for the Sauter
-        bootstrap current scaling.
-
-        Parameters
-        ----------
-        radial_elements:
-            Radial element indexes in range 1 to nr.
-        nr:
-            Maximum value of radial_elements.
-        rmajor:
-            Plasma major radius (m).
-        b_plasma_toroidal_on_axis:
-            Toroidal field on axis (T).
-        ne:
-            Electron density profile (/m³).
-        tempe:
-            Electron temperature profile (keV).
-        inverse_q:
-            Inverse safety factor profile.
-        rho:
-            Normalized minor radius profile.
-
-        Returns
-        -------
-        :
-            The local beta poloidal.
-        """
-        return (
-            np.where(
-                radial_elements != nr,
-                1.6e-4
-                * np.pi
-                * (ne[radial_elements] + ne[radial_elements - 1])
-                * (tempe[radial_elements] + tempe[radial_elements - 1]),
-                6.4e-4 * np.pi * ne[radial_elements - 1] * tempe[radial_elements - 1],
-            )
-            * (
-                rmajor
-                / (
-                    b_plasma_toroidal_on_axis
-                    * rho[radial_elements - 1]
-                    * np.abs(inverse_q[radial_elements - 1] + 1.0e-4)
-                )
-            )
-            ** 2
-        )
-
-    @staticmethod
-    @nb.njit(cache=True)
-    def _beta_poloidal_total_sauter(
-        radial_elements: np.ndarray,
-        nr: int,
-        rmajor: float,
-        b_plasma_toroidal_on_axis: float,
-        ne: np.ndarray,
-        ni: np.ndarray,
-        tempe: np.ndarray,
-        tempi: np.ndarray,
-        inverse_q: np.ndarray,
-        rho: np.ndarray,
-    ) -> np.ndarray:
-        """Calculate the local beta poloidal including ion pressure for the Sauter
-        bootstrap current scaling.
-
-        Parameters
-        ----------
-        radial_elements:
-            Radial element indexes in range 1 to nr.
-        nr:
-            Maximum value of radial_elements.
-        rmajor:
-            Plasma major radius (m).
-        b_plasma_toroidal_on_axis:
-            Toroidal field on axis (T).
-        ne:
-            Electron density profile (/m³).
-        ni:
-            Ion density profile (/m³).
-        tempe:
-            Electron temperature profile (keV).
-        tempi:
-            Ion temperature profile (keV).
-        inverse_q:
-            Inverse safety factor profile.
-        rho:
-            Normalized minor radius profile.
-
-        Returns
-        -------
-        :
-            The local total beta poloidal.
-        """
-        return (
-            np.where(
-                radial_elements != nr,
-                1.6e-4
-                * np.pi
-                * (
-                    (
-                        (ne[radial_elements] + ne[radial_elements - 1])
-                        * (tempe[radial_elements] + tempe[radial_elements - 1])
-                    )
-                    + (
-                        (ni[radial_elements] + ni[radial_elements - 1])
-                        * (tempi[radial_elements] + tempi[radial_elements - 1])
-                    )
-                ),
-                6.4e-4
-                * np.pi
-                * (
-                    ne[radial_elements - 1] * tempe[radial_elements - 1]
-                    + ni[radial_elements - 1] * tempi[radial_elements - 1]
-                ),
-            )
-            * (
-                rmajor
-                / (
-                    b_plasma_toroidal_on_axis
-                    * rho[radial_elements - 1]
-                    * np.abs(inverse_q[radial_elements - 1] + 1.0e-4)
-                )
-            )
-            ** 2
         )
 
     @staticmethod

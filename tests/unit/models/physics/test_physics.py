@@ -639,6 +639,18 @@ def test_sauter_circularised_area(physics):
         **{**kwargs, "a_plasma_poloidal": 2.0 * kwargs["a_plasma_poloidal"]},
     )
 
+    np.testing.assert_allclose(
+        circular.j_bootstrap[[0, 8, 18]],
+        [7474.022141453853, 33055.63668113657, 44254.024706078635],
+        rtol=1e-12,
+    )
+    # An extreme q makes the retained 1e-4 regularisation significant.
+    high_q = sauter.bootstrap_fraction_sauter(**{**kwargs, "q0": 1e4, "q95": 2e4})
+    np.testing.assert_allclose(
+        high_q.j_bootstrap[[0, 8, 18]],
+        [48408.501215798984, 2458134.5741814165, 1344492.5274141233],
+        rtol=1e-12,
+    )
     rho = np.sqrt(kwargs["a_plasma_poloidal"] / np.pi) * roa
     annulus_areas = 2.0 * np.pi * rho[1:-1] * np.diff(rho)[1:]
     assert circular.f_cur_plasma_bootstrap == pytest.approx(
