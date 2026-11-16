@@ -81,7 +81,7 @@ def init_process(data: DataStructure, update_obsolete: bool = False):
     # Check input data for errors/ambiguities
     check_process(data, inputs)
 
-    run_summary(data)
+    write_outfile_header(data)
 
 
 def get_git_summary() -> tuple[str, str]:
@@ -120,7 +120,7 @@ def get_git_summary() -> tuple[str, str]:
         return git_branch, git_tag
 
 
-def run_summary(data: DataStructure):
+def write_outfile_header(data: DataStructure):
     """Write a summary of the PROCESS run to the output file and MFile"""
     # Outfile and terminal #
     for outfile in [constants.NOUT, constants.IOTTY]:
