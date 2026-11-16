@@ -151,6 +151,7 @@ from process.core.io.plot.summary.time_profiles import (
     plot_current_profiles_over_time,
     plot_system_power_profiles_over_time,
 )
+from process.models.physics.bootstrap_current import BootstrapCurrentFractionModel
 from process.models.physics.current_drive import CurrentDriveModel
 from process.models.physics.plasma_geometry import PlasmaShapeModelType
 from process.models.power import PumpingPowerModelTypes
@@ -290,11 +291,15 @@ def main_plot(
     ax13.set_position([0.7, 0.105, 0.25, 0.15])
     plot_qprofile(ax13, demo_ranges, m_file, scan)
 
-    plot_sauter_bootstrap_summary(
-        fig=_add_page("sauter"),
-        mfile=m_file,
-        scan=scan,
-    )
+    if (
+        BootstrapCurrentFractionModel(m_file.get("i_bootstrap_current"))
+        == BootstrapCurrentFractionModel.SAUTER
+    ):
+        plot_sauter_bootstrap_summary(
+            fig=_add_page("sauter"),
+            mfile=m_file,
+            scan=scan,
+        )
 
     ax_line_brem = _add_page("rad_contour").add_subplot(325)
     plot_line_brem_loss_function_profile(
