@@ -247,6 +247,11 @@ bootstrap current which allows one to calculate the bootstrap fraction.
 
 Is selected by setting `i_bootstrap_current = 4`
 
+The model uses a circularised radius $\rho=\sqrt{A_{\rm plasma}/\pi}\,x$,
+where $x=r/a$ and $A_{\rm plasma}$ is the supplied total poloidal
+cross-sectional area. Current integration assumes circular annuli,
+with $dA=2\pi\rho\,d\rho$. Elongation is not used as a separate input.
+
 $$
 \left\langle j_{\|} B\right\rangle= \sigma_{\text {neo }}\left\langle E_{\|} B\right\rangle-I(\psi) p(\psi)\left[\mathcal{L}_{31} \frac{\partial \ln n_e}{\partial \psi} \\
 +R_{p e}\left(\mathcal{L}_{31}+\mathcal{L}_{32}\right) \frac{\partial \ln T_e}{\partial \psi}+\left(1-R_{p e}\right) \times\left(1+\frac{\mathcal{L}_{34}}{\mathcal{L}_{31}} \alpha\right) \mathcal{L}_{31} \frac{\partial \ln T_i}{\partial \psi}\right]
@@ -272,7 +277,7 @@ $$
  1 \times 10^6 \times \frac{-B_{0}\left[\rho\right]_{-1}\left[\frac{1}{q}\right]_{-1}}{0.2\pi R_0}\right)
 $$
 
-In this case square brackets denote array variables equal in length to $\rho_{\text{max}}$ representing the normalised radius elements across the profile. The $-1$ subscript denotes the previous array element in the summation.
+In this case square brackets denote profile arrays. The $-1$ subscript denotes the previous array element in the summation.
 
 It is not known fully if the $\left(\sigma_{\text {neo }}\left\langle E_{\|} B\right\rangle-I(\psi) p(\psi)\right)$ term is properly implemented into the `PROCESS` version. The $R_{pe}$ value is assumingly taken to be 0.5 as it is stated to approximately to be in Sauter et.al[^4].
 
@@ -377,53 +382,33 @@ $$
 
 -------------
 
-#### Calculate the Coulomb logarithm | `_coulomb_logarithm_sauter()`
+#### Calculate the normalized collisionalities
+
+The electron and ion collisionalities use Sauter et al. Eqs. 18b–18e.
+The Coulomb logarithms are evaluated separately:
 
 $$
-\ln \Lambda = 15.9 -0.5 \times \ln{n_{\text{e}}}+\ln{T_{\text{e}}}
+\ln \Lambda_e = 31.3-\ln\left(\frac{\sqrt{n_e}}{T_e}\right),
+\qquad
+\ln \Lambda_{ii} = 30-\ln\left(\frac{Z_i^3\sqrt{n_i}}{T_i^{3/2}}\right).
 $$
 
------------
-
-#### Calculate frequency of electron collisions | `_electron_collisions_sauter()`
-
-Using the Coulomb logarithm ($\ln \Lambda$) calculated from [`_coulomb_logarithm_sauter()`](#calculate-the-coulomb-logarithm--_coulomb_logarithm_sauter) we get:
-
 $$
-\nu_{\text{e}} = 670 \times \frac{\ln \Lambda \times n_{\text{e}}}{T_{\text{e}}^{3/2}}
+\nu_{e*}=6.921\times10^{-18}
+\frac{q R n_e Z_{\mathrm{eff}}\ln\Lambda_e}{T_e^2\epsilon^{3/2}},
+\qquad
+\nu_{i*}=4.90\times10^{-18}
+\frac{q R n_i Z_i^4\ln\Lambda_{ii}}{T_i^2\epsilon^{3/2}}.
 $$
 
-------------
-
-#### Calculate electron collisionality | `_electron_collisionality_sauter()`
-
-The origins of the coefficients values are not known, but thought to be derived from a condition of the [Bohm diffusion coefficient](https://en.wikipedia.org/wiki/Bohm_diffusion)
-
-Using the electron collision frequency ($\nu_{\text{e}}$) calculated from [`_electron_collisions_sauter()`](#calculate-frequency-of-electron-collisions--_electron_collisions_sauter) we get:
-$$
-\nu_{\text{e*}} = \frac{1.4 \ R \ \nu_{\text{e}}  \ Z_{\text{eff}}}{\left|\frac{1}{q}\epsilon^{3/2}\sqrt{T_{\text{e}}}\times 1.875\times10^7\right|}
-$$
-
--------------
-
-#### Calculate frequency of ion collisions | `_ion_collisions_sauter()`
-
-
-$$
-\nu_{\text{i}} = 320 \times \frac{Z_{\text{eff}}^4n_{\text{i}}}{T_{\text{i}}^{3/2}\sqrt{a_{\text{i}}}}
-$$
-
------
-
-#### Calculate ion collisionality | `_ion_collisionality_sauter()`
-
-The origins of the coefficients values are not known, but thought to be derived from a condition of the [Bohm diffusion coefficient](https://en.wikipedia.org/wiki/Bohm_diffusion)
-
-Using the ion collision frequency ($\nu_{\text{i}}$) calculated from [`_ion_collisions_sauter()`](#calculate-frequency-of-ion-collisions--_ion_collisions_sauter) we get:
-
-$$
-\nu_{\text{e*}} = \frac{3.2\times10^{-6} \nu_{\text{i}} R}{\left|\left(\frac{1}{q}+0.0001\right)\epsilon^{3/2} \sqrt{\frac{T_{\text{i}}}{a_{\text{i}}}} \right|}
-$$
+In these equations, densities are in m$^{-3}$, temperatures in eV, and $R$ in
+metres. The implementation converts its internal density profiles from units of
+$10^{19}$ m$^{-3}$ and temperatures from keV. It uses the volume-averaged
+effective charge for $Z_{\mathrm{eff}}$ and approximates the main-ion charge as
+$Z_i=1+f_{\mathrm{helium3}}$ with the total ion density, rather than calculating
+each ion species separately. The paper's ion formula does not depend on ion mass.
+The `m_ions_total_amu` argument is retained for API compatibility but is not
+used by this calculation.
 
 ----------------
 
