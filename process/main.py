@@ -38,7 +38,8 @@ from pathlib import Path
 import click
 
 import process  # noqa: F401
-from process.core import check_input, constants
+from process.core import constants
+from process.core.data_structure import check_input
 from process.core.data_structure.base import DataStructure
 from process.core.io.cli_tools import LazyGroup, help_opt, indat_opt
 from process.core.io.mfile import MFile
