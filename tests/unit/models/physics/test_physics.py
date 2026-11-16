@@ -487,6 +487,14 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
         bootstrapfractionsauterparam.expected_bfs
     )
     assert sauter_result.j_bootstrap.shape == (499,)
+    for coefficient in (
+        sauter_result.l31_coefficient,
+        sauter_result.l32_coefficient,
+        sauter_result.l34_coefficient,
+        sauter_result.alpha,
+        sauter_result.alpha_0,
+    ):
+        assert coefficient.shape == sauter_result.j_bootstrap.shape
 
     bootstrap = physics.plasma_bootstrap_current
     for method in (

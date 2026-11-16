@@ -1464,6 +1464,11 @@ class SauterBootstrapCurrentParams:
     f_trapped_particles: float | np.ndarray
     normalised_electron_collisionality: float | np.ndarray
     normalised_ion_collisionality: float | np.ndarray
+    l31_coefficient: np.ndarray
+    l32_coefficient: np.ndarray
+    l34_coefficient: np.ndarray
+    alpha: np.ndarray
+    alpha_0: np.ndarray
 
 
 class SauterBootstrapCurrent(Model):
@@ -1645,20 +1650,25 @@ class SauterBootstrapCurrent(Model):
             normalised_electron_collisionality=normalised_electron_collisionality,
             zeff=zeff,
         )
-        l31_32_coefficient = self._calculate_l31_32_coefficient(
+        l32_coefficient = self._calculate_l32_coefficient(
             radial_elements=radial_elements,
             f_trapped_particles=f_trapped_particles,
-            l31_coefficient=l31_coefficient,
             zeff=zeff,
             normalised_electron_collisionality=normalised_electron_collisionality,
         )
-        l34_alpha_31_coefficient = self._calculate_l34_alpha_31_coefficient(
+        l34_coefficient = self._calculate_l34_coefficient(
             radial_elements=radial_elements,
             f_trapped_particles=f_trapped_particles,
-            l31_coefficient=l31_coefficient,
             normalised_electron_collisionality=normalised_electron_collisionality,
-            normalised_ion_collisionality=normalised_ion_collisionality,
             zeff=zeff,
+        )
+        alpha_0 = self._calculate_alpha_0_coefficient(
+            f_trapped_particles=f_trapped_particles
+        )
+        alpha = self._calculate_alpha_coefficient(
+            alpha_0=alpha_0,
+            f_trapped_particles=f_trapped_particles,
+            normalised_ion_collisionality=normalised_ion_collisionality,
         )
 
         beta_poloidal_electron = self._beta_poloidal_sauter(
@@ -1688,9 +1698,11 @@ class SauterBootstrapCurrent(Model):
             0.5
             * (
                 beta_poloidal_total * l31_coefficient * dlogne_drho
-                + beta_poloidal_electron * l31_32_coefficient * dlogte_drho
+                + beta_poloidal_electron
+                * (l31_coefficient + l32_coefficient)
+                * dlogte_drho
                 + (beta_poloidal_total - beta_poloidal_electron)
-                * l34_alpha_31_coefficient
+                * (l31_coefficient + l34_coefficient * alpha)
                 * dlogti_drho
             )
             * 1.0e6
@@ -1708,6 +1720,11 @@ class SauterBootstrapCurrent(Model):
             f_trapped_particles=f_trapped_particles,
             normalised_electron_collisionality=normalised_electron_collisionality,
             normalised_ion_collisionality=normalised_ion_collisionality,
+            l31_coefficient=l31_coefficient,
+            l32_coefficient=l32_coefficient,
+            l34_coefficient=l34_coefficient,
+            alpha=alpha,
+            alpha_0=alpha_0,
         )
 
     @staticmethod
@@ -1968,15 +1985,14 @@ class SauterBootstrapCurrent(Model):
             x=f31_teff,
         )
 
-    def _calculate_l31_32_coefficient(
+    def _calculate_l32_coefficient(
         self,
         radial_elements: np.ndarray,
         f_trapped_particles: np.ndarray,
-        l31_coefficient: np.ndarray,
         zeff: np.ndarray,
         normalised_electron_collisionality: np.ndarray,
     ) -> np.ndarray:
-        """Calculate the dimensionless L31 + L32 coefficient.
+        """Calculate the dimensionless L32 coefficient.
 
         Parameters
         ----------
@@ -1984,8 +2000,6 @@ class SauterBootstrapCurrent(Model):
             Radial element indexes.
         f_trapped_particles : np.ndarray
             Trapped particle fraction profile at the selected elements.
-        l31_coefficient : np.ndarray
-            Dimensionless L31 coefficient at the selected elements.
         zeff : np.ndarray
             Effective charge profile.
         normalised_electron_collisionality : np.ndarray
@@ -1994,7 +2008,7 @@ class SauterBootstrapCurrent(Model):
         Returns
         -------
         np.ndarray
-            Dimensionless L31 + L32 coefficient.
+            Dimensionless L32 coefficient.
         """
         charge_profile = zeff[radial_elements - 1]
 
@@ -2022,18 +2036,16 @@ class SauterBootstrapCurrent(Model):
             n_charge_plasma_effective=charge_profile, y=f32ei_teff
         )
 
-        return big_f32ee_teff + big_f32ei_teff + l31_coefficient
+        return big_f32ee_teff + big_f32ei_teff
 
-    def _calculate_l34_alpha_31_coefficient(
+    def _calculate_l34_coefficient(
         self,
         radial_elements: np.ndarray,
         f_trapped_particles: np.ndarray,
-        l31_coefficient: np.ndarray,
         normalised_electron_collisionality: np.ndarray,
-        normalised_ion_collisionality: np.ndarray,
         zeff: np.ndarray,
     ) -> np.ndarray:
-        """Calculate the dimensionless L34 * alpha + L31 coefficient.
+        """Calculate the dimensionless L34 coefficient.
 
         Parameters
         ----------
@@ -2041,19 +2053,15 @@ class SauterBootstrapCurrent(Model):
             Radial element indexes.
         f_trapped_particles : np.ndarray
             Trapped particle fraction profile at the selected elements.
-        l31_coefficient : np.ndarray
-            Dimensionless L31 coefficient at the selected elements.
         normalised_electron_collisionality : np.ndarray
             Electron collisionality profile at the selected elements.
-        normalised_ion_collisionality : np.ndarray
-            Ion collisionality profile at the selected elements.
         zeff : np.ndarray
             Effective charge profile.
 
         Returns
         -------
         np.ndarray
-            Dimensionless L34 * alpha + L31 coefficient.
+            Dimensionless L34 coefficient.
         """
         charge_profile = zeff[radial_elements - 1]
 
@@ -2065,23 +2073,9 @@ class SauterBootstrapCurrent(Model):
         )
 
         # L₃₄ Eq.16a
-        l34_coefficient = self._calculate_f_31_factor(
+        return self._calculate_f_31_factor(
             n_charge_plasma_effective=charge_profile, x=f34_teff
         )
-
-        # α₀, Eq.17a
-        alpha_0 = self._calculate_alpha_0_coefficient(
-            f_trapped_particles=f_trapped_particles
-        )
-
-        # α(νᵢ⁎), Eq.17b # noqa: RUF003
-        alpha = self._calculate_alpha_coefficient(
-            alpha_0=alpha_0,
-            f_trapped_particles=f_trapped_particles,
-            normalised_ion_collisionality=normalised_ion_collisionality,
-        )
-
-        return l34_coefficient * alpha + l31_coefficient
 
     @staticmethod
     def _calculate_f_teff_31_coefficient(
