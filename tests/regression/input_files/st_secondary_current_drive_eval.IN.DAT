@@ -2,26 +2,34 @@
 *--------------------------------------------------*
 
 
+*---------------------Numerics---------------------*
+
+i_process_run_mode = -2 * Evaluation mode
+i_figure_merit = -5 * 
+n_equality_constraints = 3 * number of equality constraints to be satisfied
+epsvmc   = 1e-9 * Error tolerance for optimiser
+
 *---------------Constraint Equations---------------*
 
 icc = 1 * 
 icc = 2 * 
-icc = 11 * 
-icc = 9 * 
-icc = 16 * 
-icc = 5 * 
-icc = 24 * 
-icc = 15 * 
-icc = 62 * 
-icc = 81 * 
-icc = 17 * 
-icc = 56 * 
-icc = 33 * 
-icc = 31 * 
-icc = 32 * 
-icc = 67 * 
-icc = 30 * 
-icc = 46 * 
+icc = 11 *
+
+*icc = 9 * 
+*icc = 16 * 
+*icc = 5 * 
+*icc = 24 * 
+*icc = 15 * 
+*icc = 62 * 
+*icc = 81 * 
+*icc = 17 * 
+*icc = 56 * 
+*icc = 33 * 
+*icc = 31 * 
+*icc = 32 * 
+*icc = 67 * 
+*icc = 30 * 
+*icc = 46 * 
 
 *---------------Iteration Variables----------------*
 
@@ -174,13 +182,6 @@ f_nd_impurity_electrons(14) = 5e-05
 *--------------Neoclassics Variables---------------*
 
 
-*---------------------Numerics---------------------*
-
-i_process_run_mode = -2 * Evaluation mode
-i_figure_merit = -5 * 
-n_equality_constraints = 3 * number of equality constraints to be satisfied
-epsvmc   = 1e-9 * Error tolerance for optimiser
-
 *----------------Pf Power Variables----------------*
 
 
@@ -285,6 +286,7 @@ dx_tf_hts_tape_hastelloy = 1e-5 * thickness of Hastelloy layer in tape (m)
 dx_tf_croco_strand_copper = 2.0e-3 * Thickness of CroCo strand copper tube (m) (`iteration variable 158`)
 
 *-----------------Tfcoil Variables-----------------*
+
 dr_tf_inboard = 0.9 * TF coil inboard leg radial thickness (m)
 sig_tf_case_max = 850.0e6 * Allowable maximum shear stress (Tresca criterion) in TF coil case (Pa)
 sig_tf_wp_max = 700.0e6 * Allowable maximum shear stress (Tresca criterion) in TF coil conduit (Pa)
