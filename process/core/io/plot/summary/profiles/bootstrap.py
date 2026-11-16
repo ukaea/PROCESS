@@ -23,24 +23,28 @@ def plot_sauter_bootstrap_summary(fig: plt.Figure, mfile: MFile, scan: int):
     sauter = SauterBootstrapCurrent()
 
     sauter_params = sauter.bootstrap_fraction_sauter(
-        a_plasma_poloidal=mfile.get("a_plasma_poloidal"),
-        rminor=mfile.get("rminor"),
-        rmajor=mfile.get("rmajor"),
-        triang=mfile.get("triang"),
-        n_charge_plasma_effective_vol_avg=mfile.get("n_charge_plasma_effective_vol_avg"),
+        a_plasma_poloidal=mfile.get("a_plasma_poloidal", scan=scan),
+        rminor=mfile.get("rminor", scan=scan),
+        rmajor=mfile.get("rmajor", scan=scan),
+        triang=mfile.get("triang", scan=scan),
+        n_charge_plasma_effective_vol_avg=mfile.get(
+            "n_charge_plasma_effective_vol_avg", scan=scan
+        ),
         nd_plasma_electron_profile=nd_electron_profile,
         roa=rho,
         temp_plasma_electron_profile_kev=temp_electron_profile_kev,
         temp_plasma_ion_profile_kev=temp_electron_profile_kev
-        * mfile.get("f_temp_plasma_ion_electron"),
-        nd_plasma_ions_total_vol_avg=mfile.get("nd_plasma_ions_total_vol_avg"),
-        nd_plasma_electrons_vol_avg=mfile.get("nd_plasma_electrons_vol_avg"),
-        q0=mfile.get("q0"),
-        q95=mfile.get("q95"),
-        m_ions_total_amu=mfile.get("m_ions_total_amu"),
-        f_plasma_fuel_helium3=mfile.get("f_plasma_fuel_helium3"),
-        b_plasma_toroidal_on_axis=mfile.get("b_plasma_toroidal_on_axis"),
-        plasma_current=mfile.get("plasma_current"),
+        * mfile.get("f_temp_plasma_ion_electron",scan=scan),
+        nd_plasma_ions_total_vol_avg=mfile.get(
+            "nd_plasma_ions_total_vol_avg", scan=scan
+        ),
+        nd_plasma_electrons_vol_avg=mfile.get("nd_plasma_electrons_vol_avg", scan=scan),
+        q0=mfile.get("q0", scan=scan),
+        q95=mfile.get("q95", scan=scan),
+        m_ions_total_amu=mfile.get("m_ions_total_amu", scan=scan),
+        f_plasma_fuel_helium3=mfile.get("f_plasma_fuel_helium3", scan=scan),
+        b_plasma_toroidal_on_axis=mfile.get("b_plasma_toroidal_on_axis", scan=scan),
+        plasma_current=mfile.get("plasma_current", scan=scan),
     )
     j_profile = fig.add_subplot(321)
 
