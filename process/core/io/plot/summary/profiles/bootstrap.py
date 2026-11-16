@@ -49,7 +49,7 @@ def plot_sauter_bootstrap_summary(fig: plt.Figure, mfile: MFile, scan: int):
         label="Sauter Bootstrap Current",
     )
 
-    axes_trapped = fig.add_subplot(222)
+    axes_trapped = fig.add_subplot(322)
 
     axes_trapped.plot(
         np.linspace(0, 1, len(rho) - 2),
@@ -84,7 +84,7 @@ def plot_sauter_bootstrap_summary(fig: plt.Figure, mfile: MFile, scan: int):
         label="$\\alpha_0$ Coefficient",
     )
 
-    axes_collisionality = fig.add_subplot(224)
+    axes_collisionality = fig.add_subplot(324)
     axes_collisionality.plot(
         np.linspace(0, 1, len(rho) - 2),
         sauter_params.normalised_electron_collisionality,
@@ -112,3 +112,13 @@ def plot_sauter_bootstrap_summary(fig: plt.Figure, mfile: MFile, scan: int):
     axes_trapped.set_ylabel("Trapped Fraction")
     axes_trapped.grid(True)
     axes_trapped.legend()
+    q_profile = fig.add_subplot(326)
+    q_profile.plot(
+        rho,
+        sauter_params.q_profile,
+        label="Assumed $q$ profile",
+    )
+    q_profile.set_xlabel("Normalized Radius")
+    q_profile.set_ylabel("Safety Factor")
+    q_profile.grid(True)
+    q_profile.legend()

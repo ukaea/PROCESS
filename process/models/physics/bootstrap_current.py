@@ -1469,6 +1469,7 @@ class SauterBootstrapCurrentParams:
     l34_coefficient: np.ndarray
     alpha: np.ndarray
     alpha_0: np.ndarray
+    q_profile: float | np.ndarray
 
 
 class SauterBootstrapCurrent(Model):
@@ -1725,6 +1726,7 @@ class SauterBootstrapCurrent(Model):
             l34_coefficient=l34_coefficient,
             alpha=alpha,
             alpha_0=alpha_0,
+            q_profile=1/inverse_q,
         )
 
     @staticmethod
