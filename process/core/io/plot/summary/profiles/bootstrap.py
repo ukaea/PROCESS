@@ -83,6 +83,23 @@ def plot_sauter_bootstrap_summary(fig: plt.Figure, mfile: MFile, scan: int):
         sauter_params.alpha_0,
         label="$\\alpha_0$ Coefficient",
     )
+
+    axes_collisionality = fig.add_subplot(224)
+    axes_collisionality.plot(
+        np.linspace(0, 1, len(rho) - 2),
+        sauter_params.normalised_electron_collisionality,
+        label="$\\nu_{e}^*$",
+    )
+    axes_collisionality.plot(
+        np.linspace(0, 1, len(rho) - 2),
+        sauter_params.normalised_ion_collisionality,
+        label="$\\nu_{i}^*$",
+    )
+    axes_collisionality.set_xlabel("Normalized Radius")
+    axes_collisionality.set_ylabel("Collisionality")
+    axes_collisionality.grid(True)
+    axes_collisionality.legend()
+
     axes_coefficients.legend()
     axes_coefficients.set_xlabel("Normalized Radius")
     axes_coefficients.set_ylabel("Coefficient Value")
