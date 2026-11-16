@@ -1470,6 +1470,8 @@ class SauterBootstrapCurrentParams:
     alpha: np.ndarray
     alpha_0: np.ndarray
     q_profile: float | np.ndarray
+    inverse_aspect: float | np.ndarray
+    sqrt_inverse_aspect: float | np.ndarray
 
 
 class SauterBootstrapCurrent(Model):
@@ -1572,7 +1574,8 @@ class SauterBootstrapCurrent(Model):
         rho = np.sqrt(a_plasma_poloidal / np.pi) * roa
 
         # Square root of local aspect ratio
-        sqeps = np.sqrt(roa * (rminor / rmajor))
+        inverse_aspect = (rminor / rmajor) * roa
+        sqrt_inverse_aspect = np.sqrt(inverse_aspect)
 
         # Calculate electron and ion density profiles
         ne = nd_plasma_electron_profile * 1e-19
@@ -1619,7 +1622,9 @@ class SauterBootstrapCurrent(Model):
 
         # Calculate trapped particle fraction
         f_trapped_particles = self._trapped_particle_fraction_sauter(
-            radial_elements=radial_elements, triang=triang, sqeps=sqeps
+            radial_elements=radial_elements,
+            triang=triang,
+            sqrt_inverse_aspect=sqrt_inverse_aspect,
         )
 
         # Calculated electron collisionality; nu_e*
@@ -1628,7 +1633,7 @@ class SauterBootstrapCurrent(Model):
             rmajor=rmajor,
             zeff=zeff,
             inverse_q=inverse_q,
-            sqeps=sqeps,
+            sqrt_inverse_aspect=sqrt_inverse_aspect,
             tempe=temp_plasma_electron_profile_kev,
             ne=ne,
         )
@@ -1638,7 +1643,7 @@ class SauterBootstrapCurrent(Model):
             radial_elements=radial_elements,
             rmajor=rmajor,
             inverse_q=inverse_q,
-            sqeps=sqeps,
+            sqrt_inverse_aspect=sqrt_inverse_aspect,
             tempi=temp_plasma_ion_profile_kev,
             amain=amain,
             zeff=zmain,
@@ -1726,7 +1731,9 @@ class SauterBootstrapCurrent(Model):
             l34_coefficient=l34_coefficient,
             alpha=alpha,
             alpha_0=alpha_0,
-            q_profile=1/inverse_q,
+            q_profile=1 / inverse_q,
+            inverse_aspect=inverse_aspect,
+            sqrt_inverse_aspect=sqrt_inverse_aspect,
         )
 
     @staticmethod
@@ -1809,7 +1816,7 @@ class SauterBootstrapCurrent(Model):
         rmajor: float,
         zeff: np.ndarray,
         inverse_q: np.ndarray,
-        sqeps: np.ndarray,
+        sqrt_inverse_aspect: np.ndarray,
         tempe: np.ndarray,
         ne: np.ndarray,
     ) -> np.ndarray:
@@ -1826,7 +1833,7 @@ class SauterBootstrapCurrent(Model):
             The effective charge array.
         inverse_q : np.ndarray
             Inverse safety factor profile.
-        sqeps : np.ndarray
+        sqrt_inverse_aspect : np.ndarray
             The square root of the inverse aspect ratio array.
         tempe : np.ndarray
             The electron temperature array.
@@ -1849,7 +1856,7 @@ class SauterBootstrapCurrent(Model):
             * rmajor
             / np.abs(
                 inverse_q[radial_elements - 1]
-                * (sqeps[radial_elements - 1] ** 3)
+                * (sqrt_inverse_aspect[radial_elements - 1] ** 3)
                 * np.sqrt(tempe[radial_elements - 1])
                 * 1.875e7
             )
@@ -1903,7 +1910,7 @@ class SauterBootstrapCurrent(Model):
         radial_elements: np.ndarray,
         rmajor: float,
         inverse_q: np.ndarray,
-        sqeps: np.ndarray,
+        sqrt_inverse_aspect: np.ndarray,
         tempi: np.ndarray,
         amain: np.ndarray,
         zeff: np.ndarray,
@@ -1920,7 +1927,7 @@ class SauterBootstrapCurrent(Model):
             The plasma major radius (m).
         inverse_q : np.ndarray
             Inverse safety factor profile.
-        sqeps : np.ndarray
+        sqrt_inverse_aspect : np.ndarray
             The square root of the inverse aspect ratio profile.
         tempi : np.ndarray
             The ion temperature profile (keV).
@@ -1942,7 +1949,7 @@ class SauterBootstrapCurrent(Model):
             * rmajor
             / (
                 np.abs(inverse_q[radial_elements - 1] + 1.0e-4)
-                * sqeps[radial_elements - 1] ** 3
+                * sqrt_inverse_aspect[radial_elements - 1] ** 3
                 * np.sqrt(tempi[radial_elements - 1] / amain[radial_elements - 1])
             )
         )
@@ -2628,7 +2635,10 @@ class SauterBootstrapCurrent(Model):
     @staticmethod
     @nb.njit(cache=True)
     def _trapped_particle_fraction_sauter(
-        radial_elements: np.ndarray, triang: float, sqeps: np.ndarray, fit: int = 0
+        radial_elements: np.ndarray,
+        triang: float,
+        sqrt_inverse_aspect: np.ndarray,
+        fit: int = 0,
     ) -> np.ndarray:
         """Calculates the trapped particle fraction to be used in the Sauter bootstrap
         current scaling.
@@ -2639,8 +2649,8 @@ class SauterBootstrapCurrent(Model):
             Radial element index in range 1 to nr.
         triang : float
             Plasma triangularity.
-        sqeps : np.ndarray
-            Square root of local aspect ratio.
+        sqrt_inverse_aspect : np.ndarray
+            Square root of the inverse of the local aspect ratio.
         fit : int, optional
             Fit method (0 = ASTRA method, 1 = Sauter 2002, 2 = Sauter 2016).
             Default is 0.
@@ -2679,7 +2689,7 @@ class SauterBootstrapCurrent(Model):
         ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2016.04.033.
         """
         # Prevent first element from being zero
-        sqeps_reduced = sqeps[radial_elements - 1]
+        sqeps_reduced = sqrt_inverse_aspect[radial_elements - 1]
         eps = sqeps_reduced**2
 
         if fit == 0:

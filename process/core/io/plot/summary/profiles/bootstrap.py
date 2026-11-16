@@ -41,7 +41,7 @@ def plot_sauter_bootstrap_summary(fig: plt.Figure, mfile: MFile, scan: int):
         b_plasma_toroidal_on_axis=mfile.get("b_plasma_toroidal_on_axis"),
         plasma_current=mfile.get("plasma_current"),
     )
-    j_profile = fig.add_subplot(221)
+    j_profile = fig.add_subplot(321)
 
     j_profile.plot(
         np.linspace(0, 1, len(rho) - 2),
@@ -57,7 +57,7 @@ def plot_sauter_bootstrap_summary(fig: plt.Figure, mfile: MFile, scan: int):
         label="$f_{trapped}$",
     )
 
-    axes_coefficients = fig.add_subplot(223)
+    axes_coefficients = fig.add_subplot(325)
     axes_coefficients.plot(
         np.linspace(0, 1, len(rho) - 2),
         sauter_params.l31_coefficient,
@@ -95,6 +95,25 @@ def plot_sauter_bootstrap_summary(fig: plt.Figure, mfile: MFile, scan: int):
         sauter_params.normalised_ion_collisionality,
         label="$\\nu_{i}^*$",
     )
+
+    axes_aspect_ratio = fig.add_subplot(323)
+    axes_aspect_ratio.plot(
+        rho,
+        sauter_params.inverse_aspect,
+        label="$\\epsilon$",
+    )
+    axes_aspect_ratio.set_xlabel("Normalized Radius")
+    axes_aspect_ratio.set_ylabel("Inverse Aspect Ratio")
+    axes_aspect_ratio.grid(True)
+    axes_aspect_ratio.legend()
+
+    axes_aspect_ratio.plot(
+        rho,
+        sauter_params.sqrt_inverse_aspect,
+        label="$\\sqrt{\\epsilon}$",
+    )
+    axes_aspect_ratio.legend()
+
     axes_collisionality.set_xlabel("Normalized Radius")
     axes_collisionality.set_ylabel("Collisionality")
     axes_collisionality.grid(True)
