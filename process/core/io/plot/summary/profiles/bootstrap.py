@@ -54,5 +54,44 @@ def plot_sauter_bootstrap_summary(fig: plt.Figure, mfile: MFile, scan: int):
     axes_trapped.plot(
         np.linspace(0, 1, len(rho) - 2),
         sauter_params.f_trapped_particles,
-        label="Trapped Fraction",
+        label="$f_{trapped}$",
     )
+
+    axes_coefficients = fig.add_subplot(223)
+    axes_coefficients.plot(
+        np.linspace(0, 1, len(rho) - 2),
+        sauter_params.l31_coefficient,
+        label=r"$\mathcal{L}_{31}$ Coefficient",
+    )
+    axes_coefficients.plot(
+        np.linspace(0, 1, len(rho) - 2),
+        sauter_params.l32_coefficient,
+        label=r"$\mathcal{L}_{32}$ Coefficient",
+    )
+    axes_coefficients.plot(
+        np.linspace(0, 1, len(rho) - 2),
+        sauter_params.l34_coefficient,
+        label=r"$\mathcal{L}_{34}$ Coefficient",
+    )
+    axes_coefficients.plot(
+        np.linspace(0, 1, len(rho) - 2),
+        sauter_params.alpha,
+        label="$\\alpha$ Coefficient",
+    )
+    axes_coefficients.plot(
+        np.linspace(0, 1, len(rho) - 2),
+        sauter_params.alpha_0,
+        label="$\\alpha_0$ Coefficient",
+    )
+    axes_coefficients.legend()
+    axes_coefficients.set_xlabel("Normalized Radius")
+    axes_coefficients.set_ylabel("Coefficient Value")
+    axes_coefficients.grid(True)
+    j_profile.set_xlabel("Normalized Radius")
+    j_profile.set_ylabel("Bootstrap Current")
+    j_profile.grid(True)
+    j_profile.legend()
+    axes_trapped.set_xlabel("Normalized Radius")
+    axes_trapped.set_ylabel("Trapped Fraction")
+    axes_trapped.grid(True)
+    axes_trapped.legend()
