@@ -1,0 +1,14 @@
+name: Tasks
+description: Report a mainenance task to help us improve PROCESS.
+type: "Task"
+body:
+  - type: markdown
+    attributes:
+      value: Please consider whether this issue will be better suited to the Discussion section of this GitHub repository.
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe your issue.
+    validations:
+      required: true
