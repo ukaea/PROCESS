@@ -102,6 +102,13 @@ class PlasmaCurrentModel(IntEnum):
         """The full name of the plasma current model."""
         return self._full_name_
 
+    @classmethod
+    def _missing_(cls, value):
+        try:
+            return cls[value]
+        except KeyError:
+            raise ValueError(f"Illegal value of i_plasma_current: {value}") from None
+
 
 @unique
 class OutbordSOLPowerDecayLengthModel(IntEnum):
@@ -480,6 +487,13 @@ class ConfinementTimeModel(IntEnum):
         obj.mode = mode
         return obj
 
+    @classmethod
+    def _missing_(cls, value):
+        try:
+            return cls[value]
+        except KeyError:
+            raise ValueError(f"Illegal value for i_confinement_time: {value}") from None
+
 
 @unique
 class ConfinementRadiationLossModel(IntEnum):
@@ -508,6 +522,13 @@ class ConfinementRadiationLossModel(IntEnum):
         obj._value_ = value
         obj.description = description
         return obj
+
+    @classmethod
+    def _missing_(cls, value):
+        try:
+            return cls[value]
+        except KeyError:
+            raise ValueError(f"Illegal value of i_rad_loss: {value}") from None
 
 
 N_CONFINEMENT_SCALINGS = len(ConfinementTimeModel)

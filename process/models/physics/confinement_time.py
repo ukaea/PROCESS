@@ -180,26 +180,18 @@ class PlasmaConfinementTime(Model):
         p_plasma_loss_no_radiation_mw = max(p_plasma_heating_mw, 1.0e-3)
 
         # Include the radiation as a loss term based on radiation model
-        try:  # noqa: PLW0717
-            model = ConfinementRadiationLossModel(int(self.data.physics.i_rad_loss))
-
-            match model:
-                case ConfinementRadiationLossModel.FULL_RADIATION:
-                    p_plasma_loss_mw = p_plasma_loss_full_radiation_mw
-                case ConfinementRadiationLossModel.REDUCED_CORE_ONLY:
-                    p_plasma_loss_mw = p_plasma_loss_core_radiation_mw
-                case ConfinementRadiationLossModel.NO_RADIATION:
-                    p_plasma_loss_mw = p_plasma_loss_no_radiation_mw
-                case _:
-                    raise ProcessValueError(
-                        "Illegal value for i_rad_loss",
-                        i_rad_loss=self.data.physics.i_rad_loss,
-                    )
-        except ValueError as e:
-            raise ProcessValueError(
-                "Illegal value of i_rad_loss",
-                i_rad_loss=self.data.physics.i_rad_loss,
-            ) from e
+        match ConfinementRadiationLossModel(int(self.data.physics.i_rad_loss)):
+            case ConfinementRadiationLossModel.FULL_RADIATION:
+                p_plasma_loss_mw = p_plasma_loss_full_radiation_mw
+            case ConfinementRadiationLossModel.REDUCED_CORE_ONLY:
+                p_plasma_loss_mw = p_plasma_loss_core_radiation_mw
+            case ConfinementRadiationLossModel.NO_RADIATION:
+                p_plasma_loss_mw = p_plasma_loss_no_radiation_mw
+            case _:
+                raise ProcessValueError(
+                    "Illegal value for i_rad_loss",
+                    i_rad_loss=self.data.physics.i_rad_loss,
+                )
 
         # ========================================================================
 
@@ -226,17 +218,8 @@ class PlasmaConfinementTime(Model):
         )
 
         # Electron energy confinement times
-
-        try:
-            model = ConfinementTimeModel(i_confinement_time)
-        except ValueError as e:
-            raise ProcessValueError(
-                "Illegal value for i_confinement_time",
-                i_confinement_time=i_confinement_time,
-            ) from e
-
         def scaling_time(p_plasma_loss_mw: float) -> float:
-            match model:
+            match ConfinementTimeModel(i_confinement_time):
                 # ====================================================================
 
                 # User defined confinement time
