@@ -6,7 +6,9 @@ import numpy as np
 import pytest
 
 from process.core import constants
+from process.data_structure.impurity_radiation_variables import IonSpecies
 from process.data_structure.physics_variables import PlasmaIgnitionModel
+from process.models.physics import impurity_radiation
 from process.models.physics.impurity_radiation import initialise_imprad
 from process.models.physics.physics import (
     DetailedPhysics,
@@ -28,6 +30,47 @@ def physics(process_models):
     :rtype: process.physics.Physics
     """
     return process_models.physics
+
+
+def test_impurity_particle_counts_and_output(physics, monkeypatch):
+    """Particle counts and output use each impurity's density and slotted field."""
+    data = physics.data
+    data.physics.nd_plasma_electrons_vol_avg = 7.5e19
+    data.physics.temp_plasma_electron_vol_avg_kev = 12.0
+    data.physics.vol_plasma = 123.0
+    data.physics.n_plasma_profile_elements = 0
+    for species in IonSpecies:
+        if species.is_impurity:
+            data.impurity_radiation.f_nd_impurity_electron_array[species.index] = (
+                species.index * 1.0e-5
+            )
+    monkeypatch.setattr(
+        impurity_radiation,
+        "calculate_average_charge_at_temp",
+        lambda *args, **kwargs: np.array([1.0]),
+    )
+
+    physics.plasma_composition()
+
+    output = {}
+    for name in ("oblnkl", "ocmmnt", "oheadr", "osubhd"):
+        monkeypatch.setattr(
+            f"process.models.physics.physics.po.{name}", lambda *args: None
+        )
+    monkeypatch.setattr(
+        "process.models.physics.physics.po.ovarre",
+        lambda outfile, description, variable, value, *args: output.update({
+            variable: value
+        }),
+    )
+    physics.output_temperature_density_profile_info()
+
+    for species in IonSpecies:
+        if species.is_impurity:
+            field = f"n_plasma_{species.full_name}_ions"
+            expected = species.index * 1.0e-5 * 7.5e19 * 123.0
+            assert getattr(data.physics, field) == pytest.approx(expected)
+            assert output[f"({field})"] == pytest.approx(expected)
 
 
 def test_calculate_poloidal_beta():
@@ -1559,7 +1602,18 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
             physics.data.physics, field, getattr(plasmacompositionparam, field)
         )
 
+    monkeypatch.setattr(physics.data.physics, "vol_plasma", 123.0)
     physics.plasma_composition()
+
+    for species in IonSpecies:
+        if species.is_impurity:
+            assert getattr(
+                physics.data.physics, f"n_plasma_{species.full_name}_ions"
+            ) == pytest.approx(
+                plasmacompositionparam.expected_impurity_arr_frac[species.index]
+                * plasmacompositionparam.nd_plasma_electrons_vol_avg
+                * 123.0
+            )
 
     assert physics.data.impurity_radiation.f_nd_impurity_electron_array == pytest.approx(
         plasmacompositionparam.expected_impurity_arr_frac

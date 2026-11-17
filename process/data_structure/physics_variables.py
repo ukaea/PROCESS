@@ -593,28 +593,124 @@ class PhysicsData:
     first_call: int = 1
 
     m_beam_amu: float = 0.0
-    """beam ion mass (amu)"""
+    """beam ion mass [amu]"""
 
     m_fuel_amu: float = 0.0
-    """average mass of fuel portion of ions (amu)"""
+    """average mass of fuel portion of ions [amu]"""
 
     m_ions_total_amu: float = 0.0
-    """average mass of all ions (amu)"""
+    """average mass of all ions [amu]"""
 
     m_plasma_fuel_ions: float = 0.0
-    """Mass of the plasma fuel ions (kg)"""
+    """Mass of the plasma fuel ions [kg]"""
 
     m_plasma_ions_total: float = 0.0
-    """Mass of all ions in plasma (kg)"""
+    """Mass of all ions in plasma [kg]"""
 
     m_plasma_alpha: float = 0.0
-    """Mass of the alpha particles in the plasma (kg)"""
+    """Mass of the alpha particles in the plasma [kg]"""
 
     m_plasma_electron: float = 0.0
-    """Mass of the electrons in the plasma (kg)"""
+    """Mass of the electrons in the plasma [kg]"""
+
+    m_plasma_deuterons: float = 0.0
+    """Mass of the deuterons in the plasma [kg]"""
+
+    m_plasma_tritons: float = 0.0
+    """Mass of the tritons in the plasma [kg]"""
+
+    m_plasma_helions: float = 0.0
+    """Mass of the helions in the plasma [kg]"""
+
+    m_plasma_beryllium: float = 0.0
+    """Mass of the beryllium ions in the plasma [kg]"""
+
+    m_plasma_carbon: float = 0.0
+    """Mass of the carbon ions in the plasma [kg]"""
+
+    m_plasma_oxygen: float = 0.0
+    """Mass of the oxygen ions in the plasma [kg]"""
+
+    m_plasma_nitrogen: float = 0.0
+    """Mass of the nitrogen ions in the plasma [kg]"""
+
+    m_plasma_neon: float = 0.0
+    """Mass of the neon ions in the plasma [kg]"""
+
+    m_plasma_argon: float = 0.0
+    """Mass of the argon ions in the plasma [kg]"""
+
+    m_plasma_silicon: float = 0.0
+    """Mass of the silicon ions in the plasma [kg]"""
+
+    m_plasma_iron: float = 0.0
+    """Mass of the iron ions in the plasma [kg]"""
+
+    m_plasma_nickel: float = 0.0
+    """Mass of the nickel ions in the plasma [kg]"""
+
+    m_plasma_krypton: float = 0.0
+    """Mass of the krypton ions in the plasma [kg]"""
+
+    m_plasma_xenon: float = 0.0
+    """Mass of the xenon ions in the plasma [kg]"""
+
+    m_plasma_tungsten: float = 0.0
+    """Mass of the tungsten ions in the plasma [kg]"""
 
     m_plasma: float = 0.0
-    """Total mass of the plasma (kg)"""
+    """Total mass of the plasma [kg]"""
+
+    n_plasma_electrons: int = 0
+    """Number of electrons in the plasma"""
+
+    n_plasma_deuterons: int = 0
+    """Number of deuterons in the plasma"""
+
+    n_plasma_tritons: int = 0
+    """Number of tritons in the plasma"""
+
+    n_plasma_helions: int = 0
+    """Number of helions in the plasma"""
+
+    n_plasma_alpha_particles: int = 0
+    """Number of alpha particles in the plasma"""
+
+    n_plasma_beryllium_ions: int = 0
+    """Number of beryllium ions in the plasma"""
+
+    n_plasma_carbon_ions: int = 0
+    """Number of carbon ions in the plasma"""
+
+    n_plasma_oxygen_ions: int = 0
+    """Number of oxygen ions in the plasma"""
+
+    n_plasma_nitrogen_ions: int = 0
+    """Number of nitrogen ions in the plasma"""
+
+    n_plasma_neon_ions: int = 0
+    """Number of neon ions in the plasma"""
+
+    n_plasma_argon_ions: int = 0
+    """Number of argon ions in the plasma"""
+
+    n_plasma_silicon_ions: int = 0
+    """Number of silicon ions in the plasma"""
+
+    n_plasma_iron_ions: int = 0
+    """Number of iron ions in the plasma"""
+
+    n_plasma_nickel_ions: int = 0
+    """Number of nickel ions in the plasma"""
+
+    n_plasma_krypton_ions: int = 0
+    """Number of krypton ions in the plasma"""
+
+    n_plasma_xenon_ions: int = 0
+    """Number of xenon ions in the plasma"""
+
+    n_plasma_tungsten_ions: int = 0
+    """Number of tungsten ions in the plasma"""
 
     alphaj: float = 1.0
     """Plasma current profile index (⍺ⱼ)"""  # noqa: RUF001
