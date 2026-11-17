@@ -1,0 +1,21 @@
+name: Feature request
+description: Suggest an idea for this project
+type: "Feature"
+body:
+  - type: markdown
+    attributes:
+      value: Please see the CONTRIBUTING.MD guide before creating feature requests.
+  - type: textarea
+    id: description
+    attributes:
+      label: Description of issue / requirement to address
+      description: A clear and concise description of what the problem is. Please attach any references to papers for model introduction/change requests.
+    validations:
+      required: true
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Proposed solution
+      description: A clear and concise description of what you want to happen.
+    validations:
+      required: false

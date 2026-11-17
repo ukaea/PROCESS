@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: PROCESS Discussions
+    url: https://github.com/ukaea/PROCESS/discussions
+    about: For more abstract communications
