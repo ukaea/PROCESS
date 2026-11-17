@@ -168,36 +168,6 @@ class PlasmaConfinementTime(Model):
         if PlasmaIgnitionModel(i_plasma_ignited) == PlasmaIgnitionModel.NON_IGNITED:
             p_plasma_heating_mw += p_hcd_injected_total_mw
 
-        p_plasma_loss_mw = p_plasma_heating_mw
-
-        # Include the radiation as a loss term based on radiation model
-        try:  # noqa: PLW0717
-            model = ConfinementRadiationLossModel(int(self.data.physics.i_rad_loss))
-
-            match model:
-                case ConfinementRadiationLossModel.FULL_RADIATION:
-                    p_plasma_loss_mw -= (
-                        self.data.physics.pden_plasma_rad_vol_avg_mw * vol_plasma
-                    )
-                case ConfinementRadiationLossModel.REDUCED_CORE_ONLY:
-                    p_plasma_loss_mw -= (
-                        pden_plasma_core_rad_reduced_vol_avg_mw * vol_plasma
-                    )
-                case ConfinementRadiationLossModel.NO_RADIATION:
-                    pass
-                case _:
-                    raise ProcessValueError(
-                        "Illegal value for i_rad_loss",
-                        i_rad_loss=self.data.physics.i_rad_loss,
-                    )
-        except ValueError as e:
-            raise ProcessValueError(
-                "Illegal value of i_rad_loss",
-                i_rad_loss=self.data.physics.i_rad_loss,
-            ) from e
-
-        # Ensure heating power is positive (shouldn't be necessary)
-        p_plasma_loss_mw = max(p_plasma_loss_mw, 1.0e-3)
         p_plasma_loss_full_radiation_mw = max(
             p_plasma_heating_mw
             - self.data.physics.pden_plasma_rad_vol_avg_mw * vol_plasma,
@@ -208,6 +178,28 @@ class PlasmaConfinementTime(Model):
             1.0e-3,
         )
         p_plasma_loss_no_radiation_mw = max(p_plasma_heating_mw, 1.0e-3)
+
+        # Include the radiation as a loss term based on radiation model
+        try:  # noqa: PLW0717
+            model = ConfinementRadiationLossModel(int(self.data.physics.i_rad_loss))
+
+            match model:
+                case ConfinementRadiationLossModel.FULL_RADIATION:
+                    p_plasma_loss_mw = p_plasma_loss_full_radiation_mw
+                case ConfinementRadiationLossModel.REDUCED_CORE_ONLY:
+                    p_plasma_loss_mw = p_plasma_loss_core_radiation_mw
+                case ConfinementRadiationLossModel.NO_RADIATION:
+                    p_plasma_loss_mw = p_plasma_loss_no_radiation_mw
+                case _:
+                    raise ProcessValueError(
+                        "Illegal value for i_rad_loss",
+                        i_rad_loss=self.data.physics.i_rad_loss,
+                    )
+        except ValueError as e:
+            raise ProcessValueError(
+                "Illegal value of i_rad_loss",
+                i_rad_loss=self.data.physics.i_rad_loss,
+            ) from e
 
         # ========================================================================
 
