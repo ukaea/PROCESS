@@ -600,7 +600,8 @@ class Power(Model):
             self.data.physics.p_plasma_ohmic_mw / self.data.pf_coil.etapsu
         )
 
-        # Total mean PF/CS electrical demand
+        # Total mean PF/CS electrical demand, including inductive ohmic
+        # heating power, power-supply losses, and busbar losses.
         self.data.pf_coil.p_pf_electric_supplies_mw = wall_plug_ohmicmw + pfpowermw
 
         #  Output Section
