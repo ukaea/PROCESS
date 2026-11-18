@@ -118,8 +118,6 @@ def plot_current_drive_info(axis: plt.Axes, mfile: MFile, scan: int):
     pthresh = mfile.get(pthresh_name, scan=scan)
     flh = p_plasma_separatrix_mw / pthresh
 
-    hstar = mfile.get("hstar", scan=scan)
-
     data = [
         (pinjie, "Steady state auxiliary power", "MW"),
         ("p_hcd_primary_extra_heat_mw", "Power for heating only", "MW"),
@@ -134,7 +132,6 @@ def plot_current_drive_info(axis: plt.Axes, mfile: MFile, scan: int):
             r"$\times 10^{-20}$ MW m$^{2}$",
         ),
         (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
-        (hstar, "H* (non-rad. corr.)", ""),
     ]
     # Optional override based on condition
     field_overrides = {
