@@ -40,22 +40,58 @@ __all__ = ["plot_detailed_plasma_parameters", "plot_main_plasma_information"]
 
 
 def plasma_main_page(
-    axis,
-    fig,
-    rmajor,
-    rminor,
-    triang,
-    radius_plasma_core_norm,
-    kappa,
-    i_single_null,
-    plasma_square,
-    big_q_plasma,
-    p_fw_alpha_mw,
-    f_p_alpha_plasma_deposited,
-    p_neutron_total_mw,
-    pflux_plasma_surface_neutron_avg_mw,
+    axis: plt.Axes,
+    fig: plt.Figure,
+    rmajor: float,
+    rminor: float,
+    triang: float,
+    radius_plasma_core_norm: float,
+    kappa: float,
+    i_single_null: int,
+    plasma_square: float,
+    big_q_plasma: float,
+    p_fw_alpha_mw: float,
+    f_p_alpha_plasma_deposited: float,
+    p_neutron_total_mw: float,
+    pflux_plasma_surface_neutron_avg_mw: float,
 ):
-    """Plot plasma from main page"""
+    """Plots an annotated plasma cross-section for the main page.
+
+    Draws the plasma shape and labels its major radius, minor radius, elongation,
+    triangularity, and core region radius, along with the plasma fusion gain,
+    alpha particle power, and neutron power and flux information.
+
+    Parameters
+    ----------
+    axis : plt.Axes
+        The matplotlib axis object to plot on.
+    fig : plt.Figure
+        The matplotlib figure object, used to place annotations in figure coordinates.
+    rmajor : float
+        The plasma major radius (m).
+    rminor : float
+        The plasma minor radius (m).
+    triang : float
+        The plasma triangularity.
+    radius_plasma_core_norm : float
+        The normalised radius defining the plasma core region.
+    kappa : float
+        The plasma elongation.
+    i_single_null : int
+        Switch for single null / double null plasma (0: double null, 1: single null).
+    plasma_square : float
+        The plasma squareness.
+    big_q_plasma : float
+        The plasma fusion gain (Q).
+    p_fw_alpha_mw : float
+        The alpha power escaping the plasma and reaching the first wall (MW).
+    f_p_alpha_plasma_deposited : float
+        The fraction of the alpha power deposited in the plasma.
+    p_neutron_total_mw : float
+        The total neutron fusion power from plasma and beams (MW).
+    pflux_plasma_surface_neutron_avg_mw : float
+        The average neutron power flux at the plasma surface (MW/m²).
+    """
     white_box = box_style("white", linewidth=None)
     pg = plasma_geometry(
         rmajor=rmajor,
