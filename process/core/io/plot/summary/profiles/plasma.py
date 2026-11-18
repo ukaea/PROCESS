@@ -849,15 +849,17 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, mfile: MFile, scan: int):
     textstr_dt = (
         f"Total fusion power: {mfile.get('p_dt_total_mw', scan=scan):,.2f}"
         " MW\nPlasma fusion power:"
-        f" {mfile.get('p_plasma_dt_mw', scan=scan):,.2f} MW\nVolume-averaged"
-        " fusion power density: plasma:"
+        f" {mfile.get('p_plasma_dt_mw', scan=scan):,.2f} MW\n"
+        f"Volume-averaged thermal reactivity, $\\langle\\sigma v \\rangle_{{V}}$: "
+        f"{mfile.get('sigma_v_plasma_dt_vol_avg', scan=scan):.3e} MW/m³\n"
+        f"Volume-averaged fusion power density: plasma:"
         f" {mfile.get('pden_plasma_dt_vol_avg_mw', scan=scan):,.3f}"
         " MW/m³\nBeam fusion power:"
         f" {mfile.get('p_beam_dt_mw', scan=scan):,.2f} MW"
     )
 
-    add_panel(axis, 0.05, 0.785, 0.42, 0.07, textstr_dt, box_style("lightyellow"))
-    add_symbol(axis, "$\\text{D - T}$", 0.38, 0.76)
+    add_panel(axis, 0.05, 0.785, 0.42, 0.08, textstr_dt, box_style("lightyellow"))
+    add_symbol(axis, "$\\text{D - T}$", 0.39, 0.765)
 
     # =================================================
 
@@ -869,18 +871,19 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, mfile: MFile, scan: int):
         f" {mfile.get('f_dd_branching_trit', scan=scan):.4f}"
     )
 
-    add_panel(axis, 0.05, 0.7, 0.42, 0.07, textstr_dd, box_style("lightyellow"))
-    add_symbol(axis, "$\\text{D - D}$", 0.38, 0.68)
+    add_panel(axis, 0.05, 0.69, 0.42, 0.06, textstr_dd, box_style("lightyellow"))
+    add_symbol(axis, "$\\text{D - D}$", 0.38, 0.67)
 
     # =================================================
 
     textstr_dhe3 = (
         f"Total fusion power: {mfile.get('p_dhe3_total_mw', scan=scan):,.2f}"
-        " MW\n\nVolume-averaged total power density:"
+        " MW\n"
+        "Volume-averaged total power density:"
         f" {mfile.get('pden_dhe3_total_vol_avg_mw', scan=scan):,.3e} MW/m³\n\n"
     )
 
-    add_panel(axis, 0.05, 0.61, 0.42, 0.080, textstr_dhe3, box_style("lightyellow"))
+    add_panel(axis, 0.05, 0.61, 0.42, 0.06, textstr_dhe3, box_style("lightyellow"))
     add_symbol(axis, "$\\text{D - 3He}$", 0.36, 0.59)
 
     # =================================================
