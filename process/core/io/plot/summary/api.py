@@ -339,26 +339,22 @@ def main_plot(
     )
     fusion_rate_density_page = _add_page("fusion_rate_density")
     fusion_rate_density_axes = fusion_rate_density_page.add_subplot(222)
-    fusion_rate_density_axes.set_position([0.55, 0.35, 0.385, 0.6])
-    plot_fusion_rate_density_profiles(
-        fusion_rate_density_axes, m_file, scan
+    fusion_rate_density_axes.set_position([0.55, 0.31, 0.385, 0.64])
+    plot_fusion_rate_density_profiles(fusion_rate_density_axes, m_file, scan)
+
+    reactivity_axes = pages["fusion_rate_density"].add_subplot(
+        224, sharex=fusion_rate_density_axes
     )
-    
-    reactivity_axes = pages["fusion_rate_density"].add_subplot(224, sharex=fusion_rate_density_axes)
-    reactivity_axes.set_position([0.55, 0.075, 0.385, 0.225])
+    reactivity_axes.set_position([0.55, 0.075, 0.385, 0.18])
     plot_plasma_fusion_reactivity_profiles(reactivity_axes, m_file, scan)
 
     fusion_rate_page = _add_page("fusion_rate")
-    fusion_rate_axes = fusion_rate_page.add_subplot(222)
-    fusion_rate_axes.set_position([0.55, 0.35, 0.385, 0.6])
     plot_fusion_rate_profiles(
-        fusion_rate_axes,
+        fusion_rate_page.add_subplot(121),
         m_file,
         scan,
         zoom_axis=fusion_rate_page.add_subplot(122),
     )
-
-    
 
     _add_page("rx_1_2"), _add_page("rx_3_4")
     if m_file.get("i_plasma_shape", scan=scan) == PlasmaShapeModelType.SAUTER:

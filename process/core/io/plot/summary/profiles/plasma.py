@@ -799,7 +799,6 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, mfile: MFile, scan: int):
 
     # =================================================
 
-    axis.set_xlabel("$\\rho \\ [r/a]$")
     axis.set_ylabel("Fusion Rate Density [reactions/m³/sec]")
     axis.legend(
         loc="lower left",
@@ -1107,6 +1106,7 @@ def plot_plasma_fusion_reactivity_profiles(
         scan to read from MFILE
 
     """
+    sigma_v_plasma_dt_vol_avg = m_file.get("sigma_v_plasma_dt_vol_avg", scan=scan)
     dt = BoschHaleConstants(**REACTION_CONSTANTS_DT)
     rho, _, temp_electron_kev = profiles_with_pedestal(mfile=m_file, scan=scan)
     # Placeholder for actual plotting logic
@@ -1115,13 +1115,40 @@ def plot_plasma_fusion_reactivity_profiles(
         ion_temperature_profile=temp_electron_kev,
         reaction_constants=dt,
     )
-    axis.plot(rho, sigma_v_profile)
+    axis.plot(rho, sigma_v_profile, color="tab:red", label="D-T Reactivity")
+    axis.axhline(
+        y=sigma_v_plasma_dt_vol_avg,
+        color="black",
+        linestyle="--",
+        linewidth=0.9,
+        label="Volume-Averaged D-T Reactivity",
+    )
+    profile_positions = np.linspace(0, 1, len(sigma_v_profile))
+    profile_rates = np.asarray(sigma_v_profile)
+    average_position = profile_positions[
+        np.nanargmin(np.abs(profile_rates - sigma_v_plasma_dt_vol_avg))
+    ]
+    axis.axvline(
+        average_position,
+        color="black",
+        linestyle="--",
+        linewidth=0.9,
+    )
 
     axis.set_title("Plasma Fusion Reactivity Profiles")
-    axis.set_xlabel("Normalized Radius [$\\rho$]")
+    axis.set_xlabel("$\\rho \\ [r/a]$")
     axis.grid(True)
     axis.minorticks_on()
-    axis.set_ylabel("Plasma Fusion Reactivity $(\\langle \\sigma v \\rangle)$ [m^3/s]")
+    axis.set_ylabel(
+        "Thermal Fusion Reactivity $(\\langle \\sigma v \\rangle)$ [m$^3$/s]"
+    )
+    axis.legend(
+        loc="upper right",
+        edgecolor="black",
+        facecolor="white",
+        framealpha=1.0,
+        frameon=True,
+    )
 
 
 def plot_plasma_pressure_profiles(axis: plt.Axes, mfile: MFile, scan: int):
