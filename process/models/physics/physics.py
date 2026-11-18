@@ -1969,8 +1969,7 @@ class Physics(Model):
             + self.data.physics.p_fw_alpha_mw
         )
         p_plasma_out = (
-            self.data.physics.p_electron_transport_loss_mw
-            + self.data.physics.p_ion_transport_loss_mw
+            self.data.physics.p_plasma_separatrix_mw
             + p_loss_mw
             + self.data.physics.p_plasma_rad_mw
         )
