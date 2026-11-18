@@ -342,6 +342,11 @@ class PlasmaCurrent(Model):
                 fq = self.calculate_current_coefficient_fiesta(
                     eps=eps, kappa=kappa, triang=triang
                 )
+            case _:
+                raise ProcessValueError(
+                "Illegal value of i_plasma_current",
+                i_plasma_current=self.data.physics.i_plasma_current,
+            )
 
         # Main plasma current calculation using the fq value from the different settings
         if model != PlasmaCurrentModel.PENG_DIVERTOR_SCALING:
