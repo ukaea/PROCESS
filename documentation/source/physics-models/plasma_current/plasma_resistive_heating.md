@@ -38,6 +38,11 @@ $$
 
 where $f_{\text{ind}}$ is the fraction of plasma current driven by inductive means.
 
+In PROCESS, Ohmic heating is supplied inductively through the poloidal field (PF) coil and central solenoid (CS) system. 
+The corresponding electrical power requirement is included in the PF power supplies, accounting for the power-supply efficiency. 
+For fully non-inductive operation, $f_{\text{ind}} = 0$ and the Ohmic heating contribution vanishes. 
+Power supplied by non-inductive heating and current drive systems is accounted for separately.
+
 Likewise, the ohmic heating per unit volume simply as:
 
 $$

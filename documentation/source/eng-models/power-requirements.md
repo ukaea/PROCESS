@@ -22,6 +22,20 @@ The main power flow is controlled by `power.py`. The main class `Power` controls
 
 #### PF power | `pfpwr()`
 
+The PF electrical power requirement includes the power needed to supply inductive Ohmic heating to the plasma. Accounting for the power-supply efficiency, the electrical input associated with Ohmic heating is
+
+$$
+P_{\text{OH,electric}} = \frac{P_{\text{OH}}}{\eta_{\text{psu}}}
+$$
+
+where $P_{\mathrm{OH}}$ is the Ohmic heating power delivered to the plasma (`p_plasma_ohmic_mw`) and $\eta_{\mathrm{psu}}$ is the assumed efficiency of the PF power supply (`etapsu`). The power-supply losses are therefore
+
+$$
+P_{\text{OH,loss}} = P_{\text{OH}} \left( \frac{1}{\eta_{\text{psu}}} - 1 \right)
+$$
+
+The full electrical input is included in the PF electrical demand (`p_pf_electric_supplies_mw`), while the Ohmic power delivered to the plasma (`p_plasma_ohmic_mw`) is subtracted from the secondary heat calculation (`p_plant_secondary_heat_mw`). Only the associated power-supply losses contribute to secondary heat.
+
 #### PF coil power loss model – equations and derivation
 
 PF coil currents are defined at discrete pulse times $t_0 \ldots t_5$.  
