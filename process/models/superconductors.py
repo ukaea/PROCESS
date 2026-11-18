@@ -48,10 +48,10 @@ class SuperconductorType(IntEnum):
 class SuperconductorMaterial(IntEnum):
     """Enumeration of superconductor materials."""
 
-    NB3SN = (1, SuperconductorType.LOW_TEMPERATURE, 8.7e3, "Nb₃Sn")
-    NBTI = (2, SuperconductorType.LOW_TEMPERATURE, 6.45e3, "NbTi")
-    BI2212 = (3, SuperconductorType.HIGH_TEMPERATURE, 6.3e3, "Bi-2212")
-    REBCO = (4, SuperconductorType.HIGH_TEMPERATURE, 6.35e3, "REBCO")
+    NB3SN = (1, SuperconductorType.LOW_TEMPERATURE, 6080.0, "Nb₃Sn")
+    NBTI = (2, SuperconductorType.LOW_TEMPERATURE, 6070.0, "NbTi")
+    BI2212 = (3, SuperconductorType.HIGH_TEMPERATURE, 6080.0, "Bi-2212")
+    REBCO = (4, SuperconductorType.HIGH_TEMPERATURE, 8500.0, "REBCO")
 
     def __new__(
         cls, value: int, sc_type: SuperconductorType, density: float, material_name: str
