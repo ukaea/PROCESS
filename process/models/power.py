@@ -594,7 +594,8 @@ class Power(Model):
                 * abs(self.data.pf_coil.c_pf_coil_turn_peak_input[idx_circuit])
                 / self.data.pf_power.pfckts
             )
-        # PF wall-plug power required for ohmic heating (MW)
+        # Account for the full electrical power required to supply inductive
+        # ohmic heating to the plasma, including power-supply losses.
         wall_plug_ohmicmw = (
             self.data.physics.p_plasma_ohmic_mw / self.data.pf_coil.etapsu
         )
