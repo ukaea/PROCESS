@@ -291,6 +291,9 @@ def load_iteration_variables(data):
         variable_index = data.numerics.ixc[i]
         iteration_variable = ITERATION_VARIABLES[variable_index]
 
+        # use ... as the default return value because
+        # None might be a valid return from Fortran?
+
         module = (
             getattr(data, iteration_variable.module)
             if isinstance(iteration_variable.module, str)
