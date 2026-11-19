@@ -10,7 +10,7 @@ import socket
 import subprocess  # noqa: S404
 from dataclasses import dataclass, fields
 from pathlib import Path
-from typing import TYPE_CHECKING, get_type_hints
+from typing import get_type_hints
 
 import numpy as np
 
@@ -70,8 +70,6 @@ from process.data_structure.water_usage_variables import WaterUseData  # noqa: T
 from process.models.stellarator.initialization import st_init
 
 logger = logging.getLogger(__name__)
-if TYPE_CHECKING:
-    from process.core.data_structure.base import DataStructure
 
 
 initialise_later = object()
