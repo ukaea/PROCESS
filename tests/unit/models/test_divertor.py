@@ -1,4 +1,4 @@
-"""Unit tests for divertor.f90 subroutines/functions"""
+"""Unit tests for divertor.py module."""
 
 import pytest
 
