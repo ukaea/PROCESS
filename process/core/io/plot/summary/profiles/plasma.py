@@ -17,6 +17,11 @@ from process.core.io.plot.summary.profiles.misc import (
 from process.data_structure.impurity_radiation_variables import (
     IonSpecies,
 )
+from process.models.physics.fusion_reactions import (
+    REACTION_CONSTANTS_DT,
+    BoschHaleConstants,
+    bosch_hale_reactivity,
+)
 from process.models.physics.profiles import (
     PlasmaProfileShapeType,
     calculate_profile_shell_contributions,
@@ -794,7 +799,6 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, mfile: MFile, scan: int):
 
     # =================================================
 
-    axis.set_xlabel("$\\rho \\ [r/a]$")
     axis.set_ylabel("Fusion Rate Density [reactions/m³/sec]")
     axis.legend(
         loc="lower left",
@@ -845,15 +849,17 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, mfile: MFile, scan: int):
     textstr_dt = (
         f"Total fusion power: {mfile.get('p_dt_total_mw', scan=scan):,.2f}"
         " MW\nPlasma fusion power:"
-        f" {mfile.get('p_plasma_dt_mw', scan=scan):,.2f} MW\nVolume-averaged"
-        " fusion power density: plasma:"
+        f" {mfile.get('p_plasma_dt_mw', scan=scan):,.2f} MW\n"
+        f"Volume-averaged thermal reactivity, $\\langle\\sigma v \\rangle_{{V}}$: "
+        f"{mfile.get('sigma_v_plasma_dt_vol_avg', scan=scan):.3e} MW/m³\n"
+        f"Volume-averaged fusion power density: plasma:"
         f" {mfile.get('pden_plasma_dt_vol_avg_mw', scan=scan):,.3f}"
         " MW/m³\nBeam fusion power:"
         f" {mfile.get('p_beam_dt_mw', scan=scan):,.2f} MW"
     )
 
-    add_panel(axis, 0.05, 0.785, 0.42, 0.07, textstr_dt, box_style("lightyellow"))
-    add_symbol(axis, "$\\text{D - T}$", 0.38, 0.76)
+    add_panel(axis, 0.05, 0.785, 0.42, 0.08, textstr_dt, box_style("lightyellow"))
+    add_symbol(axis, "$\\text{D - T}$", 0.39, 0.765)
 
     # =================================================
 
@@ -865,18 +871,19 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, mfile: MFile, scan: int):
         f" {mfile.get('f_dd_branching_trit', scan=scan):.4f}"
     )
 
-    add_panel(axis, 0.05, 0.7, 0.42, 0.07, textstr_dd, box_style("lightyellow"))
-    add_symbol(axis, "$\\text{D - D}$", 0.38, 0.68)
+    add_panel(axis, 0.05, 0.69, 0.42, 0.06, textstr_dd, box_style("lightyellow"))
+    add_symbol(axis, "$\\text{D - D}$", 0.38, 0.67)
 
     # =================================================
 
     textstr_dhe3 = (
         f"Total fusion power: {mfile.get('p_dhe3_total_mw', scan=scan):,.2f}"
-        " MW\n\nVolume-averaged total power density:"
+        " MW\n"
+        "Volume-averaged total power density:"
         f" {mfile.get('pden_dhe3_total_vol_avg_mw', scan=scan):,.3e} MW/m³\n\n"
     )
 
-    add_panel(axis, 0.05, 0.61, 0.42, 0.080, textstr_dhe3, box_style("lightyellow"))
+    add_panel(axis, 0.05, 0.61, 0.42, 0.06, textstr_dhe3, box_style("lightyellow"))
     add_symbol(axis, "$\\text{D - 3He}$", 0.36, 0.59)
 
     # =================================================
@@ -1083,6 +1090,68 @@ def plot_fusion_rate_profiles(
         )
         zoom_axis.grid(True, which="both", linestyle="--", alpha=0.5)
         zoom_axis.minorticks_on()
+
+
+def plot_plasma_fusion_reactivity_profiles(
+    axis: plt.Axes,
+    m_file: MFile,
+    scan: int,
+):
+    """Function to plot plasma fusion reactivity profiles.
+
+    Parameters
+    ----------
+    axis : plt.Axes
+        axis object to add plot to
+    m_file : MFile
+        MFILE
+    scan : int
+        scan to read from MFILE
+
+    """
+    sigma_v_plasma_dt_vol_avg = m_file.get("sigma_v_plasma_dt_vol_avg", scan=scan)
+    dt = BoschHaleConstants(**REACTION_CONSTANTS_DT)
+    rho, _, temp_electron_kev = profiles_with_pedestal(mfile=m_file, scan=scan)
+    # Placeholder for actual plotting logic
+    # Velocity-space average reactivity D-T profile [m³/s]
+    sigma_v_profile = bosch_hale_reactivity(
+        ion_temperature_profile=temp_electron_kev,
+        reaction_constants=dt,
+    )
+    axis.plot(rho, sigma_v_profile, color="tab:red", label="D-T Reactivity")
+    axis.axhline(
+        y=sigma_v_plasma_dt_vol_avg,
+        color="black",
+        linestyle="--",
+        linewidth=0.9,
+        label="Volume-Averaged D-T Reactivity",
+    )
+    profile_positions = np.linspace(0, 1, len(sigma_v_profile))
+    profile_rates = np.asarray(sigma_v_profile)
+    average_position = profile_positions[
+        np.nanargmin(np.abs(profile_rates - sigma_v_plasma_dt_vol_avg))
+    ]
+    axis.axvline(
+        average_position,
+        color="black",
+        linestyle="--",
+        linewidth=0.9,
+    )
+
+    axis.set_title("Plasma Fusion Reactivity Profiles")
+    axis.set_xlabel("$\\rho \\ [r/a]$")
+    axis.grid(True)
+    axis.minorticks_on()
+    axis.set_ylabel(
+        "Thermal Fusion Reactivity $(\\langle \\sigma v \\rangle)$ [m$^3$/s]"
+    )
+    axis.legend(
+        loc="upper right",
+        edgecolor="black",
+        facecolor="white",
+        framealpha=1.0,
+        frameon=True,
+    )
 
 
 def plot_plasma_pressure_profiles(axis: plt.Axes, mfile: MFile, scan: int):
