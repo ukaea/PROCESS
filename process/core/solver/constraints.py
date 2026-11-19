@@ -1,15 +1,20 @@
 """Module containing routines to set up constraints"""
 
+from __future__ import annotations
+
 import logging
-from collections.abc import Callable, Hashable
 from dataclasses import asdict, dataclass
-from typing import ClassVar, Literal
+from typing import TYPE_CHECKING, ClassVar, Literal
 
 import numpy as np
 from tabulate import tabulate
 
 from process.core import constants, process_output
-from process.core.data_structure.base import DataStructure
+
+if TYPE_CHECKING:
+    from collections.abc import Callable, Hashable
+
+    from process.core.data_structure.base import DataStructure
 from process.core.exceptions import ProcessError, ProcessValueError
 from process.data_structure.build_variables import TFCSRadialConfiguration
 from process.data_structure.physics_variables import ConfinementRadiationLossModel
@@ -36,7 +41,7 @@ class ConstraintRegistration:
     """
     The name (often a number) of the constraint. It can be any hashable e.g. a string.
     """
-    constraint_equation: Callable[["ConstraintRegistration"], "ConstraintResult"]
+    constraint_equation: Callable[[ConstraintRegistration], ConstraintResult]
     """The constraint equation that, when called, returns the normalised residual,
     constraint value, and constraint error.
     """

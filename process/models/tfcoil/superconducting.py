@@ -1,5 +1,12 @@
 """Module for superconducting TF coil models and related classes."""
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from process.core.data_structure.base import DataStructure
+
 import logging
 from dataclasses import dataclass
 from enum import IntEnum, unique
@@ -10,7 +17,6 @@ from scipy import optimize
 
 from process.core import constants
 from process.core import process_output as po
-from process.core.data_structure.base import DataStructure
 from process.core.exceptions import ProcessValueError
 from process.data_structure.superconducting_tf_coil_variables import (
     StrainTFSuperconductorType,

@@ -2,29 +2,17 @@
 
 from __future__ import annotations
 
-import datetime as dt
-import getpass
 import logging
-import socket
-import subprocess  # noqa: S404
 from dataclasses import MISSING
-from pathlib import Path
-from typing import TYPE_CHECKING
 
-import process
-from process.core import constants, process_output
 from process.core.exceptions import ProcessValidationError
-from process.core.input import parse_input_file
-from process.core.io.in_dat.base import InDat
-from process.core.solver import iteration_variables
-from process.core.solver.constraints import ConstraintManager
 from process.data_structure.blanket_variables import BlktModelTypes
 from process.data_structure.build_variables import (
     CSPrecompressionConfiguration,
     InboardBlanketConfiguration,
     TFCSRadialConfiguration,
 )
-from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
+from process.data_structure.numerics import PROCESSRunMode
 from process.data_structure.pfcoil_variables import PFConductorModel
 from process.data_structure.physics_variables import (
     ConfinementMode,
@@ -41,7 +29,6 @@ from process.models.physics.profiles import (
     DensityProfilePedestalType,
     PlasmaProfileShapeType,
 )
-from process.models.stellarator.initialization import st_init
 from process.models.superconductors import (
     SuperconductorMaterial,
     SuperconductorModel,
@@ -51,204 +38,6 @@ from process.models.tfcoil.base import TFCoilShapeModel, TFConductorModel
 from process.models.tfcoil.superconducting import SuperconductingTFWPShapeType
 
 logger = logging.getLogger(__name__)
-if TYPE_CHECKING:
-    from process.core.data_structure.base import DataStructure
-
-
-def init_process(data: DataStructure, update_obsolete: bool = False):
-    """Routine that calls the initialisation routines
-
-    This routine calls the main initialisation routines that set
-    the default values for the global variables, reads in data from
-    the input file, and checks the run parameters for consistency.
-    """
-    # Initialise the program variables
-    iteration_variables.initialise_iteration_variables(data)
-
-    # Creating and open the files MFile and OUTFile
-    process_output.OutputFileManager.open_files(data.globals.output_prefix)
-
-    filename = data.globals.fileprefix
-    # InDat reads in and updates obsolete variables if requested
-    in_dat = InDat(filename=filename, update_obsolete=update_obsolete)
-
-    inputs = parse_input_file(data, in_dat)
-
-    # Set active constraints
-    set_active_constraints(data)
-
-    # set the device type (icase)
-    set_device_type(data)
-
-    # Check input data for errors/ambiguities
-    check_process(data, inputs)
-
-    write_outfile_header(data)
-
-
-def get_git_summary() -> tuple[str, str]:
-    """Get git summary"""
-    directory = Path(process.__file__).parent
-    try:
-        git_branch = (
-            subprocess  # noqa: S602
-            .run(
-                "git rev-parse --abbrev-ref HEAD",  # noqa: S607
-                shell=True,
-                capture_output=True,
-                cwd=directory,
-                check=True,
-            )
-            .stdout.decode()
-            .strip()
-        )
-
-        git_tag = (
-            subprocess  # noqa: S602
-            .run(
-                "git describe --tags",  # noqa: S607
-                shell=True,
-                capture_output=True,
-                cwd=directory,
-                check=True,
-            )
-            .stdout.decode()
-            .strip()
-        )
-
-    except (subprocess.CalledProcessError, AttributeError):
-        return "", ""
-    else:
-        return git_branch, git_tag
-
-
-def write_outfile_header(data: DataStructure):
-    """Write a summary of the PROCESS run to the output file and MFile"""
-    # Outfile and terminal #
-    for outfile in [constants.NOUT, constants.IOTTY]:
-        # PROCESS code header
-        process_output.oblnkl(outfile)
-        process_output.ostars(outfile, 110)
-        process_output.ocentr(outfile, "PROCESS", 110)
-        process_output.ocentr(outfile, "Power Reactor Optimisation Code", 110)
-        process_output.ostars(outfile, 110)
-        process_output.oblnkl(outfile)
-
-        # Run execution details
-        version = process.__version__
-        process_output.ocmmnt(outfile, f"Version : {version}")
-
-        git_branch, git_tag = get_git_summary()
-
-        process_output.ocmmnt(outfile, f"Git Tag : {git_tag}")
-        process_output.ocmmnt(outfile, f"Git Branch : {git_branch}")
-
-        date_string = dt.datetime.now(dt.UTC).strftime("%d/%m/%Y %Z")
-        time_string = dt.datetime.now(dt.UTC).strftime("%H:%M")
-
-        process_output.ocmmnt(outfile, f"Date : {date_string}")
-        process_output.ocmmnt(outfile, f"Time : {time_string}")
-
-        user = getpass.getuser()
-        machine = socket.gethostname()
-
-        process_output.ocmmnt(outfile, f"User : {user}")
-        process_output.ocmmnt(outfile, f"Computer : {machine}")
-        process_output.ocmmnt(outfile, f"Directory : {Path.cwd()}")
-
-        fileprefix = data.globals.fileprefix
-        process_output.ocmmnt(
-            outfile,
-            f"Input : {fileprefix}",
-        )
-        runtitle = data.globals.runtitle
-        process_output.ocmmnt(
-            outfile,
-            f"Run title : {runtitle}",
-        )
-
-        process_output.ocmmnt(
-            outfile,
-            f"Run type : Reactor concept design: {data.globals.icase},"
-            " (c) UK Atomic Energy Authority",
-        )
-
-        process_output.oblnkl(outfile)
-        process_output.ostars(outfile, 110)
-        process_output.oblnkl(outfile)
-
-        process_output.ocmmnt(
-            outfile, f"Equality constraints : {data.numerics.n_equality_constraints}"
-        )
-        process_output.ocmmnt(
-            outfile,
-            f"Inequality constraints : {data.numerics.n_inequality_constraints}",
-        )
-        process_output.ocmmnt(
-            outfile,
-            f"Total constraints : "
-            f"{data.numerics.n_inequality_constraints + data.numerics.n_equality_constraints}",  # noqa: E501
-        )
-        process_output.ocmmnt(
-            outfile, f"Iteration variables : {data.numerics.n_iteration_variables}"
-        )
-        # If optimising, write objective function and convergence parameter
-        if data.numerics.i_process_run_mode == PROCESSRunMode.OPTIMISATION:
-            process_output.ocmmnt(
-                outfile,
-                f"Max iterations : {data.globals.maxcal}",
-            )
-
-            if data.numerics.i_figure_merit > 0:
-                figure_merit_string = "  -- minimise "
-                figure_merit_sign = "+"
-            else:
-                figure_merit_string = "  -- maximise "
-                figure_merit_sign = "-"
-
-            fom_string = FiguresOfMerit(abs(data.numerics.i_figure_merit)).description
-            process_output.ocmmnt(
-                outfile,
-                f"Figure of merit : "
-                f"{figure_merit_sign}{abs(data.numerics.i_figure_merit)}"
-                f"{figure_merit_string}{fom_string}",
-            )
-            process_output.ocmmnt(
-                outfile,
-                f"Convergence parameter : {data.numerics.epsvmc}",
-            )
-
-        process_output.oblnkl(outfile)
-        process_output.ostars(outfile, 110)
-
-    # MFile #
-    mfile = constants.MFILE
-
-    process_output.ovarre(mfile, "PROCESS version", "(procver)", f'"{version}"')
-    process_output.ovarre(mfile, "Date of run", "(date)", f'"{date_string}"')
-    process_output.ovarre(mfile, "Time of run", "(time)", f'"{time_string}"')
-    process_output.ovarre(mfile, "User", "(username)", f'"{user}"')
-    process_output.ovarre(mfile, "PROCESS run title", "(runtitle)", f'"{runtitle}"')
-    process_output.ovarre(mfile, "PROCESS git tag", "(tagno)", f'"{git_tag}"')
-    process_output.ovarre(
-        mfile, "PROCESS git branch", "(branch_name)", f'"{git_branch}"'
-    )
-    process_output.ovarre(mfile, "Input filename", "(fileprefix)", f'"{fileprefix}"')
-
-    process_output.ovarre(
-        mfile,
-        "Optimisation switch",
-        "(i_process_run_mode)",
-        data.numerics.i_process_run_mode,
-    )
-    # If optimising, write figure of merit switch
-    if data.numerics.i_process_run_mode == PROCESSRunMode.OPTIMISATION:
-        process_output.ovarre(
-            mfile,
-            "Figure of merit switch",
-            "(i_figure_merit)",
-            data.numerics.i_figure_merit,
-        )
 
 
 def check_process(data, _inputs):
@@ -1309,32 +1098,3 @@ def check_process(data, _inputs):
         raise ProcessValidationError(
             "Can't use constraint 88 if i_strain_tf == RESIDUAL_MANUFACTURING_STRAIN"
         )
-
-
-def set_active_constraints(data: DataStructure):
-    """Set constraints provided in the input file as 'active'"""
-    num_constraints = 0
-    for i in range(ConstraintManager.num_constraints()):
-        if data.numerics.icc[i] != 0:
-            data.numerics.active_constraints[data.numerics.icc[i] - 1] = True
-            num_constraints += 1
-
-    if data.numerics.n_equality_constraints < 0:
-        # The value of n_equality_constraints has not been set in the input file.
-        # Default = 0.
-        data.numerics.n_equality_constraints = (
-            num_constraints - data.numerics.n_inequality_constraints
-        )
-    else:
-        data.numerics.n_inequality_constraints = (
-            num_constraints - data.numerics.n_equality_constraints
-        )
-
-
-def set_device_type(data: DataStructure):
-    """Set the fusion device type on the data structure"""
-    if data.ife.ife == 1:
-        data.globals.icase = "Inertial Fusion model"
-    elif data.stellarator.istell != StellaratorModel.DISABLED:
-        data.globals.icase = "Stellarator model"
-        st_init(data)
