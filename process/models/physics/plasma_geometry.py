@@ -197,6 +197,15 @@ class PlasmaGeometryModelType(IntEnum):
         """The triangularity95 model."""
         return self._triang95_model_
 
+    @classmethod
+    def _missing_(cls, value):
+        try:
+            return cls[value]
+        except KeyError:
+            raise ValueError(
+                f"Illegal value for Illegal value for i_plasma_geometry: {value}"
+            ) from None
+
 
 class PlasmaGeom(Model):
     """Class for calculating plasma geometry parameters."""
@@ -231,15 +240,7 @@ class PlasmaGeom(Model):
 
         # ======================================================================
 
-        try:
-            model = PlasmaGeometryModelType(self.data.physics.i_plasma_geometry)
-        except ValueError as e:
-            raise ProcessValueError(
-                "Illegal value for i_plasma_geometry",
-                i_plasma_geometry=self.data.physics.i_plasma_geometry,
-            ) from e
-
-        match model:
+        match PlasmaGeometryModelType(self.data.physics.i_plasma_geometry):
             case PlasmaGeometryModelType.IPDG89_X_POINT:
                 # Use input kappa, self.data.physics.triang values
                 #  Rough estimate of 95% values
