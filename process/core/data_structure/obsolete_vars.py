@@ -490,6 +490,7 @@ OBS_VARS = {
     "tftmp": "temp_tf_operating",
     "ccl0_ma": "cur_pf_group_flux_swing_cancellation_ma",
     "ccls_ma": "cur_pf_group_equilibrium_ma",
+    "dcond": None,
 }
 
 OBS_VARS_HELP = {

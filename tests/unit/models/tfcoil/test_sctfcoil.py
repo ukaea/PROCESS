@@ -1,6 +1,5 @@
 from typing import Any, NamedTuple
 
-import numpy as np
 import pytest
 
 from process.models.superconductors import SuperconductorModel
@@ -1675,8 +1674,6 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     f_a_tf_turn_cable_space_extra_void: Any = None
 
-    dcond: Any = None
-
     den_tf_wp_turn_insulation: Any = None
 
     len_tf_coil: Any = None
@@ -1790,23 +1787,6 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             m_tf_coil_conductor=0.0,
             m_tf_coil_wp_turn_insulation=0.0,
             f_a_tf_turn_cable_space_extra_void=0.30000000000000004,
-            dcond=np.array(
-                np.array(
-                    (
-                        6080.0,
-                        6080.0,
-                        6070.0,
-                        6080.0,
-                        6080.0,
-                        8500.0,
-                        6070.0,
-                        8500.0,
-                        8500.0,
-                    ),
-                    order="F",
-                ),
-                order="F",
-            ).transpose(),
             den_tf_wp_turn_insulation=1800.0,
             len_tf_coil=50.483843027201402,
             den_tf_coil_case=8000.0,
@@ -1864,23 +1844,6 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             m_tf_coil_conductor=0.0,
             m_tf_coil_wp_turn_insulation=0.0,
             f_a_tf_turn_cable_space_extra_void=0.30000000000000004,
-            dcond=np.array(
-                np.array(
-                    (
-                        6080.0,
-                        6080.0,
-                        6070.0,
-                        6080.0,
-                        6080.0,
-                        8500.0,
-                        6070.0,
-                        8500.0,
-                        8500.0,
-                    ),
-                    order="F",
-                ),
-                order="F",
-            ).transpose(),
             den_tf_wp_turn_insulation=1800.0,
             len_tf_coil=50.514015976170839,
             den_tf_coil_case=8000.0,
@@ -1968,7 +1931,6 @@ def test_superconducting_tf_coil_area_and_masses(
             "f_a_tf_turn_cable_space_extra_void",
             tfcoilareaandmassesparam.f_a_tf_turn_cable_space_extra_void,
         ),
-        ("dcond", tfcoilareaandmassesparam.dcond),
         (
             "den_tf_wp_turn_insulation",
             tfcoilareaandmassesparam.den_tf_wp_turn_insulation,
