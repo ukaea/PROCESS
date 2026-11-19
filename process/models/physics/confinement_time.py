@@ -229,7 +229,7 @@ class PlasmaConfinementTime(Model):
 
                 # ====================================================================
 
-                # Nec-Alcator(NA) OH scaling
+                # Neo-Alcator(NA) OH scaling
                 case ConfinementTimeModel.NEO_ALCATOR:
                     # t_electron_energy_confinement is an input
                     t_electron_confinement = self.neo_alcator_confinement_time(
@@ -1452,7 +1452,7 @@ class PlasmaConfinementTime(Model):
     def neo_alcator_confinement_time(
         dene20: float, rminor: float, rmajor: float, qstar: float
     ) -> float:
-        """Calculate the Nec-Alcator(NA) OH scaling confinement time
+        """Calculate the Neo-Alcator(NA) OH scaling confinement time
 
         Parameters
         ----------

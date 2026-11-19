@@ -111,7 +111,7 @@ class PlasmaCurrentModel(IntEnum):
 
 
 @unique
-class OutbordSOLPowerDecayLengthModel(IntEnum):
+class OutboardSOLPowerDecayLengthModel(IntEnum):
     """Enum for outboard scrape off layer power decay length models with descriptions."""
 
     USER_INPUT = (0, "User input")
@@ -122,7 +122,7 @@ class OutbordSOLPowerDecayLengthModel(IntEnum):
     EICH_2011_JET_ASDEX = (5, "Eich 2011 JET + ASDEX Upgrade")
 
     def __new__(cls, value: int, description: str):
-        """Create a new instance of OutbordSOLPowerDecayLengthModel.
+        """Create a new instance of OutboardSOLPowerDecayLengthModel.
 
         Parameters
         ----------
@@ -133,7 +133,7 @@ class OutbordSOLPowerDecayLengthModel(IntEnum):
 
         Returns
         -------
-        OutbordSOLPowerDecayLengthModel
+        OutboardSOLPowerDecayLengthModel
             A new enum instance with the given value and description
         """
         obj = int.__new__(cls, value)

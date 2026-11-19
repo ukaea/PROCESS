@@ -9,7 +9,7 @@ import numpy as np
 
 from process.core.io.plot.summary.constants import PLASMA_COLOUR
 from process.core.io.plot.summary.plasma.physics import plot_plasma
-from process.data_structure.physics_variables import OutbordSOLPowerDecayLengthModel
+from process.data_structure.physics_variables import OutboardSOLPowerDecayLengthModel
 from process.models.physics.exhaust import calculate_brunner_divertor_power_splits
 from process.models.physics.scrape_off_layer import ScrapeOffLayer
 
@@ -152,7 +152,7 @@ def plot_sol_power_flux_profiles(axis: plt.Axes, mfile: MFile, scan: int, colour
     plasma_scale = max(rminor, abs(kappa * rminor), 1e-6)
     scale_factor = min(max(plasma_scale / 2.0, 0.7), 1.0)
     text_fontsize = 9 * scale_factor
-    sol_power_decay_model_description = OutbordSOLPowerDecayLengthModel(
+    sol_power_decay_model_description = OutboardSOLPowerDecayLengthModel(
         mfile.get("i_len_sol_outboard_power_decay", scan=scan)
     ).description
 
@@ -213,19 +213,19 @@ def plot_sol_power_decay_length_comparison(axis: plt.Axes, mfile: MFile, scan: i
     )
     # Data for the box plot
     data = {
-        f"{OutbordSOLPowerDecayLengthModel.EICH_2013.description}": (
+        f"{OutboardSOLPowerDecayLengthModel.EICH_2013.description}": (
             len_plasma_sol_eich13_power_decay_mm
         ),
-        f"{OutbordSOLPowerDecayLengthModel.MAST_2014_1.description}": (
+        f"{OutboardSOLPowerDecayLengthModel.MAST_2014_1.description}": (
             len_plasma_sol_mast14_power_decay_1_mm
         ),
-        f"{OutbordSOLPowerDecayLengthModel.MAST_2014_2.description}": (
+        f"{OutboardSOLPowerDecayLengthModel.MAST_2014_2.description}": (
             len_plasma_sol_mast14_power_decay_2_mm
         ),
-        f"{OutbordSOLPowerDecayLengthModel.EICH_2011_JET.description}": (
+        f"{OutboardSOLPowerDecayLengthModel.EICH_2011_JET.description}": (
             len_plasma_sol_eich11_jet_power_decay_mm
         ),
-        f"{OutbordSOLPowerDecayLengthModel.EICH_2011_JET_ASDEX.description}": (
+        f"{OutboardSOLPowerDecayLengthModel.EICH_2011_JET_ASDEX.description}": (
             len_plasma_sol_eich11_jet_asdex_power_decay_mm
         ),
     }
