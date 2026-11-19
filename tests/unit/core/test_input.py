@@ -3,7 +3,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-import process.core.input as process_input
+import process.core.data_structure.input as process_input
 from process.core.data_structure import check_input
 from process.core.data_structure.base import DataStructure
 from process.core.exceptions import ProcessValidationError

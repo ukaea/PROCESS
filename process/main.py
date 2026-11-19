@@ -39,7 +39,6 @@ import click
 
 import process  # noqa: F401
 from process.core import constants
-from process.core.data_structure import check_input
 from process.core.data_structure.base import DataStructure
 from process.core.io.cli_tools import LazyGroup, help_opt, indat_opt
 from process.core.io.mfile import MFile
@@ -314,7 +313,7 @@ class VaryRun:
 
         setup_loggers(Path(self.config.wdir) / "process.log")
 
-        check_input.init_process(self.data)
+        self.data.init_process()
 
         # TODO add diff ixc summary part
         for _indat, _mfile, itervars, lbs, ubs in self.config:
@@ -432,7 +431,7 @@ class SingleRun:
 
         initialise_imprad(self.data)
         # Reads in input file
-        check_input.init_process(self.data, self.update_obsolete)
+        self.data.init_process(self.update_obsolete)
 
         # Order optimisation parameters (arbitrary order in input file)
         # Ensures consistency and makes output comparisons more straightforward

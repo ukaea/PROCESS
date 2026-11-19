@@ -14,7 +14,7 @@ from itertools import pairwise
 
 import numpy as np
 
-from process.core.input import INPUT_VARIABLES
+from process.core.data_structure.input import INPUT_VARIABLES
 from process.core.log import logging_model_handler
 from process.core.solver.iteration_variables import ITERATION_VARIABLES
 
