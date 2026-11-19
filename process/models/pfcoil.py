@@ -434,6 +434,13 @@ class PFCoil(Model):
                                 -0.4e0 * self.data.physics.plasma_current
                             )
 
+                        case PFLocationTypes.GENERALLY_PLACED:
+                            # PF coil is generally placed
+                            self.data.pf_coil.ccls[i] = 0.0e0
+                            raise ProcessValueError(
+                                "i_pf_location(i) should not be 4 if itart=1", i=i
+                            )
+
                         case _:
                             raise ProcessValueError(
                                 "Illegal value of i_pf_location(i)",
