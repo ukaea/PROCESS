@@ -79,7 +79,7 @@ def plasma_main_page(
         The normalised radius defining the plasma core region.
     kappa:
         The plasma elongation.
-    i_single_null : int
+    i_single_null:
         Switch for single null / double null plasma (0: double null, 1: single null).
     plasma_square:
         The plasma squareness.
