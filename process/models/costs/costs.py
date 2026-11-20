@@ -3006,10 +3006,7 @@ class Costs(Model):
         else:
             self.data.fwbs.life_blkt = self.data.fwbs.life_blkt_fpy
         # Current drive system lifetime
-        # (assumed equal to first wall and blanket lifetime). Must be set in
-        # both branches: if it stayed at its default of 0.0 (e.g. negligible
-        # neutron wall load, so life_blkt_fpy >= life_plant), coelc() would
-        # divide by (1 + discount_rate)**cdrlife_cal - 1 == 0.
+        # (assumed equal to first wall and blanket lifetime).
         self.data.costs.cdrlife_cal = self.data.fwbs.life_blkt
 
         # Divertor
