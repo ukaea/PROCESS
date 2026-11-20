@@ -62,6 +62,7 @@ def initialise_imprad(data: DataStructure):
             data=data,
         )
 
+
 @dataclasses.dataclass
 class ImpurityDataHeader:
     """Represents a header or metadata section of an impurity data
@@ -420,6 +421,7 @@ def calculate_impurity_radiation_power_density(
         * nd_electron_profile
         * power_loss_function
     )
+
 
 class ImpurityRadiation:
     """Calculates the impurity radiation losses for given temperature and

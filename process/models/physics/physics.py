@@ -1256,9 +1256,7 @@ class Physics(Model):
             + self.data.physics.nd_beam_ions
         ) / self.data.physics.nd_plasma_electrons_vol_avg
 
-        self.data.impurity_radiation.f_nd_impurity_electrons[
-            IonSpecies.HELIUM.index
-        ] = (
+        self.data.impurity_radiation.f_nd_impurity_electrons[IonSpecies.HELIUM.index] = (
             self.data.physics.f_plasma_fuel_helium3
             * self.data.physics.nd_plasma_fuel_ions_vol_avg
             / self.data.physics.nd_plasma_electrons_vol_avg
@@ -1272,9 +1270,7 @@ class Physics(Model):
         for species in IonSpecies:
             if species.is_impurity:
                 self.data.physics.nd_plasma_impurities_vol_avg += (
-                    self.data.impurity_radiation.f_nd_impurity_electrons[
-                        species.index
-                    ]
+                    self.data.impurity_radiation.f_nd_impurity_electrons[species.index]
                     * self.data.physics.nd_plasma_electrons_vol_avg
                 )
 
@@ -1294,19 +1290,13 @@ class Physics(Model):
         # Set some relative impurity density variables
         # for the benefit of other routines
         self.data.physics.f_nd_plasma_carbon_electron = (
-            self.data.impurity_radiation.f_nd_impurity_electrons[
-                IonSpecies.CARBON.index
-            ]
+            self.data.impurity_radiation.f_nd_impurity_electrons[IonSpecies.CARBON.index]
         )
         self.data.physics.f_nd_plasma_oxygen_electron = (
-            self.data.impurity_radiation.f_nd_impurity_electrons[
-                IonSpecies.OXYGEN.index
-            ]
+            self.data.impurity_radiation.f_nd_impurity_electrons[IonSpecies.OXYGEN.index]
         )
         self.data.physics.f_nd_plasma_iron_argon_electron = (
-            self.data.impurity_radiation.f_nd_impurity_electrons[
-                IonSpecies.IRON.index
-            ]
+            self.data.impurity_radiation.f_nd_impurity_electrons[IonSpecies.IRON.index]
             + self.data.impurity_radiation.f_nd_impurity_electrons[
                 IonSpecies.ARGON.index
             ]
@@ -1392,9 +1382,7 @@ class Physics(Model):
 
             self.data.physics.m_ions_total_amu += (
                 self.data.physics.nd_plasma_electrons_vol_avg
-                * self.data.impurity_radiation.f_nd_impurity_electrons[
-                    species.index
-                ]
+                * self.data.impurity_radiation.f_nd_impurity_electrons[species.index]
                 * species.mass_amu
             )
 
