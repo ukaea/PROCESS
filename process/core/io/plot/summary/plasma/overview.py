@@ -33,6 +33,8 @@ from process.models.physics.plasma_geometry import PlasmaGeometryModelType
 
 if TYPE_CHECKING:
     import matplotlib.pyplot as plt
+    from matplotlib.axes import Axes
+    from matplotlib.figure import Figure
 
     from process.core.io.mfile import MFile
 
@@ -40,8 +42,8 @@ __all__ = ["plot_detailed_plasma_parameters", "plot_main_plasma_information"]
 
 
 def plasma_main_page(
-    axis: plt.Axes,
-    fig: plt.Figure,
+    axis: Axes,
+    fig: Figure,
     rmajor: float,
     rminor: float,
     triang: float,
@@ -63,33 +65,33 @@ def plasma_main_page(
 
     Parameters
     ----------
-    axis : plt.Axes
+    axis:
         The matplotlib axis object to plot on.
-    fig : plt.Figure
+    fig:
         The matplotlib figure object, used to place annotations in figure coordinates.
-    rmajor : float
+    rmajor:
         The plasma major radius (m).
-    rminor : float
+    rminor:
         The plasma minor radius (m).
-    triang : float
+    triang:
         The plasma triangularity.
-    radius_plasma_core_norm : float
+    radius_plasma_core_norm:
         The normalised radius defining the plasma core region.
-    kappa : float
+    kappa:
         The plasma elongation.
     i_single_null : int
         Switch for single null / double null plasma (0: double null, 1: single null).
-    plasma_square : float
+    plasma_square:
         The plasma squareness.
-    big_q_plasma : float
+    big_q_plasma:
         The plasma fusion gain (Q).
-    p_fw_alpha_mw : float
+    p_fw_alpha_mw:
         The alpha power escaping the plasma and reaching the first wall (MW).
-    f_p_alpha_plasma_deposited : float
+    f_p_alpha_plasma_deposited:
         The fraction of the alpha power deposited in the plasma.
-    p_neutron_total_mw : float
+    p_neutron_total_mw:
         The total neutron fusion power from plasma and beams (MW).
-    pflux_plasma_surface_neutron_avg_mw : float
+    pflux_plasma_surface_neutron_avg_mw:
         The average neutron power flux at the plasma surface (MW/m²).
     """
     white_box = box_style("white", linewidth=None)
