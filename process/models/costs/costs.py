@@ -3004,11 +3004,11 @@ class Costs(Model):
             self.data.fwbs.life_blkt = (
                 self.data.fwbs.life_blkt_fpy * self.data.costs.f_t_plant_available
             )
-            # Current drive system lifetime
-            # (assumed equal to first wall and blanket lifetime)
-            self.data.costs.cdrlife_cal = self.data.fwbs.life_blkt
         else:
             self.data.fwbs.life_blkt = self.data.fwbs.life_blkt_fpy
+        # Current drive system lifetime
+        # (assumed equal to first wall and blanket lifetime).
+        self.data.costs.cdrlife_cal = self.data.fwbs.life_blkt
 
         # Divertor
         if self.data.costs.life_div_fpy < self.data.costs.life_plant:
