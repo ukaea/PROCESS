@@ -162,7 +162,6 @@ def init_imp_element(
             max=N_ION_SPECIES,
         )
 
-    data.impurity_radiation.impurity_arr_label[n_species_index] = name_label
     data.impurity_radiation.impurity_arr_len_tab[n_species_index] = len_tab
     if len_tab > N_IMPURITIY_LOSS_FUNCTION_POINTS:
         print(

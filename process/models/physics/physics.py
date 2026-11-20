@@ -2916,10 +2916,7 @@ class Physics(Model):
         po.oblnkl(self.outfile)
 
         for imp in range(N_ION_SPECIES):
-            str1 = (
-                self.data.impurity_radiation.imp_label[imp].item().replace("_", "")
-                + " concentration"
-            )
+            str1 = IonSpecies(imp).symbol + " concentration"
             str2 = f"(f_nd_impurity_electrons({imp + 1:02}))"
             # MDK Add output flag for H which is calculated.
             if imp == 0:
