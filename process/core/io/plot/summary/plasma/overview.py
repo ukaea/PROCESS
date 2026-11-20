@@ -70,9 +70,9 @@ def plasma_main_page(
     fig:
         The matplotlib figure object, used to place annotations in figure coordinates.
     rmajor:
-        The plasma major radius (m).
+        The plasma major radius [m].
     rminor:
-        The plasma minor radius (m).
+        The plasma minor radius [m].
     triang:
         The plasma triangularity.
     radius_plasma_core_norm:
@@ -84,15 +84,15 @@ def plasma_main_page(
     plasma_square:
         The plasma squareness.
     big_q_plasma:
-        The plasma fusion gain (Q).
+        The plasma fusion gain [Q].
     p_fw_alpha_mw:
-        The alpha power escaping the plasma and reaching the first wall (MW).
+        The alpha power escaping the plasma and reaching the first wall [MW].
     f_p_alpha_plasma_deposited:
         The fraction of the alpha power deposited in the plasma.
     p_neutron_total_mw:
-        The total neutron fusion power from plasma and beams (MW).
+        The total neutron fusion power from plasma and beams [MW].
     pflux_plasma_surface_neutron_avg_mw:
-        The average neutron power flux at the plasma surface (MW/m²).
+        The average neutron power flux at the plasma surface [MW/m²].
     """
     white_box = box_style("white", linewidth=None)
     pg = plasma_geometry(
