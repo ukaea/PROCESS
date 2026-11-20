@@ -1074,7 +1074,7 @@ class Physics(Model):
                     " is at least notable"
                 )
 
-            impurity_frac = self.data.impurity_radiation.f_nd_impurity_electron_array[
+            impurity_frac = self.data.impurity_radiation.f_nd_impurity_electrons[
                 self.data.reinke.impvardiv
             ]
             po.write(
@@ -1207,7 +1207,7 @@ class Physics(Model):
                 ]),
                 data=self.data,
             ).squeeze() * (
-                self.data.impurity_radiation.f_nd_impurity_electron_array[species.index]
+                self.data.impurity_radiation.f_nd_impurity_electrons[species.index]
                 * self.data.physics.nd_plasma_electrons_vol_avg
             )
 
@@ -1244,7 +1244,7 @@ class Physics(Model):
 
         # Set hydrogen and helium relative impurity densities for
         # radiation calculations
-        self.data.impurity_radiation.f_nd_impurity_electron_array[
+        self.data.impurity_radiation.f_nd_impurity_electrons[
             IonSpecies.HYDROGEN.index
         ] = (
             self.data.physics.nd_plasma_protons_vol_avg
@@ -1256,9 +1256,7 @@ class Physics(Model):
             + self.data.physics.nd_beam_ions
         ) / self.data.physics.nd_plasma_electrons_vol_avg
 
-        self.data.impurity_radiation.f_nd_impurity_electron_array[
-            IonSpecies.HELIUM.index
-        ] = (
+        self.data.impurity_radiation.f_nd_impurity_electrons[IonSpecies.HELIUM.index] = (
             self.data.physics.f_plasma_fuel_helium3
             * self.data.physics.nd_plasma_fuel_ions_vol_avg
             / self.data.physics.nd_plasma_electrons_vol_avg
@@ -1272,9 +1270,7 @@ class Physics(Model):
         for species in IonSpecies:
             if species.is_impurity:
                 self.data.physics.nd_plasma_impurities_vol_avg += (
-                    self.data.impurity_radiation.f_nd_impurity_electron_array[
-                        species.index
-                    ]
+                    self.data.impurity_radiation.f_nd_impurity_electrons[species.index]
                     * self.data.physics.nd_plasma_electrons_vol_avg
                 )
 
@@ -1294,20 +1290,14 @@ class Physics(Model):
         # Set some relative impurity density variables
         # for the benefit of other routines
         self.data.physics.f_nd_plasma_carbon_electron = (
-            self.data.impurity_radiation.f_nd_impurity_electron_array[
-                IonSpecies.CARBON.index
-            ]
+            self.data.impurity_radiation.f_nd_impurity_electrons[IonSpecies.CARBON.index]
         )
         self.data.physics.f_nd_plasma_oxygen_electron = (
-            self.data.impurity_radiation.f_nd_impurity_electron_array[
-                IonSpecies.OXYGEN.index
-            ]
+            self.data.impurity_radiation.f_nd_impurity_electrons[IonSpecies.OXYGEN.index]
         )
         self.data.physics.f_nd_plasma_iron_argon_electron = (
-            self.data.impurity_radiation.f_nd_impurity_electron_array[
-                IonSpecies.IRON.index
-            ]
-            + self.data.impurity_radiation.f_nd_impurity_electron_array[
+            self.data.impurity_radiation.f_nd_impurity_electrons[IonSpecies.IRON.index]
+            + self.data.impurity_radiation.f_nd_impurity_electrons[
                 IonSpecies.ARGON.index
             ]
         )
@@ -1320,7 +1310,7 @@ class Physics(Model):
         self.data.physics.n_charge_plasma_effective_vol_avg = 0.0
         for imp in range(N_ION_SPECIES):
             self.data.physics.n_charge_plasma_effective_vol_avg += (
-                self.data.impurity_radiation.f_nd_impurity_electron_array[imp]
+                self.data.impurity_radiation.f_nd_impurity_electrons[imp]
                 * impurity_radiation.calculate_average_charge_at_temp(
                     imp,
                     np.array([self.data.physics.temp_plasma_electron_vol_avg_kev]),
@@ -1392,9 +1382,7 @@ class Physics(Model):
 
             self.data.physics.m_ions_total_amu += (
                 self.data.physics.nd_plasma_electrons_vol_avg
-                * self.data.impurity_radiation.f_nd_impurity_electron_array[
-                    species.index
-                ]
+                * self.data.impurity_radiation.f_nd_impurity_electrons[species.index]
                 * species.mass_amu
             )
 
@@ -1445,7 +1433,7 @@ class Physics(Model):
                 continue
 
             self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg += (
-                self.data.impurity_radiation.f_nd_impurity_electron_array[species.index]
+                self.data.impurity_radiation.f_nd_impurity_electrons[species.index]
                 * impurity_radiation.calculate_average_charge_at_temp(
                     imp_element_index=species.index,
                     temp_electron_kev=np.array([
@@ -1714,7 +1702,7 @@ class Physics(Model):
             zeff_profile[i] = 0.0
             for imp in range(N_ION_SPECIES):
                 zeff_profile[i] += (
-                    self.data.impurity_radiation.f_nd_impurity_electron_array[imp]
+                    self.data.impurity_radiation.f_nd_impurity_electrons[imp]
                     * impurity_radiation.calculate_average_charge_at_temp(
                         imp,
                         np.array([self.plasma_profile.teprofile.profile_y[i]]),
@@ -2928,18 +2916,7 @@ class Physics(Model):
         po.oblnkl(self.outfile)
 
         for imp in range(N_ION_SPECIES):
-            # MDK Update f_nd_impurity_electrons, as this will make the ITV output
-            # work correctly.
-            self.data.impurity_radiation.f_nd_impurity_electrons[imp] = (
-                self.data.impurity_radiation.f_nd_impurity_electron_array[imp]
-            )
-            str1 = (
-                self.data.impurity_radiation
-                .impurity_arr_label[imp]
-                .item()
-                .replace("_", "")
-                + " concentration"
-            )
+            str1 = IonSpecies(imp).symbol + " concentration"
             str2 = f"(f_nd_impurity_electrons({imp + 1:02}))"
             # MDK Add output flag for H which is calculated.
             if imp == 0:

@@ -57,7 +57,6 @@ def initialise_imprad(data: DataStructure):
         init_imp_element(
             n_species_index=species,
             name_label=species.label,
-            f_nd_species_electron=(1.0 if species is IonSpecies.HYDROGEN else 0.0),
             len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
             error=0,
             data=data,
@@ -121,7 +120,6 @@ def read_impurity_file(impurity_file: Path):
 def init_imp_element(
     n_species_index: int,
     name_label: str,
-    f_nd_species_electron: float,
     len_tab: int,
     error: int,
     data: DataStructure,
@@ -138,8 +136,6 @@ def init_imp_element(
         Position of species in impurity array
     name_label : str
         Species name
-    f_nd_species_electron : float
-        Number density / electron density
     len_tab : int
         Length of temperature and Lz tables
     error : int
@@ -166,12 +162,7 @@ def init_imp_element(
             max=N_ION_SPECIES,
         )
 
-    data.impurity_radiation.impurity_arr_label[n_species_index] = name_label
-    data.impurity_radiation.f_nd_impurity_electron_array[n_species_index] = (
-        f_nd_species_electron
-    )
     data.impurity_radiation.impurity_arr_len_tab[n_species_index] = len_tab
-
     if len_tab > N_IMPURITIY_LOSS_FUNCTION_POINTS:
         print(
             f"ERROR: len_tab is {len_tab} but has a maximum value of "
@@ -422,9 +413,9 @@ def calculate_impurity_radiation_power_density(
     )
 
     # W/m³ = nᵢ * nₑ * L(Z, Tₑ)
-    # nᵢ = f_nd_species_electron * nₑ
+    # nᵢ = fᵢ * nₑ
     return (
-        data.impurity_radiation.f_nd_impurity_electron_array[imp_element_index]
+        data.impurity_radiation.f_nd_impurity_electrons[imp_element_index]
         * nd_electron_profile
         * nd_electron_profile
         * power_loss_function
@@ -456,7 +447,7 @@ class ImpurityRadiation:
         and volume averages so the instance can be reused between evaluations.
         """
         self.imp = np.nonzero(
-            self.data.impurity_radiation.f_nd_impurity_electron_array > 1.0e-30
+            self.data.impurity_radiation.f_nd_impurity_electrons > 1.0e-30
         )[0]
 
         self.pden_impurity_radiation_profile = np.zeros(
@@ -510,9 +501,8 @@ class ImpurityRadiation:
 
         for species in IonSpecies:
             pden_vol_avg_mw = 0.0
-
             if (
-                self.data.impurity_radiation.f_nd_impurity_electron_array[species.index]
+                self.data.impurity_radiation.f_nd_impurity_electrons[species.index]
                 > 1e-30
             ):
                 pden_profile = calculate_impurity_radiation_power_density(

@@ -58,8 +58,7 @@ single_run.run()
 def print_values():
     """Function to print values of some variables"""
     print(
-        "W frac = "
-        f"{single_run.data.impurity_radiation.f_nd_impurity_electron_array[13]:.3e}"
+        f"W frac = {single_run.data.impurity_radiation.f_nd_impurity_electrons[13]:.3e}"
     )
     print(f"p_plasma_rad_mw = {single_run.data.physics.p_plasma_rad_mw:.3e}")
     print(
@@ -74,7 +73,7 @@ print_values()
 # the divertor power.
 
 # %%
-single_run.data.impurity_radiation.f_nd_impurity_electron_array[13] = 5.0e-5
+single_run.data.impurity_radiation.f_nd_impurity_electrons[13] = 5.0e-5
 single_run.models.physics.run()
 print_values()
 
@@ -101,7 +100,7 @@ def run_impurities(w_imp_fracs):
     # Loop over W impurity values, evaluate model and store responses at each point
     for i, imp_frac in enumerate(w_imp_fracs):
         # Set W impurity fraction, then run physics model
-        single_run.data.impurity_radiation.f_nd_impurity_electron_array[13] = imp_frac
+        single_run.data.impurity_radiation.f_nd_impurity_electrons[13] = imp_frac
         single_run.models.physics.run()
 
         # Evaluate constraint equation 15 (L-H threshold constraint)
