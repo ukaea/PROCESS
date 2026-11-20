@@ -11,7 +11,9 @@ from typing import TYPE_CHECKING
 import numpy as np
 from numba import njit
 
-from process.core.data_structure.base import DataStructure
+if TYPE_CHECKING:
+    from process.core.data_structure.base import DataStructure
+
 from process.core.exceptions import ProcessError, ProcessValueError
 from process.data_structure.impurity_radiation_variables import (
     N_IMPURITIY_LOSS_FUNCTION_POINTS,

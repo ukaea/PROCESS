@@ -3,8 +3,8 @@
 import pytest
 
 from process.core.data_structure.base import DataStructure
+from process.core.data_structure.check_input import check_process
 from process.core.exceptions import ProcessValidationError
-from process.core.init import check_process
 from process.models.tfcoil.base import TFConductorModel
 
 
