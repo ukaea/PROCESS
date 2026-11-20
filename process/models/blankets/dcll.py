@@ -130,11 +130,11 @@ class DCLL(InboardBlanket, OutboardBlanket):
         )
 
         self.data.blanket.len_blkt_inboard_segment_toroidal = self.calculate_blanket_inboard_module_geometry(  # noqa: E501
-                    n_blkt_inboard_modules_toroidal=self.data.fwbs.n_blkt_inboard_modules_toroidal,
-                    rmajor=self.data.physics.rmajor,
-                    rminor=self.data.physics.rminor,
-                    dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
-                )
+            n_blkt_inboard_modules_toroidal=self.data.fwbs.n_blkt_inboard_modules_toroidal,
+            rmajor=self.data.physics.rmajor,
+            rminor=self.data.physics.rminor,
+            dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
+        )
         self.data.blanket.len_blkt_outboard_segment_toroidal = self.calculate_blanket_outboard_module_geometry(  # noqa: E501
             n_blkt_outboard_modules_toroidal=self.data.fwbs.n_blkt_outboard_modules_toroidal,
             rmajor=self.data.physics.rmajor,
