@@ -1325,7 +1325,7 @@ class PlasmaConfinementTransition(Model):
 
         Notes
         -----
-        - Thus will return an aspect ratio correction of the aspect ratio is less
+        - This will return an aspect ratio correction of the aspect ratio is less
         than or equal to 2.7. If not the usual Martin 2008 scaling will be returned.
 
         - A scaling with the total ion mass is used in this model. Martin 08 shows
@@ -1393,7 +1393,7 @@ class PlasmaConfinementTransition(Model):
 
         Notes
         -----
-        - Thus will return an aspect ratio correction of the aspect ratio is less
+        - This will return an aspect ratio correction of the aspect ratio is less
         than or equal to 2.7. If not the usual Martin 2008 scaling will be returned.
 
         - A scaling with the total ion mass is used in this model. Martin 08 shows
@@ -1461,7 +1461,7 @@ class PlasmaConfinementTransition(Model):
 
         Notes
         -----
-        - Thus will return an aspect ratio correction of the aspect ratio is less
+        - This will return an aspect ratio correction of the aspect ratio is less
         than or equal to 2.7. if not the usual Martin 2008 scaling will be returned.
 
         - A scaling with the total ion mass is used in this model. Martin 08 shows
