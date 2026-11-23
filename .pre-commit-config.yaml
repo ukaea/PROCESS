@@ -9,7 +9,7 @@ repos:
       - id: check-merge-conflict
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.17.5
+    rev: v0.17.6
     hooks:
       - id: ruff-check
         args: [--fix]
@@ -22,7 +22,7 @@ repos:
         args: [--indent-style=space, --indent-width=2, --line-width=89]
 
   - repo: https://github.com/kynan/nbstripout
-    rev: 0.9.1
+    rev: 0.9.2
     hooks:
       - id: nbstripout
         args: [--extra-keys=metadata.language_info.version]
