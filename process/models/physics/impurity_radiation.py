@@ -11,7 +11,6 @@ from typing import TYPE_CHECKING
 import numpy as np
 from numba import njit
 
-from process.core.data_structure.base import DataStructure
 from process.core.exceptions import ProcessError, ProcessValueError
 from process.data_structure.impurity_radiation_variables import (
     N_IMPURITIY_LOSS_FUNCTION_POINTS,
@@ -23,7 +22,7 @@ from process.models.physics.profiles import calculate_vol_avg_of_profile
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from process.core.model import DataStructure
+    from process.core.data_structure.base import DataStructure
     from process.models.physics.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
