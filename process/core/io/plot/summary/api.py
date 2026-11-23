@@ -614,8 +614,10 @@ def main_plot(
             m_file.get("i_tf_turn_type", scan=scan)
             == SuperconductingTFTurnType.STEP_STACKED_TAPE
         ):
+            ax20 = pages["cable"].add_subplot(325, aspect="equal")
+            ax20.set_position([0.025, 0.5, 0.4, 0.4])
             plot_tf_step_vertical_tape_turn(
-                axis=pages["cable"].add_subplot(221, aspect="equal"),
+                axis=ax20,
                 fig=pages["cable"],
                 mfile=m_file,
                 scan=scan,
