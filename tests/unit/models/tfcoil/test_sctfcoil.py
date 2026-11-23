@@ -8,7 +8,7 @@ from process.data_structure.superconducting_tf_coil_variables import (
     StrainTFSuperconductorType,
     TFWPIntegerTurnType,
 )
-from process.models.superconductors import SuperconductorModel
+from process.models.superconductors import N_CROCO_STRANDS_TURN, SuperconductorModel
 from process.models.tfcoil import superconducting as sctf
 from process.models.tfcoil.base import TFStressResults
 from process.models.tfcoil.superconducting import TFComponentShape, VVComponentShape
@@ -75,6 +75,75 @@ def step_sctfcoil(process_models):
     :rtype: process.sctfcoil.STEPSuperconductingTFCoil
     """
     return process_models.step_sctfcoil
+
+
+@pytest.mark.parametrize(
+    "model",
+    [
+        SuperconductorModel.CROCO_REBCO,
+        SuperconductorModel.DURHAM_REBCO,
+        SuperconductorModel.HAZELTON_ZHAI_REBCO,
+    ],
+)
+def test_croco_superconductor_critical_currents(croco_sctfcoil, model):
+    strand_area = 0.0001
+    turn_area = 0.002
+    turn_current = 10000.0
+    limits = croco_sctfcoil.tf_croco_superconductor_properties(
+        a_tf_turn=turn_area,
+        b_tf_inboard_peak=10.0,
+        cur_tf_turn=turn_current,
+        temp_tf_peak=20.0,
+        i_tf_superconductor=model,
+        dr_tf_hts_tape=0.0001,
+        dx_tf_hts_tape_rebco=0.004,
+        dx_tf_hts_tape_total=0.004,
+        a_tf_croco_strand=strand_area,
+    )
+
+    strand_current = limits.j_superconductor_critical * strand_area
+    turn_critical_current = strand_current * N_CROCO_STRANDS_TURN
+    assert strand_current > 0
+    assert limits.cur_tf_turn_croco_strand_critical == strand_current
+    assert limits.c_turn_cables_critical == turn_critical_current
+    assert limits.j_tf_wp_critical == pytest.approx(turn_critical_current / turn_area)
+    assert limits.f_c_tf_turn_operating_critical == pytest.approx(
+        turn_current / turn_critical_current
+    )
+
+
+def test_croco_limits_forward_operating_strand_current(croco_sctfcoil, monkeypatch):
+    coil = croco_sctfcoil.data.tfcoil
+    strand = croco_sctfcoil.data.superconducting_tfcoil
+    coil.c_tf_total = 6.0
+    coil.j_tf_wp = 1.0
+    coil.n_tf_coils = 1
+    coil.n_tf_coil_turns = 1
+    coil.c_tf_turn = 0.2
+    coil.b_tf_inboard_peak_with_ripple = 10.0
+    coil.temp_tf_operating = 20.0
+    coil.temp_tf_superconductor_margin_min = 5.0
+    coil.i_tf_sc_mat = SuperconductorModel.CROCO_REBCO
+    croco_sctfcoil.data.costs.i_plant_availability = sctf.AvailabilityModel.USER_INPUT
+    strand.a_tf_croco_strand = 1.0
+
+    def critical_density(*, temp_conductor, **kwargs):
+        return (0.1 if temp_conductor == coil.temp_tf_operating else 0.05, 0.0, 1.0, 2.0)
+
+    monkeypatch.setattr(sctf.superconductors, "jcrit_rebco", critical_density)
+    monkeypatch.setattr(croco_sctfcoil, "croco_voltage", lambda: 0.0)
+    monkeypatch.setattr(croco_sctfcoil, "_negative_area_report", lambda _: None)
+
+    croco_sctfcoil._run_croco_superconductor_limits(strand)
+
+    expected_strand_current = 0.1
+    expected_turn_current = expected_strand_current * N_CROCO_STRANDS_TURN
+    assert strand.cur_tf_turn_croco_strand_critical == expected_strand_current
+    assert strand.c_tf_turn_cables_critical == expected_turn_current
+    assert coil.j_tf_wp_critical == pytest.approx(0.1 * N_CROCO_STRANDS_TURN / 6.0)
+    assert coil.j_tf_wp_temp_margin_min == pytest.approx(
+        0.05 * N_CROCO_STRANDS_TURN / 6.0
+    )
 
 
 class ProtectParam(NamedTuple):
