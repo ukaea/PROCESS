@@ -1063,7 +1063,10 @@ def plot_tf_step_vertical_tape_turn(
     axis.set_ylabel("x [m]")
 
     # Add info about the steel casing surrounding the WP
-    textstr_turn_insulation = f"$\\mathbf{{Turn \\ Insulation:}}$\n\n$\\Delta r:${mfile.get('t_tf_superconductor_quench', scan=scan):.3e} m"
+    textstr_turn_insulation = (
+        f"$\\mathbf{{Turn \\ Insulation:}}$\n\n"
+        f"$\\Delta r$: {mfile.get('t_tf_superconductor_quench', scan=scan):.3e} m"
+    )
 
     axis.text(
         0.5,
@@ -1107,7 +1110,8 @@ def plot_tf_step_vertical_tape_turn(
         f"$\\mathbf{{Strand \\ Space:}}$\n\n"
         f"$\\Delta r:$ {mfile.get('dr_tf_turn_tape_stack', scan=scan):.3e} m\n"
         f"$\\Delta x:$ {mfile.get('dx_tf_turn_tape_stack', scan=scan):.3e} m\n"
-        f"Tape stack space area: {mfile.get('a_tf_turn_tape_stack', scan=scan):.3e} m$^2$\n"
+        "Tape stack space area: "
+        f"{mfile.get('a_tf_turn_tape_stack', scan=scan):.3e} m$^2$\n"
         f"Strands per turn: {mfile.get('n_tf_turn_superconducting_strands', scan=scan)}"
     )
 
@@ -1154,7 +1158,8 @@ def plot_tf_step_vertical_tape_turn(
     textstr_turn_cooling = (
         f"$\\mathbf{{Cooling:}}$\n\n"
         f"$\\varnothing$: {mfile.get('dia_tf_turn_coolant_channel', scan=scan):.3e} m\n"
-        f"Total area of all coolant channels: {mfile.get('a_tf_wp_coolant_channels', scan=scan):.4f} m$^2$"
+        "Total area of all coolant channels: "
+        f"{mfile.get('a_tf_wp_coolant_channels', scan=scan):.4f} m$^2$"
     )
 
     axis.text(
@@ -1173,23 +1178,30 @@ def plot_tf_step_vertical_tape_turn(
         },
     )
 
+    get = _reader(mfile, scan)
     textstr_superconductor = (
         f"$\\mathbf{{Superconductor:}}$\n \n"
-        f"Superconductor used: {SuperconductorModel(mfile.get('i_tf_sc_mat', scan=scan)).full_name}\n"
-        f"Critical field at zero \ntemperature and strain: {mfile.get('b_tf_superconductor_critical_zero_temp_strain', scan=scan):.4f} T\n"
-        f"Critical temperature at \nzero field and strain: {mfile.get('temp_tf_superconductor_critical_zero_field_strain', scan=scan):.4f} K\n"
-        f"Temperature at conductor: {mfile.get('tftmp', scan=scan):.4f} K\n"
-        f"Field at conductor: {mfile.get('b_tf_inboard_peak_with_ripple', scan=scan):.4f} T\n"
-        f"Superconductor critical current density at \noperating conditions: {mfile.get('j_tf_superconductor_critical', scan=scan):.2e} A/m$^2$\n"
-        f"$I_{{\\text{{TF,turn critical}}}}$: {mfile.get('c_turn_cables_critical', scan=scan):,.2f} A\n"
-        f"$I_{{\\text{{TF,turn}}}}$: {mfile.get('c_tf_turn', scan=scan):,.2f} A\n"
-        f"Critcal current ratio: {mfile.get('f_c_tf_turn_operating_critical', scan=scan):,.4f}\n"
-        f"Superconductor temperature \nmargin: {mfile.get('temp_tf_superconductor_margin', scan=scan):,.4f} K\n"
+        f"Superconductor used: {SuperconductorModel(get('i_tf_sc_mat')).full_name}\n"
+        "Critical field at zero \ntemperature and strain: "
+        f"{get('b_tf_superconductor_critical_zero_temp_strain'):.4f} T\n"
+        "Critical temperature at \nzero field and strain: "
+        f"{get('temp_tf_superconductor_critical_zero_field_strain'):.4f} K\n"
+        f"Temperature at conductor: {get('tftmp'):.4f} K\n"
+        f"Field at conductor: {get('b_tf_inboard_peak_with_ripple'):.4f} T\n"
+        "Superconductor critical current density at \noperating conditions: "
+        f"{get('j_tf_superconductor_critical'):.2e} A/m$^2$\n"
+        f"$I_{{\\text{{TF,turn critical}}}}$: {get('c_turn_cables_critical'):,.2f} A\n"
+        f"$I_{{\\text{{TF,turn}}}}$: {get('c_tf_turn'):,.2f} A\n"
+        f"Critcal current ratio: {get('f_c_tf_turn_operating_critical'):,.4f}\n"
+        "Superconductor temperature \nmargin: "
+        f"{get('temp_tf_superconductor_margin'):,.4f} K\n"
         f"\n$\\mathbf{{Quench:}}$\n \n"
-        f"Quench dump time: {mfile.get('t_tf_superconductor_quench', scan=scan):.4e} s\n"
-        f"Quench detection time: {mfile.get('t_tf_quench_detection', scan=scan):.4e} s\n"
-        f"User input max temperature \nduring quench: {mfile.get('temp_tf_conductor_quench_max', scan=scan):.2f} K\n"
-        f"Required maxium WP current \ndensity for heat protection:\n{mfile.get('j_tf_wp_quench_heat_max', scan=scan):.2e} A/m$^2$\n"
+        f"Quench dump time: {get('t_tf_superconductor_quench'):.4e} s\n"
+        f"Quench detection time: {get('t_tf_quench_detection'):.4e} s\n"
+        "User input max temperature \nduring quench: "
+        f"{get('temp_tf_conductor_quench_max'):.2f} K\n"
+        "Required maxium WP current \ndensity for heat protection:\n"
+        f"{get('j_tf_wp_quench_heat_max'):.2e} A/m$^2$\n"
     )
     axis.text(
         0.75,

@@ -1,5 +1,6 @@
 from typing import Any, NamedTuple
 
+import numpy as np
 import pytest
 
 from process.data_structure.superconducting_tf_coil_variables import (
@@ -7,6 +8,7 @@ from process.data_structure.superconducting_tf_coil_variables import (
 )
 from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil import superconducting as sctf
+from process.models.tfcoil.base import TFStressResults
 from process.models.tfcoil.superconducting import TFComponentShape, VVComponentShape
 
 
@@ -2281,6 +2283,97 @@ def test_tf_croco_areas_and_masses(itart, monkeypatch, croco_sctfcoil):
     else:
         assert res.whtcp == pytest.approx(0.0)
         assert res.whttflgs == pytest.approx(0.0)
+
+
+@pytest.mark.parametrize("output", [False, True])
+def test_step_run_preserves_calculation_order_and_results(
+    step_sctfcoil, monkeypatch, output
+):
+    data = step_sctfcoil.data
+    tf = data.tfcoil
+    sc = data.superconducting_tfcoil
+    tf.i_tf_turns_integer = 1
+    tf.dr_tf_wp_with_insulation = 0.6
+    tf.dx_tf_wp_insulation = 0.01
+    tf.dx_tf_wp_insertion_gap = 0.005
+    tf.n_tf_wp_layers = 4
+    tf.n_tf_wp_pancakes = 5
+    tf.dx_tf_turn_insulation = 0.002
+    tf.c_tf_total = 32.0e6
+    tf.n_tf_coils = 16
+    tf.j_tf_wp = 1.0e8
+    tf.b_tf_inboard_peak_with_ripple = 10.0
+    tf.temp_tf_operating = 20.0
+    tf.temp_tf_superconductor_margin_min = 5.0
+    tf.i_tf_sc_mat = SuperconductorModel.CROCO_REBCO
+    tf.len_tf_coil = 50.0
+    tf.a_tf_inboard_total = 30.0
+    tf.a_tf_coil_inboard_case = 2.0
+    tf.a_tf_coil_outboard_case = 1.2
+    tf.n_rad_per_layer = 37
+    sc.dx_tf_wp_toroidal_min = 0.8
+    sc.c_tf_coil = 2.0e6
+    sc.a_tf_wp_ground_insulation = 0.2
+    sc.a_tf_wp_with_insulation = 0.7
+    sc.a_tf_wp_no_insulation = 0.64
+    sc.dx_tf_hts_tape_total = 0.0001
+    sc.dx_tf_hts_tape_rebco = 0.000001
+    sc.dx_tf_hts_tape_copper = 0.00002
+    data.build.z_tf_inside_half = 9.0
+    data.build.dr_tf_inboard = 1.2
+    data.costs.i_plant_availability = sctf.AvailabilityModel.USER_INPUT
+
+    calls = []
+    monkeypatch.setattr(step_sctfcoil, "run_base_superconducting_tf", lambda: None)
+    monkeypatch.setattr(step_sctfcoil, "generic_tf_coil_area_and_masses", lambda: None)
+    monkeypatch.setattr(
+        step_sctfcoil,
+        "quench_heat_protection_current_density",
+        lambda **kwargs: (3.0, 4000.0),
+    )
+    stress_result = TFStressResults(*range(24))
+
+    def stresscl(**kwargs):
+        calls.append(("stress", kwargs["n_radial_array"], kwargs["dx_tf_turn_steel"]))
+        return stress_result
+
+    monkeypatch.setattr(step_sctfcoil, "stresscl", stresscl)
+    monkeypatch.setattr(
+        step_sctfcoil, "out_stress", lambda result: calls.append(("output", result))
+    )
+    monkeypatch.setattr(
+        step_sctfcoil, "vv_stress_on_quench", lambda: calls.append(("vv",))
+    )
+    monkeypatch.setattr(
+        step_sctfcoil, "output_general_tf_info", lambda: calls.append(("general",))
+    )
+
+    step_sctfcoil.run(output=output)
+
+    assert tf.a_tf_turn == pytest.approx(0.001)
+    assert tf.j_tf_wp_critical == pytest.approx(190842830981.11948, rel=1e-12)
+    assert tf.j_tf_wp_temp_margin_min == pytest.approx(158854598266.70135, rel=1e-12)
+    assert sc.c_tf_turn_cables_critical == pytest.approx(190842830.98111948, rel=1e-12)
+    assert tf.m_tf_coils_total == pytest.approx(23595391.70560271, rel=1e-12)
+    assert sc.n_tf_turn_superconducting_strands == 600
+    assert tf.str_wp == 20
+    assert tf.sig_tf_wp == 17
+    assert tf.v_tf_coil_dump_quench_kv == pytest.approx(4.0)
+    expected_calls = [("stress", 500 if output else 37, 0.15)]
+    if output:
+        expected_calls.append(("output", stress_result))
+    expected_calls.append(("vv",))
+    if output:
+        expected_calls.append(("general",))
+    assert calls == expected_calls
+
+
+def test_step_run_rejects_non_integer_turns(step_sctfcoil, monkeypatch):
+    monkeypatch.setattr(step_sctfcoil, "run_base_superconducting_tf", lambda: None)
+    step_sctfcoil.data.tfcoil.i_tf_turns_integer = 0
+
+    with pytest.raises(sctf.ProcessValueError, match="Non integer turn geometry"):
+        step_sctfcoil.run()
 
 
 def test_tf_step_vertical_tape_integer_turn_geometry(step_sctfcoil):

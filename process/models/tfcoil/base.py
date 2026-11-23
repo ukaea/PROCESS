@@ -283,12 +283,26 @@ class TFCoil(Model):
         """Run main tfcoil subroutine and write output."""
         self.cntrpst(output=True)
 
-    def run_and_output_stress(self, *, output: bool = True):
+    def run_and_output_stress(
+        self,
+        *,
+        output: bool = True,
+        n_rad_per_layer: int = 500,
+        dx_tf_turn_steel: float | None = None,
+    ):
+        """Run the stress calculation and optionally print its results.
+
+        Parameters
+        ----------
+        output :
+            Whether to print the stress results.
+        n_rad_per_layer :
+            Number of radial points per layer.
+        dx_tf_turn_steel :
+            Turn structure thickness for the stress calculation. Defaults to the
+            TF turn steel thickness.
         """
-        Run the TF coil model and
-        print the results of the stress calculations.
-        """
-        self.data.tfcoil.n_rad_per_layer = 500
+        self.data.tfcoil.n_rad_per_layer = n_rad_per_layer
 
         d_sc_tf = self.data.superconducting_tfcoil
 
@@ -340,7 +354,11 @@ class TFCoil(Model):
                 dr_tf_turn_cable_space=d_sc_tf.dr_tf_turn_cable_space,
                 dia_tf_turn_coolant_channel=self.data.tfcoil.dia_tf_turn_coolant_channel,
                 f_a_tf_turn_cable_copper=self.data.tfcoil.f_a_tf_turn_cable_copper,
-                dx_tf_turn_steel=self.data.tfcoil.dx_tf_turn_steel,
+                dx_tf_turn_steel=(
+                    self.data.tfcoil.dx_tf_turn_steel
+                    if dx_tf_turn_steel is None
+                    else dx_tf_turn_steel
+                ),
                 dx_tf_side_case_average=d_sc_tf.dx_tf_side_case_average,
                 dx_tf_wp_toroidal_average=d_sc_tf.dx_tf_wp_toroidal_average,
                 a_tf_coil_inboard_insulation=d_sc_tf.a_tf_coil_inboard_insulation,
