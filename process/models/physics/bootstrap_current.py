@@ -2106,7 +2106,7 @@ class SauterBootstrapCurrent(Model):
 
         Returns
         -------
-        float | np.ndarray:
+        float | np.ndarray
             The effective trapped particle fraction coefficient f³¹_{teff}.
 
         Notes
@@ -2153,7 +2153,7 @@ class SauterBootstrapCurrent(Model):
 
         Returns
         -------
-        float | np.ndarray:
+        float | np.ndarray
             The effective trapped particle fraction coefficient f³²ᵉᵉ_{teff}(νₑ⁎).
 
         Notes
@@ -2202,7 +2202,7 @@ class SauterBootstrapCurrent(Model):
 
         Returns
         -------
-        float | np.ndarray:
+        float | np.ndarray
             The effective trapped particle fraction coefficient f³²ᵉⁱ_{teff}(νₑ⁎).
 
         Notes
@@ -2252,7 +2252,7 @@ class SauterBootstrapCurrent(Model):
 
         Returns
         -------
-        float | np.ndarray:
+        float | np.ndarray
             The effective trapped particle fraction coefficient f³⁴_{teff}(νₑ⁎).
 
         Notes
@@ -2295,7 +2295,7 @@ class SauterBootstrapCurrent(Model):
 
         Returns
         -------
-        float | np.ndarray:
+        float | np.ndarray
             The (α₀) coefficient.
 
         Notes
@@ -2334,7 +2334,7 @@ class SauterBootstrapCurrent(Model):
 
         Returns
         -------
-        float | np.ndarray:
+        float | np.ndarray
             The (α) coefficient.
 
         Notes
