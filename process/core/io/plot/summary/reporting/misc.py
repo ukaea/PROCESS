@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 import numpy as np
 
 if TYPE_CHECKING:
-    import matplotlib.pyplot as plt
+    from matplotlib.axes import Axes
 
     from process.core.io.mfile import MFile
 
@@ -29,7 +29,7 @@ class RadialBuild:
 
 
 def plot_centre_cross(
-    axis: plt.Axes, mfile: MFile, scan: int, mirror_negative_x: bool = False
+    axis: Axes, mfile: MFile, scan: int, mirror_negative_x: bool = False
 ):
     """Function to plot centre cross on plot
 
@@ -53,12 +53,12 @@ def plot_centre_cross(
     )
 
 
-def plot_iteration_variables(axis: plt.Axes, m_file: MFile, scan: int):
+def plot_iteration_variables(axis: Axes, m_file: MFile, scan: int):
     """Plot the iteration variables and where they lay in their bounds on a given axes
 
     Parameters
     ----------
-    axis: plt.Axes :
+    axis: Axes :
 
     m_file: MFile :
 

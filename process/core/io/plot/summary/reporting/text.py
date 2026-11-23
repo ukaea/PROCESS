@@ -5,14 +5,14 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    import matplotlib.pyplot as plt
+    from matplotlib.axes import Axes
 
     from process.core.io.mfile import MFile
 
 __all__ = ["plot_info"]
 
 
-def plot_info(axis: plt.Axes, data, mfile: MFile, scan: int):
+def plot_info(axis: Axes, data, mfile: MFile, scan: int):
     """Function to plot data in written form on a matplotlib plot.
 
     Parameters

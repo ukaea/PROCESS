@@ -10,14 +10,14 @@ from process.core.io.plot.summary.common import add_panel, box_style, get_pulse_
 from process.core.io.plot.summary.magnets.cs import secs_to_hms
 
 if TYPE_CHECKING:
-    import matplotlib.pyplot as plt
+    from matplotlib.axes import Axes
 
     from process.core.io.mfile import MFile
 
 __all__ = ["plot_current_profiles_over_time", "plot_system_power_profiles_over_time"]
 
 
-def plot_current_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_current_profiles_over_time(axis: Axes, mfile: MFile, scan: int):
     """Plots the current profiles over time for PF circuits, CS coil, and plasma."""
     pulse_timings = get_pulse_timings(mfile, scan)
 
@@ -103,7 +103,7 @@ def plot_current_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int):
     axis.grid(True, linestyle="--", alpha=0.6)
 
 
-def plot_system_power_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_system_power_profiles_over_time(axis: Axes, mfile: MFile, scan: int):
     """Plots the power profiles over time for various systems."""
     pulse_timings = get_pulse_timings(mfile, scan)
 

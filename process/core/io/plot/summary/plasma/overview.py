@@ -32,7 +32,6 @@ from process.models.physics.plasma_current import (
 from process.models.physics.plasma_geometry import PlasmaGeometryModelType
 
 if TYPE_CHECKING:
-    import matplotlib.pyplot as plt
     from matplotlib.axes import Axes
     from matplotlib.figure import Figure
 
@@ -273,18 +272,18 @@ def plasma_main_page(
 
 
 def plot_main_plasma_information(
-    axis: plt.Axes,
+    axis: Axes,
     mfile: MFile,
     scan: int,
     colour_scheme: Literal[1, 2],
-    fig: plt.Figure,
+    fig: Figure,
 ):
     """Plots the main plasma information including plasma shape, geometry, currents,
     heating, confinement, and other relevant plasma parameters.
 
     Parameters
     ----------
-    axis : plt.Axes
+    axis : Axes
         The matplotlib axis object to plot on.
     mfile : MFile
         The MFILE data object containing plasma parameters.
@@ -292,7 +291,7 @@ def plot_main_plasma_information(
         The scan number to use for extracting data.
     colour_scheme : int
         The colour scheme to use for plots.
-    fig : plt.Figure
+    fig : Figure
         The matplotlib figure object for additional annotations.
     """
 
@@ -598,12 +597,12 @@ def plot_main_plasma_information(
     add_panel(axis, 0.220, 0.29, 0.130, 0.075, text_density_limit, box_style("pink"))
 
 
-def plot_detailed_plasma_parameters(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_detailed_plasma_parameters(axis: Axes, mfile: MFile, scan: int):
     """Function to plot detailed plasma parameters from physics data.
 
     Parameters
     ----------
-    axis : plt.Axes
+    axis : Axes
         Axis object to plot to
     mfile : MFile
         MFILE data object

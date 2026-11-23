@@ -20,6 +20,8 @@ from process.models.physics.plasma_current import PlasmaCurrentModel
 from process.models.physics.plasma_geometry import PlasmaShapeModelType
 
 if TYPE_CHECKING:
+    from matplotlib.axes import Axes
+
     from process.core.io.mfile import MFile
 
 
@@ -36,7 +38,7 @@ __all__ = [
 ]
 
 
-def plot_physics_info(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_physics_info(axis: Axes, mfile: MFile, scan: int):
     """Function to plot geometry info
 
     Parameters
@@ -104,7 +106,7 @@ def plot_physics_info(axis: plt.Axes, mfile: MFile, scan: int):
     plot_info(axis, data, mfile, scan)
 
 
-def plot_h_threshold_comparison(axis: plt.Axes, mfile: MFile, scan: int, u_seed=None):
+def plot_h_threshold_comparison(axis: Axes, mfile: MFile, scan: int, u_seed=None):
     """Function to plot a scatter box plot of L-H threshold power comparisons.
 
     Parameters
@@ -221,7 +223,7 @@ def plot_h_threshold_comparison(axis: plt.Axes, mfile: MFile, scan: int, u_seed=
     axis.set_facecolor("#f0f0f0")
 
 
-def plot_density_limit_comparison(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_density_limit_comparison(axis: Axes, mfile: MFile, scan: int):
     """Function to plot a scatter box plot of different density limit comparisons.
 
     Parameters
@@ -306,7 +308,7 @@ def plot_density_limit_comparison(axis: plt.Axes, mfile: MFile, scan: int):
 
 
 def plot_plasma(
-    axis: plt.Axes,
+    axis: Axes,
     mfile: MFile,
     scan: int,
     colour_scheme: Literal[1, 2],
@@ -395,7 +397,7 @@ def plot_plasma(
             raise ValueError(f"Unsupported plasma shape model type: {i_plasma_shape}")
 
 
-def plot_plasma_current_comparison(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_plasma_current_comparison(axis: Axes, mfile: MFile, scan: int):
     """Function to plot a scatter box plot of different plasma current comparisons.
 
     Parameters
@@ -487,7 +489,7 @@ def plot_plasma_current_comparison(axis: plt.Axes, mfile: MFile, scan: int):
     axis.set_facecolor("#f0f0f0")
 
 
-def plot_max_normalised_beta_comparison(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_max_normalised_beta_comparison(axis: Axes, mfile: MFile, scan: int):
     """Function to plot a scatter box plot of different max normalised beta comparisons.
 
     Parameters
@@ -635,7 +637,7 @@ def reaction_plot_grid(
         ax.legend(legend_handles, legend_labels, loc="upper right", fontsize=8)
 
 
-def plot_magnetic_fields_in_plasma(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_magnetic_fields_in_plasma(axis: Axes, mfile: MFile, scan: int):
     """Plot magnetic field profiles inside the plasma boundary"""
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
@@ -1048,13 +1050,13 @@ def plot_plasma_outboard_toroidal_ripple_map(fig, mfile: MFile, scan: int):
     fig.tight_layout()
 
 
-def plot_radiation_power_contributions(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_radiation_power_contributions(axis: Axes, mfile: MFile, scan: int):
     """Plot a sorted horizontal bar chart of the radiation power from synchrotron
     and each ion species, annotated with the percentage of the total.
 
     Parameters
     ----------
-    axis : plt.Axes
+    axis : Axes
         axis object to add plot to
     mfile : MFile
         MFile object containing the radiation power information.

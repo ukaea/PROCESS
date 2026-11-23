@@ -30,6 +30,8 @@ from process.models.tfcoil import quench
 from process.models.tfcoil.base import TFCoilShapeModel, TFPlasmaCaseType
 
 if TYPE_CHECKING:
+    from matplotlib.axes import Axes
+
     from process.core.io.mfile import MFile
 
 __all__ = [
@@ -157,7 +159,7 @@ def _plot_tf_case(axis, inner_radius, outer_radius, half_angle, case_type):
     return float(curves[3][-1])
 
 
-def TF_outboard(axis: plt.Axes, item, n_tf_coils, r3, r4, w, facecolor):
+def TF_outboard(axis: Axes, item, n_tf_coils, r3, r4, w, facecolor):
     """Plot an outboard TF coil."""
     angle = item * 2 * np.pi / n_tf_coils
     cosine, sine = np.cos(angle), np.sin(angle)
@@ -179,7 +181,7 @@ def TF_outboard(axis: plt.Axes, item, n_tf_coils, r3, r4, w, facecolor):
 
 
 def plot_tf_coils(
-    axis: plt.Axes,
+    axis: Axes,
     mfile: MFile,
     scan: int,
     colour_scheme: Literal[1, 2],
@@ -443,7 +445,7 @@ def _plot_superconducting_pack(axis, get):
             axis.plot([inner + inset, outer - inset], [y, y], **style)
 
 
-def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_superconducting_tf_wp(axis: Axes, mfile: MFile, scan: int):
     """Plot the superconducting inboard TF case and winding pack."""
     get = _reader(mfile, scan)
     if round(get("i_tf_sup")) != 1:
@@ -486,7 +488,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int):
     _finish_wp_axis(axis, (inner * 0.8, outer * 1.1), (lower_y * 1.25, -lower_y * 1.25))
 
 
-def plot_resistive_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
+def plot_resistive_tf_wp(axis: Axes, mfile: MFile, scan: int, fig):
     """Plot the resistive inboard TF case and winding pack."""
     get = _reader(mfile, scan)
     inner, outer = get("r_tf_wp_inboard_inner"), get("r_tf_wp_inboard_outer")
@@ -553,7 +555,7 @@ def plot_resistive_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
     )
 
 
-def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_resistive_tf_info(axis: Axes, mfile: MFile, scan: int):
     """Plot information about the resistive TF coils."""
     get = _reader(mfile, scan)
     insulation = (
@@ -873,7 +875,7 @@ def _pack_strands_rectangular_with_obstacles(
     return len(placed), n_rows * n_cols
 
 
-def plot_tf_cable_in_conduit_turn(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_tf_cable_in_conduit_turn(axis: Axes, mfile: MFile, scan: int):
     """Plot the CICC turn envelope, coolant channel and packed strands."""
     get = _reader(mfile, scan)
     turn = _TurnGeometry.from_mfile(mfile, scan)
@@ -929,7 +931,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, mfile: MFile, scan: int):
     _plot_turn_panels(axis, get, turn)
 
 
-def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
+def plot_tf_croco_turn(axis: Axes, fig, mfile: MFile, scan: int):
     """Plot a CroCo turn; retain the original non-integer-only cable layout."""
     get = _reader(mfile, scan)
     turn = _TurnGeometry.from_mfile(mfile, scan)
@@ -1004,7 +1006,7 @@ def _dimension(
     )
 
 
-def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_scheme=1):
+def plot_tf_coil_structure(axis: Axes, mfile: MFile, scan: int, colour_scheme=1):
     """Plot the TF coil poloidal cross-section and its dimensions."""
     plot_tf_coils(axis, mfile, scan, colour_scheme)
     get = _reader(mfile, scan)
@@ -1409,8 +1411,8 @@ def plot_quench_time_evolution(
     a_tf_turn_cable_space: float,
     a_tf_turn: float,
     n_points: int = 500,
-    axes_1: plt.Axes | None = None,
-    axes_2: plt.Axes | None = None,
+    axes_1: Axes | None = None,
+    axes_2: Axes | None = None,
     show: bool = False,
 ) -> None:
     """Plot quench current density and adiabatic hotspot temperature evolution.

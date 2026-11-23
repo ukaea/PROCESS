@@ -17,7 +17,6 @@ from process.core.io.plot.summary.constants import (
 )
 
 if TYPE_CHECKING:
-    import matplotlib.pyplot as plt
     from matplotlib.axes import Axes
 
     from process.core.io.mfile import MFile
@@ -25,9 +24,7 @@ if TYPE_CHECKING:
 __all__ = ["draw_bend", "plot_upper_vertical_build"]
 
 
-def plot_upper_vertical_build(
-    axis: plt.Axes, mfile: MFile, colour_scheme: Literal[1, 2]
-):
+def plot_upper_vertical_build(axis: Axes, mfile: MFile, colour_scheme: Literal[1, 2]):
     """Plots the upper vertical build of a fusion device on the given matplotlib axis.
 
     This function visualizes the different layers/components of the machine's vertical

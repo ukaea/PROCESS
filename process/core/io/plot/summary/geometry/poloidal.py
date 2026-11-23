@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal
 
-import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import patches
 
@@ -41,6 +40,8 @@ from process.models.geometry.vacuum_vessel import (
 )
 
 if TYPE_CHECKING:
+    from matplotlib.axes import Axes
+
     from process.core.io.mfile import MFile
     from process.core.io.plot.summary.reporting.misc import RadialBuild
 
@@ -59,7 +60,7 @@ __all__ = [
 
 
 def poloidal_cross_section(
-    axis: plt.Axes,
+    axis: Axes,
     mfile: MFile,
     scan: int,
     demo_ranges: bool,
@@ -108,7 +109,7 @@ def poloidal_cross_section(
 
 
 def plot_full_machine_poloidal_cross_section(
-    axis: plt.Axes,
+    axis: Axes,
     mfile: MFile,
     scan: int,
     radial_build: RadialBuild,
@@ -162,7 +163,7 @@ def plot_full_machine_poloidal_cross_section(
 
 
 def plot_cryostat(
-    axis: plt.Axes,
+    axis: Axes,
     mfile: MFile,
     scan: int,
     colour_scheme: Literal[1, 2],
@@ -172,7 +173,7 @@ def plot_cryostat(
 
     Parameters
     ----------
-    axis : plt.Axes
+    axis : Axes
         axis object to plot to
     mfile : MFile
         MFILE data object
@@ -440,7 +441,7 @@ def plot_vacuum_vessel_and_divertor(
 
 
 def plot_shield(
-    axis: plt.Axes,
+    axis: Axes,
     mfile: MFile,
     scan: int,
     radial_build,
@@ -530,7 +531,7 @@ def plot_shield(
 
 
 def plot_blanket(
-    axis: plt.Axes,
+    axis: Axes,
     mfile: MFile,
     scan,
     radial_build,
@@ -669,7 +670,7 @@ def plot_blanket(
                 )
 
 
-def plot_first_wall_top_down_cross_section(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_first_wall_top_down_cross_section(axis: Axes, mfile: MFile, scan: int):
     """Plot first wall top down cross-section"""
     # Import required variables
     radius_fw_channel = mfile.get("radius_fw_channel", scan=scan) * 100
@@ -787,7 +788,7 @@ def plot_first_wall_top_down_cross_section(axis: plt.Axes, mfile: MFile, scan: i
     axis.set_ylim(-1, 2 * (dr_fw_wall + radius_fw_channel) + 1)
 
 
-def plot_first_wall_poloidal_cross_section(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_first_wall_poloidal_cross_section(axis: Axes, mfile: MFile, scan: int):
     """Plot first wall poloidal cross-section"""
     # Import required variables
     radius_fw_channel = mfile.get("radius_fw_channel", scan=scan)
@@ -913,7 +914,7 @@ def plot_first_wall_poloidal_cross_section(axis: plt.Axes, mfile: MFile, scan: i
 
 
 def plot_firstwall(
-    axis: plt.Axes,
+    axis: Axes,
     mfile: MFile,
     scan: int,
     radial_build,

@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal
 
-import matplotlib.pyplot as plt
 from matplotlib import patches
 
 from process.core.io.plot.summary.constants import CSCOMPRESSION_COLOUR, SOLENOID_COLOUR
@@ -13,13 +12,15 @@ from process.data_structure.pfcoil_variables import CSUseModel
 from process.models.geometry.pfcoil import pfcoil_geometry
 
 if TYPE_CHECKING:
+    from matplotlib.axes import Axes
+
     from process.core.io.mfile import MFile
 
 __all__ = ["plot_pf_coils", "plot_pf_dimensions"]
 
 
 def plot_pf_coils(
-    axis: plt.Axes,
+    axis: Axes,
     mfile: MFile,
     scan: int,
     colour_scheme: Literal[1, 2],
@@ -147,7 +148,7 @@ def plot_pf_coils(
 
 
 def plot_pf_dimensions(
-    axis: plt.Axes, mfile: MFile, scan: int, colour_scheme: Literal[1, 2] = 1
+    axis: Axes, mfile: MFile, scan: int, colour_scheme: Literal[1, 2] = 1
 ) -> None:
     """Plot the PF coil dimensions on the given axis."""
     r_pf_coil_middle = []

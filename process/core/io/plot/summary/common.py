@@ -6,7 +6,6 @@ from importlib import resources
 from typing import TYPE_CHECKING, Literal
 
 import matplotlib.image as mpimg
-import matplotlib.pyplot as plt
 from matplotlib import patches
 from matplotlib.patches import FancyBboxPatch
 
@@ -25,6 +24,8 @@ from process.core.io.plot.summary.constants import (
 from process.models.pulse import PulseTimings
 
 if TYPE_CHECKING:
+    from matplotlib.axes import Axes
+
     from process.core.io.mfile import MFile
 
 __all__ = [
@@ -182,7 +183,7 @@ def add_symbol(axis, panel_name: str, x: float, top: float):
     )
 
 
-def color_key(axis: plt.Axes, mfile: MFile, scan: int, colour_scheme: Literal[1, 2]):
+def color_key(axis: Axes, mfile: MFile, scan: int, colour_scheme: Literal[1, 2]):
     """Function to plot the colour key"""
     axis.set_ylim(0, 10)
     axis.set_xlim(0, 10)

@@ -13,14 +13,15 @@ from process.core.io.plot.summary.common import (
 from process.core.io.plot.summary.reporting.text import plot_info
 
 if TYPE_CHECKING:
-    import matplotlib.pyplot as plt
+    from matplotlib.axes import Axes
+    from matplotlib.figure import Figure
 
     from process.core.io.mfile import MFile
 
 __all__ = ["plot_blanket_coolant_properties", "plot_main_power_flow", "plot_power_info"]
 
 
-def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figure):
+def plot_main_power_flow(axis: Axes, mfile: MFile, scan: int, fig: Figure):
     """Plots the main power flow diagram for the fusion reactor, including plasma,
     heating and current drive,
     first wall, blanket, vacuum vessel, divertor, coolant pumps, turbine, generator, and
@@ -1588,7 +1589,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
 
-def plot_power_info(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_power_info(axis: Axes, mfile: MFile, scan: int):
     """Function to plot power info
 
     Parameters
@@ -1677,7 +1678,7 @@ def plot_power_info(axis: plt.Axes, mfile: MFile, scan: int):
     plot_info(axis, data, mfile, scan)
 
 
-def plot_blanket_coolant_properties(fig: plt.Figure, m_file: MFile, scan: int):
+def plot_blanket_coolant_properties(fig: Figure, m_file: MFile, scan: int):
     """Combined plot of blanket coolant channel structure and properties."""
     for side, x_position in (("inboard", 0.1), ("outboard", 0.5)):
 

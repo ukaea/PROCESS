@@ -11,7 +11,7 @@ from process.data_structure.impurity_radiation_variables import (
 )
 
 if TYPE_CHECKING:
-    import matplotlib.pyplot as plt
+    from matplotlib.axes import Axes
 
     from process.core.io.mfile import MFile
 
@@ -31,7 +31,7 @@ __all__ = [
 ]
 
 
-def plot_plasma_coloumb_logarithms(axis: plt.Axes, mfile_data: MFile, scan: int) -> None:
+def plot_plasma_coloumb_logarithms(axis: Axes, mfile_data: MFile, scan: int) -> None:
     """Plot the plasma coloumb logarithms on the given axis."""
     plasma_coulomb_log_electron_electron_profile = [
         mfile_data.data[f"plasma_coulomb_log_electron_electron_profile{i}"].get_scan(
@@ -111,7 +111,7 @@ def plot_plasma_coloumb_logarithms(axis: plt.Axes, mfile_data: MFile, scan: int)
     axis.legend()
 
 
-def plot_larmor_radius_profile(axis: plt.Axes, mfile_data: MFile, scan: int):
+def plot_larmor_radius_profile(axis: Axes, mfile_data: MFile, scan: int):
     """Plot the Larmor radius profile on the given axis."""
     radius_plasma_deuteron_larmor_profile = [
         mfile_data.data[
@@ -163,7 +163,7 @@ def plot_larmor_radius_profile(axis: plt.Axes, mfile_data: MFile, scan: int):
     axis.legend()
 
 
-def plot_ion_charge_profile(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_ion_charge_profile(axis: Axes, mfile: MFile, scan: int):
     """Plot ion charge profile"""
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
@@ -214,7 +214,7 @@ def plot_ion_charge_profile(axis: plt.Axes, mfile: MFile, scan: int):
     axis.grid(which="both", linestyle="--", alpha=0.5)
 
 
-def plot_debye_length_profile(axis: plt.Axes, mfile_data: MFile, scan: int):
+def plot_debye_length_profile(axis: Axes, mfile_data: MFile, scan: int):
     """Plot the Debye length profile on the given axis."""
     len_plasma_debye_electron_profile = [
         mfile_data.data[f"len_plasma_debye_electron_profile{i}"].get_scan(scan)
@@ -243,7 +243,7 @@ def plot_debye_length_profile(axis: plt.Axes, mfile_data: MFile, scan: int):
     axis.legend()
 
 
-def plot_velocity_profile(axis: plt.Axes, mfile_data: MFile, scan: int) -> None:
+def plot_velocity_profile(axis: Axes, mfile_data: MFile, scan: int) -> None:
     """Plot the electron thermal velocity profile on the given axis."""
     vel_plasma_electron_profile = [
         mfile_data.data[f"vel_plasma_electron_profile{i}"].get_scan(scan)
@@ -309,9 +309,7 @@ def plot_velocity_profile(axis: plt.Axes, mfile_data: MFile, scan: int) -> None:
     axis.legend()
 
 
-def plot_electron_frequency_profile(
-    axis: plt.Axes, mfile_data: MFile, scan: int
-) -> None:
+def plot_electron_frequency_profile(axis: Axes, mfile_data: MFile, scan: int) -> None:
     """Plot the electron thermal frequency profile on the given axis."""
     freq_plasma_electron_profile = [
         mfile_data.data[f"freq_plasma_electron_profile{i}"].get_scan(scan)
@@ -410,7 +408,7 @@ def plot_electron_frequency_profile(
     axis.legend()
 
 
-def plot_ion_frequency_profile(axis: plt.Axes, mfile_data: MFile, scan: int) -> None:
+def plot_ion_frequency_profile(axis: Axes, mfile_data: MFile, scan: int) -> None:
     """Plot the ion thermal frequency profile on the given axis."""
     freq_plasma_larmor_toroidal_deuteron_profile = [
         mfile_data.data[f"freq_plasma_larmor_toroidal_deuteron_profile{i}"].get_scan(
@@ -450,7 +448,7 @@ def plot_ion_frequency_profile(axis: plt.Axes, mfile_data: MFile, scan: int) -> 
     axis.legend()
 
 
-def plot_collision_time_profile(axis: plt.Axes, mfile_data: MFile, scan: int) -> None:
+def plot_collision_time_profile(axis: Axes, mfile_data: MFile, scan: int) -> None:
     """Plot the plasma collision times on the given axis."""
     t_plasma_electron_electron_collision_profile = [
         mfile_data.data[f"t_plasma_electron_electron_collision_profile{i}"].get_scan(
@@ -518,9 +516,7 @@ def plot_collision_time_profile(axis: plt.Axes, mfile_data: MFile, scan: int) ->
     axis.legend()
 
 
-def plot_collision_frequency_profile(
-    axis: plt.Axes, mfile_data: MFile, scan: int
-) -> None:
+def plot_collision_frequency_profile(axis: Axes, mfile_data: MFile, scan: int) -> None:
     """Plot the plasma collision frequencies on the given axis."""
     freq_plasma_electron_electron_collision_profile = [
         mfile_data.data[f"freq_plasma_electron_electron_collision_profile{i}"].get_scan(
@@ -589,7 +585,7 @@ def plot_collision_frequency_profile(
     axis.legend()
 
 
-def plot_mean_free_path_profile(axis: plt.Axes, mfile_data: MFile, scan: int) -> None:
+def plot_mean_free_path_profile(axis: Axes, mfile_data: MFile, scan: int) -> None:
     """Plot the plasma mean free path on the given axis."""
     len_plasma_electron_electron_mean_free_path_profile = [
         mfile_data.data[
@@ -657,9 +653,7 @@ def plot_mean_free_path_profile(axis: plt.Axes, mfile_data: MFile, scan: int) ->
     axis.legend()
 
 
-def plot_ion_slowing_down_time_profile(
-    axis: plt.Axes, mfile_data: MFile, scan: int
-) -> None:
+def plot_ion_slowing_down_time_profile(axis: Axes, mfile_data: MFile, scan: int) -> None:
     """Plot the plasma Spitzer slowing down time on the given axis."""
     t_plasma_electron_alpha_spitzer_slow_profile = [
         mfile_data.data[f"t_plasma_electron_alpha_spitzer_slow_profile{i}"].get_scan(
@@ -684,7 +678,7 @@ def plot_ion_slowing_down_time_profile(
     axis.legend()
 
 
-def plot_resistivity_profile(axis: plt.Axes, mfile_data: MFile, scan: int) -> None:
+def plot_resistivity_profile(axis: Axes, mfile_data: MFile, scan: int) -> None:
     """Plot the plasma resistivity on the given axis."""
     res_plasma_fuel_spitzer_profile = [
         mfile_data.data[f"res_plasma_fuel_spitzer_profile{i}"].get_scan(scan)

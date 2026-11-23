@@ -14,6 +14,8 @@ from process.models.physics.exhaust import calculate_brunner_divertor_power_spli
 from process.models.physics.scrape_off_layer import ScrapeOffLayer
 
 if TYPE_CHECKING:
+    from matplotlib.axes import Axes
+
     from process.core.io.mfile import MFile
 
 __all__ = [
@@ -26,7 +28,7 @@ __all__ = [
 
 
 def plot_midplane_near_sol_radial_profile(
-    axis: plt.Axes, mfile: MFile, scan: int, colour_scheme: int
+    axis: Axes, mfile: MFile, scan: int, colour_scheme: int
 ):
     """Function to plot the radial profile of the near SOL at the midplane."""
     rmajor = mfile.get("rmajor", scan=scan)
@@ -78,7 +80,7 @@ def plot_midplane_near_sol_radial_profile(
     axis.set_ylabel(r"$q_{||}$ [MW/m$^2$]")
 
 
-def plot_div_lower_outboard_eich_target_profile(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_div_lower_outboard_eich_target_profile(axis: Axes, mfile: MFile, scan: int):
     """Function to plot the Eich target profile at the lower outboard divertor."""
     rmajor = mfile.get("rmajor", scan=scan)
     rminor = mfile.get("rminor", scan=scan)
@@ -133,7 +135,7 @@ def plot_div_lower_outboard_eich_target_profile(axis: plt.Axes, mfile: MFile, sc
     axis.set_ylabel(r"$q_{||,t,\mathrm{unmitigated}}$ [MW/m$^2$]")
 
 
-def plot_sol_power_flux_profiles(axis: plt.Axes, mfile: MFile, scan: int, colour_scheme):
+def plot_sol_power_flux_profiles(axis: Axes, mfile: MFile, scan: int, colour_scheme):
     """Plot separatrix power split fractions as a bar chart."""
     plot_plasma(axis=axis, mfile=mfile, scan=scan, colour_scheme=colour_scheme)
     rmajor, rminor, kappa = mfile.get_variables(
@@ -184,7 +186,7 @@ def plot_sol_power_flux_profiles(axis: plt.Axes, mfile: MFile, scan: int, colour
     axis.get_yaxis().set_ticks([])
 
 
-def plot_sol_power_decay_length_comparison(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_sol_power_decay_length_comparison(axis: Axes, mfile: MFile, scan: int):
     """Function to plot a scatter box plot of SOL power decay lengths (λ_q).
 
     Parameters
@@ -280,7 +282,7 @@ def plot_sol_power_decay_length_comparison(axis: plt.Axes, mfile: MFile, scan: i
 
 
 def plot_brunner_divertor_power_split_comparison_stackplot(
-    axis: plt.Axes, mfile: MFile, scan: int
+    axis: Axes, mfile: MFile, scan: int
 ):
     """Plot Brunner divertor power split fractions as a stack plot over dr_sep."""
     len_plasma_sol_outboard_pd = mfile.get("len_sol_outboard_power_decay", scan=scan)

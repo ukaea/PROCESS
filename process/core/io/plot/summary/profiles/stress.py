@@ -15,7 +15,7 @@ from process.models.engineering.materials import (
 from process.models.pfcoil import N_CS_STRESS_PROFILE_POINTS, CSCoil
 
 if TYPE_CHECKING:
-    import matplotlib.pyplot as plt
+    from matplotlib.axes import Axes
 
     from process.core.io.mfile import MFile
 
@@ -33,7 +33,7 @@ __all__ = [
 
 
 def plot_cs_radial_stress_profile(
-    axis: plt.Axes,
+    axis: Axes,
     mfile: MFile,
     scan: int,
     j_cs: float,
@@ -75,12 +75,12 @@ def plot_cs_radial_stress_profile(
 
 
 def plot_cs_radial_stress_contour_profile(
-    axis: plt.Axes,
+    axis: Axes,
     mfile: MFile,
     scan: int,
     j_cs: float,
     b_cs_inner: float,
-    colorbar_axis: plt.Axes | None = None,
+    colorbar_axis: Axes | None = None,
 ):
     """Plot CS radial stress contour profile"""
     r_cs_inner = mfile.get("r_cs_inner", scan=scan)
@@ -165,7 +165,7 @@ def plot_cs_radial_stress_contour_profile(
     axis.grid(True, alpha=0.3)
 
 
-def plot_cs_stress_time_profile(axis: plt.Axes, mfile: MFile, scan: int) -> None:
+def plot_cs_stress_time_profile(axis: Axes, mfile: MFile, scan: int) -> None:
     """Function to plot the time profile of the CS stress during the pulse."""
     pulse_timings = get_pulse_timings(mfile, scan)
 
@@ -193,7 +193,7 @@ def plot_cs_stress_time_profile(axis: plt.Axes, mfile: MFile, scan: int) -> None
 
 
 def plot_cs_hoop_stress_profile(
-    axis: plt.Axes,
+    axis: Axes,
     mfile: MFile,
     scan: int,
     j_cs: float,
@@ -236,12 +236,12 @@ def plot_cs_hoop_stress_profile(
 
 
 def plot_cs_hoop_stress_contour_profile(
-    axis: plt.Axes,
+    axis: Axes,
     mfile: MFile,
     scan: int,
     j_cs: float,
     b_cs_inner: float,
-    colorbar_axis: plt.Axes | None = None,
+    colorbar_axis: Axes | None = None,
 ):
     """Plot CS hoop stress contour profile"""
     r_cs_inner = mfile.get("r_cs_inner", scan=scan)
@@ -329,7 +329,7 @@ def plot_cs_hoop_stress_contour_profile(
 
 
 def plot_cs_vertical_stress_profile(
-    axis: plt.Axes,
+    axis: Axes,
     mfile: MFile,
     scan: int,
 ):
@@ -361,10 +361,10 @@ def plot_cs_vertical_stress_profile(
 
 
 def plot_vertical_stress_contour_profile(
-    axis: plt.Axes,
+    axis: Axes,
     mfile: MFile,
     scan: int,
-    colorbar_axis: plt.Axes | None = None,
+    colorbar_axis: Axes | None = None,
 ):
     """Vertical stress contour plot"""
     dz_cs_full = mfile.get("dz_cs_full", scan=scan)
@@ -442,10 +442,10 @@ def plot_vertical_stress_contour_profile(
 
 
 def plot_cs_tresca_2d_contour(
-    axis: plt.Axes,
+    axis: Axes,
     mfile: MFile,
     scan: int,
-    colorbar_axis: plt.Axes | None = None,
+    colorbar_axis: Axes | None = None,
 ):
     """CS Tresca stress contour plot"""
     dz_cs_full = mfile.get("dz_cs_full", scan=scan)
@@ -552,10 +552,10 @@ def plot_cs_tresca_2d_contour(
 
 
 def plot_cs_von_mises_2d_contour(
-    axis: plt.Axes,
+    axis: Axes,
     mfile: MFile,
     scan: int,
-    colorbar_axis: plt.Axes | None = None,
+    colorbar_axis: Axes | None = None,
 ):
     """CS Von Mises stress contour plot"""
     dz_cs_full = mfile.get("dz_cs_full", scan=scan)

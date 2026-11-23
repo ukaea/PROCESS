@@ -10,16 +10,14 @@ from process.data_structure.physics_variables import ConfinementTimeModel
 from process.models.physics.confinement_time import PlasmaConfinementTime
 
 if TYPE_CHECKING:
-    import matplotlib.pyplot as plt
+    from matplotlib.axes import Axes
 
     from process.core.io.mfile import MFile
 
 __all__ = ["plot_confinement_time_comparison"]
 
 
-def plot_confinement_time_comparison(
-    axis: plt.Axes, mfile: MFile, scan: int, u_seed=None
-):
+def plot_confinement_time_comparison(axis: Axes, mfile: MFile, scan: int, u_seed=None):
     """Function to plot a scatter box plot of confinement time comparisons.
 
     Parameters

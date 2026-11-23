@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import patches
 
@@ -15,6 +14,8 @@ from process.data_structure.pfcoil_variables import NFIXMX, CSUseModel
 from process.models.superconductors import SuperconductorModel
 
 if TYPE_CHECKING:
+    from matplotlib.axes import Axes
+
     from process.core.io.mfile import MFile
 
 
@@ -33,7 +34,7 @@ def secs_to_hms(s):
     return f"{int(s // 3600)}h {int((s % 3600) // 60)}m {int(s % 60)}s"
 
 
-def plot_magnetics_info(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_magnetics_info(axis: Axes, mfile: MFile, scan: int):
     """Function to plot magnet info
 
     Parameters
@@ -164,7 +165,7 @@ def plot_magnetics_info(axis: plt.Axes, mfile: MFile, scan: int):
     plot_info(axis, data, mfile, scan)
 
 
-def plot_cs_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_scheme=1):
+def plot_cs_coil_structure(axis: Axes, mfile: MFile, scan: int, colour_scheme=1):
     """Function to plot the coil structure of the CS.
 
     Parameters
@@ -367,7 +368,7 @@ def plot_cs_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_schem
     axis.legend()
 
 
-def plot_cs_turn_structure(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_cs_turn_structure(axis: Axes, mfile: MFile, scan: int):
     """Plot the CS turn structure"""
     a_cs_turn = mfile.get("a_cs_turn", scan=scan)
     dz_cs_turn = mfile.get("dz_cs_turn", scan=scan)
@@ -468,18 +469,16 @@ def plot_cs_turn_structure(axis: plt.Axes, mfile: MFile, scan: int):
     axis.grid(True, linestyle="--", alpha=0.3)
 
 
-def plot_pf_cs_plasma_mutual_inductance(
-    axis: plt.Axes, m_file: MFile, scan: int
-) -> None:
+def plot_pf_cs_plasma_mutual_inductance(axis: Axes, m_file: MFile, scan: int) -> None:
     """Plot the mutual inductance between the plasma and PF/CS coils.
 
     Parameters
     ----------
-    axis : plt.Axes
+    axis :
         Axis to plot on
-    m_file : MFile
+    m_file :
         MFILE data object
-    scan : int
+    scan :
         Scan number to read from MFILE
 
     """
@@ -515,7 +514,7 @@ def plot_pf_cs_plasma_mutual_inductance(
         for j in range(n_pf_cs_plasma_circuits):
             if mutual_inductance[i, j] != 0:
                 axis.add_patch(
-                    plt.Rectangle(
+                    patches.Rectangle(
                         (j - 0.5, i - 0.5),
                         1,
                         1,
