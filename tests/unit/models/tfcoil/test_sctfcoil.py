@@ -1,3 +1,4 @@
+from dataclasses import fields
 from typing import Any, NamedTuple
 
 import numpy as np
@@ -2027,7 +2028,27 @@ def test_tf_cicc_area_and_masses(
     ):
         monkeypatch.setattr(sctfcoil.data.superconducting_tfcoil, name, val)
 
+    conductor_area = (
+        tfcoilareaandmassesparam.a_tf_turn_cable_space_no_void
+        * tfcoilareaandmassesparam.n_tf_coil_turns
+        * (1.0 - tfcoilareaandmassesparam.f_a_tf_turn_cable_space_extra_void)
+        - tfcoilareaandmassesparam.a_tf_wp_coolant_channels
+    )
+    monkeypatch.setattr(sctfcoil.data.tfcoil, "a_tf_wp_conductor", conductor_area)
     result = cicc_sctfcoil.tf_cicc_areas_and_masses()
+
+    expected_sc = (
+        tfcoilareaandmassesparam.len_tf_coil
+        * conductor_area
+        * (1.0 - tfcoilareaandmassesparam.f_a_tf_turn_cable_copper)
+        * SuperconductorModel.WST_NB3SN.material.density
+    )
+    expected_copper = (
+        tfcoilareaandmassesparam.len_tf_coil
+        * conductor_area
+        * tfcoilareaandmassesparam.f_a_tf_turn_cable_copper
+        * sctf.constants.DEN_COPPER
+    )
 
     assert result.m_tf_wp_steel_conduit == pytest.approx(
         tfcoilareaandmassesparam.expected_m_tf_wp_steel_conduit
@@ -2041,16 +2062,15 @@ def test_tf_cicc_area_and_masses(
         tfcoilareaandmassesparam.expected_m_tf_coil_wp_insulation
     )
 
-    assert result.m_tf_coil_superconductor == pytest.approx(
-        tfcoilareaandmassesparam.expected_m_tf_coil_superconductor
-    )
+    assert result.m_tf_coil_superconductor == pytest.approx(expected_sc)
 
-    assert result.m_tf_coil_copper == pytest.approx(
-        tfcoilareaandmassesparam.expected_m_tf_coil_copper
-    )
+    assert result.m_tf_coil_copper == pytest.approx(expected_copper)
 
     assert result.m_tf_coil_conductor == pytest.approx(
-        tfcoilareaandmassesparam.expected_whtcon
+        expected_sc
+        + expected_copper
+        + tfcoilareaandmassesparam.expected_m_tf_wp_steel_conduit
+        + tfcoilareaandmassesparam.expected_m_tf_coil_wp_turn_insulation
     )
 
     assert result.m_tf_coil_wp_turn_insulation == pytest.approx(
@@ -2058,6 +2078,168 @@ def test_tf_cicc_area_and_masses(
     )
 
     assert result.cplen == pytest.approx(tfcoilareaandmassesparam.expected_cplen)
+
+
+@pytest.mark.parametrize("copper_fraction", [0.0, 0.25, 1.0])
+def test_cicc_masses_exclude_cooling_before_material_split(
+    cicc_sctfcoil, copper_fraction
+):
+    tf = cicc_sctfcoil.data.tfcoil
+    tf.len_tf_coil = 10.0
+    tf.n_tf_coil_turns = 2
+    tf.f_a_tf_turn_cable_copper = copper_fraction
+    tf.i_tf_sc_mat = SuperconductorModel.ITER_NB3SN
+    areas = cicc_sctfcoil.tf_cicc_inboard_areas_and_fractions(
+        n_tf_coil_turns=2,
+        dia_tf_turn_coolant_channel=0.02,
+        a_tf_turn_cable_space_no_void=0.01,
+        f_a_tf_turn_cable_space_extra_void=0.25,
+        a_tf_turn_insulation=0.001,
+        a_tf_turn_steel=0.001,
+        n_tf_coils=1,
+        a_tf_inboard_total=1.0,
+        a_tf_coil_inboard_case=0.1,
+        a_tf_wp_ground_insulation=0.01,
+    )
+    tf.a_tf_wp_conductor = areas.a_tf_wp_conductor
+
+    masses = cicc_sctfcoil.tf_cicc_areas_and_masses()
+    material_area = 2 * (0.01 * 0.75 - np.pi * 0.02**2 / 4)
+    assert masses.m_tf_coil_copper == pytest.approx(
+        10.0 * material_area * copper_fraction * sctf.constants.DEN_COPPER
+    )
+    assert masses.m_tf_coil_superconductor == pytest.approx(
+        10.0
+        * material_area
+        * (1.0 - copper_fraction)
+        * SuperconductorModel.ITER_NB3SN.material.density
+    )
+
+
+@pytest.mark.parametrize(
+    ("model_name", "mass_method", "setup_methods"),
+    [
+        (
+            "cicc_sctfcoil",
+            "tf_cicc_areas_and_masses",
+            (
+                "_run_cicc_turn_geometry",
+                "_run_cicc_inboard_areas",
+                "_run_cicc_superconductor_limits",
+            ),
+        ),
+        (
+            "croco_sctfcoil",
+            "tf_croco_areas_and_masses",
+            (
+                "_run_croco_turn_geometry",
+                "_run_croco_cable_geometry",
+                "_run_croco_inboard_areas",
+                "_run_croco_superconductor_limits",
+                "_run_croco_quench_protection",
+            ),
+        ),
+        (
+            "step_sctfcoil",
+            "tf_step_areas_and_masses",
+            (
+                "_run_step_turn_geometry",
+                "_run_step_inboard_areas",
+                "_run_step_superconductor_limits",
+                "_run_step_quench_protection",
+            ),
+        ),
+    ],
+)
+def test_tf_turn_run_stores_geometry_specific_masses(
+    process_models, monkeypatch, model_name, mass_method, setup_methods
+):
+    coil = getattr(process_models, model_name)
+    tf = coil.data.tfcoil
+    sc = coil.data.superconducting_tfcoil
+    coil.data.physics.itart = 0
+    coil.data.build.z_tf_inside_half = 9.0
+    coil.data.build.dr_tf_inboard = 1.2
+    tf.len_tf_coil = 50.0
+    tf.n_tf_coil_turns = 100
+    tf.n_tf_coils = 16
+    tf.c_tf_total = 16.0e6
+    tf.j_tf_wp = 1.0e8
+    tf.i_tf_sc_mat = (
+        SuperconductorModel.ITER_NB3SN
+        if model_name == "cicc_sctfcoil"
+        else SuperconductorModel.CROCO_REBCO
+    )
+    tf.a_tf_wp_conductor = 0.1
+    tf.f_a_tf_turn_cable_copper = 0.25
+    tf.a_tf_turn_steel = 0.001
+    tf.a_tf_coil_wp_turn_insulation = 0.05
+    tf.a_tf_coil_inboard_case = 1.0
+    tf.a_tf_coil_outboard_case = 1.2
+    sc.a_tf_wp_with_insulation = 0.7
+    sc.a_tf_wp_no_insulation = 0.64
+    sc.a_tf_croco_strand_rebco = 1e-5
+    sc.a_tf_croco_strand_copper_total = 5e-5
+    sc.a_tf_croco_strand = 2e-4
+    sc.dx_tf_hts_tape_rebco = 1e-6
+    sc.dr_tf_hts_tape = 0.004
+    sc.dx_tf_hts_tape_copper = 2e-5
+    sc.n_tf_turn_superconducting_strands = 50
+    sc.a_tf_turn_stabiliser = 0.01
+    expected = getattr(coil, mass_method)()
+
+    monkeypatch.setattr(coil, "run_base_superconducting_tf", lambda: None)
+    monkeypatch.setattr(coil, "generic_tf_coil_area_and_masses", lambda: None)
+    monkeypatch.setattr(coil, "run_and_output_stress", lambda **kwargs: None)
+    monkeypatch.setattr(coil, "vv_stress_on_quench", lambda: None)
+    for method in setup_methods:
+        monkeypatch.setattr(coil, method, lambda *_: None)
+    if model_name == "step_sctfcoil":
+        monkeypatch.setattr(coil, "_run_step_area_report", lambda: None)
+
+    coil.run()
+
+    for field in fields(expected):
+        assert getattr(tf, field.name) == pytest.approx(getattr(expected, field.name))
+
+
+def test_croco_run_calculates_turn_area_before_conductor_fractions(
+    croco_sctfcoil, monkeypatch
+):
+    tf = croco_sctfcoil.data.tfcoil
+    sc = croco_sctfcoil.data.superconducting_tfcoil
+    tf.c_tf_total = 800.0e6
+    tf.n_tf_coils = 16
+    tf.j_tf_wp = 1.0e8
+    tf.c_tf_turn = 1.0e5
+    tf.a_tf_inboard_total = 30.0
+    tf.len_tf_coil = 50.0
+    tf.i_tf_sc_mat = SuperconductorModel.CROCO_REBCO
+    sc.a_tf_wp_no_insulation = 0.5
+    sc.a_tf_wp_with_insulation = 0.6
+
+    monkeypatch.setattr(croco_sctfcoil, "run_base_superconducting_tf", lambda: None)
+    monkeypatch.setattr(croco_sctfcoil, "generic_tf_coil_area_and_masses", lambda: None)
+    monkeypatch.setattr(
+        croco_sctfcoil, "_run_croco_superconductor_limits", lambda _: None
+    )
+    monkeypatch.setattr(croco_sctfcoil, "_run_croco_quench_protection", lambda _: None)
+    monkeypatch.setattr(croco_sctfcoil, "run_and_output_stress", lambda **kwargs: None)
+    monkeypatch.setattr(croco_sctfcoil, "vv_stress_on_quench", lambda: None)
+
+    croco_sctfcoil.run()
+
+    assert tf.a_tf_turn == pytest.approx(0.001)
+    assert sc.f_a_tf_turn_copper == pytest.approx(
+        sc.a_tf_turn_croco_cable_space_copper / tf.a_tf_turn
+    )
+    assert tf.m_tf_coil_copper == pytest.approx(
+        tf.len_tf_coil
+        * tf.n_tf_coil_turns
+        * sc.a_tf_turn_croco_cable_space_copper
+        * sctf.constants.DEN_COPPER
+    )
+    assert tf.m_tf_coils_total > 0.0
 
 
 @pytest.mark.parametrize(
@@ -2242,8 +2424,7 @@ def test_tf_croco_areas_and_masses(itart, monkeypatch, croco_sctfcoil):
     monkeypatch.setattr(tf, "n_tf_coils", 16)
     monkeypatch.setattr(tf, "a_tf_turn_steel", 1.5e-3)
     monkeypatch.setattr(tf, "a_tf_coil_wp_turn_insulation", 0.05)
-    monkeypatch.setattr(tf, "i_tf_sc_mat", 1)
-    monkeypatch.setattr(tf, "dcond", [6000.0] * 9)
+    monkeypatch.setattr(tf, "i_tf_sc_mat", SuperconductorModel.CROCO_REBCO)
     monkeypatch.setattr(tf, "cplen", 20.0)
     monkeypatch.setattr(sc, "a_tf_wp_with_insulation", 0.7)
     monkeypatch.setattr(sc, "a_tf_wp_no_insulation", 0.64)
@@ -2259,7 +2440,13 @@ def test_tf_croco_areas_and_masses(itart, monkeypatch, croco_sctfcoil):
         exp_case = 2.2 * 8000.0 * (exp_cplen * 1.0 + 50.0 * 1.2)
     else:
         exp_case = 2.2 * 8000.0 * (exp_cplen * 1.0 + (50.0 - exp_cplen) * 1.2)
-    exp_sc = 50.0 * 100 * 1.0e-5 * n_strands * 6000.0
+    exp_sc = (
+        50.0
+        * 100
+        * 1.0e-5
+        * n_strands
+        * SuperconductorModel.CROCO_REBCO.material.density
+    )
     exp_cu = 50.0 * 100 * (5.0e-5 * n_strands + 2.0e-4) * sctf.constants.DEN_COPPER
     exp_steel = 50.0 * 100 * 1.5e-3 * 7800.0
     exp_turn_ins = 50.0 * 0.05 * 1800.0
@@ -2431,8 +2618,7 @@ def test_tf_step_areas_and_masses(itart, monkeypatch, step_sctfcoil):
     monkeypatch.setattr(tf, "n_tf_coil_turns", 100)
     monkeypatch.setattr(tf, "n_tf_coils", 16)
     monkeypatch.setattr(tf, "a_tf_coil_wp_turn_insulation", 0.05)
-    monkeypatch.setattr(tf, "i_tf_sc_mat", 1)
-    monkeypatch.setattr(tf, "dcond", [6000.0] * 9)
+    monkeypatch.setattr(tf, "i_tf_sc_mat", SuperconductorModel.CROCO_REBCO)
     monkeypatch.setattr(tf, "cplen", 20.0)
     monkeypatch.setattr(sc, "a_tf_wp_with_insulation", 0.7)
     monkeypatch.setattr(sc, "a_tf_wp_no_insulation", 0.64)
@@ -2450,7 +2636,14 @@ def test_tf_step_areas_and_masses(itart, monkeypatch, step_sctfcoil):
         exp_case = 2.2 * 8000.0 * (exp_cplen * 1.0 + 50.0 * 1.2)
     else:
         exp_case = 2.2 * 8000.0 * (exp_cplen * 1.0 + (50.0 - exp_cplen) * 1.2)
-    exp_sc = 50.0 * 100 * 1.0e-6 * 4.0e-3 * 50 * 6000.0
+    exp_sc = (
+        50.0
+        * 100
+        * 1.0e-6
+        * 4.0e-3
+        * 50
+        * SuperconductorModel.CROCO_REBCO.material.density
+    )
     exp_cu = 50.0 * 100 * (0.01 + 2.0e-5 * 4.0e-3 * 50) * sctf.constants.DEN_COPPER
     exp_turn_ins = 50.0 * 0.05 * 1800.0
     exp_cond = exp_sc + exp_cu + exp_turn_ins

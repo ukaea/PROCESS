@@ -629,6 +629,18 @@ It is also worth mentioning that the the ripple must be evaluated layer-by-layer
 used to quantify the SC cross-section area per layer. Finally, resistive
 coils do not suffer from on-coil ripple as there is no radial case present.
 
+## TF turn mass calculation
+
+Each TF turn model calculates its own component masses and stores them in the
+common TF coil outputs. For CICC turns, the copper fraction is applied to the
+cable area after both the central coolant channel and extra void have been
+removed. CroCo masses use the REBCO and copper areas of the strands and the
+central copper bar; STEP masses use the tape layers and copper stabiliser.
+
+The CroCo and STEP mass totals currently omit the tape substrate, and CroCo
+also omits solder. These totals therefore do not include every conductor
+material.
+
 -----------------------------
 
 ## Cable in Conduit TF coil class | `CICCSuperconductingTFCoil(SuperconductingTFCoil)`
