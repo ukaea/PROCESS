@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from dataclasses import dataclass
 from enum import IntEnum, unique
 from types import DynamicClassAttribute
 from typing import TYPE_CHECKING
@@ -135,13 +136,11 @@ class PlasmaBootstrapCurrent(Model):
             )
         )
 
-        (
-            self.data.current_drive.f_c_plasma_bootstrap_sauter,
-            self.data.physics.j_plasma_bootstrap_sauter_profile,
-        ) = self.bootstrap_fraction_sauter(self.plasma_profile)
-        self.data.current_drive.f_c_plasma_bootstrap_sauter *= (
-            self.data.current_drive.cboot
+        sauter_outputs = self.bootstrap_fraction_sauter()
+        self.data.current_drive.f_c_plasma_bootstrap_sauter = (
+            sauter_outputs.f_cur_plasma_bootstrap * self.data.current_drive.cboot
         )
+        self.data.physics.j_plasma_bootstrap_sauter_profile = sauter_outputs.j_bootstrap
 
         self.data.current_drive.f_c_plasma_bootstrap_sakai = (
             self.data.current_drive.cboot
@@ -586,23 +585,34 @@ class PlasmaBootstrapCurrent(Model):
         return (q / q95) * (al1 * (a1 + (pratio * (a1 + alphai * a2))) + al2 * a2)
 
     def bootstrap_fraction_sauter(
-        self, plasma_profile: PlasmaProfile
-    ) -> tuple[float, np.ndarray]:
+        self,
+    ) -> SauterBootstrapCurrentParams:
         """Get the bootstrap current fraction using Sauter et al scaling.
-
-        Parameters
-        ----------
-        plasma_profile : PlasmaProfile
-            The plasma profile object containing the necessary plasma parameters for the
-            Sauter bootstrap calculation.
 
         Returns
         -------
-        tuple[float, np.ndarray]
-            A tuple containing the bootstrap current fraction and the bootstrap current
-            density profile.
+        :
+            The calculated bootstrap current parameters.
         """
-        return self.sauter_bootstrap.bootstrap_fraction_sauter(plasma_profile)
+        return self.sauter_bootstrap.bootstrap_fraction_sauter(
+            a_plasma_poloidal=self.data.physics.a_plasma_poloidal,
+            rminor=self.data.physics.rminor,
+            rmajor=self.data.physics.rmajor,
+            triang=self.data.physics.triang,
+            n_charge_plasma_effective_vol_avg=self.data.physics.n_charge_plasma_effective_vol_avg,
+            nd_plasma_electron_profile=self.plasma_profile.neprofile.profile_y,
+            roa=self.plasma_profile.neprofile.profile_x,
+            temp_plasma_electron_profile_kev=self.plasma_profile.teprofile.profile_y,
+            temp_plasma_ion_profile_kev=self.plasma_profile.tiprofile.profile_y,
+            nd_plasma_ions_total_vol_avg=self.data.physics.nd_plasma_ions_total_vol_avg,
+            nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
+            q0=self.data.physics.q0,
+            q95=self.data.physics.q95,
+            m_ions_total_amu=self.data.physics.m_ions_total_amu,
+            f_plasma_fuel_helium3=self.data.physics.f_plasma_fuel_helium3,
+            b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
+            plasma_current=self.data.physics.plasma_current,
+        )
 
     def bootstrap_fraction_nevins(
         self,
@@ -1445,8 +1455,57 @@ class PlasmaBootstrapCurrent(Model):
         )
 
 
+@dataclass
+class SauterBootstrapCurrentParams:
+    """Output parameters for the Sauter bootstrap current calculation."""
+
+    f_cur_plasma_bootstrap: float
+    "Bootstrap current fraction [-]"
+    j_bootstrap: float | np.ndarray
+    "Bootstrap current density (j) [A/m²]"
+    f_trapped_particles: float | np.ndarray
+    "Trapped particle fraction [-]"
+    normalised_electron_collisionality: float | np.ndarray
+    "Normalised electron collisionality [-]"
+    normalised_ion_collisionality: float | np.ndarray
+    "Normalised ion collisionality [-]"
+    l31_coefficient: np.ndarray
+    "L₃₁ coefficient [-]"
+    l32_coefficient: np.ndarray
+    "L₃₂ coefficient [-]"
+    l34_coefficient: np.ndarray
+    "L₃₄ coefficient [-]"
+    alpha: np.ndarray
+    "α coefficient [-]"  # noqa: RUF001
+    alpha_0: np.ndarray
+    "α₀ coefficient [-]"
+    q_profile: float | np.ndarray
+    "Safety factor profile (q) [-]"
+    inverse_aspect: float | np.ndarray
+    "Inverse aspect ratio (ε) [-]"
+    sqrt_inverse_aspect: float | np.ndarray
+    "Square root of inverse aspect ratio (√ε) [-]"
+
+
 class SauterBootstrapCurrent(Model):
-    """Class to calculate the bootstrap current using the Sauter et al formula."""
+    """Class to calculate the bootstrap current using the Sauter et al formula.
+
+
+    References
+    ----------
+    [1] O. Sauter, C. Angioni, Y. R. Lin-Liu;
+    Neoclassical conductivity and bootstrap current formulas for general
+    axisymmetric equilibria and arbitrary collisionality regime. Phys. Plasmas
+    1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
+
+    [2] O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
+    Neoclassical conductivity and bootstrap current formulas for general
+    axisymmetric equilibria and arbitrary collisionality regime
+    [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12):
+    5140. https://doi.org/10.1063/1.1517052
+
+
+    """
 
     def run(self):
         """SauterBootstrapCurrent model isn't run"""
@@ -1454,84 +1513,110 @@ class SauterBootstrapCurrent(Model):
     def output(self):
         """SauterBootstrapCurrent model doesn't have any output"""
 
-    def bootstrap_fraction_sauter(self, plasma_profile: PlasmaProfile) -> float:
+    def bootstrap_fraction_sauter(
+        self,
+        a_plasma_poloidal: float,
+        rminor: float,
+        rmajor: float,
+        triang: float,
+        n_charge_plasma_effective_vol_avg: float,
+        nd_plasma_electron_profile: np.ndarray,
+        roa: np.ndarray,
+        temp_plasma_electron_profile_kev: np.ndarray,
+        temp_plasma_ion_profile_kev: np.ndarray,
+        nd_plasma_ions_total_vol_avg: float,
+        nd_plasma_electrons_vol_avg: float,
+        q0: float,
+        q95: float,
+        m_ions_total_amu: float,
+        f_plasma_fuel_helium3: float,
+        b_plasma_toroidal_on_axis: float,
+        plasma_current: float,
+    ) -> SauterBootstrapCurrentParams:
         """Calculate the bootstrap current fraction from the Sauter et al scaling.
 
         Parameters
         ----------
-        plasma_profile : PlasmaProfile
-            The plasma profile object.
+        a_plasma_poloidal:
+            The poloidal cross-sectional area of the plasma [m²].
+        rminor:
+            The minor radius of the plasma (a) [m].
+        rmajor:
+            The major radius of the plasma (R₀) [m].
+        triang:
+            The triangularity of the plasma [-].
+        n_charge_plasma_effective_vol_avg:
+            The volume-averaged effective charge of the plasma (Z_eff) [-].
+        nd_plasma_electron_profile:
+            The electron density profile of the plasma [m⁻³].
+        temp_plasma_electron_profile_kev:
+            The electron temperature profile of the plasma [keV].
+        temp_plasma_ion_profile_kev:
+            The ion temperature profile of the plasma [keV].
+        nd_plasma_ions_total_vol_avg:
+            The volume-averaged total ion density of the plasma [m⁻³].
+        nd_plasma_electrons_vol_avg:
+            The volume-averaged electron density of the plasma [m⁻³].
+        q0:
+            The central safety factor [-].
+        q95:
+            The edge safety factor at 95% of the minor radius [-].
+        m_ions_total_amu:
+            The total ion mass in atomic mass units (amu) [-].
+        f_plasma_fuel_helium3:
+            The fraction of helium-3 in the plasma fuel [-].
+        b_plasma_toroidal_on_axis:
+            The toroidal magnetic field on the plasma axis (B₀) [T].
+        plasma_current:
+            The total plasma current (I_p) [A].
+
+
 
         Returns
         -------
-        tuple[float, np.ndarray]
-            The bootstrap current fraction and current density profile.
+        :
+            The calculated bootstrap current parameters.
 
         Notes
         -----
         This function calculates the bootstrap current fraction using the Sauter,
         Angioni, and Lin-Liu scaling.
 
-        References
-        ----------
-        O. Sauter, C. Angioni, Y. R. Lin-Liu;
-        Neoclassical conductivity and bootstrap current formulas for general
-        axisymmetric equilibria and arbitrary collisionality regime. Phys. Plasmas
-        1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
-
-        O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
-        Neoclassical conductivity and bootstrap current formulas for general
-        axisymmetric equilibria and arbitrary collisionality regime
-        [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12):
-        5140. https://doi.org/10.1063/1.1517052
-
-        Note: The code was supplied by Emiliano Fable, IPP Garching
-        (private communication).
         """
-        # Radial points from 0 to 1 separated by 1/profile_size
-        roa = plasma_profile.neprofile.profile_x
-
         # Local circularised minor radius
-        rho = np.sqrt(self.data.physics.a_plasma_poloidal / np.pi) * roa
+        rho = np.sqrt(a_plasma_poloidal / np.pi) * roa
 
         # Square root of local aspect ratio
-        sqeps = np.sqrt(roa * (self.data.physics.rminor / self.data.physics.rmajor))
+        inverse_aspect = (rminor / rmajor) * roa
+        sqrt_inverse_aspect = np.sqrt(inverse_aspect)
 
         # Calculate electron and ion density profiles
-        ne = plasma_profile.neprofile.profile_y * 1e-19
+        ne = nd_plasma_electron_profile * 1e-19
 
         # Prevent log(0) in Sauter bootstrap calculation
         ne = np.maximum(ne, 1.0e-6)
 
-        ni = (
-            self.data.physics.nd_plasma_ions_total_vol_avg
-            / self.data.physics.nd_plasma_electrons_vol_avg
-        ) * ne
-
-        # Calculate electron and ion temperature profiles
-        tempe = plasma_profile.teprofile.profile_y
-        tempi = plasma_profile.tiprofile.profile_y
+        ni = (nd_plasma_ions_total_vol_avg / nd_plasma_electrons_vol_avg) * ne
 
         # Flat Zeff profile assumed
         # Return tempi like array object filled with zeff
-        zeff = np.full_like(tempi, self.data.physics.n_charge_plasma_effective_vol_avg)
+        zeff = np.full_like(
+            temp_plasma_ion_profile_kev, n_charge_plasma_effective_vol_avg
+        )
 
         # inverse_q = 1/safety factor
         # Parabolic q profile assumed
-        inverse_q = 1 / (
-            self.data.physics.q0
-            + (self.data.physics.q95 - self.data.physics.q0) * roa**2
-        )
+        inverse_q = 1 / (q0 + (q95 - q0) * roa**2)
         # Create new array of average mass of fuel portion of ions
-        amain = np.full_like(inverse_q, self.data.physics.m_ions_total_amu)
+        amain = np.full_like(inverse_q, m_ions_total_amu)
 
         # Create new array of average main ion charge
-        zmain = np.full_like(inverse_q, 1.0 + self.data.physics.f_plasma_fuel_helium3)
+        zmain = np.full_like(inverse_q, 1.0 + f_plasma_fuel_helium3)
 
         # Calculate total bootstrap current (MA) by summing along profiles
         # Looping from 2 because _calculate_l31_coefficient() etc should return 0
         # @ j == 1
-        radial_elements = np.arange(2, self.data.physics.n_plasma_profile_elements)
+        radial_elements = np.arange(2, len(ne))
 
         # Change in localised minor radius to be used as delta term in derivative
         drho = rho[radial_elements] - rho[radial_elements - 1]
@@ -1540,74 +1625,129 @@ class SauterBootstrapCurrent(Model):
         da = 2 * np.pi * rho[radial_elements - 1] * drho  # area of annulus
 
         # Create the partial derivatives using numpy gradient (central differences)
-        dlogte_drho = np.gradient(np.log(tempe), rho)[radial_elements - 1]
-        dlogti_drho = np.gradient(np.log(tempi), rho)[radial_elements - 1]
+        dlogte_drho = np.gradient(np.log(temp_plasma_electron_profile_kev), rho)[
+            radial_elements - 1
+        ]
+        dlogti_drho = np.gradient(np.log(temp_plasma_ion_profile_kev), rho)[
+            radial_elements - 1
+        ]
         dlogne_drho = np.gradient(np.log(ne), rho)[radial_elements - 1]
+
+        # Calculate trapped particle fraction
+        f_trapped_particles = self._trapped_particle_fraction_sauter(
+            radial_elements=radial_elements,
+            triang=triang,
+            sqrt_inverse_aspect=sqrt_inverse_aspect,
+        )
+
+        # Calculated electron collisionality; nu_e*
+        normalised_electron_collisionality = self._electron_collisionality_sauter(
+            radial_elements=radial_elements,
+            rmajor=rmajor,
+            zeff=zeff,
+            inverse_q=inverse_q,
+            sqrt_inverse_aspect=sqrt_inverse_aspect,
+            tempe=temp_plasma_electron_profile_kev,
+            ne=ne,
+        )
+
+        # Calculate the ion collisionality
+        normalised_ion_collisionality = self._ion_collisionality_sauter(
+            radial_elements=radial_elements,
+            rmajor=rmajor,
+            inverse_q=inverse_q,
+            sqrt_inverse_aspect=sqrt_inverse_aspect,
+            tempi=temp_plasma_ion_profile_kev,
+            amain=amain,
+            zeff=zmain,
+            ni=ni,
+        )
+
+        l31_coefficient = self._calculate_l31_coefficient(
+            radial_elements=radial_elements,
+            f_trapped_particles=f_trapped_particles,
+            normalised_electron_collisionality=normalised_electron_collisionality,
+            zeff=zeff,
+        )
+        l32_coefficient = self._calculate_l32_coefficient(
+            radial_elements=radial_elements,
+            f_trapped_particles=f_trapped_particles,
+            zeff=zeff,
+            normalised_electron_collisionality=normalised_electron_collisionality,
+        )
+        l34_coefficient = self._calculate_l34_coefficient(
+            radial_elements=radial_elements,
+            f_trapped_particles=f_trapped_particles,
+            normalised_electron_collisionality=normalised_electron_collisionality,
+            zeff=zeff,
+        )
+        alpha_0 = self._calculate_alpha_0_coefficient(
+            f_trapped_particles=f_trapped_particles
+        )
+        alpha = self._calculate_alpha_coefficient(
+            alpha_0=alpha_0,
+            f_trapped_particles=f_trapped_particles,
+            normalised_ion_collisionality=normalised_ion_collisionality,
+        )
+
+        beta_poloidal_electron = self._beta_poloidal_sauter(
+            radial_elements,
+            len(ne),
+            rmajor,
+            b_plasma_toroidal_on_axis,
+            ne,
+            temp_plasma_electron_profile_kev,
+            inverse_q,
+            rho,
+        )
+        beta_poloidal_total = self._beta_poloidal_total_sauter(
+            radial_elements,
+            len(ne),
+            rmajor,
+            b_plasma_toroidal_on_axis,
+            ne,
+            ni,
+            temp_plasma_electron_profile_kev,
+            temp_plasma_ion_profile_kev,
+            inverse_q,
+            rho,
+        )
 
         jboot = (
             0.5
             * (
-                self._calculate_l31_coefficient(
-                    radial_elements,
-                    self.data.physics.n_plasma_profile_elements,
-                    self.data.physics.rmajor,
-                    self.data.physics.b_plasma_toroidal_on_axis,
-                    self.data.physics.triang,
-                    ne,
-                    ni,
-                    tempe,
-                    tempi,
-                    inverse_q,
-                    rho,
-                    zeff,
-                    sqeps,
-                )
-                * dlogne_drho
-                + self._calculate_l31_32_coefficient(
-                    radial_elements,
-                    self.data.physics.n_plasma_profile_elements,
-                    self.data.physics.rmajor,
-                    self.data.physics.b_plasma_toroidal_on_axis,
-                    self.data.physics.triang,
-                    ne,
-                    ni,
-                    tempe,
-                    tempi,
-                    inverse_q,
-                    rho,
-                    zeff,
-                    sqeps,
-                )
+                beta_poloidal_total * l31_coefficient * dlogne_drho
+                + beta_poloidal_electron
+                * (l31_coefficient + l32_coefficient)
                 * dlogte_drho
-                + self._calculate_l34_alpha_31_coefficient(
-                    radial_elements,
-                    self.data.physics.n_plasma_profile_elements,
-                    self.data.physics.rmajor,
-                    self.data.physics.b_plasma_toroidal_on_axis,
-                    self.data.physics.triang,
-                    inverse_q,
-                    sqeps,
-                    tempi,
-                    tempe,
-                    amain,
-                    zmain,
-                    ni,
-                    ne,
-                    rho,
-                    zeff,
-                )
+                + (beta_poloidal_total - beta_poloidal_electron)
+                * (l31_coefficient + l34_coefficient * alpha)
                 * dlogti_drho
             )
             * 1.0e6
             * (
-                -self.data.physics.b_plasma_toroidal_on_axis
-                / (0.2 * np.pi * self.data.physics.rmajor)
+                -b_plasma_toroidal_on_axis
+                / (0.2 * np.pi * rmajor)
                 * rho[radial_elements - 1]
                 * inverse_q[radial_elements - 1]
             )
         )  # A/m2
 
-        return (np.sum(da * jboot, axis=0) / self.data.physics.plasma_current), jboot
+        return SauterBootstrapCurrentParams(
+            f_cur_plasma_bootstrap=np.sum(da * jboot, axis=0) / plasma_current,
+            j_bootstrap=jboot,
+            f_trapped_particles=f_trapped_particles,
+            normalised_electron_collisionality=normalised_electron_collisionality,
+            normalised_ion_collisionality=normalised_ion_collisionality,
+            l31_coefficient=l31_coefficient,
+            l32_coefficient=l32_coefficient,
+            l34_coefficient=l34_coefficient,
+            alpha=alpha,
+            alpha_0=alpha_0,
+            q_profile=1 / inverse_q,
+            inverse_aspect=inverse_aspect,
+            sqrt_inverse_aspect=sqrt_inverse_aspect,
+        )
 
     @staticmethod
     @nb.njit(cache=True)
@@ -1623,16 +1763,16 @@ class SauterBootstrapCurrent(Model):
 
         Parameters
         ----------
-        radial_elements : int
+        radial_elements:
             The radial element indexes in the range 1 to nr.
-        tempe : np.ndarray
+        tempe:
             The electron temperature array.
-        ne : np.ndarray
+        ne:
             The electron density array.
 
         Returns
         -------
-        np.ndarray
+        :
             The Coulomb logarithm at each array point.
 
         References
@@ -1660,16 +1800,16 @@ class SauterBootstrapCurrent(Model):
 
         Parameters
         ----------
-        radial_elements : np.ndarray
+        radial_elements:
             The radial element indexes in the range 1 to nr.
-        tempe : np.ndarray
+        tempe:
             The electron temperature array.
-        ne : np.ndarray
+        ne:
             The electron density array.
 
         Returns
         -------
-        np.ndarray
+        :
             The frequency of electron-electron collisions (Hz).
 
         References
@@ -1689,7 +1829,7 @@ class SauterBootstrapCurrent(Model):
         rmajor: float,
         zeff: np.ndarray,
         inverse_q: np.ndarray,
-        sqeps: np.ndarray,
+        sqrt_inverse_aspect: np.ndarray,
         tempe: np.ndarray,
         ne: np.ndarray,
     ) -> np.ndarray:
@@ -1698,24 +1838,24 @@ class SauterBootstrapCurrent(Model):
 
         Parameters
         ----------
-        radial_elements : np.ndarray
+        radial_elements:
             The radial element index in the range 1 to nr.
-        rmajor : float
+        rmajor:
             The plasma major radius (m).
-        zeff : np.ndarray
+        zeff:
             The effective charge array.
-        inverse_q : np.ndarray
+        inverse_q:
             Inverse safety factor profile.
-        sqeps : np.ndarray
+        sqrt_inverse_aspect:
             The square root of the inverse aspect ratio array.
-        tempe : np.ndarray
+        tempe:
             The electron temperature array.
-        ne : np.ndarray
+        ne:
             The electron density array.
 
         Returns
         -------
-        np.ndarray
+        :
             The relative frequency of electron collisions.
 
         References
@@ -1729,7 +1869,7 @@ class SauterBootstrapCurrent(Model):
             * rmajor
             / np.abs(
                 inverse_q[radial_elements - 1]
-                * (sqeps[radial_elements - 1] ** 3)
+                * (sqrt_inverse_aspect[radial_elements - 1] ** 3)
                 * np.sqrt(tempe[radial_elements - 1])
                 * 1.875e7
             )
@@ -1752,20 +1892,20 @@ class SauterBootstrapCurrent(Model):
 
         Parameters
         ----------
-        radial_elements : np.ndarray
+        radial_elements:
             The radial element indexes in the range 1 to nr.
-        zeff : np.ndarray
+        zeff:
             The effective charge array.
-        ni : np.ndarray
+        ni:
             The ion density array.
-        tempi : np.ndarray
+        tempi:
             The ion temperature array.
-        amain : np.ndarray
+        amain:
             The atomic mass of the main ion species array.
 
         Returns
         -------
-        np.ndarray
+        :
             The full frequency of ion collisions (Hz).
         """
         return (
@@ -1783,7 +1923,7 @@ class SauterBootstrapCurrent(Model):
         radial_elements: np.ndarray,
         rmajor: float,
         inverse_q: np.ndarray,
-        sqeps: np.ndarray,
+        sqrt_inverse_aspect: np.ndarray,
         tempi: np.ndarray,
         amain: np.ndarray,
         zeff: np.ndarray,
@@ -1794,26 +1934,26 @@ class SauterBootstrapCurrent(Model):
 
         Parameters
         ----------
-        radial_elements : np.ndarray
+        radial_elements:
             The radial element indexes in the range 1 to nr.
-        rmajor : float
+        rmajor:
             The plasma major radius (m).
-        inverse_q : np.ndarray
+        inverse_q:
             Inverse safety factor profile.
-        sqeps : np.ndarray
+        sqrt_inverse_aspect:
             The square root of the inverse aspect ratio profile.
-        tempi : np.ndarray
+        tempi:
             The ion temperature profile (keV).
-        amain : np.ndarray
+        amain:
             The atomic mass of the main ion species profile.
-        zeff : np.ndarray
+        zeff:
             The effective charge of the main ion species.
-        ni : np.ndarray
+        ni:
             The ion density profile (/m³).
 
         Returns
         -------
-        float
+        :
             The ion collisionality.
         """
         return (
@@ -1822,7 +1962,7 @@ class SauterBootstrapCurrent(Model):
             * rmajor
             / (
                 np.abs(inverse_q[radial_elements - 1] + 1.0e-4)
-                * sqeps[radial_elements - 1] ** 3
+                * sqrt_inverse_aspect[radial_elements - 1] ** 3
                 * np.sqrt(tempi[radial_elements - 1] / amain[radial_elements - 1])
             )
         )
@@ -1830,480 +1970,542 @@ class SauterBootstrapCurrent(Model):
     def _calculate_l31_coefficient(
         self,
         radial_elements: np.ndarray,
-        number_of_elements: int,
-        rmajor: float,
-        b_plasma_toroidal_on_axis: float,
-        triang: float,
-        ne: np.ndarray,
-        ni: np.ndarray,
-        tempe: np.ndarray,
-        tempi: np.ndarray,
-        inverse_q: np.ndarray,
-        rho: np.ndarray,
+        f_trapped_particles: np.ndarray,
+        normalised_electron_collisionality: np.ndarray,
         zeff: np.ndarray,
-        sqeps: np.ndarray,
-    ) -> float:
-        """L31 coefficient before Grad(ln(ne)) in the Sauter bootstrap scaling.
+    ) -> np.ndarray:
+        """Calculate the dimensionless L31 coefficient.
 
         Parameters
         ----------
-        radial_elements : np.ndarray
-            Radial element indexes in range 2 to nr.
-        number_of_elements : int
-            Maximum value of radial_elements.
-        rmajor : float
-            Plasma major radius (m).
-        b_plasma_toroidal_on_axis : float
-            Toroidal field on axis (T).
-        triang : float
-            Plasma triangularity.
-        ne : np.ndarray
-            Electron density profile (/m³).
-        ni : np.ndarray
-            Ion density profile (/m³).
-        tempe : np.ndarray
-            Electron temperature profile (keV).
-        tempi : np.ndarray
-            Ion temperature profile (keV).
-        inverse_q : np.ndarray
-            Inverse safety factor profile.
-        rho : np.ndarray
-            Normalized minor radius profile.
-        zeff : np.ndarray
+        radial_elements:
+            Radial element indexes.
+        f_trapped_particles:
+            Trapped particle fraction profile at the selected elements.
+        normalised_electron_collisionality:
+            Electron collisionality profile at the selected elements.
+        zeff:
             Effective charge profile.
-        sqeps : np.ndarray
-            Square root of inverse aspect ratio profile.
 
         Returns
         -------
-        float
-            The coefficient scaling grad(ln(ne)) in the Sauter bootstrap current
-            scaling.
-
-        References
-        ----------
-        O. Sauter, C. Angioni, Y. R. Lin-Liu;
-        Neoclassical conductivity and bootstrap current formulas for general
-        axisymmetric equilibria and arbitrary collisionality regime.
-        Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
-
-        O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
-        Neoclassical conductivity and bootstrap current formulas for general
-        axisymmetric equilibria and arbitrary collisionality regime
-        [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140.
-        https://doi.org/10.1063/1.1517052
+        :
+            Dimensionless L31 coefficient.
         """
-        # Prevents first element being 0
         charge_profile = zeff[radial_elements - 1]
 
-        # Calculate trapped particle fraction
-        f_trapped = self._trapped_particle_fraction_sauter(
-            radial_elements, triang, sqeps
+        # f³¹_{teff}(νₑ⁎), Eq.14b # noqa: RUF003
+        f31_teff = self._calculate_f_teff_31_coefficient(
+            f_trapped_particles=f_trapped_particles,
+            normalised_electron_collisionality=normalised_electron_collisionality,
+            n_charge_plasma_effective=charge_profile,
         )
 
-        # Calculated electron collisionality; nu_e*
-        electron_collisionality = self._electron_collisionality_sauter(
-            radial_elements, rmajor, zeff, inverse_q, sqeps, tempe, ne
+        # L₃₁, Eq.14a
+        return self._calculate_f_31_factor(
+            n_charge_plasma_effective=charge_profile,
+            x=f31_teff,
         )
 
-        # $f^{31}_{teff}(\nu_{e*})$, Eq.14b
-        f31_teff = f_trapped / (
-            (1.0 + (1.0 - 0.1 * f_trapped) * np.sqrt(electron_collisionality))
-            + (0.5 * (1.0 - f_trapped) * electron_collisionality) / charge_profile
-        )
-
-        l31_coefficient = (
-            ((1.0 + 1.4 / (charge_profile + 1.0)) * f31_teff)
-            - (1.9 / (charge_profile + 1.0) * f31_teff**2)
-            + ((0.3 * f31_teff**3 + 0.2 * f31_teff**4) / (charge_profile + 1.0))
-        )
-
-        # Corrections suggested by Fable, 15/05/2015
-        return l31_coefficient * self._beta_poloidal_total_sauter(
-            radial_elements,
-            number_of_elements,
-            rmajor,
-            b_plasma_toroidal_on_axis,
-            ne,
-            ni,
-            tempe,
-            tempi,
-            inverse_q,
-            rho,
-        )
-
-    def _calculate_l31_32_coefficient(
+    def _calculate_l32_coefficient(
         self,
         radial_elements: np.ndarray,
-        number_of_elements: int,
-        rmajor: float,
-        b_plasma_toroidal_on_axis: float,
-        triang: float,
-        ne: np.ndarray,
-        ni: np.ndarray,
-        tempe: np.ndarray,
-        tempi: np.ndarray,
-        inverse_q: np.ndarray,
-        rho: np.ndarray,
+        f_trapped_particles: np.ndarray,
         zeff: np.ndarray,
-        sqeps: np.ndarray,
-    ) -> float:
-        """L31 & L32 coefficient before Grad(ln(Te)) in the Sauter bootstrap current
-        scaling.
-
-        This function calculates the coefficient scaling grad(ln(Te)) in the Sauter
-        bootstrap current scaling.
+        normalised_electron_collisionality: np.ndarray,
+    ) -> np.ndarray:
+        """Calculate the dimensionless L32 coefficient.
 
         Parameters
         ----------
-        radial_elements : np.ndarray
-            Radial element indexes in range 2 to nr.
-        number_of_elements : int
-            Maximum value of radial_elements.
-        rmajor : float
-            Plasma major radius (m).
-        b_plasma_toroidal_on_axis : float
-            Toroidal field on axis (T).
-        triang : float
-            Plasma triangularity.
-        ne : np.ndarray
-            Electron density profile (/m³).
-        ni : np.ndarray
-            Ion density profile (/m³).
-        tempe : np.ndarray
-            Electron temperature profile (keV).
-        tempi : np.ndarray
-            Ion temperature profile (keV).
-        inverse_q : np.ndarray
-            Inverse safety factor profile.
-        rho : np.ndarray
-            Normalized minor radius profile.
-        zeff : np.ndarray
+        radial_elements:
+            Radial element indexes.
+        f_trapped_particles:
+            Trapped particle fraction profile at the selected elements.
+        zeff:
             Effective charge profile.
-        sqeps : np.ndarray
-            Square root of inverse aspect ratio profile.
+        normalised_electron_collisionality:
+            Electron collisionality profile at the selected elements.
 
         Returns
         -------
-        float
-            The L31 & L32 coefficient scaling grad(ln(Te)) in the Sauter bootstrap
-            current scaling.
+        :
+            Dimensionless L32 coefficient.
+        """
+        charge_profile = zeff[radial_elements - 1]
+
+        # f³²ᵉᵉ_{teff}(νₑ⁎), Eq.15d # noqa: RUF003
+        f32ee_teff = self._calculate_f_teff_32ee_coefficient(
+            f_trapped_particles=f_trapped_particles,
+            normalised_electron_collisionality=normalised_electron_collisionality,
+            n_charge_plasma_effective=charge_profile,
+        )
+
+        # f³²ᵉⁱ_{teff}(νₑ⁎), Eq.15e # noqa: RUF003
+        f32ei_teff = self._calculate_f_teff_32ei_coefficient(
+            f_trapped_particles=f_trapped_particles,
+            normalised_electron_collisionality=normalised_electron_collisionality,
+            n_charge_plasma_effective=charge_profile,
+        )
+
+        # F₃₂ₑₑ(X), Eq.15b
+        big_f32ee_teff = self._calculate_f_32_ee_factor(
+            n_charge_plasma_effective=charge_profile, x=f32ee_teff
+        )
+
+        # F₃₂ₑᵢ(Y), Eq.15c
+        big_f32ei_teff = self._calculate_f_32_ei_factor(
+            n_charge_plasma_effective=charge_profile, y=f32ei_teff
+        )
+
+        return big_f32ee_teff + big_f32ei_teff
+
+    def _calculate_l34_coefficient(
+        self,
+        radial_elements: np.ndarray,
+        f_trapped_particles: np.ndarray,
+        normalised_electron_collisionality: np.ndarray,
+        zeff: np.ndarray,
+    ) -> np.ndarray:
+        """Calculate the dimensionless L34 coefficient.
+
+        Parameters
+        ----------
+        radial_elements:
+            Radial element indexes.
+        f_trapped_particles:
+            Trapped particle fraction profile at the selected elements.
+        normalised_electron_collisionality:
+            Electron collisionality profile at the selected elements.
+        zeff:
+            Effective charge profile.
+
+        Returns
+        -------
+        :
+            Dimensionless L34 coefficient.
+        """
+        charge_profile = zeff[radial_elements - 1]
+
+        # f³⁴_{teff}(νₑ⁎), Eq.16b, # noqa: RUF003
+        f34_teff = self._calculate_f_teff_34_coefficient(
+            f_trapped_particles=f_trapped_particles,
+            normalised_electron_collisionality=normalised_electron_collisionality,
+            n_charge_plasma_effective=charge_profile,
+        )
+
+        # L₃₄ Eq.16a
+        return self._calculate_f_31_factor(
+            n_charge_plasma_effective=charge_profile, x=f34_teff
+        )
+
+    @staticmethod
+    def _calculate_f_teff_31_coefficient(
+        f_trapped_particles: float | np.ndarray,
+        normalised_electron_collisionality: float | np.ndarray,
+        n_charge_plasma_effective: float | np.ndarray,
+    ) -> float | np.ndarray:
+        """Calculate the effective trapped particle fraction coefficient f³¹_{teff} as a
+        function of electron collisionality and effective charge profile.
+
+        Parameters
+        ----------
+        f_trapped_particles:
+            Trapped particle fraction (fₜ) [-].
+        normalised_electron_collisionality:
+            Normalised electron collisionality (νₑ⁎) [-].
+        n_charge_plasma_effective:
+            Plasma effective charge (Z_eff) [-].
+
+        Returns
+        -------
+        :
+            The effective trapped particle fraction coefficient f³¹_{teff}.
+
+        Notes
+        -----
+        - This equation is given by Eq.14b in reference [1]
 
         References
         ----------
-        O. Sauter, C. Angioni, Y. R. Lin-Liu;
+        [1] O. Sauter, C. Angioni, Y. R. Lin-Liu;
         Neoclassical conductivity and bootstrap current formulas for general
         axisymmetric equilibria and arbitrary collisionality regime.
         Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
 
-        O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
+        """  # noqa: RUF002
+        # f³¹_{teff}(νₑ⁎), Eq.14b # noqa: RUF003
+        return f_trapped_particles / (
+            (
+                1.0
+                + (1.0 - 0.1 * f_trapped_particles)
+                * np.sqrt(normalised_electron_collisionality)
+            )
+            + (0.5 * (1.0 - f_trapped_particles) * normalised_electron_collisionality)
+            / n_charge_plasma_effective
+        )
+
+    @staticmethod
+    def _calculate_f_teff_32ee_coefficient(
+        f_trapped_particles: float | np.ndarray,
+        normalised_electron_collisionality: float | np.ndarray,
+        n_charge_plasma_effective: float | np.ndarray,
+    ) -> float | np.ndarray:
+        """Calculate the effective trapped particle fraction coefficient f³²ᵉᵉ_{teff}
+        as a function of normalised electron collisionality and effective charge
+        profile.
+
+        Parameters
+        ----------
+        f_trapped_particles:
+            Trapped particle fraction (fₜ) [-].
+        normalised_electron_collisionality:
+            Normalised electron collisionality (νₑ⁎) [-].
+        n_charge_plasma_effective:
+            Plasma effective charge (Z_eff) [-].
+
+        Returns
+        -------
+        :
+            The effective trapped particle fraction coefficient f³²ᵉᵉ_{teff}(νₑ⁎).
+
+        Notes
+        -----
+        - This equation is given by Eq.15d in reference [1]
+
+        References
+        ----------
+        [1] O. Sauter, C. Angioni, Y. R. Lin-Liu;
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime.
+        Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
+
+        """  # noqa: RUF002
+        # f³²ᵉᵉ_{teff}(νₑ⁎), Eq.15d # noqa: RUF003
+        return f_trapped_particles / (
+            1.0
+            + 0.26
+            * (1.0 - f_trapped_particles)
+            * np.sqrt(normalised_electron_collisionality)
+            + (
+                0.18
+                * (1.0 - 0.37 * f_trapped_particles)
+                * normalised_electron_collisionality
+                / np.sqrt(n_charge_plasma_effective)
+            )
+        )
+
+    @staticmethod
+    def _calculate_f_teff_32ei_coefficient(
+        f_trapped_particles: float | np.ndarray,
+        normalised_electron_collisionality: float | np.ndarray,
+        n_charge_plasma_effective: float | np.ndarray,
+    ) -> float | np.ndarray:
+        """Calculate the effective trapped particle fraction coefficient f³²ᵉⁱ_{teff}
+        as a function of normalised electron collisionality and effective charge profile.
+
+        Parameters
+        ----------
+        f_trapped_particles:
+            Trapped particle fraction (fₜ) [-].
+        normalised_electron_collisionality:
+            Normalised electron collisionality (νₑ⁎) [-].
+        n_charge_plasma_effective:
+            Effective charge profile (Z_eff) [-].
+
+        Returns
+        -------
+        :
+            The effective trapped particle fraction coefficient f³²ᵉⁱ_{teff}(νₑ⁎).
+
+        Notes
+        -----
+        - This equation is given by Eq.15e in reference [1]
+
+        References
+        ----------
+        [1] O. Sauter, C. Angioni, Y. R. Lin-Liu;
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime.
+        Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
+
+        """  # noqa: RUF002
+        # f³²ᵉⁱ_{teff}(νₑ⁎), Eq.15e # noqa: RUF003
+        return f_trapped_particles / (
+            (
+                1.0
+                + (1.0 + 0.6 * f_trapped_particles)
+                * np.sqrt(normalised_electron_collisionality)
+            )
+            + (
+                0.85
+                * (1.0 - 0.37 * f_trapped_particles)
+                * normalised_electron_collisionality
+                * (1.0 + n_charge_plasma_effective)
+            )
+        )
+
+    @staticmethod
+    def _calculate_f_teff_34_coefficient(
+        f_trapped_particles: float | np.ndarray,
+        normalised_electron_collisionality: float | np.ndarray,
+        n_charge_plasma_effective: float | np.ndarray,
+    ) -> float | np.ndarray:
+        """Calculate the effective trapped particle fraction coefficient f³⁴_{teff}
+        as a function of normalised electron collisionality and effective charge profile.
+
+        Parameters
+        ----------
+        f_trapped_particles:
+            Trapped particle fraction (fₜ) [-].
+        normalised_electron_collisionality:
+            Normalised electron collisionality (νₑ⁎) [-].
+        n_charge_plasma_effective:
+            Effective charge profile (Z_eff) [-].
+
+        Returns
+        -------
+        :
+            The effective trapped particle fraction coefficient f³⁴_{teff}(νₑ⁎).
+
+        Notes
+        -----
+        - This equation is given by Eq.16b in reference [1]
+
+        References
+        ----------
+        [1] O. Sauter, C. Angioni, Y. R. Lin-Liu;
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime.
+        Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
+
+        """  # noqa: RUF002
+        # f³⁴_{teff}(νₑ⁎), Eq.16b, # noqa: RUF003
+
+        return f_trapped_particles / (
+            (
+                1.0
+                + (1.0 - 0.1 * f_trapped_particles)
+                * np.sqrt(normalised_electron_collisionality)
+            )
+            + 0.5
+            * (1.0 - 0.5 * f_trapped_particles)
+            * normalised_electron_collisionality
+            / n_charge_plasma_effective
+        )
+
+    @staticmethod
+    def _calculate_alpha_0_coefficient(
+        f_trapped_particles: float | np.ndarray,
+    ) -> float | np.ndarray:
+        """Calculate the (α₀) coefficient. The collisionless (banana-regime) limit of
+        the ion-temperature-gradient bootstrap coefficient.
+
+        Parameters
+        ----------
+        f_trapped_particles:
+            Trapped particle fraction (fₜ) [-].
+
+        Returns
+        -------
+        :
+            The (α₀) coefficient.
+
+        Notes
+        -----
+        - This equation is given by Eq.17a in reference [1]
+
+        References
+        ----------
+        [1] O. Sauter, C. Angioni, Y. R. Lin-Liu;
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime.
+        Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
+        """
+        # α₀, Eq.17a
+        return (-1.17 * (1.0 - f_trapped_particles)) / (
+            1.0 - (0.22 * f_trapped_particles) - (0.19 * f_trapped_particles**2)
+        )
+
+    @staticmethod
+    def _calculate_alpha_coefficient(
+        alpha_0: float | np.ndarray,
+        f_trapped_particles: float | np.ndarray,
+        normalised_ion_collisionality: float | np.ndarray,
+    ) -> float | np.ndarray:
+        """Calculate the (α) coefficient, the finite-collisionality correction to the
+        ion-temperature-gradient contribution to the bootstrap current.
+
+        Parameters
+        ----------
+        alpha_0:
+            The (α₀) coefficient [-].
+        f_trapped_particles:
+            Trapped particle fraction (fₜ) [-].
+        normalised_ion_collisionality:
+            Normalised ion collisionality (νᵢ⁎) [-].
+
+        Returns
+        -------
+        :
+            The (α) coefficient.
+
+        Notes
+        -----
+        - This equation is originally given by Eq.17b in reference [1], though an error
+        concerning the sign of the 0.315 term is corrected to be positive in
+        reference [2].
+
+        References
+        ----------
+        [1] O. Sauter, C. Angioni, Y. R. Lin-Liu;
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime.
+        Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
+
+        [2] O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
         Neoclassical conductivity and bootstrap current formulas for general
         axisymmetric equilibria and arbitrary collisionality regime
         [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140.
         https://doi.org/10.1063/1.1517052
+        """  # noqa: RUF002
+        # α(νᵢ⁎), Eq.17b # noqa: RUF003
+        return (
+            (
+                alpha_0
+                + (0.25 * (1.0 - f_trapped_particles**2))
+                * np.sqrt(normalised_ion_collisionality)
+            )
+            / (1.0 + (0.5 * np.sqrt(normalised_ion_collisionality)))
+            + (0.315 * normalised_ion_collisionality**2 * f_trapped_particles**6)
+        ) / (1.0 + (0.15 * normalised_ion_collisionality**2 * f_trapped_particles**6))
+
+    @staticmethod
+    def _calculate_f_32_ei_factor(
+        n_charge_plasma_effective: float | np.ndarray,
+        y: float | np.ndarray,
+    ) -> float | np.ndarray:
+        """Calculate the F₃₂ₑᵢ(Y) factor, the electron-ion friction correction factor
+        for the electron temperature-gradient bootstrap coefficient L₃₂.
+
+        Parameters
+        ----------
+        n_charge_plasma_effective:
+            Effective plasma charge (Z_eff) [-].
+        y:
+            Normalized parameter Y [-].
+
+        Returns
+        -------
+        :
+            The F₃₂ₑᵢ(Y) factor.
+
+        Notes
+        -----
+        - This equation is originally given by Eq.15c in reference [1].
+
+        References
+        ----------
+        [1] O. Sauter, C. Angioni, Y. R. Lin-Liu;
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime.
+        Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
         """
-        # Prevents first element being 0
-        charge_profile = zeff[radial_elements - 1]
-
-        # Calculate trapped particle fraction
-        f_trapped = self._trapped_particle_fraction_sauter(
-            radial_elements, triang, sqeps
-        )
-
-        # Calculated electron collisionality; nu_e*
-        electron_collisionality = self._electron_collisionality_sauter(
-            radial_elements, rmajor, zeff, inverse_q, sqeps, tempe, ne
-        )
-
-        # $f^{32\_ee}_{teff}(\nu_{e*})$, Eq.15d
-        f32ee_teff = f_trapped / (
-            1.0
-            + 0.26 * (1.0 - f_trapped) * np.sqrt(electron_collisionality)
-            + (
-                0.18
-                * (1.0 - 0.37 * f_trapped)
-                * electron_collisionality
-                / np.sqrt(charge_profile)
-            )
-        )
-
-        # $f^{32\_ei}_{teff}(\nu_{e*})$, Eq.15e
-        f32ei_teff = f_trapped / (
-            (1.0 + (1.0 + 0.6 * f_trapped) * np.sqrt(electron_collisionality))
-            + (
-                0.85
-                * (1.0 - 0.37 * f_trapped)
-                * electron_collisionality
-                * (1.0 + charge_profile)
-            )
-        )
-
-        # $F_{32\_ee}(X)$, Eq.15b
-        big_f32ee_teff = (
+        # F₃₂ₑᵢ(Y), Eq.15c
+        return (
             (
-                (0.05 + 0.62 * charge_profile)
-                / charge_profile
-                / (1.0 + 0.44 * charge_profile)
-                * (f32ee_teff - f32ee_teff**4)
-            )
-            + (
-                (f32ee_teff**2 - f32ee_teff**4 - 1.2 * (f32ee_teff**3 - f32ee_teff**4))
-                / (1.0 + 0.22 * charge_profile)
-            )
-            + (1.2 / (1.0 + 0.5 * charge_profile) * f32ee_teff**4)
-        )
-
-        # $F_{32\_ei}(Y)$, Eq.15c
-        big_f32ei_teff = (
-            (
-                -(0.56 + 1.93 * charge_profile)
-                / charge_profile
-                / (1.0 + 0.44 * charge_profile)
-                * (f32ei_teff - f32ei_teff**4)
+                -(0.56 + 1.93 * n_charge_plasma_effective)
+                / n_charge_plasma_effective
+                / (1.0 + 0.44 * n_charge_plasma_effective)
+                * (y - y**4)
             )
             + (
                 4.95
-                / (1.0 + 2.48 * charge_profile)
-                * (
-                    f32ei_teff**2
-                    - f32ei_teff**4
-                    - 0.55 * (f32ei_teff**3 - f32ei_teff**4)
-                )
+                / (1.0 + 2.48 * n_charge_plasma_effective)
+                * (y**2 - y**4 - 0.55 * (y**3 - y**4))
             )
-            - (1.2 / (1.0 + 0.5 * charge_profile) * f32ei_teff**4)
+            - (1.2 / (1.0 + 0.5 * n_charge_plasma_effective) * y**4)
         )
 
-        # big_f32ee_teff + big_f32ei_teff = L32 coefficient
-
-        # Corrections suggested by Fable, 15/05/2015
-        return self._beta_poloidal_sauter(
-            radial_elements,
-            number_of_elements,
-            rmajor,
-            b_plasma_toroidal_on_axis,
-            ne,
-            tempe,
-            inverse_q,
-            rho,
-        ) * (big_f32ee_teff + big_f32ei_teff) + self._calculate_l31_coefficient(
-            radial_elements,
-            number_of_elements,
-            rmajor,
-            b_plasma_toroidal_on_axis,
-            triang,
-            ne,
-            ni,
-            tempe,
-            tempi,
-            inverse_q,
-            rho,
-            zeff,
-            sqeps,
-        ) * self._beta_poloidal_sauter(
-            radial_elements,
-            number_of_elements,
-            rmajor,
-            b_plasma_toroidal_on_axis,
-            ne,
-            tempe,
-            inverse_q,
-            rho,
-        ) / self._beta_poloidal_total_sauter(
-            radial_elements,
-            number_of_elements,
-            rmajor,
-            b_plasma_toroidal_on_axis,
-            ne,
-            ni,
-            tempe,
-            tempi,
-            inverse_q,
-            rho,
-        )
-
-    def _calculate_l34_alpha_31_coefficient(
-        self,
-        radial_elements: np.ndarray,
-        number_of_elements: int,
-        rmajor: float,
-        b_plasma_toroidal_on_axis: float,
-        triang: float,
-        inverse_q: np.ndarray,
-        sqeps: np.ndarray,
-        tempi: np.ndarray,
-        tempe: np.ndarray,
-        amain: float,
-        zmain: float,
-        ni: np.ndarray,
-        ne: np.ndarray,
-        rho: np.ndarray,
-        zeff: np.ndarray,
-    ) -> float:
-        """L34, alpha and L31 coefficient before Grad(ln(Ti)) in the Sauter bootstrap
-        current scaling.
-
-        This function calculates the coefficient scaling grad(ln(Ti)) in the Sauter
-        bootstrap current scaling.
+    @staticmethod
+    def _calculate_f_32_ee_factor(
+        n_charge_plasma_effective: float | np.ndarray, x: float | np.ndarray
+    ) -> float | np.ndarray:
+        """Calculate the F₃₂ₑₑ(X) factor, the electron-electron friction correction
+        factor for the electron temperature-gradient bootstrap coefficient L₃₂.
 
         Parameters
         ----------
-        radial_elements : np.ndarray
-            Radial element indexes in range 2 to nr.
-        number_of_elements : int
-            Maximum value of radial_elements.
-        rmajor : float
-            Plasma major radius (m).
-        b_plasma_toroidal_on_axis : float
-            Toroidal field on axis (T).
-        triang : float
-            Plasma triangularity.
-        inverse_q : np.ndarray
-            Inverse safety factor profile.
-        sqeps : np.ndarray
-            Square root of inverse aspect ratio profile.
-        tempi : np.ndarray
-            Ion temperature profile (keV).
-        tempe : np.ndarray
-            Electron temperature profile (keV).
-        amain : float
-            Atomic mass of the main ion.
-        zmain : float
-            Charge of the main ion.
-        ni : np.ndarray
-            Ion density profile (/m³).
-        ne : np.ndarray
-            Electron density profile (/m³).
-        rho : np.ndarray
-            Normalized minor radius profile.
-        zeff : np.ndarray
-            Effective charge profile.
+        n_charge_plasma_effective:
+            Effective plasma charge (Z_eff) [-].
+        x:
+            Normalized parameter X [-].
 
         Returns
         -------
-        float
-            The L34, alpha and L31 coefficient scaling grad(ln(Ti)) in the Sauter
-            bootstrap current scaling.
+        :
+            The F₃₂ₑₑ(X) factor.
+
+        Notes
+        -----
+        - This equation is originally given by Eq.15b in reference [1].
 
         References
         ----------
-        O. Sauter, C. Angioni, Y. R. Lin-Liu;
+        [1] O. Sauter, C. Angioni, Y. R. Lin-Liu;
         Neoclassical conductivity and bootstrap current formulas for general
-        axisymmetric equilibria and arbitrary collisionality regime. Phys. Plasmas
-        1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
-
-        O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
-        Neoclassical conductivity and bootstrap current formulas for general
-        axisymmetric equilibria and arbitrary collisionality regime
-        [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140.
-        https://doi.org/10.1063/1.1517052
+        axisymmetric equilibria and arbitrary collisionality regime.
+        Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
         """
-        # Prevents first element being 0
-        charge_profile = zeff[radial_elements - 1]
-
-        # Calculate trapped particle fraction
-        f_trapped = self._trapped_particle_fraction_sauter(
-            radial_elements, triang, sqeps
-        )
-
-        # Calculated electron collisionality; nu_e*
-        electron_collisionality = self._electron_collisionality_sauter(
-            radial_elements, rmajor, zeff, inverse_q, sqeps, tempe, ne
-        )
-
-        # $f^{34}_{teff}(\nu_{e*})$, Eq.16b
-        f34_teff = f_trapped / (
-            (1.0 + (1.0 - 0.1 * f_trapped) * np.sqrt(electron_collisionality))
-            + 0.5 * (1.0 - 0.5 * f_trapped) * electron_collisionality / charge_profile
-        )
-
-        # Eq.16a
-        l34_coefficient = (
-            ((1.0 + (1.4 / (charge_profile + 1.0))) * f34_teff)
-            - ((1.9 / (charge_profile + 1.0)) * f34_teff**2)
-            + ((0.3 / (charge_profile + 1.0)) * f34_teff**3)
-            + ((0.2 / (charge_profile + 1.0)) * f34_teff**4)
-        )
-
-        # $\alpha_0$, Eq.17a
-        alpha_0 = (-1.17 * (1.0 - f_trapped)) / (
-            1.0 - (0.22 * f_trapped) - 0.19 * f_trapped**2
-        )
-
-        # Calculate the ion collisionality
-        ion_collisionality = self._ion_collisionality_sauter(
-            radial_elements, rmajor, inverse_q, sqeps, tempi, amain, zmain, ni
-        )
-
-        # $\alpha(\nu_{i*})$, Eq.17b
-        alpha = (
-            (alpha_0 + (0.25 * (1.0 - f_trapped**2)) * np.sqrt(ion_collisionality))
-            / (1.0 + (0.5 * np.sqrt(ion_collisionality)))
-            + (0.315 * ion_collisionality**2 * f_trapped**6)
-        ) / (1.0 + (0.15 * ion_collisionality**2 * f_trapped**6))
-
-        # Corrections suggested by Fable, 15/05/2015
-        # Below calculates the L34 * alpha + L31 coefficient
+        # F₃₂ₑₑ(X), Eq.15b
         return (
-            self._beta_poloidal_total_sauter(
-                radial_elements,
-                number_of_elements,
-                rmajor,
-                b_plasma_toroidal_on_axis,
-                ne,
-                ni,
-                tempe,
-                tempi,
-                inverse_q,
-                rho,
+            (
+                (0.05 + 0.62 * n_charge_plasma_effective)
+                / n_charge_plasma_effective
+                / (1.0 + 0.44 * n_charge_plasma_effective)
+                * (x - x**4)
             )
-            - self._beta_poloidal_sauter(
-                radial_elements,
-                number_of_elements,
-                rmajor,
-                b_plasma_toroidal_on_axis,
-                ne,
-                tempe,
-                inverse_q,
-                rho,
+            + (
+                (x**2 - x**4 - 1.2 * (x**3 - x**4))
+                / (1.0 + 0.22 * n_charge_plasma_effective)
             )
-        ) * (l34_coefficient * alpha) + self._calculate_l31_coefficient(
-            radial_elements,
-            number_of_elements,
-            rmajor,
-            b_plasma_toroidal_on_axis,
-            triang,
-            ne,
-            ni,
-            tempe,
-            tempi,
-            inverse_q,
-            rho,
-            zeff,
-            sqeps,
-        ) * (
-            1.0
-            - self._beta_poloidal_sauter(
-                radial_elements,
-                number_of_elements,
-                rmajor,
-                b_plasma_toroidal_on_axis,
-                ne,
-                tempe,
-                inverse_q,
-                rho,
-            )
-            / self._beta_poloidal_total_sauter(
-                radial_elements,
-                number_of_elements,
-                rmajor,
-                b_plasma_toroidal_on_axis,
-                ne,
-                ni,
-                tempe,
-                tempi,
-                inverse_q,
-                rho,
-            )
+            + (1.2 / (1.0 + 0.5 * n_charge_plasma_effective) * x**4)
+        )
+
+    @staticmethod
+    def _calculate_f_31_factor(
+        n_charge_plasma_effective: float | np.ndarray, x: float | np.ndarray
+    ) -> float | np.ndarray:
+        """Calculate the F₃₁ factor. Used to find L₃₁ and L₃₄.
+
+        Parameters
+        ----------
+        n_charge_plasma_effective:
+            Effective plasma charge (Z_eff) [-].
+        x:
+            Normalized parameter X [-].
+
+        Returns
+        -------
+        :
+            The F₃₁ factor.
+
+        Notes
+        -----
+        - This equation is originally given by Eq.14a in reference [1].
+
+        References
+        ----------
+        [1] O. Sauter, C. Angioni, Y. R. Lin-Liu;
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime.
+        Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
+        """
+        # F₃₁ Eq.14a
+        return (
+            ((1.0 + 1.4 / (n_charge_plasma_effective + 1.0)) * x)
+            - (1.9 / (n_charge_plasma_effective + 1.0) * x**2)
+            + ((0.3 * x**3 + 0.2 * x**4) / (n_charge_plasma_effective + 1.0))
         )
 
     @staticmethod
@@ -2323,26 +2525,26 @@ class SauterBootstrapCurrent(Model):
 
         Parameters
         ----------
-        radial_elements : np.ndarray
+        radial_elements:
             Radial element indexes in range 1 to nr.
-        nr : int
+        nr:
             Maximum value of radial_elements.
-        rmajor : float
+        rmajor:
             Plasma major radius (m).
-        b_plasma_toroidal_on_axis : float
+        b_plasma_toroidal_on_axis:
             Toroidal field on axis (T).
-        ne : np.ndarray
+        ne:
             Electron density profile (/m³).
-        tempe : np.ndarray
+        tempe:
             Electron temperature profile (keV).
-        inverse_q : np.ndarray
+        inverse_q:
             Inverse safety factor profile.
-        rho : np.ndarray
+        rho:
             Normalized minor radius profile.
 
         Returns
         -------
-        np.ndarray
+        :
             The local beta poloidal.
         """
         return (
@@ -2384,30 +2586,30 @@ class SauterBootstrapCurrent(Model):
 
         Parameters
         ----------
-        radial_elements : np.ndarray
+        radial_elements:
             Radial element indexes in range 1 to nr.
-        nr : int
+        nr:
             Maximum value of radial_elements.
-        rmajor : float
+        rmajor:
             Plasma major radius (m).
-        b_plasma_toroidal_on_axis : float
+        b_plasma_toroidal_on_axis:
             Toroidal field on axis (T).
-        ne : np.ndarray
+        ne:
             Electron density profile (/m³).
-        ni : np.ndarray
+        ni:
             Ion density profile (/m³).
-        tempe : np.ndarray
+        tempe:
             Electron temperature profile (keV).
-        tempi : np.ndarray
+        tempi:
             Ion temperature profile (keV).
-        inverse_q : np.ndarray
+        inverse_q:
             Inverse safety factor profile.
-        rho : np.ndarray
+        rho:
             Normalized minor radius profile.
 
         Returns
         -------
-        np.ndarray
+        :
             The local total beta poloidal.
         """
         return (
@@ -2446,26 +2648,29 @@ class SauterBootstrapCurrent(Model):
     @staticmethod
     @nb.njit(cache=True)
     def _trapped_particle_fraction_sauter(
-        radial_elements: np.ndarray, triang: float, sqeps: np.ndarray, fit: int = 0
+        radial_elements: np.ndarray,
+        triang: float,
+        sqrt_inverse_aspect: np.ndarray,
+        fit: int = 0,
     ) -> np.ndarray:
         """Calculates the trapped particle fraction to be used in the Sauter bootstrap
         current scaling.
 
         Parameters
         ----------
-        radial_elements : np.ndarray
+        radial_elements:
             Radial element index in range 1 to nr.
-        triang : float
+        triang:
             Plasma triangularity.
-        sqeps : np.ndarray
-            Square root of local aspect ratio.
-        fit : int, optional
-            Fit method (0 = ASTRA method, 1 = Sauter 2002, 2 = Sauter 2016).
+        sqrt_inverse_aspect:
+            Square root of the inverse of the local aspect ratio.
+        fit:
+            Optional. Fit method (0 = ASTRA method, 1 = Sauter 2002, 2 = Sauter 2016).
             Default is 0.
 
         Returns
         -------
-        np.ndarray
+        :
             Trapped particle fraction.
 
         Raises
@@ -2497,7 +2702,7 @@ class SauterBootstrapCurrent(Model):
         ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2016.04.033.
         """
         # Prevent first element from being zero
-        sqeps_reduced = sqeps[radial_elements - 1]
+        sqeps_reduced = sqrt_inverse_aspect[radial_elements - 1]
         eps = sqeps_reduced**2
 
         if fit == 0:

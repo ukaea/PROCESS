@@ -305,13 +305,15 @@ $$
 f_{\text {teff }}^{31}\left(\nu_{e *}\right)= \frac{f_t}{1+\left(1-0.1 f_t\right) \sqrt{\nu_{e *}}+0.5\left(1-f_t\right) \nu_{e *} / Z}
 $$
 
-The returned value is $\mathcal{L}_{31} \times$ [`_beta_poloidal_total_sauter()`](#calculate-ion-and-electron-poloidal-beta-correction-beta_poloidal_total_sauter)  
+This returns the dimensionless $\mathcal{L}_{31}$ coefficient, exposed in
+`SauterBootstrapCurrentParams.l31_coefficient`. In `bootstrap_fraction_sauter()`,
+it is multiplied by the total poloidal beta.
 
 ---------------
 
-#### Calculate electron temperature coefficient | `_calculate_l31_32_coefficient()`
+#### Calculate electron temperature coefficient | `_calculate_l32_coefficient()`
 
-This function calculates and returns the $\left(\mathcal{L}_{31}+\mathcal{L}_{32}\right)$ coefficient value for $\frac{\partial \ln T_{\text{e}}}{\partial \psi}$.
+This function calculates and returns the dimensionless $\mathcal{L}_{32}$ coefficient.
 
 $$
 \begin{align*}
@@ -328,15 +330,15 @@ F_{32 \_e i}(Y) = -\frac{0.56+1.93 Z}{Z(1+0.44 Z)}\left(Y-Y^4\right)+\frac{4.95}
 f_{\text {teff }}^{32 \_e i}\left(\nu_{e *}\right) = \frac{f_t}{1+\left(1+0.6 f_t\right) \sqrt{\nu_{e *}}+0.85\left(1-0.37 f_t\right) \nu_{e *}(1+Z)}
 $$
 
-The above is added to a call of [`_calculate_l31_coefficient()`](#calculate-electron-density-coefficient-calculate_l31_coefficient). This is then multiplied by [`_beta_poloidal_sauter()`](#calculate-electron-only-poloidal-beta-correction-beta_poloidal_sauter). 
-
-This product above is then multiplied by ([`_beta_poloidal_sauter()`](#calculate-electron-only-poloidal-beta-correction-beta_poloidal_sauter) divided by [`_beta_poloidal_total_sauter()`](#calculate-ion-and-electron-poloidal-beta-correction-beta_poloidal_total_sauter))
+`SauterBootstrapCurrentParams` returns the L31 and L32 profiles separately as
+`l31_coefficient` and `l32_coefficient`. In `bootstrap_fraction_sauter()`, their
+sum is multiplied by the electron-only poloidal beta.
 
 ---------------
 
-#### Calculate ion temperature coefficient | `_calculate_l34_alpha_31_coefficient()`
+#### Calculate ion temperature coefficient | `_calculate_l34_coefficient()`
 
-This function calculates and returns the $\left(1+\frac{\mathcal{L}_{34}}{\mathcal{L}_{31}}\alpha\right)\mathcal{L}_{31}$ coefficient value for $\frac{\partial \ln T_{\text{i}}}{\partial \psi}$.
+This function calculates and returns the dimensionless $\mathcal{L}_{34}$ coefficient.
 
 $$
 \mathcal{L}_{34}=F_{31}\left(X=f_{\text {teff }}^{34}\right) 
@@ -357,7 +359,19 @@ $$
 
 The definition of $\alpha\left(\nu_{i *}\right)$ is that found in the erratum paper which changes the value of $-0.315\nu_{i *}^2 f_t^6$ to positive.[^5]
 
-The return sequence is ([`_beta_poloidal_total_sauter()`](#calculate-ion-and-electron-poloidal-beta-correction-beta_poloidal_total_sauter) - [`_beta_poloidal_sauter()`](#calculate-electron-only-poloidal-beta-correction-beta_poloidal_sauter)) $\times (\mathcal{L}_{34} + \alpha)$ + [`_calculate_l31_coefficient()`](#calculate-electron-density-coefficient-calculate_l31_coefficient) $\times$ (1.0 -  [`_beta_poloidal_sauter()`](#calculate-electron-only-poloidal-beta-correction-beta_poloidal_sauter) divided by [`_beta_poloidal_total_sauter()`](#calculate-ion-and-electron-poloidal-beta-correction-beta_poloidal_total_sauter))
+`SauterBootstrapCurrentParams` returns the L34, $\alpha_0$, and $\alpha$ profiles
+separately as `l34_coefficient`, `alpha_0`, and `alpha`. In
+`bootstrap_fraction_sauter()`, the ion-temperature term uses
+$\mathcal{L}_{31}+\mathcal{L}_{34}\alpha$ and is multiplied by the difference
+between total and electron-only poloidal beta.
+
+The three gradient terms are combined there as
+
+$$
+\beta_{p,\mathrm{total}}\mathcal{L}_{31}\frac{\partial\ln n_e}{\partial\rho}
++\beta_{p,e}(\mathcal{L}_{31}+\mathcal{L}_{32})\frac{\partial\ln T_e}{\partial\rho}
++(\beta_{p,\mathrm{total}}-\beta_{p,e})(\mathcal{L}_{34}\alpha+\mathcal{L}_{31})\frac{\partial\ln T_i}{\partial\rho}
+$$
 
 
 

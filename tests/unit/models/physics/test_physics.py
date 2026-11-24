@@ -421,7 +421,7 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
     This test was generated using data from
     large_tokamak_nof.IN.DAT.
 
-    :param bootstrapfractionsauterparam: the data used to mock and assert in this test.
+    :param bootstrapfractionsauterparam: data used to mock and assert in this test.
     :type bootstrapfractionsauterparam: bootstrapfractionsauterparam
 
     :param monkeypatch: pytest fixture used to mock module/class variables
@@ -458,15 +458,79 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
         "n_plasma_profile_elements",
     ]:
         monkeypatch.setattr(
-            physics.data.physics, field, getattr(bootstrapfractionsauterparam, field)
+            physics.data.physics,
+            field,
+            getattr(bootstrapfractionsauterparam, field),
         )
 
     physics.plasma_profile.run()
-    bfs, _ = physics.plasma_bootstrap_current.bootstrap_fraction_sauter(
-        physics.plasma_profile
+    sauter = physics.plasma_bootstrap_current.sauter_bootstrap
+    sauter_result = sauter.bootstrap_fraction_sauter(
+        a_plasma_poloidal=physics.data.physics.a_plasma_poloidal,
+        rminor=physics.data.physics.rminor,
+        rmajor=physics.data.physics.rmajor,
+        triang=physics.data.physics.triang,
+        n_charge_plasma_effective_vol_avg=(
+            physics.data.physics.n_charge_plasma_effective_vol_avg
+        ),
+        nd_plasma_electron_profile=physics.plasma_profile.neprofile.profile_y,
+        roa=physics.plasma_profile.neprofile.profile_x,
+        temp_plasma_electron_profile_kev=(physics.plasma_profile.teprofile.profile_y),
+        temp_plasma_ion_profile_kev=physics.plasma_profile.tiprofile.profile_y,
+        nd_plasma_ions_total_vol_avg=(physics.data.physics.nd_plasma_ions_total_vol_avg),
+        nd_plasma_electrons_vol_avg=(physics.data.physics.nd_plasma_electrons_vol_avg),
+        q0=physics.data.physics.q0,
+        q95=physics.data.physics.q95,
+        m_ions_total_amu=physics.data.physics.m_ions_total_amu,
+        f_plasma_fuel_helium3=physics.data.physics.f_plasma_fuel_helium3,
+        b_plasma_toroidal_on_axis=(physics.data.physics.b_plasma_toroidal_on_axis),
+        plasma_current=physics.data.physics.plasma_current,
     )
 
-    assert bfs == pytest.approx(bootstrapfractionsauterparam.expected_bfs)
+    assert sauter_result.f_cur_plasma_bootstrap == pytest.approx(
+        bootstrapfractionsauterparam.expected_bfs
+    )
+    assert sauter_result.j_bootstrap.shape == (499,)
+    for coefficient in (
+        sauter_result.l31_coefficient,
+        sauter_result.l32_coefficient,
+        sauter_result.l34_coefficient,
+        sauter_result.alpha,
+        sauter_result.alpha_0,
+    ):
+        assert coefficient.shape == sauter_result.j_bootstrap.shape
+
+    bootstrap = physics.plasma_bootstrap_current
+    for method in (
+        "bootstrap_fraction_iter89",
+        "bootstrap_fraction_nevins",
+        "bootstrap_fraction_wilson",
+        "bootstrap_fraction_sakai",
+        "bootstrap_fraction_aries",
+        "bootstrap_fraction_andrade",
+        "bootstrap_fraction_hoang",
+        "bootstrap_fraction_wong",
+        "bootstrap_fraction_gi_I",
+        "bootstrap_fraction_gi_II",
+        "bootstrap_fraction_sugiyama_l_mode",
+        "bootstrap_fraction_sugiyama_h_mode",
+    ):
+        monkeypatch.setattr(bootstrap, method, lambda **_kwargs: 0.0)
+    monkeypatch.setattr(physics.data.current_drive, "cboot", 1.5)
+    monkeypatch.setattr(physics.data.physics, "i_bootstrap_current", 4)
+
+    bootstrap.run()
+
+    assert physics.data.current_drive.f_c_plasma_bootstrap_sauter == pytest.approx(
+        1.5 * bootstrapfractionsauterparam.expected_bfs
+    )
+    assert physics.data.current_drive.f_c_plasma_bootstrap == pytest.approx(
+        1.5 * bootstrapfractionsauterparam.expected_bfs
+    )
+    np.testing.assert_array_equal(
+        physics.data.physics.j_plasma_bootstrap_sauter_profile,
+        sauter_result.j_bootstrap,
+    )
 
 
 class BootstrapFractionSakaiParam(NamedTuple):
