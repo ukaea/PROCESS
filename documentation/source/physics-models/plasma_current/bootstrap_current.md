@@ -251,6 +251,26 @@ The model uses a circularised radius $\rho=\sqrt{A_{\rm plasma}/\pi}\,x$,
 where $x=r/a$ and $A_{\rm plasma}$ is the supplied total poloidal
 cross-sectional area. Current integration assumes circular annuli,
 with $dA=2\pi\rho\,d\rho$. Elongation is not used as a separate input.
+PROCESS assumes $q(x)=q_0+(q_{95}-q_0)x^2$ and a flat $Z_{\rm eff}$
+profile. The input $q_{95}$ therefore sets the value of this assumed profile
+at $x=1$.
+
+The electron density is floored at $10^{13}$ m$^{-3}$. The ion density
+profile is assumed proportional to the electron profile:
+$n_i(x)=n_e(x)n_{i,\rm vol}/n_{e,\rm vol}$, where the subscript denotes a
+volume average. Thus their logarithmic density gradients are identical. These
+profile assumptions, the density floor, and the parabolic $q$ profile are
+PROCESS choices, not requirements of the paper. Temperatures must be positive
+throughout the profiles used in the logarithmic gradients.
+
+The calculation uses `numpy.gradient` on the full radial grid. Coefficients
+and gradients are evaluated at indices $1,\ldots,N-2$; pressures are products
+of the neighbouring density and temperature means at indices $j$ and $j+1$.
+The annular sum uses $2\pi\rho_j(\rho_{j+1}-\rho_j)$ at those same indices.
+It omits the central interval between indices 0 and 1.
+
+The expression below is the second equation in the paper's conclusions[^4],
+which assumes equal electron and ion logarithmic density gradients.
 
 $$
 \left\langle j_{\|} B\right\rangle= \sigma_{\text {neo }}\left\langle E_{\|} B\right\rangle-I(\psi) p(\psi)\left[\mathcal{L}_{31} \frac{\partial \ln n_e}{\partial \psi} \\
@@ -262,6 +282,8 @@ term. PROCESS calculates only the bootstrap contribution and treats its local
 current density as a toroidal current density for integration. The pressure
 terms below are not an explicit parallel-to-toroidal projection, and this
 approximation does not evaluate the exact flux-surface geometry.
+The erratum also restores a missing ion-pressure factor in the paper's
+preceding pressure-form expression[^5].
 
 The PROCESS approximation is
 
@@ -284,27 +306,56 @@ retains the existing regularisation in the denominator only.
 
 !!! warning "Validity of the Sauter Bootstrap Scaling"
 
-    In its current state the several base functions called by the Sauter scaling have no reference and cannot be verified. The ad-hoc adaption of the Sauter scaling for use in `PROCESS` is done knowing that `PROCESS` does not calculate flux surfaces across the plasma.
+    The Sauter coefficients are fitted for general axisymmetric equilibria,
+    but PROCESS does not calculate the flux-surface geometry needed to evaluate
+    the paper's expression exactly. Its trapped-fraction fit, profile assumptions,
+    circularised integration and current-density approximation are described here
+    separately from the paper's formulas.
 
 -----------
 
 #### Calculate the trapped particle fraction | `_trapped_particle_fraction_sauter()`
 
-This function calculates the trapped particle fraction $\left(f_t\right)$ used within other key internal Sauter scaling functions.
+The original paper defines $f_t$ using a flux-surface integral (Eq. 12)[^4].
+PROCESS instead uses one of three geometric fits; `bootstrap_fraction_sauter()`
+uses the default `fit=0`. With $\epsilon=(a/R_0)x$, the default is
 
 $$
 f_t = 1.0-\frac{(1.0-\epsilon_{-1})\sqrt{1.0-\epsilon_{-1}}}{\left(1.0+1.46 \sqrt{\epsilon_{-1}}\right)}
 $$
 
-$\epsilon$ in this case is the local aspect ratio at that normalised radial point in the profile given by $\epsilon = \rho \left(\frac{a}{R}\right)$. The value of $\rho$ varies from 0 to 1 across the profile.
+The subscript $-1$ denotes the preceding array index used by the calculation.
+This ASTRA fit is attributed in the source to private communication with
+Emiliano Fable; it is not the integral in the 1999 paper. Its implementation
+omits the additional $h$ term mentioned in the source. It does not depend on
+triangularity.
 
-The $-1$ subscript in this case refers to the value of the variable in the previous array index value.
+The optional `fit=1` is the 2002 approximation, Eq. 4[^15],
+
+$$
+f_t=1-\frac{(1-\epsilon)^2}
+{(1+1.46\sqrt{\epsilon})\sqrt{1-\epsilon^2}}.
+$$
+
+The optional `fit=2` uses the 2016 geometric fit[^16], including triangularity
+$\delta$:
+
+$$
+\epsilon_{\rm eff}=0.67(1-1.4\delta|\delta|)\epsilon,\qquad
+f_t=1-\frac{1-\epsilon_{\rm eff}}{1+2\sqrt{\epsilon_{\rm eff}}}
+\sqrt{\frac{1-\epsilon}{1+\epsilon}}.
+$$
+
+These are alternative approximations, not the paper's general
+flux-surface integral. The caller must supply parameters for which the
+square roots and denominators are defined.
 
 -------------
 
 #### Calculate electron density coefficient | `_calculate_l31_coefficient()`
 
-This function calculates and returns the $\mathcal{L}_{31}$ coefficient value for $\frac{\partial \ln n_e}{\partial \psi}$
+This function calculates and returns the $\mathcal{L}_{31}$ coefficient value
+for $\frac{\partial \ln n_e}{\partial \psi}$ (Eqs. 14a–14b)[^4].
 
 $$
 \mathcal{L}_{31}= F_{31}\left(X=f_{\text {teff }}^{31}\right) \equiv\left(1+\frac{1.4}{Z+1}\right) X-\frac{1.9}{Z+1} X^2+\frac{0.3}{Z+1} X^3 +\frac{0.2}{Z+1} X^4 \\
@@ -319,7 +370,8 @@ it is multiplied by the total pressure.
 
 #### Calculate electron temperature coefficient | `_calculate_l32_coefficient()`
 
-This function calculates and returns the dimensionless $\mathcal{L}_{32}$ coefficient.
+This function calculates and returns the dimensionless $\mathcal{L}_{32}$
+coefficient (Eqs. 15a–15e)[^4].
 
 $$
 \begin{align*}
@@ -344,7 +396,9 @@ sum is multiplied by the electron pressure.
 
 #### Calculate ion temperature coefficient | `_calculate_l34_coefficient()`
 
-This function calculates and returns the dimensionless $\mathcal{L}_{34}$ coefficient.
+This function calculates and returns the dimensionless $\mathcal{L}_{34}$
+coefficient (Eqs. 16a–16b)[^4]. The $\alpha_0$ and $\alpha$ expressions
+below use Eqs. 17a–17b and the erratum[^4] [^5].
 
 $$
 \mathcal{L}_{34}=F_{31}\left(X=f_{\text {teff }}^{34}\right) 
@@ -405,15 +459,23 @@ $$
 In these equations, densities are in m$^{-3}$, temperatures in eV, and $R$ in
 metres. The implementation uses density profiles in m$^{-3}$ and converts
 temperatures from keV. It uses the volume-averaged
-effective charge for $Z_{\mathrm{eff}}$ and approximates the main-ion charge as
+effective charge for $Z_{\mathrm{eff}}$. The erratum explicitly specifies
+that $Z$ is $Z_{\mathrm{eff}}$ except in the ion collisionality and ion-ion
+Coulomb logarithm, Eqs. 18c and 18e, where it is the **main-ion charge**
+$Z_i$[^5]. PROCESS approximates that charge as
 $Z_i=1+f_{\mathrm{helium3}}$ with the total ion density, rather than calculating
-each ion species separately. The total includes thermal ash, impurities and hot
-beam ions; they are all treated as one population at the thermal ion temperature.
+each ion species separately. The expression is the average charge of the
+D–T–He-3 fuel mixture, not an impurity-weighted charge. The total density
+includes thermal ash, impurities and hot beam ions; they are all treated as one
+population at the thermal ion temperature.
 This is a PROCESS approximation: the paper does not derive a multispecies or
 fast-ion model. Fast-alpha pressure is not included in the bootstrap calculation.
 The paper's ion formula does not depend on ion mass.
 The `m_ions_total_amu` argument is retained for API compatibility but is not
 used by this calculation.
+Both collisionality functions check that density, temperature, $1/q$, charge,
+$\sqrt{\epsilon}$ and $R_0$ are positive and finite at the selected grid points,
+raising `ProcessValueError` otherwise.
 
 ----------------
 
@@ -434,6 +496,33 @@ uses the product of those means rather than the mean of the pressures.
 The electron pressure ratio is represented implicitly by
 $R_{pe}=p_e/p_{\rm total}$, and the ion ratio by
 $1-R_{pe}=p_i/p_{\rm total}$.
+
+#### Sauter class function references
+
+The following maps every method of `SauterBootstrapCurrent` to its role and
+source. Equation numbers refer to the 1999 paper[^4], with corrections from
+the erratum[^5]; the PROCESS-specific assumptions above apply to their inputs.
+
+| Method | Role and reference |
+|---|---|
+| `run()` | No-op required by the PROCESS model interface; not a paper formula. |
+| `output()` | No-op required by the PROCESS model interface; not a paper formula. |
+| `bootstrap_fraction_sauter()` | Combines the coefficients and pressure gradients using the corrected bootstrap expression on p. 2839[^4] [^5], then applies the PROCESS geometry and integration assumptions above. |
+| `_electron_collisionality_sauter()` | Electron collisionality and Coulomb logarithm, Eqs. 18b and 18d[^4], with the charge convention clarified by the erratum[^5]. |
+| `_ion_collisionality_sauter()` | Ion collisionality and Coulomb logarithm, Eqs. 18c and 18e[^4], with main-ion charge as clarified by the erratum[^5]. |
+| `_calculate_l31_coefficient()` | Assembles $\mathcal L_{31}$ from Eq. 14[^4]. |
+| `_calculate_l32_coefficient()` | Assembles $\mathcal L_{32}$ from Eq. 15[^4]. |
+| `_calculate_l34_coefficient()` | Assembles $\mathcal L_{34}$ from Eq. 16[^4]. |
+| `_calculate_f_teff_31_coefficient()` | Effective trapped fraction in Eq. 14b[^4]. |
+| `_calculate_f_teff_32ee_coefficient()` | Electron-electron effective trapped fraction in Eq. 15d[^4]. |
+| `_calculate_f_teff_32ei_coefficient()` | Electron-ion effective trapped fraction in Eq. 15e[^4]. |
+| `_calculate_f_teff_34_coefficient()` | Effective trapped fraction in Eq. 16b[^4]. |
+| `_calculate_alpha_0_coefficient()` | Collisionless ion-temperature coefficient in Eq. 17a[^4]. |
+| `_calculate_alpha_coefficient()` | Finite-collisionality coefficient in Eq. 17b[^4], using the corrected positive $0.315$ term[^5]. |
+| `_calculate_f_32_ee_factor()` | $F_{32ee}$ in Eq. 15b[^4]. |
+| `_calculate_f_32_ei_factor()` | $F_{32ei}$ in Eq. 15c[^4]. |
+| `_calculate_f_31_factor()` | $F_{31}$ in Eq. 14a, reused by Eq. 16a[^4]. |
+| `_trapped_particle_fraction_sauter()` | PROCESS fit, or optional 2002[^15] and 2016[^16] fits; these approximate rather than evaluate Eq. 12[^4]. |
 
 
 ------------------
@@ -794,4 +883,6 @@ Fusion Engineering and Design, Volume 89, Issue 11, 2014, Pages 2709-2715, ISSN 
 [^12]: Miller, R L, "Stable bootstrap-current driven equilibria for low aspect ratio tokamaks". Switzerland: N. p., 1996. Web.https://fusion.gat.com/pubs-ext/MISCONF96/A22433.pdf
 [^13]: K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, “Bootstrap current fraction scaling for a tokamak reactor design study,” Fusion Engineering and Design, vol. 89, no. 11, pp. 2709–2715, Aug. 2014, doi: https://doi.org/10.1016/j.fusengdes.2014.07.009.
 [^14]: S. Sugiyama, T. Goto, H. Utoh, and Y. Sakamoto, “Improvement of core plasma power and current balance models for tokamak systems code considering H-mode plasma profiles,” Fusion Engineering and Design, vol. 216, p. 115022, Jul. 2025, doi: https://doi.org/10.1016/j.fusengdes.2025.115022.
+[^15]: O. Sauter, R. J. Buttery, R. Felton, T. C. Hender, D. F. Howell, and contributors to the E.-J. Workprogramme, “Marginal-limit for neoclassical tearing modes in JET H-mode discharges,” Plasma Physics and Controlled Fusion, vol. 44, no. 9, pp. 1999–2019, 2002. https://doi.org/10.1088/0741-3335/44/9/315.
+[^16]: O. Sauter, “Geometric formulas for system codes including the effect of negative triangularity,” Fusion Engineering and Design, vol. 112, pp. 633–645, 2016. https://doi.org/10.1016/j.fusengdes.2016.04.033.
 ‌ 

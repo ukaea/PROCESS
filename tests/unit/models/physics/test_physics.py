@@ -666,12 +666,10 @@ def test_sauter_density_floor_preserves_results(physics):
         "plasma_current": 1e7,
     }
     result = sauter.bootstrap_fraction_sauter(**kwargs)
-    floored = sauter.bootstrap_fraction_sauter(
-        **{
-            **kwargs,
-            "nd_plasma_electron_profile": np.array([5e19, 3e19, 2e13, 1e13, 1e13]),
-        }
-    )
+    floored = sauter.bootstrap_fraction_sauter(**{
+        **kwargs,
+        "nd_plasma_electron_profile": np.array([5e19, 3e19, 2e13, 1e13, 1e13]),
+    })
     np.testing.assert_allclose(result.j_bootstrap, floored.j_bootstrap, rtol=1e-12)
     assert np.all(np.isfinite(result.j_bootstrap))
     np.testing.assert_allclose(
