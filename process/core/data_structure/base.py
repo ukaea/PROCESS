@@ -118,12 +118,10 @@ class DataStructure:
 
     def __post_init__(self):
         """Set up the data structure"""
-        for i, f in enumerate(fields(self)):
-            if getattr(self, f.name) is initialise_later:
-                # need to resolve type otherwise it is read as a str
-                r = get_type_hints(DataStructure)
-                ff = fields(DataStructure)[i]
-                ftype = r[ff.name]
+        for f, ftype in zip(
+            fields(self), get_type_hints(type(self)).values(), strict=True
+        ):
+            if getattr(self, f.name) is f.default:
                 setattr(self, f.name, ftype())
 
     def init_process(self, update_obsolete: bool = False):

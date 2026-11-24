@@ -2,15 +2,11 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from process.core.data_structure.base import DataStructure
-
 import logging
 from dataclasses import dataclass
 from enum import IntEnum, unique
 from types import DynamicClassAttribute
+from typing import TYPE_CHECKING
 
 import numpy as np
 from scipy import optimize
@@ -34,6 +30,8 @@ from process.models.superconductors import (
 from process.models.tfcoil import quench
 from process.models.tfcoil.base import TFCoil, TFPlasmaCaseType
 
+if TYPE_CHECKING:
+    from process.core.data_structure.base import DataStructure
 logger = logging.getLogger(__name__)
 
 

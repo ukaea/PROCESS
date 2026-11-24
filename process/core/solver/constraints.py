@@ -10,11 +10,6 @@ import numpy as np
 from tabulate import tabulate
 
 from process.core import constants, process_output
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Hashable
-
-    from process.core.data_structure.base import DataStructure
 from process.core.exceptions import ProcessError, ProcessValueError
 from process.data_structure.build_variables import TFCSRadialConfiguration
 from process.data_structure.physics_variables import ConfinementRadiationLossModel
@@ -27,6 +22,11 @@ from process.models.physics.physics import (
     PlasmaIgnitionModel,
 )
 from process.models.tfcoil.base import TFConductorModel
+
+if TYPE_CHECKING:
+    from collections.abc import Callable, Hashable
+
+    from process.core.data_structure.base import DataStructure
 
 ConstraintSymbolType = Literal["=", ">=", "<="]
 
