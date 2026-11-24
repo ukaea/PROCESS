@@ -37,8 +37,8 @@ Switches should start with the `i_` prefix in their name, be of integer type and
 
 Use an uppercase single letter, word, or words. Separate words with underscores to improve readability.
 
-Refrain from declaring or typing known numerical constants directly in the code. Instead call the value from `constants.py`
-If the constants doesn't exist then add it with a source link and uncertainty value.
+Refrain from declaring or typing known numerical constants directly in the code. Instead call the value from `constants.py`.
+If the constant doesn't exist then add it with a source link.
 
 ---------------------
 

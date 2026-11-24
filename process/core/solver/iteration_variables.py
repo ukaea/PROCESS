@@ -291,6 +291,7 @@ def load_iteration_variables(data):
         variable_index = data.numerics.ixc[i]
         iteration_variable = ITERATION_VARIABLES[variable_index]
 
+# use ... sentinel because None is a valid initial/default value for variables
         # use ... as the default return value because
         # None might be a valid return from Fortran?
 

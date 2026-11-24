@@ -108,6 +108,7 @@ class SolverHandler:
         Objective function value, solution vector and constraints vector.
         """
         self.data.numerics.norm_objf = self.solver.objf
+        # Slicing required to trim maximum sized arrays down to actually used size
         self.data.numerics.xcm[: self.solver.x.shape[0]] = self.solver.x
         self.data.numerics.rcm[: self.solver.conf.shape[0]] = self.solver.conf
 

@@ -411,7 +411,7 @@ class SingleRun:
         self.data.globals.fileprefix = self.input_path.resolve()
 
     def set_output(self):
-        """Set the output file name.
+        """Set the output file path.
 
         Set Path object on the Process object
         """
