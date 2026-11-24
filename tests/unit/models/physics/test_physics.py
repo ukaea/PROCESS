@@ -537,8 +537,8 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
 def test_sauter_collisionalities_match_paper(physics):
     sauter = physics.plasma_bootstrap_current.sauter_bootstrap
     radial_elements = np.array([2, 3])
-    ne = np.array([10.0, 10.0, 4.0, 2.0])
-    ni = np.array([10.0, 10.0, 3.0, 1.0])
+    ne = np.array([10.0, 10.0, 4.0, 2.0]) * 1.0e19
+    ni = np.array([10.0, 10.0, 3.0, 1.0]) * 1.0e19
     tempe = np.array([10.0, 10.0, 2.0, 1.0])
     tempi = np.array([10.0, 10.0, 3.0, 1.0])
     zeff = np.array([2.0, 2.0, 3.0, 2.0])
@@ -546,8 +546,8 @@ def test_sauter_collisionalities_match_paper(physics):
     inverse_q = np.array([0.5, 0.5, 0.25, 0.2])
     sqrt_inverse_aspect = np.sqrt(np.array([0.1, 0.1, 0.2, 0.3]))
     selected = radial_elements - 1
-    ne_si = ne[selected] * 1.0e19
-    ni_si = ni[selected] * 1.0e19
+    ne_si = ne[selected]
+    ni_si = ni[selected]
     te_ev = tempe[selected] * 1.0e3
     ti_ev = tempi[selected] * 1.0e3
     log_e = 31.3 - np.log(np.sqrt(ne_si) / te_ev)
@@ -576,7 +576,7 @@ def test_sauter_collisionalities_match_paper(physics):
 @pytest.mark.parametrize("bad_input", ["density", "inverse_q", "aspect"])
 def test_sauter_collisionality_rejects_invalid_inputs(physics, species, bad_input):
     sauter = physics.plasma_bootstrap_current.sauter_bootstrap
-    density = np.array([10.0, 10.0, 10.0])
+    density = np.full(3, 1.0e20)
     inverse_q = np.array([0.5, 0.5, 0.5])
     sqrt_inverse_aspect = np.sqrt(np.array([0.1, 0.1, 0.1]))
     if bad_input == "density":
@@ -610,6 +610,44 @@ def test_sauter_collisionality_rejects_invalid_inputs(physics, species, bad_inpu
         )
     with pytest.raises(ProcessValueError, match="positive and finite"):
         method(*args)
+
+
+def test_sauter_density_floor_preserves_results(physics):
+    sauter = physics.plasma_bootstrap_current.sauter_bootstrap
+    result = sauter.bootstrap_fraction_sauter(
+        a_plasma_poloidal=np.pi,
+        rminor=1.0,
+        rmajor=6.0,
+        triang=0.0,
+        n_charge_plasma_effective_vol_avg=2.0,
+        nd_plasma_electron_profile=np.array([5e19, 3e19, 2e13, 0.0, 0.0]),
+        roa=np.linspace(0.0, 1.0, 5),
+        temp_plasma_electron_profile_kev=np.array([10.0, 9.0, 7.0, 4.0, 1.0]),
+        temp_plasma_ion_profile_kev=np.array([9.0, 8.0, 6.0, 3.0, 1.0]),
+        nd_plasma_ions_total_vol_avg=0.9e20,
+        nd_plasma_electrons_vol_avg=1e20,
+        q0=1.0,
+        q95=3.0,
+        m_ions_total_amu=2.5,
+        f_plasma_fuel_helium3=0.0,
+        b_plasma_toroidal_on_axis=5.0,
+        plasma_current=1e7,
+    )
+    np.testing.assert_allclose(
+        result.j_bootstrap,
+        [1.7028061261652075e6, 1.2004567091591511, 0.04394254881717017],
+        rtol=1e-12,
+    )
+    np.testing.assert_allclose(
+        result.normalised_electron_collisionality,
+        [0.0365798859456134, 2.625268834825411e-8, 3.073334914970342e-8],
+        rtol=1e-12,
+    )
+    np.testing.assert_allclose(
+        result.normalised_ion_collisionality,
+        [0.03463225217746871, 2.5471044247292564e-8, 3.8303394980871553e-8],
+        rtol=1e-12,
+    )
 
 
 def test_sauter_circularised_area(physics):

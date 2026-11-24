@@ -1596,17 +1596,15 @@ class SauterBootstrapCurrent(Model):
         inverse_aspect = (rminor / rmajor) * roa
         sqrt_inverse_aspect = np.sqrt(inverse_aspect)
 
-        # Calculate electron and ion density profiles
-        ne = nd_plasma_electron_profile * 1e-19
+        # Prevent log(0) using the existing density floor in m⁻³.
+        nd_plasma_electron_profile = np.maximum(nd_plasma_electron_profile, 1.0e13)
+        nd_plasma_ions_total_profile = (
+            nd_plasma_ions_total_vol_avg / nd_plasma_electrons_vol_avg
+        ) * nd_plasma_electron_profile
 
-        # Prevent log(0) in Sauter bootstrap calculation
-        ne = np.maximum(ne, 1.0e-6)
-
-        ni = (nd_plasma_ions_total_vol_avg / nd_plasma_electrons_vol_avg) * ne
-
-        # Flat Zeff profile assumed
+        # Flat effective charge profile assumed
         # Return tempi like array object filled with zeff
-        zeff = np.full_like(
+        n_charge_plasma_effective_profile = np.full_like(
             temp_plasma_ion_profile_kev, n_charge_plasma_effective_vol_avg
         )
 
@@ -1619,7 +1617,7 @@ class SauterBootstrapCurrent(Model):
         # Calculate total bootstrap current (MA) by summing along profiles
         # Looping from 2 because _calculate_l31_coefficient() etc should return 0
         # @ j == 1
-        radial_elements = np.arange(2, len(ne))
+        radial_elements = np.arange(2, len(nd_plasma_electron_profile))
 
         # Area of annulus, assuming circular plasma cross-section
         drho = rho[radial_elements] - rho[radial_elements - 1]
@@ -1632,7 +1630,9 @@ class SauterBootstrapCurrent(Model):
         dlogti_drho = np.gradient(np.log(temp_plasma_ion_profile_kev), rho)[
             radial_elements - 1
         ]
-        dlogne_drho = np.gradient(np.log(ne), rho)[radial_elements - 1]
+        dlogne_drho = np.gradient(np.log(nd_plasma_electron_profile), rho)[
+            radial_elements - 1
+        ]
 
         # Calculate trapped particle fraction
         f_trapped_particles = self._trapped_particle_fraction_sauter(
@@ -1641,7 +1641,7 @@ class SauterBootstrapCurrent(Model):
             sqrt_inverse_aspect=sqrt_inverse_aspect,
         )
 
-        # Calculated electron collisionality; nu_e*
+        # Calculated electron collisionality; (νₑ⁎)
         normalised_electron_collisionality = self._electron_collisionality_sauter(
             radial_elements=radial_elements,
             rmajor=rmajor,
@@ -1649,10 +1649,10 @@ class SauterBootstrapCurrent(Model):
             inverse_q=inverse_q,
             sqrt_inverse_aspect=sqrt_inverse_aspect,
             temp_plasma_electron_profile_kev=temp_plasma_electron_profile_kev,
-            nd_plasma_electron_profile=ne,
+            nd_plasma_electron_profile=nd_plasma_electron_profile,
         )
 
-        # Calculate the ion collisionality
+        # Calculate the ion collisionality; (νᵢ⁎)
         normalised_ion_collisionality = self._ion_collisionality_sauter(
             radial_elements=radial_elements,
             rmajor=rmajor,
@@ -1660,26 +1660,26 @@ class SauterBootstrapCurrent(Model):
             sqrt_inverse_aspect=sqrt_inverse_aspect,
             temp_plasma_ion_profile_kev=temp_plasma_ion_profile_kev,
             n_charge_main_ion=zmain,
-            nd_plasma_ion_profile=ni,
+            nd_plasma_ion_profile=nd_plasma_ions_total_profile,
         )
 
         l31_coefficient = self._calculate_l31_coefficient(
             radial_elements=radial_elements,
             f_trapped_particles=f_trapped_particles,
             normalised_electron_collisionality=normalised_electron_collisionality,
-            zeff=zeff,
+            zeff=n_charge_plasma_effective_profile,
         )
         l32_coefficient = self._calculate_l32_coefficient(
             radial_elements=radial_elements,
             f_trapped_particles=f_trapped_particles,
-            zeff=zeff,
+            zeff=n_charge_plasma_effective_profile,
             normalised_electron_collisionality=normalised_electron_collisionality,
         )
         l34_coefficient = self._calculate_l34_coefficient(
             radial_elements=radial_elements,
             f_trapped_particles=f_trapped_particles,
             normalised_electron_collisionality=normalised_electron_collisionality,
-            zeff=zeff,
+            zeff=n_charge_plasma_effective_profile,
         )
         alpha_0 = self._calculate_alpha_0_coefficient(
             f_trapped_particles=f_trapped_particles
@@ -1691,8 +1691,14 @@ class SauterBootstrapCurrent(Model):
         )
 
         previous = radial_elements - 1
-        ne_mid = 0.5 * (ne[radial_elements] + ne[previous])
-        ni_mid = 0.5 * (ni[radial_elements] + ni[previous])
+        ne_mid = 0.5 * (
+            nd_plasma_electron_profile[radial_elements]
+            + nd_plasma_electron_profile[previous]
+        )
+        ni_mid = 0.5 * (
+            nd_plasma_ions_total_profile[radial_elements]
+            + nd_plasma_ions_total_profile[previous]
+        )
         te_mid = 0.5 * (
             temp_plasma_electron_profile_kev[radial_elements]
             + temp_plasma_electron_profile_kev[previous]
@@ -1701,9 +1707,9 @@ class SauterBootstrapCurrent(Model):
             temp_plasma_ion_profile_kev[radial_elements]
             + temp_plasma_ion_profile_kev[previous]
         )
-        # Retain the original rounded conversion from 10¹⁹ m⁻³ and keV to Pa.
-        pressure_electron = 1.6e3 * ne_mid * te_mid
-        pressure_ion = 1.6e3 * ni_mid * ti_mid
+        # Retain the original rounded conversion from m⁻³ and keV to Pa.
+        pressure_electron = constants.KILOELECTRON_VOLT * ne_mid * te_mid
+        pressure_ion = constants.KILOELECTRON_VOLT * ni_mid * ti_mid
         pressure_total = pressure_electron + pressure_ion
 
         # With the assumed circular geometry, Bp ≈ B0 * rho / (R * q).
@@ -1723,15 +1729,16 @@ class SauterBootstrapCurrent(Model):
 
         # This inherited Bp/Bp_reg² approximation is not an explicit
         # parallel-to-toroidal current projection.
-        jboot = (
+        j_bootstrap_toroidal = (
             -poloidal_field
             / poloidal_field_regularised**2
             * (density_gradient_term + electron_temperature_term + ion_temperature_term)
         )  # A/m2
 
         return SauterBootstrapCurrentParams(
-            f_cur_plasma_bootstrap=np.sum(da * jboot, axis=0) / plasma_current,
-            j_bootstrap=jboot,
+            f_cur_plasma_bootstrap=np.sum(da * j_bootstrap_toroidal, axis=0)
+            / plasma_current,
+            j_bootstrap=j_bootstrap_toroidal,
             f_trapped_particles=f_trapped_particles,
             normalised_electron_collisionality=normalised_electron_collisionality,
             normalised_ion_collisionality=normalised_ion_collisionality,
@@ -1755,7 +1762,8 @@ class SauterBootstrapCurrent(Model):
         temp_plasma_electron_profile_kev: float | np.ndarray,
         nd_plasma_electron_profile: float | np.ndarray,
     ) -> np.ndarray:
-        """Calculate normalized electron collisionality using Sauter Eqs. 18b and 18d.
+        """Calculate normalized electron collisionality (νₑ⁎) using Sauter Eqs. 18b
+        and 18d.
 
         Parameters
         ----------
@@ -1772,7 +1780,7 @@ class SauterBootstrapCurrent(Model):
         temp_plasma_electron_profile_kev:
             The electron temperature profile [keV].
         nd_plasma_electron_profile:
-            The electron density profile in units of [10¹⁹ m⁻³].
+            The electron density profile [m⁻³].
 
         Returns
         -------
@@ -1799,7 +1807,7 @@ class SauterBootstrapCurrent(Model):
         Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
         """  # noqa: RUF002
         selected = radial_elements - 1
-        ne_si = nd_plasma_electron_profile[selected] * 1.0e19
+        ne_si = nd_plasma_electron_profile[selected]
         temp_plasma_electron_profile_ev = (
             temp_plasma_electron_profile_kev[selected] * 1.0e3
         )
@@ -1860,7 +1868,7 @@ class SauterBootstrapCurrent(Model):
         n_charge_main_ion : np.ndarray
             The charge of the main ion species [-].
         nd_plasma_ion_profile : np.ndarray
-            The ion density profile in units of [10¹⁹ m⁻³].
+            The ion density profile [m⁻³].
 
         Returns
         -------
@@ -1888,7 +1896,7 @@ class SauterBootstrapCurrent(Model):
 
         """  # noqa: RUF002
         selected = radial_elements - 1
-        ni_si = nd_plasma_ion_profile[selected] * 1.0e19
+        ni_si = nd_plasma_ion_profile[selected]
         temp_plasma_ion_profile_ev = temp_plasma_ion_profile_kev[selected] * 1.0e3
         zion_selected = n_charge_main_ion[selected]
         inverse_q_selected = inverse_q[selected]
