@@ -31,7 +31,8 @@ def plot_sauter_bootstrap_summary(fig: plt.Figure, mfile: MFile, scan: int):
         nd_plasma_electron_profile=nd_electron_profile,
         roa=rho,
         temp_plasma_electron_profile_kev=temp_electron_profile_kev,
-        temp_plasma_ion_profile_kev=temp_electron_profile_kev,
+        temp_plasma_ion_profile_kev=temp_electron_profile_kev
+        * mfile.get("f_temp_plasma_ion_electron"),
         nd_plasma_ions_total_vol_avg=mfile.get("nd_plasma_ions_total_vol_avg"),
         nd_plasma_electrons_vol_avg=mfile.get("nd_plasma_electrons_vol_avg"),
         q0=mfile.get("q0"),
@@ -46,7 +47,7 @@ def plot_sauter_bootstrap_summary(fig: plt.Figure, mfile: MFile, scan: int):
     j_profile.plot(
         np.linspace(0, 1, len(rho) - 2),
         sauter_params.j_bootstrap,
-        label="Sauter Bootstrap Current",
+        label="Sauter Bootstrap Current Density",
     )
 
     axes_trapped = fig.add_subplot(322)
@@ -124,7 +125,7 @@ def plot_sauter_bootstrap_summary(fig: plt.Figure, mfile: MFile, scan: int):
     axes_coefficients.set_ylabel("Coefficient Value")
     axes_coefficients.grid(True)
     j_profile.set_xlabel("Normalized Radius")
-    j_profile.set_ylabel("Bootstrap Current")
+    j_profile.set_ylabel("Bootstrap Current Density")
     j_profile.grid(True)
     j_profile.legend()
     axes_trapped.set_xlabel("Normalized Radius")
@@ -141,3 +142,4 @@ def plot_sauter_bootstrap_summary(fig: plt.Figure, mfile: MFile, scan: int):
     q_profile.set_ylabel("Safety Factor")
     q_profile.grid(True)
     q_profile.legend()
+    fig.suptitle("Sauter Model Graphs")

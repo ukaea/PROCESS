@@ -591,7 +591,7 @@ class PlasmaBootstrapCurrent(Model):
 
         Returns
         -------
-        SauterBootstrapCurrentParams
+        :
             The calculated bootstrap current parameters.
         """
         return self.sauter_bootstrap.bootstrap_fraction_sauter(
@@ -1460,18 +1460,31 @@ class SauterBootstrapCurrentParams:
     """Output parameters for the Sauter bootstrap current calculation."""
 
     f_cur_plasma_bootstrap: float
+    "Bootstrap current fraction [-]"
     j_bootstrap: float | np.ndarray
+    "Bootstrap current density (j) [A/m²]"
     f_trapped_particles: float | np.ndarray
+    "Trapped particle fraction [-]"
     normalised_electron_collisionality: float | np.ndarray
+    "Normalised electron collisionality [-]"
     normalised_ion_collisionality: float | np.ndarray
+    "Normalised ion collisionality [-]"
     l31_coefficient: np.ndarray
+    "L₃₁ coefficient [-]"
     l32_coefficient: np.ndarray
+    "L₃₂ coefficient [-]"
     l34_coefficient: np.ndarray
+    "L₃₄ coefficient [-]"
     alpha: np.ndarray
+    "α coefficient [-]"  # noqa: RUF001
     alpha_0: np.ndarray
+    "α₀ coefficient [-]"
     q_profile: float | np.ndarray
+    "Safety factor profile (q) [-]"
     inverse_aspect: float | np.ndarray
+    "Inverse aspect ratio (ε) [-]"
     sqrt_inverse_aspect: float | np.ndarray
+    "Square root of inverse aspect ratio (√ε) [-]"
 
 
 class SauterBootstrapCurrent(Model):
@@ -1524,44 +1537,44 @@ class SauterBootstrapCurrent(Model):
 
         Parameters
         ----------
-        a_plasma_poloidal : float
+        a_plasma_poloidal:
             The poloidal cross-sectional area of the plasma [m²].
-        rminor : float
+        rminor:
             The minor radius of the plasma (a) [m].
-        rmajor : float
+        rmajor:
             The major radius of the plasma (R₀) [m].
-        triang : float
+        triang:
             The triangularity of the plasma [-].
-        n_charge_plasma_effective_vol_avg : float
+        n_charge_plasma_effective_vol_avg:
             The volume-averaged effective charge of the plasma (Z_eff) [-].
-        nd_plasma_electron_profile : np.ndarray
+        nd_plasma_electron_profile:
             The electron density profile of the plasma [m⁻³].
-        temp_plasma_electron_profile_kev : np.ndarray
+        temp_plasma_electron_profile_kev:
             The electron temperature profile of the plasma [keV].
-        temp_plasma_ion_profile_kev : np.ndarray
+        temp_plasma_ion_profile_kev:
             The ion temperature profile of the plasma [keV].
-        nd_plasma_ions_total_vol_avg : float
+        nd_plasma_ions_total_vol_avg:
             The volume-averaged total ion density of the plasma [m⁻³].
-        nd_plasma_electrons_vol_avg : float
+        nd_plasma_electrons_vol_avg:
             The volume-averaged electron density of the plasma [m⁻³].
-        q0 : float
+        q0:
             The central safety factor [-].
-        q95 : float
+        q95:
             The edge safety factor at 95% of the minor radius [-].
-        m_ions_total_amu : float
+        m_ions_total_amu:
             The total ion mass in atomic mass units (amu) [-].
-        f_plasma_fuel_helium3 : float
+        f_plasma_fuel_helium3:
             The fraction of helium-3 in the plasma fuel [-].
-        b_plasma_toroidal_on_axis : float
+        b_plasma_toroidal_on_axis:
             The toroidal magnetic field on the plasma axis (B₀) [T].
-        plasma_current : float
+        plasma_current:
             The total plasma current (I_p) [A].
 
 
 
         Returns
         -------
-        SauterBootstrapCurrentParams
+        :
             The calculated bootstrap current parameters.
 
         Notes
@@ -1750,16 +1763,16 @@ class SauterBootstrapCurrent(Model):
 
         Parameters
         ----------
-        radial_elements : int
+        radial_elements:
             The radial element indexes in the range 1 to nr.
-        tempe : np.ndarray
+        tempe:
             The electron temperature array.
-        ne : np.ndarray
+        ne:
             The electron density array.
 
         Returns
         -------
-        np.ndarray
+        :
             The Coulomb logarithm at each array point.
 
         References
@@ -1787,16 +1800,16 @@ class SauterBootstrapCurrent(Model):
 
         Parameters
         ----------
-        radial_elements : np.ndarray
+        radial_elements:
             The radial element indexes in the range 1 to nr.
-        tempe : np.ndarray
+        tempe:
             The electron temperature array.
-        ne : np.ndarray
+        ne:
             The electron density array.
 
         Returns
         -------
-        np.ndarray
+        :
             The frequency of electron-electron collisions (Hz).
 
         References
@@ -1825,24 +1838,24 @@ class SauterBootstrapCurrent(Model):
 
         Parameters
         ----------
-        radial_elements : np.ndarray
+        radial_elements:
             The radial element index in the range 1 to nr.
-        rmajor : float
+        rmajor:
             The plasma major radius (m).
-        zeff : np.ndarray
+        zeff:
             The effective charge array.
-        inverse_q : np.ndarray
+        inverse_q:
             Inverse safety factor profile.
-        sqrt_inverse_aspect : np.ndarray
+        sqrt_inverse_aspect:
             The square root of the inverse aspect ratio array.
-        tempe : np.ndarray
+        tempe:
             The electron temperature array.
-        ne : np.ndarray
+        ne:
             The electron density array.
 
         Returns
         -------
-        np.ndarray
+        :
             The relative frequency of electron collisions.
 
         References
@@ -1879,20 +1892,20 @@ class SauterBootstrapCurrent(Model):
 
         Parameters
         ----------
-        radial_elements : np.ndarray
+        radial_elements:
             The radial element indexes in the range 1 to nr.
-        zeff : np.ndarray
+        zeff:
             The effective charge array.
-        ni : np.ndarray
+        ni:
             The ion density array.
-        tempi : np.ndarray
+        tempi:
             The ion temperature array.
-        amain : np.ndarray
+        amain:
             The atomic mass of the main ion species array.
 
         Returns
         -------
-        np.ndarray
+        :
             The full frequency of ion collisions (Hz).
         """
         return (
@@ -1921,26 +1934,26 @@ class SauterBootstrapCurrent(Model):
 
         Parameters
         ----------
-        radial_elements : np.ndarray
+        radial_elements:
             The radial element indexes in the range 1 to nr.
-        rmajor : float
+        rmajor:
             The plasma major radius (m).
-        inverse_q : np.ndarray
+        inverse_q:
             Inverse safety factor profile.
-        sqrt_inverse_aspect : np.ndarray
+        sqrt_inverse_aspect:
             The square root of the inverse aspect ratio profile.
-        tempi : np.ndarray
+        tempi:
             The ion temperature profile (keV).
-        amain : np.ndarray
+        amain:
             The atomic mass of the main ion species profile.
-        zeff : np.ndarray
+        zeff:
             The effective charge of the main ion species.
-        ni : np.ndarray
+        ni:
             The ion density profile (/m³).
 
         Returns
         -------
-        float
+        :
             The ion collisionality.
         """
         return (
@@ -1965,18 +1978,18 @@ class SauterBootstrapCurrent(Model):
 
         Parameters
         ----------
-        radial_elements : np.ndarray
+        radial_elements:
             Radial element indexes.
-        f_trapped_particles : np.ndarray
+        f_trapped_particles:
             Trapped particle fraction profile at the selected elements.
-        normalised_electron_collisionality : np.ndarray
+        normalised_electron_collisionality:
             Electron collisionality profile at the selected elements.
-        zeff : np.ndarray
+        zeff:
             Effective charge profile.
 
         Returns
         -------
-        np.ndarray
+        :
             Dimensionless L31 coefficient.
         """
         charge_profile = zeff[radial_elements - 1]
@@ -2005,18 +2018,18 @@ class SauterBootstrapCurrent(Model):
 
         Parameters
         ----------
-        radial_elements : np.ndarray
+        radial_elements:
             Radial element indexes.
-        f_trapped_particles : np.ndarray
+        f_trapped_particles:
             Trapped particle fraction profile at the selected elements.
-        zeff : np.ndarray
+        zeff:
             Effective charge profile.
-        normalised_electron_collisionality : np.ndarray
+        normalised_electron_collisionality:
             Electron collisionality profile at the selected elements.
 
         Returns
         -------
-        np.ndarray
+        :
             Dimensionless L32 coefficient.
         """
         charge_profile = zeff[radial_elements - 1]
@@ -2058,18 +2071,18 @@ class SauterBootstrapCurrent(Model):
 
         Parameters
         ----------
-        radial_elements : np.ndarray
+        radial_elements:
             Radial element indexes.
-        f_trapped_particles : np.ndarray
+        f_trapped_particles:
             Trapped particle fraction profile at the selected elements.
-        normalised_electron_collisionality : np.ndarray
+        normalised_electron_collisionality:
             Electron collisionality profile at the selected elements.
-        zeff : np.ndarray
+        zeff:
             Effective charge profile.
 
         Returns
         -------
-        np.ndarray
+        :
             Dimensionless L34 coefficient.
         """
         charge_profile = zeff[radial_elements - 1]
@@ -2097,16 +2110,16 @@ class SauterBootstrapCurrent(Model):
 
         Parameters
         ----------
-        f_trapped_particles :
+        f_trapped_particles:
             Trapped particle fraction (fₜ) [-].
-        normalised_electron_collisionality :
+        normalised_electron_collisionality:
             Normalised electron collisionality (νₑ⁎) [-].
-        n_charge_plasma_effective :
+        n_charge_plasma_effective:
             Plasma effective charge (Z_eff) [-].
 
         Returns
         -------
-        float | np.ndarray
+        :
             The effective trapped particle fraction coefficient f³¹_{teff}.
 
         Notes
@@ -2144,16 +2157,16 @@ class SauterBootstrapCurrent(Model):
 
         Parameters
         ----------
-        f_trapped_particles :
+        f_trapped_particles:
             Trapped particle fraction (fₜ) [-].
-        normalised_electron_collisionality :
+        normalised_electron_collisionality:
             Normalised electron collisionality (νₑ⁎) [-].
-        n_charge_plasma_effective :
+        n_charge_plasma_effective:
             Plasma effective charge (Z_eff) [-].
 
         Returns
         -------
-        float | np.ndarray
+        :
             The effective trapped particle fraction coefficient f³²ᵉᵉ_{teff}(νₑ⁎).
 
         Notes
@@ -2193,16 +2206,16 @@ class SauterBootstrapCurrent(Model):
 
         Parameters
         ----------
-        f_trapped_particles :
+        f_trapped_particles:
             Trapped particle fraction (fₜ) [-].
-        normalised_electron_collisionality :
+        normalised_electron_collisionality:
             Normalised electron collisionality (νₑ⁎) [-].
-        n_charge_plasma_effective :
+        n_charge_plasma_effective:
             Effective charge profile (Z_eff) [-].
 
         Returns
         -------
-        float | np.ndarray
+        :
             The effective trapped particle fraction coefficient f³²ᵉⁱ_{teff}(νₑ⁎).
 
         Notes
@@ -2243,16 +2256,16 @@ class SauterBootstrapCurrent(Model):
 
         Parameters
         ----------
-        f_trapped_particles :
+        f_trapped_particles:
             Trapped particle fraction (fₜ) [-].
-        normalised_electron_collisionality :
+        normalised_electron_collisionality:
             Normalised electron collisionality (νₑ⁎) [-].
-        n_charge_plasma_effective :
+        n_charge_plasma_effective:
             Effective charge profile (Z_eff) [-].
 
         Returns
         -------
-        float | np.ndarray
+        :
             The effective trapped particle fraction coefficient f³⁴_{teff}(νₑ⁎).
 
         Notes
@@ -2290,12 +2303,12 @@ class SauterBootstrapCurrent(Model):
 
         Parameters
         ----------
-        f_trapped_particles :
+        f_trapped_particles:
             Trapped particle fraction (fₜ) [-].
 
         Returns
         -------
-        float | np.ndarray
+        :
             The (α₀) coefficient.
 
         Notes
@@ -2325,16 +2338,16 @@ class SauterBootstrapCurrent(Model):
 
         Parameters
         ----------
-        alpha_0 :
+        alpha_0:
             The (α₀) coefficient [-].
-        f_trapped_particles :
+        f_trapped_particles:
             Trapped particle fraction (fₜ) [-].
-        normalised_ion_collisionality :
+        normalised_ion_collisionality:
             Normalised ion collisionality (νᵢ⁎) [-].
 
         Returns
         -------
-        float | np.ndarray
+        :
             The (α) coefficient.
 
         Notes
@@ -2377,14 +2390,14 @@ class SauterBootstrapCurrent(Model):
 
         Parameters
         ----------
-        n_charge_plasma_effective : float | np.ndarray
+        n_charge_plasma_effective:
             Effective plasma charge (Z_eff) [-].
-        y : float | np.ndarray
+        y:
             Normalized parameter Y [-].
 
         Returns
         -------
-        float | np.ndarray
+        :
             The F₃₂ₑᵢ(Y) factor.
 
         Notes
@@ -2423,14 +2436,14 @@ class SauterBootstrapCurrent(Model):
 
         Parameters
         ----------
-        n_charge_plasma_effective : float | np.ndarray
+        n_charge_plasma_effective:
             Effective plasma charge (Z_eff) [-].
-        x : float | np.ndarray
+        x:
             Normalized parameter X [-].
 
         Returns
         -------
-        float | np.ndarray
+        :
             The F₃₂ₑₑ(X) factor.
 
         Notes
@@ -2467,14 +2480,14 @@ class SauterBootstrapCurrent(Model):
 
         Parameters
         ----------
-        n_charge_plasma_effective : float | np.ndarray
+        n_charge_plasma_effective:
             Effective plasma charge (Z_eff) [-].
-        x : float | np.ndarray
+        x:
             Normalized parameter X [-].
 
         Returns
         -------
-        float | np.ndarray
+        :
             The F₃₁ factor.
 
         Notes
@@ -2512,26 +2525,26 @@ class SauterBootstrapCurrent(Model):
 
         Parameters
         ----------
-        radial_elements : np.ndarray
+        radial_elements:
             Radial element indexes in range 1 to nr.
-        nr : int
+        nr:
             Maximum value of radial_elements.
-        rmajor : float
+        rmajor:
             Plasma major radius (m).
-        b_plasma_toroidal_on_axis : float
+        b_plasma_toroidal_on_axis:
             Toroidal field on axis (T).
-        ne : np.ndarray
+        ne:
             Electron density profile (/m³).
-        tempe : np.ndarray
+        tempe:
             Electron temperature profile (keV).
-        inverse_q : np.ndarray
+        inverse_q:
             Inverse safety factor profile.
-        rho : np.ndarray
+        rho:
             Normalized minor radius profile.
 
         Returns
         -------
-        np.ndarray
+        :
             The local beta poloidal.
         """
         return (
@@ -2573,30 +2586,30 @@ class SauterBootstrapCurrent(Model):
 
         Parameters
         ----------
-        radial_elements : np.ndarray
+        radial_elements:
             Radial element indexes in range 1 to nr.
-        nr : int
+        nr:
             Maximum value of radial_elements.
-        rmajor : float
+        rmajor:
             Plasma major radius (m).
-        b_plasma_toroidal_on_axis : float
+        b_plasma_toroidal_on_axis:
             Toroidal field on axis (T).
-        ne : np.ndarray
+        ne:
             Electron density profile (/m³).
-        ni : np.ndarray
+        ni:
             Ion density profile (/m³).
-        tempe : np.ndarray
+        tempe:
             Electron temperature profile (keV).
-        tempi : np.ndarray
+        tempi:
             Ion temperature profile (keV).
-        inverse_q : np.ndarray
+        inverse_q:
             Inverse safety factor profile.
-        rho : np.ndarray
+        rho:
             Normalized minor radius profile.
 
         Returns
         -------
-        np.ndarray
+        :
             The local total beta poloidal.
         """
         return (
@@ -2645,19 +2658,19 @@ class SauterBootstrapCurrent(Model):
 
         Parameters
         ----------
-        radial_elements : np.ndarray
+        radial_elements:
             Radial element index in range 1 to nr.
-        triang : float
+        triang:
             Plasma triangularity.
-        sqrt_inverse_aspect : np.ndarray
+        sqrt_inverse_aspect:
             Square root of the inverse of the local aspect ratio.
-        fit : int, optional
-            Fit method (0 = ASTRA method, 1 = Sauter 2002, 2 = Sauter 2016).
+        fit:
+            Optional. Fit method (0 = ASTRA method, 1 = Sauter 2002, 2 = Sauter 2016).
             Default is 0.
 
         Returns
         -------
-        np.ndarray
+        :
             Trapped particle fraction.
 
         Raises
