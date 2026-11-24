@@ -34,7 +34,7 @@ def plot_sauter_bootstrap_summary(fig: plt.Figure, mfile: MFile, scan: int):
         roa=rho,
         temp_plasma_electron_profile_kev=temp_electron_profile_kev,
         temp_plasma_ion_profile_kev=temp_electron_profile_kev
-        * mfile.get("f_temp_plasma_ion_electron",scan=scan),
+        * mfile.get("f_temp_plasma_ion_electron", scan=scan),
         nd_plasma_ions_total_vol_avg=mfile.get(
             "nd_plasma_ions_total_vol_avg", scan=scan
         ),

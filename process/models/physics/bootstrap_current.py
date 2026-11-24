@@ -1645,11 +1645,11 @@ class SauterBootstrapCurrent(Model):
         normalised_electron_collisionality = self._electron_collisionality_sauter(
             radial_elements=radial_elements,
             rmajor=rmajor,
-            zeff=zmain,
+            n_charge_plasma_effective=zmain,
             inverse_q=inverse_q,
             sqrt_inverse_aspect=sqrt_inverse_aspect,
-            tempe=temp_plasma_electron_profile_kev,
-            ne=ne,
+            temp_plasma_electron_profile_kev=temp_plasma_electron_profile_kev,
+            nd_plasma_electron_profile=ne,
         )
 
         # Calculate the ion collisionality
@@ -1658,9 +1658,9 @@ class SauterBootstrapCurrent(Model):
             rmajor=rmajor,
             inverse_q=inverse_q,
             sqrt_inverse_aspect=sqrt_inverse_aspect,
-            tempi=temp_plasma_ion_profile_kev,
-            zion=zmain,
-            ni=ni,
+            temp_plasma_ion_profile_kev=temp_plasma_ion_profile_kev,
+            n_charge_main_ion=zmain,
+            nd_plasma_ion_profile=ni,
         )
 
         l31_coefficient = self._calculate_l31_coefficient(
@@ -1749,11 +1749,11 @@ class SauterBootstrapCurrent(Model):
     def _electron_collisionality_sauter(
         radial_elements: np.ndarray,
         rmajor: float,
-        zeff: np.ndarray,
+        n_charge_plasma_effective: float | np.ndarray,
         inverse_q: np.ndarray,
-        sqrt_inverse_aspect: np.ndarray,
-        tempe: np.ndarray,
-        ne: np.ndarray,
+        sqrt_inverse_aspect: float | np.ndarray,
+        temp_plasma_electron_profile_kev: float | np.ndarray,
+        nd_plasma_electron_profile: float | np.ndarray,
     ) -> np.ndarray:
         """Calculate normalized electron collisionality using Sauter Eqs. 18b and 18d.
 
@@ -1762,39 +1762,55 @@ class SauterBootstrapCurrent(Model):
         radial_elements:
             The radial element index in the range 1 to nr.
         rmajor:
-            The plasma major radius (m).
-        zeff:
-            The effective charge array.
+            The plasma major radius (R) [m].
+        n_charge_plasma_effective:
+            Plasma effective charge (Z_eff) [-].
         inverse_q:
-            Inverse safety factor profile.
+            Inverse safety factor profile [-].
         sqrt_inverse_aspect:
-            The square root of the inverse aspect ratio array.
-        tempe:
-            The electron temperature profile (keV).
-        ne:
-            The electron density profile in units of 10¹⁹ m⁻³.
+            The square root of the inverse aspect ratio array (√ε) [-].
+        temp_plasma_electron_profile_kev:
+            The electron temperature profile [keV].
+        nd_plasma_electron_profile:
+            The electron density profile in units of [10¹⁹ m⁻³].
 
         Returns
         -------
         np.ndarray
-            The normalized electron collisionality.
+            The normalized electron collisionality (νₑ⁎).
 
         Raises
         ------
         ProcessValueError
             If an input to the selected points is non-positive or non-finite.
-        """
+
+        Notes
+        -----
+        - The normalised electron collisionality (νₑ⁎) is calculated from the
+        electron-electron coulomb logarithm given by Equation 18d in reference [1].
+        This is then used in the full equation in Equation 18b.
+
+
+        References
+        ----------
+        [1] O. Sauter, C. Angioni, Y. R. Lin-Liu;
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime.
+        Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
+        """  # noqa: RUF002
         selected = radial_elements - 1
-        ne_si = ne[selected] * 1.0e19
-        te_ev = tempe[selected] * 1.0e3
+        ne_si = nd_plasma_electron_profile[selected] * 1.0e19
+        temp_plasma_electron_profile_ev = (
+            temp_plasma_electron_profile_kev[selected] * 1.0e3
+        )
         inverse_q_selected = inverse_q[selected]
         if not all(
             np.all(np.isfinite(value) & (value > 0))
             for value in (
                 ne_si,
-                te_ev,
+                temp_plasma_electron_profile_ev,
                 inverse_q_selected,
-                zeff[selected],
+                n_charge_plasma_effective[selected],
                 sqrt_inverse_aspect[selected],
                 rmajor,
             )
@@ -1802,14 +1818,19 @@ class SauterBootstrapCurrent(Model):
             raise ProcessValueError(
                 "Sauter electron collisionality inputs must be positive and finite."
             )
-        log_lambda_e = 31.3 - np.log(np.sqrt(ne_si) / te_ev)
+        # Electron-electron Coulomb logarithm given by Equation 18d in reference [1]
+        log_lambda_e = 31.3 - np.log(np.sqrt(ne_si) / temp_plasma_electron_profile_ev)
         return (
             6.921e-18
             * rmajor
             * ne_si
-            * zeff[selected]
+            * n_charge_plasma_effective[selected]
             * log_lambda_e
-            / (inverse_q_selected * te_ev**2 * sqrt_inverse_aspect[selected] ** 3)
+            / (
+                inverse_q_selected
+                * temp_plasma_electron_profile_ev**2
+                * sqrt_inverse_aspect[selected] ** 3
+            )
         )
 
     @staticmethod
@@ -1818,49 +1839,64 @@ class SauterBootstrapCurrent(Model):
         rmajor: float,
         inverse_q: np.ndarray,
         sqrt_inverse_aspect: np.ndarray,
-        tempi: np.ndarray,
-        zion: np.ndarray,
-        ni: np.ndarray,
+        temp_plasma_ion_profile_kev: np.ndarray,
+        n_charge_main_ion: np.ndarray,
+        nd_plasma_ion_profile: np.ndarray,
     ) -> np.ndarray:
-        """Calculate normalized ion collisionality using Sauter Eqs. 18c and 18e.
+        """Calculate normalized ion collisionality (νᵢ⁎) using Sauter Eqs. 18c and 18e.
 
         Parameters
         ----------
         radial_elements:
             The radial element indexes in the range 1 to nr.
         rmajor:
-            The plasma major radius (m).
+            The plasma major radius (R₀) [m].
         inverse_q:
-            Inverse safety factor profile.
+            Inverse safety factor profile [-].
         sqrt_inverse_aspect:
-            The square root of the inverse aspect ratio profile.
-        tempi:
-            The ion temperature profile (keV).
-        zion : np.ndarray
-            The charge of the main ion species.
-        ni : np.ndarray
-            The ion density profile in units of 10¹⁹ m⁻³.
+            The square root of the inverse aspect ratio profile [-].
+        temp_plasma_ion_profile_kev:
+            The ion temperature profile [keV].
+        n_charge_main_ion : np.ndarray
+            The charge of the main ion species [-].
+        nd_plasma_ion_profile : np.ndarray
+            The ion density profile in units of [10¹⁹ m⁻³].
 
         Returns
         -------
         np.ndarray
-            The normalized ion collisionality.
+            The normalized ion collisionality (νᵢ⁎).
 
         Raises
         ------
         ProcessValueError
             If an input to the selected points is non-positive or non-finite.
-        """
+
+        Notes
+        -----
+        - The normalised electron collisionality (νₑ⁎) is calculated from the
+        electron-electron coulomb logarithm given by Equation 18e in reference [1].
+        This is then used in the full equation in Equation 18c.
+
+
+        References
+        ----------
+        [1] O. Sauter, C. Angioni, Y. R. Lin-Liu;
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime.
+        Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
+
+        """  # noqa: RUF002
         selected = radial_elements - 1
-        ni_si = ni[selected] * 1.0e19
-        ti_ev = tempi[selected] * 1.0e3
-        zion_selected = zion[selected]
+        ni_si = nd_plasma_ion_profile[selected] * 1.0e19
+        temp_plasma_ion_profile_ev = temp_plasma_ion_profile_kev[selected] * 1.0e3
+        zion_selected = n_charge_main_ion[selected]
         inverse_q_selected = inverse_q[selected]
         if not all(
             np.all(np.isfinite(value) & (value > 0))
             for value in (
                 ni_si,
-                ti_ev,
+                temp_plasma_ion_profile_ev,
                 zion_selected,
                 inverse_q_selected,
                 sqrt_inverse_aspect[selected],
@@ -1870,14 +1906,22 @@ class SauterBootstrapCurrent(Model):
             raise ProcessValueError(
                 "Sauter ion collisionality inputs must be positive and finite."
             )
-        log_lambda_ii = 30.0 - np.log(zion_selected**3 * np.sqrt(ni_si) / ti_ev**1.5)
+        # Calculate the ion-ion Coulomb logarithm. Given by Equation 18e in
+        # reference [1].
+        log_lambda_ii = 30.0 - np.log(
+            zion_selected**3 * np.sqrt(ni_si) / temp_plasma_ion_profile_ev**1.5
+        )
         return (
             4.90e-18
             * rmajor
             * ni_si
             * zion_selected**4
             * log_lambda_ii
-            / (inverse_q_selected * ti_ev**2 * sqrt_inverse_aspect[selected] ** 3)
+            / (
+                inverse_q_selected
+                * temp_plasma_ion_profile_ev**2
+                * sqrt_inverse_aspect[selected] ** 3
+            )
         )
 
     def _calculate_l31_coefficient(
