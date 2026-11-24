@@ -241,9 +241,9 @@ means that it falls off sharply at the plasma edge.
 
 ### Sauter Scaling | `bootstrap_fraction_sauter()`
 
-Sauter et al.[^4] [^5] provides a formula using the exact Fokker–Planck operator and
-without any approximation on the plasma geometry or collisionality. In this way we have been able to accurately determine the neoclassical resistivity and the coefficients for the
-bootstrap current which allows one to calculate the bootstrap fraction.
+Sauter et al.[^4] [^5] provide fitted neoclassical bootstrap coefficients for
+general axisymmetric equilibria and collisionalities. PROCESS uses these
+coefficients with the approximate geometry and profiles described below.
 
 Is selected by setting `i_bootstrap_current = 4`
 
@@ -293,7 +293,7 @@ retains the existing regularisation in the denominator only.
 This function calculates the trapped particle fraction $\left(f_t\right)$ used within other key internal Sauter scaling functions.
 
 $$
-f_t = \frac{1.0 - (1.0-\epsilon_{-1})\sqrt{1.0-\epsilon_{-1}}}{\left(1.0+1.46 \sqrt{\epsilon_{-1}}\right)}
+f_t = 1.0-\frac{(1.0-\epsilon_{-1})\sqrt{1.0-\epsilon_{-1}}}{\left(1.0+1.46 \sqrt{\epsilon_{-1}}\right)}
 $$
 
 $\epsilon$ in this case is the local aspect ratio at that normalised radial point in the profile given by $\epsilon = \rho \left(\frac{a}{R}\right)$. The value of $\rho$ varies from 0 to 1 across the profile.
@@ -331,8 +331,8 @@ f_{\text {teff }}^{32_{-e e}}\left(\nu_{e *}\right) &= \frac{f_t}{1+0.26\left(1-
 $$
 
 $$
-F_{32 \_e i}(Y) = -\frac{0.56+1.93 Z}{Z(1+0.44 Z)}\left(Y-Y^4\right)+\frac{4.95}{1+2.48 Z}\left[Y^2-Y^4\right] \\
--0.55\left(Y^3-Y^4\right)-\frac{1.2}{1+0.5 Z} Y^4 \\
+F_{32 \_e i}(Y) = -\frac{0.56+1.93 Z}{Z(1+0.44 Z)}\left(Y-Y^4\right)+\frac{4.95}{1+2.48 Z}\left[Y^2-Y^4\right. \\
+\left.-0.55\left(Y^3-Y^4\right)\right]-\frac{1.2}{1+0.5 Z} Y^4 \\
 f_{\text {teff }}^{32 \_e i}\left(\nu_{e *}\right) = \frac{f_t}{1+\left(1+0.6 f_t\right) \sqrt{\nu_{e *}}+0.85\left(1-0.37 f_t\right) \nu_{e *}(1+Z)}
 $$
 
@@ -403,11 +403,15 @@ $$
 $$
 
 In these equations, densities are in m$^{-3}$, temperatures in eV, and $R$ in
-metres. The implementation converts its internal density profiles from units of
-$10^{19}$ m$^{-3}$ and temperatures from keV. It uses the volume-averaged
+metres. The implementation uses density profiles in m$^{-3}$ and converts
+temperatures from keV. It uses the volume-averaged
 effective charge for $Z_{\mathrm{eff}}$ and approximates the main-ion charge as
 $Z_i=1+f_{\mathrm{helium3}}$ with the total ion density, rather than calculating
-each ion species separately. The paper's ion formula does not depend on ion mass.
+each ion species separately. The total includes thermal ash, impurities and hot
+beam ions; they are all treated as one population at the thermal ion temperature.
+This is a PROCESS approximation: the paper does not derive a multispecies or
+fast-ion model. Fast-alpha pressure is not included in the bootstrap calculation.
+The paper's ion formula does not depend on ion mass.
 The `m_ions_total_amu` argument is retained for API compatibility but is not
 used by this calculation.
 
@@ -418,15 +422,14 @@ used by this calculation.
 The implementation estimates the electron and ion pressures as
 
 $$
-p_s=1.6\times10^3\,\bar n_s\bar T_s\ {\rm Pa},
+p_s=1.602176634\times10^{-16}\,\bar n_s\bar T_s\ {\rm Pa},
 \quad s\in\{e,i\},
 \qquad p_{\rm total}=p_e+p_i.
 $$
 
-Here density is in units of $10^{19}$ m$^{-3}$, temperature in keV, and each
+Here density is in m$^{-3}$, temperature in keV, and each
 bar denotes the arithmetic mean of two neighbouring profile values. The code
-uses the product of those means rather than the mean of the pressures. The
-conversion factor is rounded to retain the previous calculation.
+uses the product of those means rather than the mean of the pressures.
 
 The electron pressure ratio is represented implicitly by
 $R_{pe}=p_e/p_{\rm total}$, and the ion ratio by

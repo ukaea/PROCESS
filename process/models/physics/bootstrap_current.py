@@ -1586,7 +1586,11 @@ class SauterBootstrapCurrent(Model):
         Notes
         -----
         This function calculates the bootstrap current fraction using the Sauter,
-        Angioni, and Lin-Liu scaling.
+        Angioni, and Lin-Liu scaling. The total ion density, including thermal
+        impurities and hot beam ions, is treated as one ion population at the
+        thermal ion temperature and with the effective main-ion charge. Fast-alpha
+        pressure is not included. This is a multispecies approximation, not the
+        single-ion model derived in the paper.
 
         """
         # Local circularised minor radius
@@ -1603,9 +1607,8 @@ class SauterBootstrapCurrent(Model):
         ) * nd_plasma_electron_profile
 
         # Flat effective charge profile assumed
-        # Return tempi like array object filled with zeff
         n_charge_plasma_effective_profile = np.full_like(
-            temp_plasma_ion_profile_kev, n_charge_plasma_effective_vol_avg
+            temp_plasma_ion_profile_kev, n_charge_plasma_effective_vol_avg, dtype=float
         )
 
         # inverse_q = 1/safety factor
@@ -1641,18 +1644,18 @@ class SauterBootstrapCurrent(Model):
             sqrt_inverse_aspect=sqrt_inverse_aspect,
         )
 
-        # Calculated electron collisionality; (νₑ⁎)
+        # Calculate normalised electron collisionality
         normalised_electron_collisionality = self._electron_collisionality_sauter(
             radial_elements=radial_elements,
             rmajor=rmajor,
-            n_charge_plasma_effective=zmain,
+            n_charge_plasma_effective=n_charge_plasma_effective_profile,
             inverse_q=inverse_q,
             sqrt_inverse_aspect=sqrt_inverse_aspect,
             temp_plasma_electron_profile_kev=temp_plasma_electron_profile_kev,
             nd_plasma_electron_profile=nd_plasma_electron_profile,
         )
 
-        # Calculate the ion collisionality; (νᵢ⁎)
+        # Calculate normalised ion collisionality
         normalised_ion_collisionality = self._ion_collisionality_sauter(
             radial_elements=radial_elements,
             rmajor=rmajor,
@@ -1707,7 +1710,7 @@ class SauterBootstrapCurrent(Model):
             temp_plasma_ion_profile_kev[radial_elements]
             + temp_plasma_ion_profile_kev[previous]
         )
-        # Retain the original rounded conversion from m⁻³ and keV to Pa.
+        # Convert density in m⁻³ and temperature in keV to pressure in Pa.
         pressure_electron = constants.KILOELECTRON_VOLT * ne_mid * te_mid
         pressure_ion = constants.KILOELECTRON_VOLT * ni_mid * ti_mid
         pressure_total = pressure_electron + pressure_ion
