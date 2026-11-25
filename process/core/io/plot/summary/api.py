@@ -109,6 +109,7 @@ from process.core.io.plot.summary.profiles.plasma import (
     plot_jprofile,
     plot_n_profiles,
     plot_plasma_effective_charge_profile,
+    plot_plasma_fusion_reactivity_profiles,
     plot_plasma_poloidal_pressure_contours,
     plot_plasma_pressure_profiles,
     plot_plasma_thermal_energy_profiles,
@@ -348,9 +349,16 @@ def main_plot(
         m_file,
         scan,
     )
-    plot_fusion_rate_density_profiles(
-        _add_page("fusion_rate_density").add_subplot(122), m_file, scan
+    fusion_rate_density_page = _add_page("fusion_rate_density")
+    fusion_rate_density_axes = fusion_rate_density_page.add_subplot(222)
+    fusion_rate_density_axes.set_position([0.55, 0.31, 0.385, 0.64])
+    plot_fusion_rate_density_profiles(fusion_rate_density_axes, m_file, scan)
+
+    reactivity_axes = pages["fusion_rate_density"].add_subplot(
+        224, sharex=fusion_rate_density_axes
     )
+    reactivity_axes.set_position([0.55, 0.075, 0.385, 0.18])
+    plot_plasma_fusion_reactivity_profiles(reactivity_axes, m_file, scan)
 
     fusion_rate_page = _add_page("fusion_rate")
     plot_fusion_rate_profiles(
