@@ -1851,6 +1851,42 @@ def test_acc2221(acc2221param, monkeypatch, costs):
     assert costs.data.costs.c22212 == pytest.approx(acc2221param.expected_c22212)
 
 
+@pytest.mark.parametrize("itart", [0, 1])
+@pytest.mark.parametrize("supercond_cost_model", [0, 1])
+def test_acc2221_costs_full_superconducting_coil_length(
+    costs, monkeypatch, itart, supercond_cost_model
+):
+    data = costs.data
+    data.physics.itart = itart
+    data.tfcoil.i_tf_sup = 1
+    data.tfcoil.i_tf_sc_mat = 1
+    data.tfcoil.len_tf_coil = 50.0
+    data.tfcoil.cplen = 20.0
+    data.tfcoil.n_tf_coil_turns = 10
+    data.tfcoil.n_tf_coils = 12
+    data.tfcoil.m_tf_coil_copper = 100.0
+    data.tfcoil.m_tf_coil_superconductor = 0.0
+    data.tfcoil.j_crit_str_tf = 1.0e6
+    monkeypatch.setattr(
+        data.costs, "sc_mat_cost_0", np.zeros_like(data.costs.sc_mat_cost_0)
+    )
+    data.costs.supercond_cost_model = supercond_cost_model
+    data.costs.uccu = 2.0
+    data.costs.cconshtf = 10.0
+    data.costs.cconfix = 0.0
+    data.costs.ucwindtf = 5.0
+    data.costs.fkind = 1.0
+    data.costs.lsa = 4
+
+    costs.acc2221()
+
+    total_length = (70.0 if itart else 50.0) * 10 * 12
+    assert data.costs.c22211 == pytest.approx(
+        (total_length * 10.0 + 100 * 12 * 2) * 1e-6
+    )
+    assert data.costs.c22212 == pytest.approx(total_length * 5.0e-6)
+
+
 class Acc2222Param(NamedTuple):
     i_cs_use: Any = None
 

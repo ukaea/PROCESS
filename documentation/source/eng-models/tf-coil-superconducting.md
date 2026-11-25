@@ -637,6 +637,13 @@ cable area after both the central coolant channel and extra void have been
 removed. CroCo masses use the REBCO and copper areas of the strands and the
 central copper bar; STEP masses use the tape layers and copper stabiliser.
 
+For `itart = 1`, the winding-pack masses include both the inboard centrepost
+length and the return-coil length. They assume the inboard winding-pack
+cross-section applies over the full conductor length. Centrepost and return-leg
+masses use their respective case areas and sum to the total TF coil mass.
+`m_tf_coil_copper` is per coil; `m_tf_coils_copper_total` is for all coils.
+The existing case mass estimate includes an ITER-derived scaling factor of 2.2.
+
 The CroCo and STEP mass totals currently omit the tape substrate, and CroCo
 also omits solder. These totals therefore do not include every conductor
 material.

@@ -1483,13 +1483,17 @@ class Costs(Model):
         else:  # Superconducting TF coils
             #  Account 222.1.1 : Conductor
 
+            coil_length = self.data.tfcoil.len_tf_coil
+            if self.data.physics.itart == 1:
+                coil_length += self.data.tfcoil.cplen
+
             #  Superconductor ($/m)
 
             if self.data.costs.supercond_cost_model == 0:
                 costtfsc = (
                     self.data.costs.ucsc[self.data.tfcoil.i_tf_sc_mat - 1]
                     * self.data.tfcoil.m_tf_coil_superconductor
-                    / (self.data.tfcoil.len_tf_coil * self.data.tfcoil.n_tf_coil_turns)
+                    / (coil_length * self.data.tfcoil.n_tf_coil_turns)
                 )
             else:
                 costtfsc = (
@@ -1503,7 +1507,7 @@ class Costs(Model):
             costtfcu = (
                 self.data.costs.uccu
                 * self.data.tfcoil.m_tf_coil_copper
-                / (self.data.tfcoil.len_tf_coil * self.data.tfcoil.n_tf_coil_turns)
+                / (coil_length * self.data.tfcoil.n_tf_coil_turns)
             )
 
             #  Total cost/metre of superconductor and copper wire
@@ -1520,7 +1524,7 @@ class Costs(Model):
                 1.0e-6
                 * ctfconpm
                 * self.data.tfcoil.n_tf_coils
-                * self.data.tfcoil.len_tf_coil
+                * coil_length
                 * self.data.tfcoil.n_tf_coil_turns
             )
             self.data.costs.c22211 = (
@@ -1535,7 +1539,7 @@ class Costs(Model):
                 1.0e-6
                 * self.data.costs.ucwindtf
                 * self.data.tfcoil.n_tf_coils
-                * self.data.tfcoil.len_tf_coil
+                * coil_length
                 * self.data.tfcoil.n_tf_coil_turns
             )
             self.data.costs.c22212 = (
