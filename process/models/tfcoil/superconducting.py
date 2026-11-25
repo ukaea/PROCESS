@@ -1524,9 +1524,6 @@ class SuperconductingTFCoil(TFCoil):
                 a[2] = -0.85031e0
                 a[3] = 0.89808e0
             case _:
-                self.data.superconducting_tfcoil.f_b_tf_inboard_peak_ripple_symmetric = (
-                    1.09e0
-                )
                 return 1.09e0 * b_tf_inboard_peak_symmetric
 
         #  Maximum winding pack width before adjacent packs touch
@@ -3374,8 +3371,8 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         # (in this case, total TF coil length = inboard `cplen` +
         # outboard `len_tf_coil`)
         if self.data.physics.itart == 1:
-            tfleng_sph = self.data.tfcoil.cplen + self.data.tfcoil.len_tf_coil
-            whtcp = m_tf_coils_total * (self.data.tfcoil.cplen / tfleng_sph)
+            tfleng_sph = cplen + self.data.tfcoil.len_tf_coil
+            whtcp = m_tf_coils_total * (cplen / tfleng_sph)
             whttflgs = m_tf_coils_total * (self.data.tfcoil.len_tf_coil / tfleng_sph)
         else:
             whtcp = 0.0
@@ -4869,7 +4866,7 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
 
         self.data.tfcoil.temp_tf_superconductor_margin = temp_margin
 
-    def _run_step_quench_protection(self, d_sc_tf):
+    def _run_step_quench_protection(self):
         """Calculate STEP quench protection limits."""
         # Do current density protection calculation
         # Only setup for Nb3Sn at present.
@@ -4881,8 +4878,8 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
                 "Calculating current density protection limit for Nb3Sn TF coil "
                 "(LTS windings only)"
             )
-            # Find the current density limited by the protection limit
-            # At present only valid for LTS windings (Nb3Sn properties assumed)
+        # Find the current density limited by the protection limit
+        # At present only valid for LTS windings (Nb3Sn properties assumed)
         self.data.tfcoil.j_tf_wp_quench_heat_max, v_tf_coil_dump_quench = (
             self.quench_heat_protection_current_density(
                 c_tf_turn=self.data.tfcoil.c_tf_turn,
@@ -4890,8 +4887,8 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
                 a_tf_turn_cable_space=self.data.tfcoil.a_tf_turn_cable_space_no_void,
                 a_tf_turn=self.data.tfcoil.a_tf_turn,
                 t_tf_quench_dump=self.data.tfcoil.t_tf_superconductor_quench,
-                f_a_tf_turn_cable_copper=self.data.tfcoil.f_a_tf_turn_cable_copper,
-                f_a_tf_turn_cable_space_cooling=d_sc_tf.f_a_tf_turn_cable_space_cooling,
+                f_a_tf_turn_cable_copper=0.0,
+                f_a_tf_turn_cable_space_cooling=0.0,
                 temp_tf_coolant_peak_field=self.data.tfcoil.temp_tf_operating,
                 temp_tf_conductor_quench_max=self.data.tfcoil.temp_tf_conductor_quench_max,
                 b_tf_inboard_peak=self.data.tfcoil.b_tf_inboard_peak_with_ripple,
@@ -5560,13 +5557,13 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
 
         Parameters
         ----------
-        n_tf_coils: int :
+        n_tf_coils:
             n_tf_coils: Number of TF coils.
-        n_tf_coil_turns: int :
+        n_tf_coil_turns:
             n_tf_coil_turns: Total number of turns in the TF coil winding pack.
         len_tf_coil:
             len_tf_coil: Length of a single TF coil (in meters).
-        n_tf_turn_superconducting_strands: int :
+        n_tf_turn_superconducting_strands:
             n_tf_turn_superconducting_strands: Number of superconducting tapes/strands
             per turn in the TF coil.
 

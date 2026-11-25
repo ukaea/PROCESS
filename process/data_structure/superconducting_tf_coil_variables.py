@@ -316,7 +316,7 @@ class SuperconductingTFData:
     a_tf_turn_stabiliser: float = 0.0
     """Cross-sectional area of the stabiliser in the TF turn [m²]"""
 
-    n_tf_turn_superconducting_strands: int = 0.0
+    n_tf_turn_superconducting_strands: int = 0
     """Number of superconducting strands in the TF turn"""
 
     t1: float = 0.0

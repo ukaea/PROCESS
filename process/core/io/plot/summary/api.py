@@ -690,11 +690,10 @@ def main_plot(
                 axes_1=_add_page("quench_time_evo").add_subplot(211),
                 axes_2=pages["quench_time_evo"].add_subplot(212),
             )
-        if (
-            m_file.get("i_tf_turn_type", scan=scan)
-            == SuperconductingTFTurnType.STEP_STACKED_TAPE
-            or SuperconductingTFTurnType.CROSS_CONDUCTOR
-        ):
+        if m_file.get("i_tf_turn_type", scan=scan) in {
+            SuperconductingTFTurnType.STEP_STACKED_TAPE,
+            SuperconductingTFTurnType.CROSS_CONDUCTOR,
+        }:
             ax_hts_tape = pages["cable"].add_subplot(339)
             ax_hts_tape.set_position([0.75, 0.1, 0.2, 0.2])
             plot_hts_tape_geometry(
