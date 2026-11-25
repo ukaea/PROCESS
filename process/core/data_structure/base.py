@@ -16,7 +16,7 @@ import numpy as np
 
 import process
 from process.core import constants, process_output
-from process.core.data_structure.check_input import check_process
+from process.core.data_structure import check_input
 from process.core.data_structure.input import (
     INPUT_VARIABLES,
     InputVariable,
@@ -150,7 +150,7 @@ class DataStructure:
         self.set_device_type()
 
         # Check input data for errors/ambiguities
-        check_process(self, inputs)
+        check_input.check_process(self, inputs)
 
         self.write_outfile_header()
 
