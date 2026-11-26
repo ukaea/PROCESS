@@ -295,7 +295,7 @@ preceding pressure-form expression[^5].
 The PROCESS approximation is
 
 $$
-j_{\rm bs}=-\frac{B_{p,\rm eff}}{(B_{p,\rm eff}^{\rm reg})^2}\,G(\rho,q)
+j_{\rm bs}=-\frac{G(\rho,q)}{B_{p,\rm eff}}
 \left[
 p_{\rm total}\mathcal L_{31}\frac{\partial\ln n_e}{\partial\rho}
 +p_e(\mathcal L_{31}+\mathcal L_{32})\frac{\partial\ln T_e}{\partial\rho}
@@ -306,11 +306,10 @@ p_{\rm total}\mathcal L_{31}\frac{\partial\ln n_e}{\partial\rho}
 $$
 
 Here $p_e$, $p_i$ and $p_{\rm total}$ are the approximated pressures
-described below. The effective field factors are
-$B_{p,\rm eff}=B_0\rho/(R_0q)$ and
-$B_{p,\rm eff}^{\rm reg}=(B_0\rho/R_0)|1/q+10^{-4}|$; they are not the
-local poloidal field on a flux surface. The $10^{-4}$ offset
-retains the existing regularisation in the denominator only.
+described below. The effective field is $B_{p,\rm eff}=B_0\rho/(R_0q)$;
+it is not the local poloidal field on a flux surface. No poloidal-field
+regularisation is applied. The input safety factors $q_0$ and $q_{95}$ and
+the resulting $q$ profile must be positive and finite.
 
 #### Concentric circular surfaces and toroidal field
 
@@ -352,8 +351,7 @@ G(\rho,q)=\frac{\sqrt{1-(\rho/R_0)^2}}
 $$
 
 The factor includes both the circular-surface flux-gradient conversion and
-the projection. The inherited $10^{-4}$ regularisation is applied separately,
-so the resulting expression is not an exact unregularised circular model.
+the projection.
 The output profile is a poloidal-angle average, not a local current density.
 This model does not account for perpendicular currents or model shaped
 equilibria; the trapped-fraction and collisionality fits use the physical

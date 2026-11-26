@@ -411,7 +411,7 @@ class BootstrapFractionSauterParam(NamedTuple):
             radius_plasma_pedestal_temp_norm=0.9400000000000001,
             alphat=1.45,
             n_plasma_profile_elements=501,
-            expected_bfs=0.37042391881425596,
+            expected_bfs=0.3705993039026555,
         ),
     ],
 )
@@ -772,27 +772,13 @@ def test_sauter_circularised_area(physics):
         * np.gradient(np.log(ti), rho)[1:-1]
     )
     expected_current = (
-        -flux_function
-        / flux_derivative[:, 0]
-        * pressure_gradient
-        * projection
-        / (1 + 1e-4 * q[:, 0]) ** 2
+        -flux_function / flux_derivative[:, 0] * pressure_gradient * projection
     )
     np.testing.assert_allclose(circular.j_bootstrap, expected_current, rtol=1e-12)
     old_field = (
         kwargs["b_plasma_toroidal_on_axis"] * r_area[:, 0] / (kwargs["rmajor"] * q[:, 0])
     )
     geometry_ratio = flux_function / flux_derivative[:, 0] * projection * old_field
-    previous_density = np.array([
-        7484.189773151201,
-        33100.60544532266,
-        44314.22771533675,
-    ])
-    np.testing.assert_allclose(
-        circular.j_bootstrap[[0, 8, 18]],
-        previous_density * geometry_ratio[[0, 8, 18]],
-        rtol=1e-12,
-    )
     constant_jb_projection = np.mean(toroidal_field / total_field_squared, axis=1)
     constant_jb_ratio = (
         flux_function / flux_derivative[:, 0] * constant_jb_projection * old_field
@@ -801,16 +787,30 @@ def test_sauter_circularised_area(physics):
     assert 0.7 < geometry_ratio[-1] < 1.0
     assert geometry_ratio[0] == pytest.approx(1.0, rel=0.005)
 
-    # An extreme q makes the retained 1e-4 regularisation significant.
+    # An extreme q distinguishes the unregularised result from the old offset.
     high_q = sauter.bootstrap_fraction_sauter(**{**kwargs, "q0": 1e4, "q95": 2e4})
     high_q_profile = 1e4 + 1e4 * roa[1:-1] ** 2
     epsilon = rho[1:-1] / kwargs["rmajor"]
     geometry = np.sqrt(1 - epsilon**2)
     high_q_factor = geometry / (1 + (epsilon / (high_q_profile * geometry)) ** 2)
+    high_q_pressure_gradient = (
+        (pressure_e + pressure_i)
+        * high_q.l31_coefficient
+        * np.gradient(np.log(ne), rho)[1:-1]
+        + pressure_e
+        * (high_q.l31_coefficient + high_q.l32_coefficient)
+        * np.gradient(np.log(te), rho)[1:-1]
+        + pressure_i
+        * (high_q.l31_coefficient + high_q.alpha * high_q.l34_coefficient)
+        * np.gradient(np.log(ti), rho)[1:-1]
+    )
     np.testing.assert_allclose(
-        high_q.j_bootstrap[[0, 8, 18]],
-        np.array([48474.35595933371, 2461478.6112382733, 1346321.5700065806])
-        * high_q_factor[[0, 8, 18]],
+        high_q.j_bootstrap,
+        -high_q_pressure_gradient
+        * high_q_factor
+        * kwargs["rmajor"]
+        * high_q_profile
+        / (kwargs["b_plasma_toroidal_on_axis"] * rho[1:-1]),
         rtol=1e-12,
     )
     assert elongated.f_cur_plasma_bootstrap < unelongated.f_cur_plasma_bootstrap
@@ -824,6 +824,18 @@ def test_sauter_circularised_area(physics):
         sauter.bootstrap_fraction_sauter(**{
             **kwargs,
             "a_plasma_poloidal": -1.0,
+        })
+
+    for parameter in ("q0", "q95"):
+        for invalid in (0.0, -1.0, np.nan, np.inf):
+            with pytest.raises(ProcessValueError, match=r"safety factors.*positive"):
+                sauter.bootstrap_fraction_sauter(**{**kwargs, parameter: invalid})
+    with pytest.raises(ProcessValueError, match=r"safety factor profile.*positive"):
+        sauter.bootstrap_fraction_sauter(**{
+            **kwargs,
+            "q0": 3.0,
+            "q95": 1.0,
+            "roa": np.linspace(0.0, 1.3, len(roa)),
         })
 
 

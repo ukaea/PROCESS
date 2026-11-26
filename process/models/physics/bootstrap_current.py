@@ -1582,7 +1582,7 @@ class SauterBootstrapCurrent(Model):
         ------
         ProcessValueError
             If the collisionality inputs are not positive and finite, or the
-            circular-surface geometry is invalid.
+            safety factor or circular-surface geometry is invalid.
 
         Notes
         -----
@@ -1632,9 +1632,21 @@ class SauterBootstrapCurrent(Model):
             temp_plasma_ion_profile_kev, n_charge_plasma_effective_vol_avg, dtype=float
         )
 
-        # inverse_q = 1/safety factor
         # Parabolic q profile assumed
-        inverse_q = 1 / (q0 + (q95 - q0) * roa**2)
+        if not np.isfinite(q0) or q0 <= 0 or not np.isfinite(q95) or q95 <= 0:
+            raise ProcessValueError(
+                "Sauter safety factors q0 and q95 must be positive and finite",
+                q0=q0,
+                q95=q95,
+            )
+        q_profile = q0 + (q95 - q0) * roa**2
+        if not np.all(np.isfinite(q_profile)) or np.any(q_profile <= 0):
+            raise ProcessValueError(
+                "Sauter safety factor profile must be positive and finite",
+                q0=q0,
+                q95=q95,
+            )
+        inverse_q = 1 / q_profile
         # Create new array of average main ion charge
         zmain = np.full_like(inverse_q, 1.0 + f_plasma_fuel_helium3)
 
@@ -1739,10 +1751,6 @@ class SauterBootstrapCurrent(Model):
         # Effective circular field, not the local field on a shaped flux surface.
         field_scale = b_plasma_toroidal_on_axis * r_area[previous] / rmajor
         poloidal_field_effective = field_scale * inverse_q[previous]
-        # The 1/q offset regularises the denominator only.
-        poloidal_field_effective_regularised = field_scale * np.abs(
-            inverse_q[previous] + 1.0e-4
-        )
 
         # Ion density follows the electron density, so both share this gradient.
         density_gradient_term = pressure_total * l31_coefficient * dlogne_dr_area
@@ -1753,11 +1761,9 @@ class SauterBootstrapCurrent(Model):
             pressure_ion * (l31_coefficient + l34_coefficient * alpha) * dlogti_dr_area
         )
 
-        # The inherited regularisation is retained in the circular model.
         j_bootstrap_toroidal = (
-            -poloidal_field_effective
-            / poloidal_field_effective_regularised**2
-            * (density_gradient_term + electron_temperature_term + ion_temperature_term)
+            -(density_gradient_term + electron_temperature_term + ion_temperature_term)
+            / poloidal_field_effective
         )  # A/m2
 
         # Circular flux surfaces, Bphi = F/R and Bp = (dpsi/dr)/R.
