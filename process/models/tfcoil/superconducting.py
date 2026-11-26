@@ -4675,8 +4675,8 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
 
         self.data.superconducting_tfcoil.n_tf_turn_superconducting_strands = (
             self.calculate_stacked_tape_strand_count(
-                dr_tape_stack=self.data.superconducting_tfcoil.dx_tf_turn_tape_stack,
-                dr_hts_tape=self.data.superconducting_tfcoil.dx_tf_hts_tape_total,
+                dx_tape_stack=self.data.superconducting_tfcoil.dx_tf_turn_tape_stack,
+                dx_hts_tape=self.data.superconducting_tfcoil.dx_tf_hts_tape_total,
             )
         )
 
@@ -5331,21 +5331,21 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
 
     @staticmethod
     def calculate_stacked_tape_strand_count(
-        dr_tape_stack: float,
-        dr_hts_tape: float,
+        dx_tape_stack: float,
+        dx_hts_tape: float,
     ) -> int:
         """
         Calculate how many HTS tapes can be placed in a vertical stacked tape conductor.
         The function returns the maximum whole number of tapes that fit within the
         available radial tape stack width by taking the floor of the ratio
-        dr_tape_stack / dr_hts_tape.
+        dx_tape_stack / dx_hts_tape.
 
         Parameters
         ----------
-        dr_tape_stack : float
-            Available radial width for the tape stack (m). Must be >= 0.
-        dr_hts_tape : float
-            Width of a single HTS tape (m). Must be > 0.
+        dx_tape_stack : float
+            Available height for the tape stack [m]. Must be >= 0.
+        dx_hts_tape : float
+            Height of a single HTS tape [m]. Must be > 0.
 
         Returns
         -------
@@ -5355,15 +5355,15 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
         Raises
         ------
         ValueError
-            If dr_hts_tape <= 0 or dr_tape_stack < 0.
+            If dx_hts_tape <= 0 or dx_tape_stack < 0.
         """
-        if dr_hts_tape <= 0:
-            raise ValueError("dr_hts_tape must be greater than 0")
-        if dr_tape_stack < 0:
-            raise ValueError("dr_tape_stack must be non-negative")
+        if dx_hts_tape <= 0:
+            raise ValueError("dx_hts_tape must be greater than 0")
+        if dx_tape_stack < 0:
+            raise ValueError("dx_tape_stack must be non-negative")
 
         # Use floor to get the maximum whole number of tapes that fit
-        return int(np.floor(dr_tape_stack / dr_hts_tape))
+        return int(np.floor(dx_tape_stack / dx_hts_tape))
 
     def tf_step_areas_and_masses(self) -> SuperconTFAreasAndMasses:
         """Calculate areas and masses of superconducting TF coil components."""
