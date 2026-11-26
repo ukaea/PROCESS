@@ -411,7 +411,7 @@ class BootstrapFractionSauterParam(NamedTuple):
             radius_plasma_pedestal_temp_norm=0.9400000000000001,
             alphat=1.45,
             n_plasma_profile_elements=501,
-            expected_bfs=0.3705993039026555,
+            expected_bfs=0.3790845895596959,
         ),
     ],
 )
@@ -695,13 +695,16 @@ def test_sauter_density_floor_preserves_results(physics):
     )
 
 
-def test_sauter_circularised_area(physics):
+@pytest.mark.parametrize("kappa", [1.0, 1.8, 3.0])
+@pytest.mark.parametrize(("q0", "q95"), [(1.0, 3.0), (1.0, 20.0), (1e4, 2e4)])
+@pytest.mark.parametrize("rmajor", [3.0, 6.0])
+def test_sauter_elliptical_surfaces(physics, kappa, q0, q95, rmajor):
     sauter = physics.plasma_bootstrap_current.sauter_bootstrap
     roa = np.linspace(0.0, 1.0, 21)
     kwargs = {
-        "a_plasma_poloidal": 3.0 * np.pi * 2.0**2,
+        "a_plasma_poloidal": kappa * np.pi * 2.0**2,
         "rminor": 2.0,
-        "rmajor": 6.0,
+        "rmajor": rmajor,
         "triang": 0.0,
         "n_charge_plasma_effective_vol_avg": 2.0,
         "nd_plasma_electron_profile": 1e20 * (1.0 - 0.5 * roa**2),
@@ -710,38 +713,34 @@ def test_sauter_circularised_area(physics):
         "temp_plasma_ion_profile_kev": 9.0 - 6.0 * roa**2,
         "nd_plasma_ions_total_vol_avg": 0.9e20,
         "nd_plasma_electrons_vol_avg": 1e20,
-        "q0": 1.0,
-        "q95": 3.0,
+        "q0": q0,
+        "q95": q95,
         "m_ions_total_amu": 2.5,
         "f_plasma_fuel_helium3": 0.0,
         "b_plasma_toroidal_on_axis": 5.0,
         "plasma_current": 1e7,
     }
-    circular = sauter.bootstrap_fraction_sauter(**kwargs)
-    circle_area = np.pi * kwargs["rminor"] ** 2
-    unelongated = sauter.bootstrap_fraction_sauter(
-        **{**kwargs, "a_plasma_poloidal": circle_area},
-    )
-    elongated = sauter.bootstrap_fraction_sauter(
-        **{**kwargs, "a_plasma_poloidal": 1.8 * circle_area},
-    )
+    result = sauter.bootstrap_fraction_sauter(**kwargs)
 
     rho = np.sqrt(kwargs["a_plasma_poloidal"] / np.pi) * roa
     annulus_areas = 2.0 * np.pi * rho[1:-1] * np.diff(rho)[1:]
-    assert circular.f_cur_plasma_bootstrap == pytest.approx(
-        np.sum(annulus_areas * circular.j_bootstrap) / kwargs["plasma_current"]
+    assert result.f_cur_plasma_bootstrap == pytest.approx(
+        np.sum(annulus_areas * result.j_bootstrap) / kwargs["plasma_current"]
     )
 
     theta = 2 * np.pi * np.arange(4096) / 4096
-    r_area = rho[1:-1, np.newaxis]
-    major_radius = kwargs["rmajor"] + r_area * np.cos(theta)
+    r = (kwargs["rminor"] * roa[1:-1])[:, np.newaxis]
+    major_radius = kwargs["rmajor"] + r * np.cos(theta)
     q = (kwargs["q0"] + (kwargs["q95"] - kwargs["q0"]) * roa[1:-1] ** 2)[:, np.newaxis]
     flux_function = kwargs["rmajor"] * kwargs["b_plasma_toroidal_on_axis"]
     flux_derivative = (
-        flux_function * r_area * np.mean(1 / major_radius, axis=1, keepdims=True) / q
+        flux_function * kappa * r * np.mean(1 / major_radius, axis=1, keepdims=True) / q
     )
     toroidal_field = flux_function / major_radius
-    total_field_squared = (flux_function**2 + flux_derivative**2) / major_radius**2
+    gradient_squared = np.cos(theta) ** 2 + np.sin(theta) ** 2 / kappa**2
+    total_field_squared = (
+        flux_function**2 + flux_derivative**2 * gradient_squared
+    ) / major_radius**2
     flux_average_b_squared = (
         np.mean(major_radius * total_field_squared, axis=1) / kwargs["rmajor"]
     )
@@ -762,64 +761,42 @@ def test_sauter_circularised_area(physics):
     )
     pressure_gradient = (
         (pressure_e + pressure_i)
-        * circular.l31_coefficient
+        * result.l31_coefficient
         * np.gradient(np.log(ne), rho)[1:-1]
         + pressure_e
-        * (circular.l31_coefficient + circular.l32_coefficient)
+        * (result.l31_coefficient + result.l32_coefficient)
         * np.gradient(np.log(te), rho)[1:-1]
         + pressure_i
-        * (circular.l31_coefficient + circular.alpha * circular.l34_coefficient)
+        * (result.l31_coefficient + result.alpha * result.l34_coefficient)
         * np.gradient(np.log(ti), rho)[1:-1]
     )
     expected_current = (
-        -flux_function / flux_derivative[:, 0] * pressure_gradient * projection
+        -flux_function
+        / flux_derivative[:, 0]
+        * np.sqrt(kappa)
+        * pressure_gradient
+        * projection
     )
-    np.testing.assert_allclose(circular.j_bootstrap, expected_current, rtol=1e-12)
-    old_field = (
-        kwargs["b_plasma_toroidal_on_axis"] * r_area[:, 0] / (kwargs["rmajor"] * q[:, 0])
-    )
-    geometry_ratio = flux_function / flux_derivative[:, 0] * projection * old_field
-    constant_jb_projection = np.mean(toroidal_field / total_field_squared, axis=1)
-    constant_jb_ratio = (
-        flux_function / flux_derivative[:, 0] * constant_jb_projection * old_field
-    )
-    np.testing.assert_allclose(geometry_ratio, constant_jb_ratio, rtol=1e-12)
-    assert 0.7 < geometry_ratio[-1] < 1.0
-    assert geometry_ratio[0] == pytest.approx(1.0, rel=0.005)
+    np.testing.assert_allclose(result.j_bootstrap, expected_current, rtol=1e-12)
 
-    # An extreme q distinguishes the unregularised result from the old offset.
-    high_q = sauter.bootstrap_fraction_sauter(**{**kwargs, "q0": 1e4, "q95": 2e4})
-    high_q_profile = 1e4 + 1e4 * roa[1:-1] ** 2
-    epsilon = rho[1:-1] / kwargs["rmajor"]
-    geometry = np.sqrt(1 - epsilon**2)
-    high_q_factor = geometry / (1 + (epsilon / (high_q_profile * geometry)) ** 2)
-    high_q_pressure_gradient = (
-        (pressure_e + pressure_i)
-        * high_q.l31_coefficient
-        * np.gradient(np.log(ne), rho)[1:-1]
-        + pressure_e
-        * (high_q.l31_coefficient + high_q.l32_coefficient)
-        * np.gradient(np.log(te), rho)[1:-1]
-        + pressure_i
-        * (high_q.l31_coefficient + high_q.alpha * high_q.l34_coefficient)
-        * np.gradient(np.log(ti), rho)[1:-1]
-    )
-    np.testing.assert_allclose(
-        high_q.j_bootstrap,
-        -high_q_pressure_gradient
-        * high_q_factor
-        * kwargs["rmajor"]
-        * high_q_profile
-        / (kwargs["b_plasma_toroidal_on_axis"] * rho[1:-1]),
-        rtol=1e-12,
-    )
-    assert elongated.f_cur_plasma_bootstrap < unelongated.f_cur_plasma_bootstrap
+    if kappa == pytest.approx(1.0):
+        epsilon = rho[1:-1] / kwargs["rmajor"]
+        geometry = np.sqrt(1 - epsilon**2)
+        pitch = epsilon / (q[:, 0] * geometry)
+        effective_field = kwargs["b_plasma_toroidal_on_axis"] * epsilon / q[:, 0]
+        np.testing.assert_allclose(
+            result.j_bootstrap,
+            -pressure_gradient * geometry / ((1 + pitch**2) * effective_field),
+            rtol=1e-12,
+        )
 
-    with pytest.raises(ProcessValueError, match="r_area < rmajor"):
+    with pytest.raises(ProcessValueError, match="r_horizontal < rmajor"):
         sauter.bootstrap_fraction_sauter(**{
             **kwargs,
-            "a_plasma_poloidal": np.pi * kwargs["rmajor"] ** 2,
+            "rmajor": kwargs["rminor"],
         })
+    with pytest.raises(ProcessValueError, match="finite, positive minor radius"):
+        sauter.bootstrap_fraction_sauter(**{**kwargs, "rminor": 0.0})
     with pytest.raises(ProcessValueError, match="finite, positive plasma area"):
         sauter.bootstrap_fraction_sauter(**{
             **kwargs,
@@ -837,6 +814,14 @@ def test_sauter_circularised_area(physics):
             "q95": 1.0,
             "roa": np.linspace(0.0, 1.3, len(roa)),
         })
+
+    # A tall ellipse can be valid even if its area-equivalent radius exceeds R0.
+    low_aspect = sauter.bootstrap_fraction_sauter(**{
+        **kwargs,
+        "a_plasma_poloidal": 3 * np.pi * kwargs["rminor"] ** 2,
+        "rmajor": 3.0,
+    })
+    assert np.all(np.isfinite(low_aspect.j_bootstrap))
 
 
 class BootstrapFractionSakaiParam(NamedTuple):

@@ -247,23 +247,24 @@ coefficients with the approximate geometry and profiles described below.
 
 The model is selected with `i_bootstrap_current = 4`.
 
-The model uses an area-equivalent physical radius
-$\rho=\sqrt{A_{\rm plasma}/\pi} \ x$ (`r_area` in the code), where
-$x=r/a$ is the normalised minor radius and $A_{\rm plasma}$ is the supplied
-total poloidal cross-sectional area. Current integration assumes circular
-annuli, with $dA=2\pi\rho \ d\rho$. Elongation is not used as a separate input.
+The model assumes concentric, self-similar elliptical flux surfaces with
+horizontal minor radius $r=ax$, where $a$ is the plasma minor radius and
+$x=r/a$. Their effective elongation is
+$\kappa_{\rm eff}=A_{\rm plasma}/(\pi a^2)$, where $A_{\rm plasma}$ is the
+supplied total poloidal cross-sectional area. The outer ellipse therefore
+matches both that area and the horizontal minor radius, but not necessarily
+the actual elongation, triangularity or squareness. The inner surfaces are
+assumed to have the same elongation as the outer ellipse; their shapes are
+not calculated from a plasma equilibrium.
+
+The area-equivalent radius $\rho=\sqrt{A_{\rm plasma}/\pi}\,x
+=\sqrt{\kappa_{\rm eff}}\,r$ (`r_area` in the code) is used for profile
+gradients and the elliptical annulus area $dA=2\pi\rho\,d\rho$. The supplied
+area can come from any PROCESS plasma geometry model.
+
 PROCESS assumes $q(x)=q_0+(q_{95}-q_0)x^2$ and a flat $Z_{\rm eff}$
 profile. The input $q_{95}$ therefore sets the value of this assumed profile
 at $x=1$.
-
-For self-similar ellipses with constant elongation $\kappa$ and horizontal
-minor radius $a$, $A_{\rm plasma}=\pi\kappa a^2$ and
-$\rho=\sqrt{\kappa}\,r$. The code's circular annular area then equals the
-elliptical annular area, $2\pi\kappa r\,dr$. However, the field geometry below
-is circular, not elliptical. Its factor depends on $\rho/R_0$, so the
-integrated current does not generally remain unchanged when the supplied
-area changes, even with other inputs fixed. Radially varying elongation and
-non-self-similar surfaces are not represented by this area scaling.
 
 The electron density is floored at $10^{13}$ $\text{m}^{-3}$. The ion density
 profile is assumed proportional to the electron profile:
@@ -288,14 +289,14 @@ $$
 
 The paper gives a flux-surface-averaged parallel current, including an ohmic
 term. PROCESS calculates only the bootstrap contribution and approximates the
-toroidal component of the parallel current using circular flux surfaces.
+toroidal component of the parallel current using elliptical flux surfaces.
 The erratum also restores a missing ion-pressure factor in the paper's
 preceding pressure-form expression[^5].
 
 The PROCESS approximation is
 
 $$
-j_{\rm bs}=-\frac{G(\rho,q)}{B_{p,\rm eff}}
+j_{\rm bs}=-\frac{G(r,q,\kappa_{\rm eff})}{B_{p,\rm eff}}
 \left[
 p_{\rm total}\mathcal L_{31}\frac{\partial\ln n_e}{\partial\rho}
 +p_e(\mathcal L_{31}+\mathcal L_{32})\frac{\partial\ln T_e}{\partial\rho}
@@ -311,61 +312,77 @@ it is not the local poloidal field on a flux surface. No poloidal-field
 regularisation is applied. The input safety factors $q_0$ and $q_{95}$ and
 the resulting $q$ profile must be positive and finite.
 
-#### Concentric circular surfaces and toroidal field
+#### Concentric elliptical surfaces and magnetic fields
 
 The toroidal component of the parallel bootstrap current is approximated
-using concentric circular flux surfaces. Their radius is the area-equivalent
-$\rho$ above, not the physical horizontal minor radius of a shaped plasma.
-The calculation requires a finite, positive area and major radius, and
-$0 \leq \rho < R_0$ throughout the supplied grid. PROCESS evaluates the Sauter
+using concentric ellipses with constant $\kappa_{\rm eff}$. The calculation
+requires finite, positive area, minor radius and major radius, and
+$0 \leq r < R_0$ throughout the supplied grid. PROCESS evaluates the Sauter
 scaling for reporting even when another bootstrap model is selected, so these
 conditions apply in that case as well.
 
-Writing $R=R_0+\rho\cos\theta$, assume
-$B_\phi=F/R$, $B_p=K/R$, $F=R_0B_0$ and $K=d\psi/d\rho$, with $\psi$
-the poloidal flux per radian. The toroidal field follows the same $1/R$ dependence as
-`b_plasma_toroidal_profile`, but is used analytically around each surface;
-the midplane profile array is not an input.
-
-For the assumed $q(\rho)$,
+Write $R=R_0+r\cos\theta$ and $Z=\kappa_{\rm eff}r\sin\theta$. Assume
+$B_\phi=F/R$, $B_p=K|\nabla r|/R$, $F=R_0B_0$ and $K=d\psi/dr$, with
+$\psi$ the poloidal flux per radian. The toroidal field follows the same
+$1/R$ dependence as `b_plasma_toroidal_profile`, but is used analytically
+around each surface; the midplane profile array is not an input. On an ellipse,
 
 $$
-K=\frac{F\rho}{q\sqrt{R_0^2-\rho^2}}.
+|\nabla r|^2=\cos^2\theta+\frac{\sin^2\theta}{\kappa_{\rm eff}^2},
+\qquad
+K=\frac{F\kappa_{\rm eff}r}{q\sqrt{R_0^2-r^2}}.
 $$
 
-The flux-surface average is weighted by $R$ for these circular surfaces.
-For $J=\langle j_\parallel B\rangle$, the poloidal-angle average of the
-toroidal component of the parallel current is
+Thus $B_p/B_\phi$ varies with poloidal angle when $\kappa_{\rm eff}\ne 1$.
+The model assumes $j_\parallel/B$ is constant on each surface in order to
+convert Sauter's $J=\langle j_\parallel B\rangle$ into the poloidal-angle
+average of the parallel current's toroidal component:
 
 $$
 \overline{j_{\phi,\parallel}} =
-J\frac{FR_0}{F^2+K^2}.
+J\,\frac{\overline{B_\phi}}{\langle B^2\rangle}.
 $$
 
-Combining this with the bootstrap part of the Sauter expression and the
-radial gradients gives the geometric factor used above:
+Here the flux-surface average $\langle\cdot\rangle$ is weighted by $R$;
+the bar denotes an unweighted poloidal-angle average, as appropriate for
+integrating current through the elliptical cross-section. Defining
 
 $$
-G(\rho,q)=\frac{\sqrt{1-(\rho/R_0)^2}}
-{1+\left[\rho/(q\sqrt{R_0^2-\rho^2})\right]^2}.
+s=\sqrt{1-(r/R_0)^2},\qquad
+H=\frac{1+s/\kappa_{\rm eff}^2}{1+s},
 $$
 
-The factor includes both the circular-surface flux-gradient conversion and
-the projection.
+the flux-gradient conversion and projection give the geometric factor
+
+$$
+G(r,q,\kappa_{\rm eff})=
+\frac{s}{1+H\left[\kappa_{\rm eff}r/(qR_0s)\right]^2}.
+$$
+
+For $\kappa_{\rm eff}=1$, the ellipses become concentric circles:
+$R=R_0+r\cos\theta$ and $Z=r\sin\theta$. In this case $\rho=r$, $H=1$,
+and the geometric factor reduces to the circular expression
+
+$$
+G(r,q,1)=\frac{\sqrt{1-(r/R_0)^2}}
+{1+\left[r/(q\sqrt{R_0^2-r^2})\right]^2}.
+$$
+
 The output profile is a poloidal-angle average, not a local current density.
-This model does not account for perpendicular currents or model shaped
-equilibria; the trapped-fraction and collisionality fits use the physical
-minor radius rather than $\rho$.
-It is a geometric approximation, not an equilibrium-validated correction.
-The fields and pressure are not required to satisfy an equilibrium solution.
-This geometry changes the previously calculated Sauter current and fraction.
+This model does not account for perpendicular currents, triangularity in the
+elliptical geometry, axis shifts, or radial changes in shape. The trapped-fraction
+fit still uses the supplied triangularity, and the trapped-fraction and
+collisionality fits use the physical minor radius. It is a geometric
+approximation, not an equilibrium-validated correction; the fields and pressure
+are not required to satisfy an equilibrium solution. The elliptical geometry
+changes the previously calculated Sauter current and fraction.
 
 !!! warning "Validity of the Sauter Bootstrap Scaling"
 
     The Sauter coefficients are fitted for general axisymmetric equilibria,
     but PROCESS does not calculate the flux-surface geometry needed to evaluate
     the paper's expression exactly. Its trapped-fraction fit, profile assumptions,
-    circularised integration and current-density approximation are described here
+    area-equivalent integration and current-density approximation are described here
     separately from the paper's formulas.
 
 -----------

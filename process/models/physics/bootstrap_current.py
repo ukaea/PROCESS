@@ -1582,7 +1582,7 @@ class SauterBootstrapCurrent(Model):
         ------
         ProcessValueError
             If the collisionality inputs are not positive and finite, or the
-            safety factor or circular-surface geometry is invalid.
+            safety factor or elliptical-surface geometry is invalid.
 
         Notes
         -----
@@ -1596,24 +1596,34 @@ class SauterBootstrapCurrent(Model):
         """
         if not np.isfinite(a_plasma_poloidal) or a_plasma_poloidal <= 0:
             raise ProcessValueError(
-                "Sauter circular surfaces require a finite, positive plasma area",
+                "Sauter elliptical surfaces require a finite, positive plasma area",
                 a_plasma_poloidal=a_plasma_poloidal,
             )
 
-        # Area-equivalent physical radius, not the physical minor radius.
+        if not np.isfinite(rminor) or rminor <= 0:
+            raise ProcessValueError(
+                "Sauter elliptical surfaces require a finite, positive minor radius",
+                rminor=rminor,
+            )
+        kappa_effective = a_plasma_poloidal / (np.pi * rminor**2)
+        r_horizontal = rminor * roa
+        # Area-equivalent radius keeps the existing annulus areas and gradients.
         r_area = np.sqrt(a_plasma_poloidal / np.pi) * roa
 
         if (
             not np.isfinite(rmajor)
             or rmajor <= 0
-            or not np.all(np.isfinite(r_area))
-            or np.any(r_area < 0)
-            or np.any(r_area >= rmajor)
+            or not np.isfinite(kappa_effective)
+            or kappa_effective <= 0
+            or not np.all(np.isfinite(r_horizontal))
+            or np.any(r_horizontal < 0)
+            or np.any(r_horizontal >= rmajor)
         ):
             raise ProcessValueError(
-                "Sauter circular surfaces require 0 <= r_area < rmajor "
+                "Sauter elliptical surfaces require 0 <= r_horizontal < rmajor "
                 "and a finite, positive rmajor",
                 rmajor=rmajor,
+                rminor=rminor,
                 a_plasma_poloidal=a_plasma_poloidal,
             )
 
@@ -1655,7 +1665,7 @@ class SauterBootstrapCurrent(Model):
         # @ j == 1
         radial_elements = np.arange(2, len(nd_plasma_electron_profile))
 
-        # Annulus area in the area-equivalent circular cross-section.
+        # Annulus area for self-similar ellipses.
         dr_area = r_area[radial_elements] - r_area[radial_elements - 1]
         da = 2 * np.pi * r_area[radial_elements - 1] * dr_area
 
@@ -1748,7 +1758,7 @@ class SauterBootstrapCurrent(Model):
         pressure_ion = constants.KILOELECTRON_VOLT * ni_mid * ti_mid
         pressure_total = pressure_electron + pressure_ion
 
-        # Effective circular field, not the local field on a shaped flux surface.
+        # Effective field, not the local field on an elliptical flux surface.
         field_scale = b_plasma_toroidal_on_axis * r_area[previous] / rmajor
         poloidal_field_effective = field_scale * inverse_q[previous]
 
@@ -1766,11 +1776,18 @@ class SauterBootstrapCurrent(Model):
             / poloidal_field_effective
         )  # A/m2
 
-        # Circular flux surfaces, Bphi = F/R and Bp = (dpsi/dr)/R.
-        epsilon_area = r_area[previous] / rmajor
-        circular_geometry_factor = np.sqrt(1.0 - epsilon_area**2)
-        field_pitch = epsilon_area * inverse_q[previous] / circular_geometry_factor
-        j_bootstrap_toroidal *= circular_geometry_factor / (1.0 + field_pitch**2)
+        # Elliptical surfaces with j_parallel / B constant on each surface.
+        epsilon_horizontal = r_horizontal[previous] / rmajor
+        geometry_root = np.sqrt(1.0 - epsilon_horizontal**2)
+        field_pitch_scale = (
+            kappa_effective * epsilon_horizontal * inverse_q[previous] / geometry_root
+        )
+        shape_average = (1.0 + geometry_root / kappa_effective**2) / (
+            1.0 + geometry_root
+        )
+        j_bootstrap_toroidal *= geometry_root / (
+            1.0 + field_pitch_scale**2 * shape_average
+        )
 
         return SauterBootstrapCurrentParams(
             f_cur_plasma_bootstrap=np.sum(da * j_bootstrap_toroidal, axis=0)
