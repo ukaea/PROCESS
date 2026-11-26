@@ -548,13 +548,13 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
         # If spherical tokamak, this is outboard only. pnuc_cp_tf is evaluated separately
         if self.data.physics.itart == 1:
-            # Nuclear heating in outobard TF coil legs (whttflgs)
+            # Nuclear heating in outobard TF coil legs (m_tf_return_legs_total)
             # Unit heating (W/kg/GW of fusion power) x legs mass only (kg)
             self.data.ccfe_hcpb.tfc_nuc_heating = (
                 e
                 * np.exp(-a * self.data.ccfe_hcpb.x_blanket)
                 * np.exp(-b * self.data.ccfe_hcpb.x_shield)
-                * self.data.tfcoil.whttflgs
+                * self.data.tfcoil.m_tf_return_legs_total
             )
         else:
             # Nuclear heating in TF coil

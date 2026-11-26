@@ -1470,7 +1470,7 @@ class Costs(Model):
 
             self.data.costs.c22212 = (
                 1.0e-6
-                * self.data.tfcoil.whttflgs
+                * self.data.tfcoil.m_tf_return_legs_total
                 * self.data.costs.uccpclb
                 * cmlsa[self.data.costs.lsa - 1]
             )

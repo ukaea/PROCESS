@@ -844,8 +844,8 @@ class TFData:
     whtcp: float = 0.0
     """mass of TF coil inboard legs (kg)"""
 
-    whttflgs: float = 0.0
-    """mass of the TF coil legs (kg)"""
+    m_tf_return_legs_total: float = 0.0
+    """Total mass of all TF coil return legs (this includes both horizontal and outboard vertical sections) [kg]"""
 
     cryo_cool_req: float = 0.0
     """Cryo cooling requirement at helium temp 4.5K (kW)"""
