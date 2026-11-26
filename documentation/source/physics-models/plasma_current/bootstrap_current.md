@@ -247,6 +247,13 @@ coefficients with the approximate geometry and profiles described below.
 
 The model is selected with `i_bootstrap_current = 4`.
 
+PROCESS starts with Sauter's flux-surface-averaged parallel current, assumes
+an elliptical geometry to relate flux to radius, and approximates its
+toroidal component. It then integrates that component over the plasma
+cross-section to estimate the bootstrap current fraction.
+
+#### Assumed flux-surface shape
+
 The model assumes concentric, self-similar elliptical flux surfaces with
 horizontal minor radius $r=ax$, where $a$ is the plasma minor radius and
 $x=r/a$. Their effective elongation is
@@ -256,6 +263,8 @@ matches both that area and the horizontal minor radius, but not necessarily
 the actual elongation, triangularity or squareness. The inner surfaces are
 assumed to have the same elongation as the outer ellipse; their shapes are
 not calculated from a plasma equilibrium.
+
+#### Radial coordinate and profiles
 
 The area-equivalent radius $\rho=\sqrt{A_{\rm plasma}/\pi}\,x
 =\sqrt{\kappa_{\rm eff}}\,r$ (`r_area` in the code) is used for profile
@@ -273,11 +282,15 @@ profile assumptions, the density floor, and the parabolic $q$ profile are
 PROCESS choices, not requirements of the paper. Temperatures must be positive
 throughout the profiles used in the logarithmic gradients.
 
+#### Radial discretisation
+
 The calculation uses `numpy.gradient` on the full radial grid. Coefficients
 and gradients are evaluated at indices $1,\ldots,N-2$; pressures are products
 of the neighbouring density and temperature means at indices $j$ and $j+1$.
 The annular sum uses $2\pi\rho_j(\rho_{j+1}-\rho_j)$ at those same indices.
 It omits the central interval between indices 0 and 1.
+
+#### Sauter's starting expression
 
 The expression below is the second equation in the paper's conclusions[^4],
 which assumes equal electron and ion logarithmic density gradients.
@@ -292,6 +305,8 @@ term. PROCESS calculates only the bootstrap contribution and approximates the
 toroidal component of the parallel current using elliptical flux surfaces.
 The erratum also restores a missing ion-pressure factor in the paper's
 preceding pressure-form expression[^5].
+
+#### PROCESS bootstrap current approximation
 
 The PROCESS approximation is
 
@@ -308,9 +323,12 @@ $$
 
 Here $p_e$, $p_i$ and $p_{\rm total}$ are the approximated pressures
 described below. The effective field is $B_{p,\rm eff}=B_0\rho/(R_0q)$;
-it is not the local poloidal field on a flux surface. No poloidal-field
-regularisation is applied. The input safety factors $q_0$ and $q_{95}$ and
-the resulting $q$ profile must be positive and finite.
+it is a factor used in the conversion from Sauter's flux-coordinate expression,
+not the local poloidal field on a flux surface. PROCESS does not simply divide
+$\langle j_\parallel B\rangle$ by this field. The conversion and the role of
+$G$ are described below. No poloidal-field regularisation is applied. The input
+safety factors $q_0$ and $q_{95}$ and the resulting $q$ profile must be positive
+and finite.
 
 #### Concentric elliptical surfaces and magnetic fields
 
@@ -334,6 +352,9 @@ K=\frac{F\kappa_{\rm eff}r}{q\sqrt{R_0^2-r^2}}.
 $$
 
 Thus $B_p/B_\phi$ varies with poloidal angle when $\kappa_{\rm eff}\ne 1$.
+
+#### Flux-surface averaging and toroidal projection
+
 The model assumes $j_\parallel/B$ is constant on each surface in order to
 convert Sauter's $J=\langle j_\parallel B\rangle$ into the poloidal-angle
 average of the parallel current's toroidal component:
@@ -345,19 +366,62 @@ $$
 
 Here the flux-surface average $\langle\cdot\rangle$ is weighted by $R$;
 the bar denotes an unweighted poloidal-angle average, as appropriate for
-integrating current through the elliptical cross-section. Defining
+integrating current through the elliptical cross-section. Define
 
 $$
 s=\sqrt{1-(r/R_0)^2},\qquad
 H=\frac{1+s/\kappa_{\rm eff}^2}{1+s},
 $$
 
-the flux-gradient conversion and projection give the geometric factor
+#### Converting from flux to radial gradients
+
+To convert the original formula, denote the pressure-gradient
+bracket in the PROCESS expression above by $\mathcal P_\rho$. For the
+bootstrap contribution, identify Sauter's $I(\psi)$ with the assumed
+$F=R_0B_0$ and apply the chain rule:
+
+$$
+J_{\rm bs}=\left\langle j_\parallel B\right\rangle_{\rm bs}
+=-\frac{F}{d\psi/d\rho}\,\mathcal P_\rho.
+$$
+
+The assumed $q$ profile and elliptical geometry give
+
+$$
+\frac{d\psi}{d\rho}
+=\frac{K}{\sqrt{\kappa_{\rm eff}}}
+=\frac{R_0B_{p,\rm eff}}{s},
+\qquad
+J_{\rm bs}=-\frac{B_0s}{B_{p,\rm eff}}\,\mathcal P_\rho.
+$$
+
+Thus $B_{p,\rm eff}$ is a convenient way to express the flux-gradient
+conversion in terms of $B_0$, $\rho$ and $q$. It is not a divisor applied
+directly to Sauter's surface-averaged parallel current.
+
+#### Combining the geometry and projection factors
+
+Under the assumed $j_\parallel/B$ distribution, the projection factor is
+
+$$
+\frac{\overline{B_\phi}}{\langle B^2\rangle}
+=\frac{1}{B_0\left(1+H
+\left[\kappa_{\rm eff}r/(qR_0s)\right]^2\right)}.
+$$
+
+Combining it with the flux-gradient conversion gives
 
 $$
 G(r,q,\kappa_{\rm eff})=
 \frac{s}{1+H\left[\kappa_{\rm eff}r/(qR_0s)\right]^2}.
 $$
+
+Multiplying $J_{\rm bs}$ by the projection factor cancels $B_0$ and gives
+$\overline{j_{\phi,\parallel}}=-G\mathcal P_\rho/B_{p,\rm eff}$.
+The numerator $s$ in $G$ comes from converting the flux gradient; the
+denominator comes from the field geometry and toroidal projection.
+
+#### Circular-surface limit
 
 For $\kappa_{\rm eff}=1$, the ellipses become concentric circles:
 $R=R_0+r\cos\theta$ and $Z=r\sin\theta$. In this case $\rho=r$, $H=1$,
@@ -368,10 +432,12 @@ G(r,q,1)=\frac{\sqrt{1-(r/R_0)^2}}
 {1+\left[r/(q\sqrt{R_0^2-r^2})\right]^2}.
 $$
 
+#### Scope and limitations
+
 The output profile is a poloidal-angle average, not a local current density.
 This model does not account for perpendicular currents, triangularity in the
-elliptical geometry, axis shifts, or radial changes in shape. The trapped-fraction
-fit still uses the supplied triangularity, and the trapped-fraction and
+elliptical geometry, axis shifts, or radial changes in shape. The default
+trapped-fraction fit does not depend on triangularity; that fit and the
 collisionality fits use the physical minor radius. It is a geometric
 approximation, not an equilibrium-validated correction; the fields and pressure
 are not required to satisfy an equilibrium solution. The elliptical geometry
