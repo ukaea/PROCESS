@@ -245,7 +245,7 @@ Sauter et al.[^4] [^5] provide fitted neoclassical bootstrap coefficients for
 general axisymmetric equilibria and collisionalities. PROCESS uses these
 coefficients with the approximate geometry and profiles described below.
 
-Is selected by setting `i_bootstrap_current = 4`
+The model is selected with `i_bootstrap_current = 4`.
 
 The model uses an area-equivalent physical radius
 $\rho=\sqrt{A_{\rm plasma}/\pi} \ x$ (`r_area` in the code), where
@@ -259,22 +259,11 @@ at $x=1$.
 For self-similar ellipses with constant elongation $\kappa$ and horizontal
 minor radius $a$, $A_{\rm plasma}=\pi\kappa a^2$ and
 $\rho=\sqrt{\kappa}\,r$. The code's circular annular area then equals the
-elliptical annular area, $2\pi\kappa r\,dr$. At fixed $a$, profiles as
-functions of $x$, $q$ profile, field, plasma current and all other inputs,
-increasing $\kappa$ through the supplied area changes the calculated current
-density by $1/\kappa$: one factor $1/\sqrt{\kappa}$ comes from the radial
-gradients and another from the effective field factor. The annular area grows
-by $\kappa$, so the integrated bootstrap current is unchanged in this
-calculation. For example, increasing $\kappa$ from 1 to 1.8 changes the
-calculated current density by a factor $1/1.8$, but not the integrated current.
-
-This cancellation is a property of the PROCESS approximation, not a validation
-of the physical current density or bootstrap current in an elliptical
-equilibrium. The effective field is not the local poloidal field on a shaped
-flux surface; shaping may also affect the trapped fraction, safety factor and
-other equilibrium quantities. Radially varying elongation or non-self-similar
-surfaces are not represented by this area scaling. An additional elongation
-multiplier cannot be justified solely from this area argument.
+elliptical annular area, $2\pi\kappa r\,dr$. However, the field geometry below
+is circular, not elliptical. Its factor depends on $\rho/R_0$, so the
+integrated current does not generally remain unchanged when the supplied
+area changes, even with other inputs fixed. Radially varying elongation and
+non-self-similar surfaces are not represented by this area scaling.
 
 The electron density is floored at $10^{13}$ $\text{m}^{-3}$. The ion density
 profile is assumed proportional to the electron profile:
@@ -298,17 +287,15 @@ $$
 $$
 
 The paper gives a flux-surface-averaged parallel current, including an ohmic
-term. PROCESS calculates only the bootstrap contribution and treats its local
-current density as a toroidal current density for integration. The pressure
-terms below are not an explicit parallel-to-toroidal projection, and this
-approximation does not evaluate the exact flux-surface geometry.
+term. PROCESS calculates only the bootstrap contribution and approximates the
+toroidal component of the parallel current using circular flux surfaces.
 The erratum also restores a missing ion-pressure factor in the paper's
 preceding pressure-form expression[^5].
 
 The PROCESS approximation is
 
 $$
-j_{\rm bs}=-\frac{B_p}{(B_p^{\rm reg})^2}
+j_{\rm bs}=-\frac{B_{p,\rm eff}}{(B_{p,\rm eff}^{\rm reg})^2}\,G(\rho,q)
 \left[
 p_{\rm total}\mathcal L_{31}\frac{\partial\ln n_e}{\partial\rho}
 +p_e(\mathcal L_{31}+\mathcal L_{32})\frac{\partial\ln T_e}{\partial\rho}
@@ -319,10 +306,61 @@ p_{\rm total}\mathcal L_{31}\frac{\partial\ln n_e}{\partial\rho}
 $$
 
 Here $p_e$, $p_i$ and $p_{\rm total}$ are the approximated pressures
-described below. The model uses the effective circular-field approximation
-$B_p=B_0\rho/(R_0q)$ and
-$B_p^{\rm reg}=(B_0\rho/R_0)|1/q+10^{-4}|$. The $10^{-4}$ offset
+described below. The effective field factors are
+$B_{p,\rm eff}=B_0\rho/(R_0q)$ and
+$B_{p,\rm eff}^{\rm reg}=(B_0\rho/R_0)|1/q+10^{-4}|$; they are not the
+local poloidal field on a flux surface. The $10^{-4}$ offset
 retains the existing regularisation in the denominator only.
+
+#### Concentric circular surfaces and toroidal field
+
+The toroidal component of the parallel bootstrap current is approximated
+using concentric circular flux surfaces. Their radius is the area-equivalent
+$\rho$ above, not the physical horizontal minor radius of a shaped plasma.
+The calculation requires a finite, positive area and major radius, and
+$0 \leq \rho < R_0$ throughout the supplied grid. PROCESS evaluates the Sauter
+scaling for reporting even when another bootstrap model is selected, so these
+conditions apply in that case as well.
+
+Writing $R=R_0+\rho\cos\theta$, assume
+$B_\phi=F/R$, $B_p=K/R$, $F=R_0B_0$ and $K=d\psi/d\rho$, with $\psi$
+the poloidal flux per radian. The toroidal field follows the same $1/R$ dependence as
+`b_plasma_toroidal_profile`, but is used analytically around each surface;
+the midplane profile array is not an input.
+
+For the assumed $q(\rho)$,
+
+$$
+K=\frac{F\rho}{q\sqrt{R_0^2-\rho^2}}.
+$$
+
+The flux-surface average is weighted by $R$ for these circular surfaces.
+For $J=\langle j_\parallel B\rangle$, the poloidal-angle average of the
+toroidal component of the parallel current is
+
+$$
+\overline{j_{\phi,\parallel}} =
+J\frac{FR_0}{F^2+K^2}.
+$$
+
+Combining this with the bootstrap part of the Sauter expression and the
+radial gradients gives the geometric factor used above:
+
+$$
+G(\rho,q)=\frac{\sqrt{1-(\rho/R_0)^2}}
+{1+\left[\rho/(q\sqrt{R_0^2-\rho^2})\right]^2}.
+$$
+
+The factor includes both the circular-surface flux-gradient conversion and
+the projection. The inherited $10^{-4}$ regularisation is applied separately,
+so the resulting expression is not an exact unregularised circular model.
+The output profile is a poloidal-angle average, not a local current density.
+This model does not account for perpendicular currents or model shaped
+equilibria; the trapped-fraction and collisionality fits use the physical
+minor radius rather than $\rho$.
+It is a geometric approximation, not an equilibrium-validated correction.
+The fields and pressure are not required to satisfy an equilibrium solution.
+This geometry changes the previously calculated Sauter current and fraction.
 
 !!! warning "Validity of the Sauter Bootstrap Scaling"
 

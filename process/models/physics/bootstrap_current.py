@@ -1573,8 +1573,6 @@ class SauterBootstrapCurrent(Model):
         plasma_current:
             The total plasma current (I_p) [A].
 
-
-
         Returns
         -------
         :
@@ -1583,7 +1581,8 @@ class SauterBootstrapCurrent(Model):
         Raises
         ------
         ProcessValueError
-            If the collisionality inputs are not positive and finite.
+            If the collisionality inputs are not positive and finite, or the
+            circular-surface geometry is invalid.
 
         Notes
         -----
@@ -1595,8 +1594,28 @@ class SauterBootstrapCurrent(Model):
         single-ion model derived in the paper.
 
         """
+        if not np.isfinite(a_plasma_poloidal) or a_plasma_poloidal <= 0:
+            raise ProcessValueError(
+                "Sauter circular surfaces require a finite, positive plasma area",
+                a_plasma_poloidal=a_plasma_poloidal,
+            )
+
         # Area-equivalent physical radius, not the physical minor radius.
         r_area = np.sqrt(a_plasma_poloidal / np.pi) * roa
+
+        if (
+            not np.isfinite(rmajor)
+            or rmajor <= 0
+            or not np.all(np.isfinite(r_area))
+            or np.any(r_area < 0)
+            or np.any(r_area >= rmajor)
+        ):
+            raise ProcessValueError(
+                "Sauter circular surfaces require 0 <= r_area < rmajor "
+                "and a finite, positive rmajor",
+                rmajor=rmajor,
+                a_plasma_poloidal=a_plasma_poloidal,
+            )
 
         # Square root of local aspect ratio
         inverse_aspect = (rminor / rmajor) * roa
@@ -1734,13 +1753,18 @@ class SauterBootstrapCurrent(Model):
             pressure_ion * (l31_coefficient + l34_coefficient * alpha) * dlogti_dr_area
         )
 
-        # This inherited Bp/Bp_reg² approximation is not an explicit
-        # parallel-to-toroidal current projection.
+        # The inherited regularisation is retained in the circular model.
         j_bootstrap_toroidal = (
             -poloidal_field_effective
             / poloidal_field_effective_regularised**2
             * (density_gradient_term + electron_temperature_term + ion_temperature_term)
         )  # A/m2
+
+        # Circular flux surfaces, Bphi = F/R and Bp = (dpsi/dr)/R.
+        epsilon_area = r_area[previous] / rmajor
+        circular_geometry_factor = np.sqrt(1.0 - epsilon_area**2)
+        field_pitch = epsilon_area * inverse_q[previous] / circular_geometry_factor
+        j_bootstrap_toroidal *= circular_geometry_factor / (1.0 + field_pitch**2)
 
         return SauterBootstrapCurrentParams(
             f_cur_plasma_bootstrap=np.sum(da * j_bootstrap_toroidal, axis=0)
