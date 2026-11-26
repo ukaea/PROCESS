@@ -841,8 +841,8 @@ class TFData:
     vol_cond_cp: float = 0.0
     """Exact conductor volume in the centrepost (m3)"""
 
-    whtcp: float = 0.0
-    """mass of TF coil inboard legs (kg)"""
+    m_cp_total: float = 0.0
+    """Mass of TF coil inboard legs or entire centrepost [kg]"""
 
     m_tf_return_legs_total: float = 0.0
     """Total mass of all TF coil return legs (this includes both horizontal and outboard vertical sections) [kg]"""

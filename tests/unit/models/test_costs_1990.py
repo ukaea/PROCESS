@@ -1605,7 +1605,7 @@ class Acc2221Param(NamedTuple):
 
     m_tf_return_legs_total: Any = None
 
-    whtcp: Any = None
+    m_cp_total: Any = None
 
     i_tf_sup: Any = None
 
@@ -1661,7 +1661,7 @@ class Acc2221Param(NamedTuple):
             m_tf_coil_case=1034021.9996272125,
             n_tf_coils=16,
             m_tf_return_legs_total=0,
-            whtcp=0,
+            m_cp_total=0,
             i_tf_sup=1,
             supercond_cost_model=0,
             j_crit_str_tf=300.0,
@@ -1700,7 +1700,7 @@ class Acc2221Param(NamedTuple):
             m_tf_coil_case=1034699.2182961091,
             n_tf_coils=16,
             m_tf_return_legs_total=0,
-            whtcp=0,
+            m_cp_total=0,
             i_tf_sup=1,
             supercond_cost_model=0,
             j_crit_str_tf=300.0,
@@ -1739,7 +1739,7 @@ class Acc2221Param(NamedTuple):
             m_tf_coil_case=1034699.2182961091,
             n_tf_coils=16,
             m_tf_return_legs_total=0,
-            whtcp=0,
+            m_cp_total=0,
             i_tf_sup=1,
             supercond_cost_model=1,
             j_crit_str_tf=300.0,
@@ -1818,7 +1818,7 @@ def test_acc2221(acc2221param, monkeypatch, costs):
         costs.data.tfcoil, "m_tf_return_legs_total", acc2221param.m_tf_return_legs_total
     )
 
-    monkeypatch.setattr(costs.data.tfcoil, "whtcp", acc2221param.whtcp)
+    monkeypatch.setattr(costs.data.tfcoil, "m_cp_total", acc2221param.m_cp_total)
 
     monkeypatch.setattr(costs.data.tfcoil, "i_tf_sup", acc2221param.i_tf_sup)
 

@@ -169,7 +169,7 @@ class SuperconTFAreasAndMasses:
     m_tf_coil_conductor: float
     m_tf_coil: float
     m_tf_coils_total: float
-    whtcp: float
+    m_cp_total: float
     m_tf_return_legs_total: float
 
 
@@ -866,8 +866,8 @@ class SuperconductingTFCoil(TFCoil):
             po.ovarre(
                 self.outfile,
                 "Mass of inboard legs (kg)",
-                "(whtcp)",
-                self.data.tfcoil.whtcp,
+                "(m_cp_total)",
+                self.data.tfcoil.m_cp_total,
                 "OP ",
             )
             po.ovarre(
@@ -2028,10 +2028,12 @@ class SuperconductingTFCoil(TFCoil):
 
         if self.data.physics.itart == 1:
             # Winding-pack material is assumed to have a uniform cross-section.
-            whtcp = tf.n_tf_coils * (inboard_case + winding_mass * cplen / coil_length)
-            m_tf_return_legs_total = m_tf_coils_total - whtcp
+            m_cp_total = tf.n_tf_coils * (
+                inboard_case + winding_mass * cplen / coil_length
+            )
+            m_tf_return_legs_total = m_tf_coils_total - m_cp_total
         else:
-            whtcp = 0.0
+            m_cp_total = 0.0
             m_tf_return_legs_total = 0.0
 
         return SuperconTFAreasAndMasses(
@@ -2045,7 +2047,7 @@ class SuperconductingTFCoil(TFCoil):
             m_tf_coil_conductor=m_tf_coil_conductor,
             m_tf_coil=m_tf_coil,
             m_tf_coils_total=m_tf_coils_total,
-            whtcp=whtcp,
+            m_cp_total=m_cp_total,
             m_tf_return_legs_total=m_tf_return_legs_total,
         )
 
@@ -2069,7 +2071,7 @@ class SuperconductingTFCoil(TFCoil):
         self.data.tfcoil.m_tf_coil_conductor = tf_areas_masses.m_tf_coil_conductor
         self.data.tfcoil.m_tf_coil = tf_areas_masses.m_tf_coil
         self.data.tfcoil.m_tf_coils_total = tf_areas_masses.m_tf_coils_total
-        self.data.tfcoil.whtcp = tf_areas_masses.whtcp
+        self.data.tfcoil.m_cp_total = tf_areas_masses.m_cp_total
         self.data.tfcoil.m_tf_return_legs_total = tf_areas_masses.m_tf_return_legs_total
 
     @staticmethod

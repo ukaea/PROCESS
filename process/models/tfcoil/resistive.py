@@ -612,7 +612,7 @@ class ResistiveTFCoil(TFCoil):
                     )
 
                     # CP weight
-                    self.data.tfcoil.whtcp = (
+                    self.data.tfcoil.m_cp_total = (
                         constants.DEN_COPPER * self.data.tfcoil.vol_cond_cp
                         + self.data.tfcoil.den_tf_wp_turn_insulation
                         * (
@@ -648,7 +648,7 @@ class ResistiveTFCoil(TFCoil):
                     )
 
                     # CP weight
-                    self.data.tfcoil.whtcp = (
+                    self.data.tfcoil.m_cp_total = (
                         constants.DEN_ALUMINIUM * self.data.tfcoil.vol_cond_cp
                         + self.data.tfcoil.den_tf_wp_turn_insulation
                         * (

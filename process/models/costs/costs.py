@@ -1453,7 +1453,7 @@ class Costs(Model):
 
             self.data.costs.c22211 = (
                 1.0e-6
-                * self.data.tfcoil.whtcp
+                * self.data.tfcoil.m_cp_total
                 * self.data.costs.uccpcl1
                 * cmlsa[self.data.costs.lsa - 1]
             )

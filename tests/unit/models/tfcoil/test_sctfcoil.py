@@ -1749,7 +1749,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     m_tf_return_legs_total: Any = None
 
-    whtcp: Any = None
+    m_cp_total: Any = None
 
     whtconal: Any = None
 
@@ -1849,7 +1849,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             a_tf_wp_coolant_channels=0.015707963267948974,
             a_tf_turn_cable_space_no_void=0.001293323051622732,
             m_tf_return_legs_total=0.0,
-            whtcp=0.0,
+            m_cp_total=0.0,
             whtconal=0.0,
             vol_cond_cp=0.0,
             i_tf_sup=1,
@@ -1906,7 +1906,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             a_tf_wp_coolant_channels=0.015707963267948974,
             a_tf_turn_cable_space_no_void=0.001293323051622732,
             m_tf_return_legs_total=0.0,
-            whtcp=0.0,
+            m_cp_total=0.0,
             whtconal=0.0,
             vol_cond_cp=0.0,
             i_tf_sup=1,
@@ -2002,7 +2002,7 @@ def test_tf_cicc_area_and_masses(
             tfcoilareaandmassesparam.a_tf_turn_cable_space_no_void,
         ),
         ("m_tf_return_legs_total", tfcoilareaandmassesparam.m_tf_return_legs_total),
-        ("whtcp", tfcoilareaandmassesparam.whtcp),
+        ("m_cp_total", tfcoilareaandmassesparam.m_cp_total),
         ("whtconal", tfcoilareaandmassesparam.whtconal),
         ("vol_cond_cp", tfcoilareaandmassesparam.vol_cond_cp),
         ("i_tf_sup", tfcoilareaandmassesparam.i_tf_sup),
@@ -2153,12 +2153,12 @@ def test_cicc_masses_include_inboard_conductor_for_st(cicc_sctfcoil, itart):
     if itart:
         winding_mass = masses.m_tf_coil_conductor + masses.m_tf_coil_wp_insulation
         expected_cp = 12 * (2.2 * 8000.0 * 20.0 + winding_mass * 20.0 / 70.0)
-        assert masses.whtcp == pytest.approx(expected_cp)
-        assert masses.whtcp + masses.m_tf_return_legs_total == pytest.approx(
+        assert masses.m_cp_total == pytest.approx(expected_cp)
+        assert masses.m_cp_total + masses.m_tf_return_legs_total == pytest.approx(
             masses.m_tf_coils_total
         )
     else:
-        assert masses.whtcp == pytest.approx(0.0)
+        assert masses.m_cp_total == pytest.approx(0.0)
         assert masses.m_tf_return_legs_total == pytest.approx(0.0)
 
 
@@ -2518,10 +2518,10 @@ def test_tf_croco_areas_and_masses(itart, monkeypatch, croco_sctfcoil):
             2.2 * 8000.0 * exp_cplen * 1.0
             + (exp_cond + exp_ins) * exp_cplen / coil_length
         )
-        assert res.whtcp == pytest.approx(expected_cp)
+        assert res.m_cp_total == pytest.approx(expected_cp)
         assert res.m_tf_return_legs_total == pytest.approx(exp_total - expected_cp)
     else:
-        assert res.whtcp == pytest.approx(0.0)
+        assert res.m_cp_total == pytest.approx(0.0)
         assert res.m_tf_return_legs_total == pytest.approx(0.0)
 
 
@@ -2752,10 +2752,10 @@ def test_tf_step_areas_and_masses(itart, monkeypatch, step_sctfcoil):
             2.2 * 8000.0 * exp_cplen * 1.0
             + (exp_cond + exp_ins) * exp_cplen / coil_length
         )
-        assert res.whtcp == pytest.approx(expected_cp)
+        assert res.m_cp_total == pytest.approx(expected_cp)
         assert res.m_tf_return_legs_total == pytest.approx(exp_total - expected_cp)
     else:
-        assert res.whtcp == pytest.approx(0.0)
+        assert res.m_cp_total == pytest.approx(0.0)
         assert res.m_tf_return_legs_total == pytest.approx(0.0)
 
 
