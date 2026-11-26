@@ -247,13 +247,34 @@ coefficients with the approximate geometry and profiles described below.
 
 Is selected by setting `i_bootstrap_current = 4`
 
-The model uses a circularised radius $\rho=\sqrt{A_{\rm plasma}/\pi} \ x$,
-where $x=r/a$ and $A_{\rm plasma}$ is the supplied total poloidal
-cross-sectional area. Current integration assumes circular annuli,
-with $dA=2\pi\rho \ d\rho$. Elongation is not used as a separate input.
+The model uses an area-equivalent physical radius
+$\rho=\sqrt{A_{\rm plasma}/\pi} \ x$ (`r_area` in the code), where
+$x=r/a$ is the normalised minor radius and $A_{\rm plasma}$ is the supplied
+total poloidal cross-sectional area. Current integration assumes circular
+annuli, with $dA=2\pi\rho \ d\rho$. Elongation is not used as a separate input.
 PROCESS assumes $q(x)=q_0+(q_{95}-q_0)x^2$ and a flat $Z_{\rm eff}$
 profile. The input $q_{95}$ therefore sets the value of this assumed profile
 at $x=1$.
+
+For self-similar ellipses with constant elongation $\kappa$ and horizontal
+minor radius $a$, $A_{\rm plasma}=\pi\kappa a^2$ and
+$\rho=\sqrt{\kappa}\,r$. The code's circular annular area then equals the
+elliptical annular area, $2\pi\kappa r\,dr$. At fixed $a$, profiles as
+functions of $x$, $q$ profile, field, plasma current and all other inputs,
+increasing $\kappa$ through the supplied area changes the calculated current
+density by $1/\kappa$: one factor $1/\sqrt{\kappa}$ comes from the radial
+gradients and another from the effective field factor. The annular area grows
+by $\kappa$, so the integrated bootstrap current is unchanged in this
+calculation. For example, increasing $\kappa$ from 1 to 1.8 changes the
+calculated current density by a factor $1/1.8$, but not the integrated current.
+
+This cancellation is a property of the PROCESS approximation, not a validation
+of the physical current density or bootstrap current in an elliptical
+equilibrium. The effective field is not the local poloidal field on a shaped
+flux surface; shaping may also affect the trapped fraction, safety factor and
+other equilibrium quantities. Radially varying elongation or non-self-similar
+surfaces are not represented by this area scaling. An additional elongation
+multiplier cannot be justified solely from this area argument.
 
 The electron density is floored at $10^{13}$ $\text{m}^{-3}$. The ion density
 profile is assumed proportional to the electron profile:
@@ -298,7 +319,7 @@ p_{\rm total}\mathcal L_{31}\frac{\partial\ln n_e}{\partial\rho}
 $$
 
 Here $p_e$, $p_i$ and $p_{\rm total}$ are the approximated pressures
-described below. The model uses the circular approximation
+described below. The model uses the effective circular-field approximation
 $B_p=B_0\rho/(R_0q)$ and
 $B_p^{\rm reg}=(B_0\rho/R_0)|1/q+10^{-4}|$. The $10^{-4}$ offset
 retains the existing regularisation in the denominator only.

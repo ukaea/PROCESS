@@ -707,8 +707,12 @@ def test_sauter_circularised_area(physics):
         "plasma_current": 1e7,
     }
     circular = sauter.bootstrap_fraction_sauter(**kwargs)
-    larger_area = sauter.bootstrap_fraction_sauter(
-        **{**kwargs, "a_plasma_poloidal": 2.0 * kwargs["a_plasma_poloidal"]},
+    circle_area = np.pi * kwargs["rminor"] ** 2
+    unelongated = sauter.bootstrap_fraction_sauter(
+        **{**kwargs, "a_plasma_poloidal": circle_area},
+    )
+    elongated = sauter.bootstrap_fraction_sauter(
+        **{**kwargs, "a_plasma_poloidal": 1.8 * circle_area},
     )
 
     np.testing.assert_allclose(
@@ -728,9 +732,9 @@ def test_sauter_circularised_area(physics):
     assert circular.f_cur_plasma_bootstrap == pytest.approx(
         np.sum(annulus_areas * circular.j_bootstrap) / kwargs["plasma_current"]
     )
-    np.testing.assert_allclose(larger_area.j_bootstrap, circular.j_bootstrap / 2.0)
-    assert larger_area.f_cur_plasma_bootstrap == pytest.approx(
-        circular.f_cur_plasma_bootstrap
+    np.testing.assert_allclose(elongated.j_bootstrap, unelongated.j_bootstrap / 1.8)
+    assert elongated.f_cur_plasma_bootstrap == pytest.approx(
+        unelongated.f_cur_plasma_bootstrap
     )
 
 

@@ -1549,6 +1549,8 @@ class SauterBootstrapCurrent(Model):
             The volume-averaged effective charge of the plasma (Z_eff) [-].
         nd_plasma_electron_profile:
             The electron density profile of the plasma [m⁻³].
+        roa:
+            Normalised minor-radius profile r/a [-].
         temp_plasma_electron_profile_kev:
             The electron temperature profile of the plasma [keV].
         temp_plasma_ion_profile_kev:
@@ -1593,8 +1595,8 @@ class SauterBootstrapCurrent(Model):
         single-ion model derived in the paper.
 
         """
-        # Local circularised minor radius
-        rho = np.sqrt(a_plasma_poloidal / np.pi) * roa
+        # Area-equivalent physical radius, not the physical minor radius.
+        r_area = np.sqrt(a_plasma_poloidal / np.pi) * roa
 
         # Square root of local aspect ratio
         inverse_aspect = (rminor / rmajor) * roa
@@ -1622,18 +1624,18 @@ class SauterBootstrapCurrent(Model):
         # @ j == 1
         radial_elements = np.arange(2, len(nd_plasma_electron_profile))
 
-        # Area of annulus, assuming circular plasma cross-section
-        drho = rho[radial_elements] - rho[radial_elements - 1]
-        da = 2 * np.pi * rho[radial_elements - 1] * drho
+        # Annulus area in the area-equivalent circular cross-section.
+        dr_area = r_area[radial_elements] - r_area[radial_elements - 1]
+        da = 2 * np.pi * r_area[radial_elements - 1] * dr_area
 
         # Create the partial derivatives using numpy gradient (central differences)
-        dlogte_drho = np.gradient(np.log(temp_plasma_electron_profile_kev), rho)[
+        dlogte_dr_area = np.gradient(np.log(temp_plasma_electron_profile_kev), r_area)[
             radial_elements - 1
         ]
-        dlogti_drho = np.gradient(np.log(temp_plasma_ion_profile_kev), rho)[
+        dlogti_dr_area = np.gradient(np.log(temp_plasma_ion_profile_kev), r_area)[
             radial_elements - 1
         ]
-        dlogne_drho = np.gradient(np.log(nd_plasma_electron_profile), rho)[
+        dlogne_dr_area = np.gradient(np.log(nd_plasma_electron_profile), r_area)[
             radial_elements - 1
         ]
 
@@ -1715,26 +1717,28 @@ class SauterBootstrapCurrent(Model):
         pressure_ion = constants.KILOELECTRON_VOLT * ni_mid * ti_mid
         pressure_total = pressure_electron + pressure_ion
 
-        # With the assumed circular geometry, Bp ≈ B0 * rho / (R * q).
-        field_scale = b_plasma_toroidal_on_axis * rho[previous] / rmajor
-        poloidal_field = field_scale * inverse_q[previous]
+        # Effective circular field, not the local field on a shaped flux surface.
+        field_scale = b_plasma_toroidal_on_axis * r_area[previous] / rmajor
+        poloidal_field_effective = field_scale * inverse_q[previous]
         # The 1/q offset regularises the denominator only.
-        poloidal_field_regularised = field_scale * np.abs(inverse_q[previous] + 1.0e-4)
+        poloidal_field_effective_regularised = field_scale * np.abs(
+            inverse_q[previous] + 1.0e-4
+        )
 
         # Ion density follows the electron density, so both share this gradient.
-        density_gradient_term = pressure_total * l31_coefficient * dlogne_drho
+        density_gradient_term = pressure_total * l31_coefficient * dlogne_dr_area
         electron_temperature_term = (
-            pressure_electron * (l31_coefficient + l32_coefficient) * dlogte_drho
+            pressure_electron * (l31_coefficient + l32_coefficient) * dlogte_dr_area
         )
         ion_temperature_term = (
-            pressure_ion * (l31_coefficient + l34_coefficient * alpha) * dlogti_drho
+            pressure_ion * (l31_coefficient + l34_coefficient * alpha) * dlogti_dr_area
         )
 
         # This inherited Bp/Bp_reg² approximation is not an explicit
         # parallel-to-toroidal current projection.
         j_bootstrap_toroidal = (
-            -poloidal_field
-            / poloidal_field_regularised**2
+            -poloidal_field_effective
+            / poloidal_field_effective_regularised**2
             * (density_gradient_term + electron_temperature_term + ion_temperature_term)
         )  # A/m2
 
