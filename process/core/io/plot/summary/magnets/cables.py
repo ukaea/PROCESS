@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import patches
 from matplotlib.patches import Rectangle
@@ -12,21 +11,23 @@ from matplotlib.patches import Rectangle
 from process.core.io.plot.summary.common import box_style, text_layout
 
 if TYPE_CHECKING:
+    from matplotlib.axes import Axes
+
     from process.core.io.mfile import MFile
 
 __all__ = ["plot_cable_in_conduit_cable", "plot_hts_tape_geometry"]
 
 
-def plot_cable_in_conduit_cable(axis: plt.Axes, fig, mfile: MFile, scan: int):
+def plot_cable_in_conduit_cable(axis: Axes, fig, mfile: MFile, scan: int):
     """Plots TF coil CICC cable cross-section.
 
     Parameters
     ----------
-    axis: plt.Axes :
+    axis:
 
     fig :
 
-    mfile: MFile :
+    mfile:
 
     scan: int :
 

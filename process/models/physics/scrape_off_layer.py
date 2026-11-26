@@ -8,7 +8,7 @@ import scipy
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
-from process.data_structure.physics_variables import OutbordSOLPowerDecayLengthModel
+from process.data_structure.physics_variables import OutboardSOLPowerDecayLengthModel
 
 logger = logging.getLogger(__name__)
 
@@ -59,27 +59,27 @@ class ScrapeOffLayer(Model):
             )
         )
 
-        # Set to user input if OutbordSOLPowerDecayLengthModel = 1/USER_INUT
-        match OutbordSOLPowerDecayLengthModel(
+        # Set to user input if OutboardSOLPowerDecayLengthModel = 1/USER_INUT
+        match OutboardSOLPowerDecayLengthModel(
             self.data.physics.i_len_sol_outboard_power_decay
         ):
-            case OutbordSOLPowerDecayLengthModel.EICH_2013:
+            case OutboardSOLPowerDecayLengthModel.EICH_2013:
                 self.data.physics.len_sol_outboard_power_decay = (
                     self.data.physics.len_plasma_sol_eich13_power_decay
                 )
-            case OutbordSOLPowerDecayLengthModel.MAST_2014_1:
+            case OutboardSOLPowerDecayLengthModel.MAST_2014_1:
                 self.data.physics.len_sol_outboard_power_decay = (
                     self.data.physics.len_plasma_sol_mast14_power_decay_1
                 )
-            case OutbordSOLPowerDecayLengthModel.MAST_2014_2:
+            case OutboardSOLPowerDecayLengthModel.MAST_2014_2:
                 self.data.physics.len_sol_outboard_power_decay = (
                     self.data.physics.len_plasma_sol_mast14_power_decay_2
                 )
-            case OutbordSOLPowerDecayLengthModel.EICH_2011_JET:
+            case OutboardSOLPowerDecayLengthModel.EICH_2011_JET:
                 self.data.physics.len_sol_outboard_power_decay = (
                     self.data.physics.len_plasma_sol_eich11_jet_power_decay
                 )
-            case OutbordSOLPowerDecayLengthModel.EICH_2011_JET_ASDEX:
+            case OutboardSOLPowerDecayLengthModel.EICH_2011_JET_ASDEX:
                 self.data.physics.len_sol_outboard_power_decay = (
                     self.data.physics.len_plasma_sol_eich11_jet_asdex_power_decay
                 )
@@ -142,7 +142,7 @@ class ScrapeOffLayer(Model):
         po.ocmmnt(
             self.outfile,
             "-> "
-            + OutbordSOLPowerDecayLengthModel(
+            + OutboardSOLPowerDecayLengthModel(
                 self.data.physics.i_len_sol_outboard_power_decay
             ).description
             + " ",

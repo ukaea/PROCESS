@@ -13,7 +13,7 @@ from process.core.io.plot.summary.reporting.layouts import draw_bend
 from process.data_structure.physics_variables import DivertorNumberModels
 
 if TYPE_CHECKING:
-    import matplotlib.pyplot as plt
+    from matplotlib.axes import Axes
 
     from process.core.io.mfile import MFile
 
@@ -76,7 +76,7 @@ def plot_blkt_pipe_bends(fig, m_file, scan: int):
 
 
 def plot_blkt_structure(
-    ax: plt.Axes,
+    ax: Axes,
     m_file: MFile,
     scan: int,
     radial_build: dict[str, float],

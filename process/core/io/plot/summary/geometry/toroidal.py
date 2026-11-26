@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal
 
-import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import patches
 from matplotlib.path import Path as mplPath
@@ -32,13 +31,16 @@ from process.models.physics.current_drive import (
 from process.models.tfcoil.base import TFConductorModel
 
 if TYPE_CHECKING:
+    from matplotlib.axes import Axes
+
     from process.core.io.mfile import MFile
+
 
 __all__ = ["arc", "arc_fill", "toroidal_cross_section"]
 
 
 def toroidal_cross_section(
-    axis: plt.Axes,
+    axis: Axes,
     mfile: MFile,
     scan: int,
     demo_ranges: bool,
@@ -272,7 +274,7 @@ def toroidal_cross_section(
         axis.set_xlim(0.0, axis.get_xlim()[1])
 
 
-def arc(axis: plt.Axes, r, theta1=0, theta2=rtangle, style="solid"):
+def arc(axis: Axes, r, theta1=0, theta2=rtangle, style="solid"):
     """Plots an arc.
 
     Parameters
@@ -285,8 +287,6 @@ def arc(axis: plt.Axes, r, theta1=0, theta2=rtangle, style="solid"):
         starting polar angle (Default value = 0)
     theta2 :
         finishing polar angle (Default value = rtangle)
-    axis: plt.Axes :
-
     style :
          (Default value = "solid")
     """
@@ -296,7 +296,7 @@ def arc(axis: plt.Axes, r, theta1=0, theta2=rtangle, style="solid"):
     axis.plot(xs, ys, linestyle=style, color="black", lw=0.2)
 
 
-def arc_fill(axis: plt.Axes, r1, r2, color="pink", theta1=0, theta2=rtangle):
+def arc_fill(axis: Axes, r1, r2, color="pink", theta1=0, theta2=rtangle):
     """Fills the space between two quarter circles.
 
     Parameters
@@ -305,8 +305,6 @@ def arc_fill(axis: plt.Axes, r1, r2, color="pink", theta1=0, theta2=rtangle):
         plot object
     r1 :
         r2 radii to be filled
-    axis: plt.Axes :
-
     r2 :
 
     color :

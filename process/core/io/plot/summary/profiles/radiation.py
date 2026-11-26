@@ -18,7 +18,6 @@ from process.data_structure.impurity_radiation_variables import (
 from process.models.physics.profiles import calculate_profile_shell_contributions
 
 if TYPE_CHECKING:
-    import matplotlib.pyplot as plt
     from matplotlib.axes import Axes
 
     from process.core.io.mfile import MFile
@@ -34,13 +33,13 @@ __all__ = [
 
 
 def plot_line_brem_power_density_profile(
-    axis: plt.Axes, mfile: MFile, scan: int, impp: str, demo_ranges: bool
+    axis: Axes, mfile: MFile, scan: int, impp: str, demo_ranges: bool
 ):
     """Function to plot Line and Bremsstrahlung radiation power density [MW/m³] profile.
 
     Parameters
     ----------
-    axis : plt.Axes
+    axis : Axes
         axis object to add plot to
     mfile : MFile
         MFile object containing plasma and impurity profile information.
@@ -153,7 +152,7 @@ def plot_line_brem_power_density_profile(
 
 
 def plot_line_brem_loss_function_profile(
-    axis: plt.Axes,
+    axis: Axes,
     mfile: MFile,
     scan: int,
     impp: str,
@@ -162,7 +161,7 @@ def plot_line_brem_loss_function_profile(
 
     Parameters
     ----------
-    axis : plt.Axes
+    axis : Axes
         axis object to add plot to
     mfile : MFile
         MFile object containing plasma and impurity profile information.
@@ -234,7 +233,7 @@ def plot_line_brem_loss_function_profile(
 
 
 def plot_line_brem_power_profile(
-    axis: plt.Axes,
+    axis: Axes,
     mfile: MFile,
     scan: int,
     impp: str,
@@ -243,7 +242,7 @@ def plot_line_brem_power_profile(
 
     Parameters
     ----------
-    axis : plt.Axes
+    axis : Axes
         axis object to add plot to
     mfile : MFile
         MFile object containing plasma and impurity profile information.
@@ -534,7 +533,7 @@ def plot_rad_density_contour(axis: Axes, mfile: MFile, scan: int, impp: str):
     axis.tick_params(which="both", direction="in", top=True, right=True)
 
 
-def plot_plasma_pressure_gradient_profiles(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_plasma_pressure_gradient_profiles(axis: Axes, mfile: MFile, scan: int):
     """Plot plasma pressure gradient profiles"""
     # Get the plasma pressure profiles
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))

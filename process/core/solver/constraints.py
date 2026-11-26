@@ -1940,7 +1940,7 @@ def constraint_equation_91(constraint_registration, data):
     max_gyrotron_frequency: Max. av. gyrotron frequency
     te0_ecrh_achievable: Max. achievable electron temperature at ignition point
     """
-    # Achievable ECRH te needs to be larger than needed te for igntion
+    # Achievable ECRH te needs to be larger than needed te for ignition
     if (
         PlasmaIgnitionModel(data.physics.i_plasma_ignited)
         == PlasmaIgnitionModel.NON_IGNITED

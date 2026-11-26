@@ -23,6 +23,8 @@ from process.models.physics.profiles import (
 )
 
 if TYPE_CHECKING:
+    from matplotlib.axes import Axes
+
     from process.core.io.mfile import MFile
 
 
@@ -648,7 +650,7 @@ def plot_qprofile(prof, demo_ranges: bool, mfile: MFile, scan: int):
     )
 
 
-def plot_fusion_rate_density_profiles(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_fusion_rate_density_profiles(axis: Axes, mfile: MFile, scan: int):
     """Plot the fusion rate density profiles on the given axis"""
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
@@ -920,19 +922,19 @@ def plot_fusion_rate_density_profiles(axis: plt.Axes, mfile: MFile, scan: int):
 
 
 def plot_fusion_rate_profiles(
-    axis: plt.Axes, mfile: MFile, scan: int, zoom_axis: plt.Axes | None = None
+    axis: Axes, mfile: MFile, scan: int, zoom_axis: Axes | None = None
 ):
     """Plot the fusion rate profiles on the given axis
 
     Parameters
     ----------
-    axis : plt.Axes
+    axis : Axes
         The axis for the full (log scale) fusion rate profiles.
     mfile : MFile
         The MFILE data object.
     scan : int
         The scan number to use for extracting data.
-    zoom_axis : plt.Axes | None
+    zoom_axis : Axes | None
         If given, an axis on which only the cumulative total fusion rate is plotted
         on a linear scale.
     """
@@ -1085,7 +1087,7 @@ def plot_fusion_rate_profiles(
         zoom_axis.minorticks_on()
 
 
-def plot_plasma_pressure_profiles(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_plasma_pressure_profiles(axis: Axes, mfile: MFile, scan: int):
     """Plot the plasma pressure profiles on the given axis"""
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
@@ -1210,7 +1212,7 @@ def plot_plasma_pressure_profiles(axis: plt.Axes, mfile: MFile, scan: int):
         )
 
 
-def plot_plasma_poloidal_pressure_contours(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_plasma_poloidal_pressure_contours(axis: Axes, mfile: MFile, scan: int):
     """Plot plasma poloidal pressure contours inside the plasma boundary.
 
     This function visualizes the poloidal pressure distribution inside the plasma
@@ -1334,7 +1336,7 @@ def plot_fusion_rate_contours(fig1, fig2, mfile: MFile, scan: int):
     reaction_plot_grid(rminor, rmajor, kappa, r_grid, z_grid, dhe3_grid, dhe3_axes)
 
 
-def plot_beta_profiles(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_beta_profiles(axis: Axes, mfile: MFile, scan: int):
     """Plot the beta profiles on the given axis"""
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
@@ -1369,7 +1371,7 @@ def plot_beta_profiles(axis: plt.Axes, mfile: MFile, scan: int):
     axis.set_ylim(bottom=0.0)
 
 
-def plot_plasma_effective_charge_profile(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_plasma_effective_charge_profile(axis: Axes, mfile: MFile, scan: int):
     """Plot plasma effective charge profile"""
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 

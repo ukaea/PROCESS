@@ -22,7 +22,7 @@ from process.core.io.plot.summary.reporting.text import plot_info
 from process.data_structure.build_variables import TFCSRadialConfiguration
 
 if TYPE_CHECKING:
-    import matplotlib.pyplot as plt
+    from matplotlib.axes import Axes
 
     from process.core.io.mfile import MFile
 
@@ -30,7 +30,7 @@ if TYPE_CHECKING:
 __all__ = ["plot_geometry_info", "plot_lower_vertical_build", "plot_radial_build"]
 
 
-def plot_geometry_info(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_geometry_info(axis: Axes, mfile: MFile, scan: int):
     """Function to plot geometry info
 
     Parameters
@@ -70,7 +70,7 @@ def plot_geometry_info(axis: plt.Axes, mfile: MFile, scan: int):
     plot_info(axis, data, mfile, scan)
 
 
-def plot_radial_build(axis: plt.Axes, mfile: MFile, colour_scheme: Literal[1, 2]):
+def plot_radial_build(axis: Axes, mfile: MFile, colour_scheme: Literal[1, 2]):
     """Plots the radial build of a fusion device on the given matplotlib axis.
 
     This function visualizes the different layers/components of the machine's radial
@@ -258,9 +258,7 @@ def plot_radial_build(axis: plt.Axes, mfile: MFile, colour_scheme: Literal[1, 2]
     axis.set_xlabel("Radius [m]")
 
 
-def plot_lower_vertical_build(
-    axis: plt.Axes, mfile: MFile, colour_scheme: Literal[1, 2]
-):
+def plot_lower_vertical_build(axis: Axes, mfile: MFile, colour_scheme: Literal[1, 2]):
     """Plots the lower vertical build of a fusion device on the given matplotlib axis.
 
     This function visualizes the different layers/components of the machine's vertical

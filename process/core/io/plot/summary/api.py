@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from importlib import resources
 from pathlib import Path
-from typing import Literal
+from typing import TYPE_CHECKING, Literal
 
 import matplotlib.backends.backend_pdf as bpdf
 import matplotlib.pyplot as plt
@@ -158,6 +158,9 @@ from process.models.power import PumpingPowerModelTypes
 from process.models.tfcoil.base import TFConductorModel
 from process.models.tfcoil.superconducting import SuperconductingTFTurnType
 
+if TYPE_CHECKING:
+    from matplotlib.figure import Figure
+
 __all__ = ["create_thickness_builds", "main_plot", "plot_summary"]
 
 
@@ -167,7 +170,7 @@ def main_plot(
     imp: str = "../data/lz_non_corona_14_elements/",
     demo_ranges: bool = False,
     colour_scheme: Literal[1, 2] = 1,
-) -> list[plt.Figure]:
+) -> list[Figure]:
     """Function to create radial and vertical build plot on given figure.
 
     Parameters
@@ -947,9 +950,7 @@ def plot_summary(
 ):
     """Create the summary.pdf"""
 
-    def add_page_footer(
-        fig: plt.Figure, page_number: int, total_pages: int, run_label: str
-    ):
+    def add_page_footer(fig: Figure, page_number: int, total_pages: int, run_label: str):
         footer_text = f"{run_label}"
         fig.text(
             0.01,

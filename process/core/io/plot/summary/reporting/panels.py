@@ -6,7 +6,6 @@ import textwrap
 from typing import TYPE_CHECKING, Any, Literal
 
 import matplotlib as mpl
-import matplotlib.pyplot as plt
 import numpy as np
 
 from process.core.io.mfile import MFile, MFileErrorClass
@@ -19,13 +18,15 @@ from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.physics_variables import DivertorNumberModels
 
 if TYPE_CHECKING:
+    from matplotlib.axes import Axes
+
     from process.core.io.plot.summary.reporting.misc import RadialBuild
 
 
 __all__ = ["plot_cover_page", "plot_header", "plot_separatrix_power_split"]
 
 
-def plot_header(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_header(axis: Axes, mfile: MFile, scan: int):
     """Function to plot header info: date, rutitle etc
 
     Parameters
@@ -156,7 +157,7 @@ def plot_header(axis: plt.Axes, mfile: MFile, scan: int):
     plot_info(axis, data2, mfile, scan)
 
 
-def plot_separatrix_power_split(axis: plt.Axes, mfile: MFile, scan: int, colour_scheme):
+def plot_separatrix_power_split(axis: Axes, mfile: MFile, scan: int, colour_scheme):
     """Plot separatrix power split fractions as a bar chart."""
     plot_plasma(axis=axis, mfile=mfile, scan=scan, colour_scheme=colour_scheme)
     rmajor, rminor, kappa, dr_sep = mfile.get_variables(
@@ -362,7 +363,7 @@ def plot_separatrix_power_split(axis: plt.Axes, mfile: MFile, scan: int, colour_
 
 
 def plot_cover_page(
-    axis: plt.Axes,
+    axis: Axes,
     mfile: MFile,
     scan: int,
     fig,
@@ -374,13 +375,13 @@ def plot_cover_page(
 
     Parameters
     ----------
-    axis : plt.Axes
+    axis : Axes
         The matplotlib axis object to plot on.
     mfile : MFile
         The MFILE data object containing run info.
     scan : int
         The scan number to use for extracting data.
-    fig : plt.Figure
+    fig : Figure
         The matplotlib figure object for additional annotations.
     radial_build:
 

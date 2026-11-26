@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 import numpy as np
 
 if TYPE_CHECKING:
-    import matplotlib.pyplot as plt
+    from matplotlib.axes import Axes
 
     from process.core.io.mfile import MFile
 
@@ -45,12 +45,12 @@ def _var_label_formatting(var_label: str) -> str:
     return var_label
 
 
-def plot_equality_constraint_equations(axis: plt.Axes, m_file_data: MFile, scan: int):
+def plot_equality_constraint_equations(axis: Axes, m_file_data: MFile, scan: int):
     """Plot the equality constraints for a solution and their normalised residuals
 
     Parameters
     ----------
-    axis: plt.Axes :
+    axis: Axes :
 
     m_file_data: MFile :
 
@@ -129,13 +129,13 @@ def plot_equality_constraint_equations(axis: plt.Axes, m_file_data: MFile, scan:
     axis.legend()
 
 
-def plot_inequality_constraint_equations(axis: plt.Axes, m_file: MFile, scan: int):
+def plot_inequality_constraint_equations(axis: Axes, m_file: MFile, scan: int):
     """Plot the inequality constraints for a solution and where they lay within their
     bounds
 
     Parameters
     ----------
-    axis: plt.Axes :
+    axis: Axes :
 
     m_file: MFile :
 

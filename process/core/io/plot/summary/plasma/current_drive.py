@@ -12,6 +12,8 @@ from process.core.io.plot.summary.reporting.text import plot_info
 from process.models.physics.current_drive import ElectronBernstein, ElectronCyclotron
 
 if TYPE_CHECKING:
+    from matplotlib.axes import Axes
+
     from process.core.io.mfile import MFile
 
 __all__ = [
@@ -21,7 +23,7 @@ __all__ = [
 ]
 
 
-def plot_current_drive_info(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_current_drive_info(axis: Axes, mfile: MFile, scan: int):
     """Function to plot current drive info
 
     Parameters
@@ -200,7 +202,7 @@ def plot_current_drive_info(axis: plt.Axes, mfile: MFile, scan: int):
     plot_info(axis, data, mfile, scan)
 
 
-def plot_ebw_ecrh_coupling_graph(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_ebw_ecrh_coupling_graph(axis: Axes, mfile: MFile, scan: int):
     """Plot EBW and ECRH coupling efficiency graph"""
     ebw = ElectronBernstein(plasma_profile=0)
     ecrg = ElectronCyclotron(plasma_profile=0)
@@ -289,7 +291,7 @@ def plot_ebw_ecrh_coupling_graph(axis: plt.Axes, mfile: MFile, scan: int):
     axis.minorticks_on()
 
 
-def plot_bootstrap_comparison(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_bootstrap_comparison(axis: Axes, mfile: MFile, scan: int):
     """Function to plot a scatter box plot of bootstrap current fractions.
 
     Parameters

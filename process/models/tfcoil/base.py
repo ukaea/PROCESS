@@ -3366,7 +3366,7 @@ class TFCoil(Model):
             for ii in range(
                 (n_tf_bucking * n_radial_array), n_tf_layer * n_radial_array
             ):
-                # Addaped Von-mises stress calculation to WP strucure [Pa]
+                # Adapted Von-mises stress calculation to WP strucure [Pa]
 
                 svmxz = calculate_von_mises_stress(
                     stress_x=0.0e0,

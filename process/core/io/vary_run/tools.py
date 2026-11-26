@@ -17,8 +17,8 @@ from process.core.io.mfile import MFile
 from process.core.solver.iteration_variables import ITERATION_VARIABLES
 
 if TYPE_CHECKING:
+    from process.core.data_structure.base import DataStructure
     from process.core.io.vary_run import RunProcessConfig
-    from process.core.model import DataStructure
 from process.data_structure.numerics import SolverOutputCondition
 
 logger = logging.getLogger(__name__)

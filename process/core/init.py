@@ -658,7 +658,7 @@ def check_process(data, _inputs):
         # Disabled Forcing that no inboard breeding blanket is used
         # Disabled i_blkt_inboard = 0
 
-        # Check if the choice of plasma current is addapted for ST
+        # Check if the choice of plasma current is adapted for ST
         # 2 : Peng Ip scaling (See STAR code documentation)
         # 9 : Fiesta Ip scaling
         if data.physics.i_plasma_current not in {2, 9}:
@@ -745,10 +745,10 @@ def check_process(data, _inputs):
                         "Upper limit for cryo-al < 50 K"
                     )
 
-                # Otherwise intitialise the average conductor temperature at
+                # Otherwise initialise the average conductor temperature at
                 data.tfcoil.temp_cp_average = data.tfcoil.temp_cp_coolant_inlet
 
-        # Check if the boostrap current selection is addapted to ST
+        # Check if the boostrap current selection is adapted to ST
         if data.physics.i_bootstrap_current == 1:
             raise ProcessValidationError(
                 "Invalid boostrap current law for ST, do not use i_bootstrap_current = 1"
@@ -767,7 +767,7 @@ def check_process(data, _inputs):
             data.tfcoil.i_tf_shape = TFCoilShapeModel.PICTURE_FRAME
 
         # Warning stating that the CP fast neutron fluence calculation
-        # is not addapted for cryoaluminium calculations yet
+        # is not adapted for cryoaluminium calculations yet
         if (
             data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM
             and (
