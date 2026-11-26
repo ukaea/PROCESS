@@ -1,10 +1,13 @@
 from dataclasses import fields
+from typing import get_type_hints
 
 import pytest
 
 from process.core.data_structure.base import DataStructure
 
-DATA_STRUCTURES = {f.name: f.type() for f in fields(DataStructure)}
+type_hints = get_type_hints(DataStructure)
+
+DATA_STRUCTURES = {f.name: type_hints[f.name]() for f in fields(DataStructure())}
 
 
 @pytest.mark.parametrize(
