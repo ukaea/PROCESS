@@ -247,18 +247,17 @@ coefficients with the approximate geometry and profiles described below.
 
 Is selected by setting `i_bootstrap_current = 4`
 
-The model uses a circularised radius $\rho=\sqrt{A_{\rm plasma}/\pi}\,x$,
+The model uses a circularised radius $\rho=\sqrt{A_{\rm plasma}/\pi} \ x$,
 where $x=r/a$ and $A_{\rm plasma}$ is the supplied total poloidal
 cross-sectional area. Current integration assumes circular annuli,
-with $dA=2\pi\rho\,d\rho$. Elongation is not used as a separate input.
+with $dA=2\pi\rho \ d\rho$. Elongation is not used as a separate input.
 PROCESS assumes $q(x)=q_0+(q_{95}-q_0)x^2$ and a flat $Z_{\rm eff}$
 profile. The input $q_{95}$ therefore sets the value of this assumed profile
 at $x=1$.
 
-The electron density is floored at $10^{13}$ m$^{-3}$. The ion density
+The electron density is floored at $10^{13}$ $\text{m}^{-3}$. The ion density
 profile is assumed proportional to the electron profile:
-$n_i(x)=n_e(x)n_{i,\rm vol}/n_{e,\rm vol}$, where the subscript denotes a
-volume average. Thus their logarithmic density gradients are identical. These
+$n_i(x)=n_e(x) \frac{\langle n_{i} \rangle} {\langle n_{e} \rangle}$, where the brackets denote the volume average. Thus their logarithmic density gradients are identical. These
 profile assumptions, the density floor, and the parabolic $q$ profile are
 PROCESS choices, not requirements of the paper. Temperatures must be positive
 throughout the profiles used in the logarithmic gradients.
@@ -273,7 +272,7 @@ The expression below is the second equation in the paper's conclusions[^4],
 which assumes equal electron and ion logarithmic density gradients.
 
 $$
-\left\langle j_{\|} B\right\rangle= \sigma_{\text {neo }}\left\langle E_{\|} B\right\rangle-I(\psi) p(\psi)\left[\mathcal{L}_{31} \frac{\partial \ln n_e}{\partial \psi} \\
+\left\langle j_{\parallel} B\right\rangle= \sigma_{\text {neo }}\left\langle E_{\parallel} B\right\rangle-I(\psi) p(\psi)\left[\mathcal{L}_{31} \frac{\partial \ln n_e}{\partial \psi} \\
 +R_{p e}\left(\mathcal{L}_{31}+\mathcal{L}_{32}\right) \frac{\partial \ln T_e}{\partial \psi}+\left(1-R_{p e}\right) \times\left(1+\frac{\mathcal{L}_{34}}{\mathcal{L}_{31}} \alpha\right) \mathcal{L}_{31} \frac{\partial \ln T_i}{\partial \psi}\right]
 $$
 
@@ -456,8 +455,8 @@ $$
 \frac{q R n_i Z_i^4\ln\Lambda_{ii}}{T_i^2\epsilon^{3/2}}.
 $$
 
-In these equations, densities are in m$^{-3}$, temperatures in eV, and $R$ in
-metres. The implementation uses density profiles in m$^{-3}$ and converts
+In these equations, densities are in $\text{m}^{-3}$, temperatures in eV, and $R$ in
+metres. The implementation uses density profiles in $\text{m}^{-3}$ and converts
 temperatures from keV. It uses the volume-averaged
 effective charge for $Z_{\mathrm{eff}}$. The erratum explicitly specifies
 that $Z$ is $Z_{\mathrm{eff}}$ except in the ion collisionality and ion-ion
@@ -484,7 +483,7 @@ raising `ProcessValueError` otherwise.
 The implementation estimates the electron and ion pressures as
 
 $$
-p_s=1.602176634\times10^{-16}\,\bar n_s\bar T_s\ {\rm Pa},
+p_s=\overbrace{1.602176634\times10^{-16}}^{\text{keV}}\times\bar n_s\bar T_s\ {\rm Pa},
 \quad s\in\{e,i\},
 \qquad p_{\rm total}=p_e+p_i.
 $$
