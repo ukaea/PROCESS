@@ -23,7 +23,7 @@ from process.core.data_structure.input import (
     ValidInputTypes,
 )
 from process.core.exceptions import ProcessValidationError, ProcessValueError
-from process.core.io.in_dat.base import InDat
+from process.core.io.in_dat.base import InDat, INVariable
 from process.core.solver import iteration_variables
 from process.core.solver.constraints import ConstraintManager
 from process.data_structure.blanket_variables import BlanketData  # noqa: TC001
@@ -317,13 +317,8 @@ class DataStructure:
 
         Parameters
         ----------
-        in_dat: InDat
+        in_dat:
             The input file data from InDat
-
-        Raises
-        ------
-        ProcessValidationError
-            If bounds are not of the correct form of boundl(index) = value
 
         """
         # These need to be set to zero so the iteration variables are not counted
@@ -347,17 +342,19 @@ class DataStructure:
 
         return variables
 
-    def set_on_datastructure(self, variable_name, info, variables):
+    def set_on_datastructure(
+        self, variable_name: str, info: INVariable, variables: dict
+    ):
         """Set the values from the IN.DAT on the data structure, and store in
         variables dictionary
 
         Parameters
         ----------
-        variable_name: str
+        variable_name:
             The variable's name
-        info: INVariable
+        info:
             Information of a single variable from the IN.DAT file
-        variables: dict
+        variables:
             Dictionary of variables to be updated
         """
         variable_config = copy.copy(INPUT_VARIABLES.get(variable_name))
