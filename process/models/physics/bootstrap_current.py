@@ -1528,7 +1528,7 @@ class SauterBootstrapCurrent(Model):
         nd_plasma_electrons_vol_avg: float,
         q0: float,
         q95: float,
-        m_ions_total_amu: float,
+        m_ions_total_amu: float,  # noqa: ARG002
         f_plasma_fuel_helium3: float,
         b_plasma_toroidal_on_axis: float,
         plasma_current: float,
@@ -1549,6 +1549,8 @@ class SauterBootstrapCurrent(Model):
             The volume-averaged effective charge of the plasma (Z_eff) [-].
         nd_plasma_electron_profile:
             The electron density profile of the plasma [m⁻³].
+        roa:
+            Normalised minor-radius profile r/a [-].
         temp_plasma_electron_profile_kev:
             The electron temperature profile of the plasma [keV].
         temp_plasma_ion_profile_kev:
@@ -1562,7 +1564,8 @@ class SauterBootstrapCurrent(Model):
         q95:
             The edge safety factor at 95% of the minor radius [-].
         m_ions_total_amu:
-            The total ion mass in atomic mass units (amu) [-].
+            The total ion mass in atomic mass units (amu) [-]. Retained for
+            compatibility; the Sauter collisionality formula does not depend on it.
         f_plasma_fuel_helium3:
             The fraction of helium-3 in the plasma fuel [-].
         b_plasma_toroidal_on_axis:
@@ -1570,68 +1573,112 @@ class SauterBootstrapCurrent(Model):
         plasma_current:
             The total plasma current (I_p) [A].
 
-
-
         Returns
         -------
         :
             The calculated bootstrap current parameters.
 
+        Raises
+        ------
+        ProcessValueError
+            If the collisionality inputs are not positive and finite, or the
+            safety factor or elliptical-surface geometry is invalid.
+
         Notes
         -----
         This function calculates the bootstrap current fraction using the Sauter,
-        Angioni, and Lin-Liu scaling.
+        Angioni, and Lin-Liu scaling. The total ion density, including thermal
+        impurities and hot beam ions, is treated as one ion population at the
+        thermal ion temperature and with the effective main-ion charge. Fast-alpha
+        pressure is not included. This is a multispecies approximation, not the
+        single-ion model derived in the paper.
 
         """
-        # Local circularised minor radius
-        rho = np.sqrt(a_plasma_poloidal / np.pi) * roa
+        if not np.isfinite(a_plasma_poloidal) or a_plasma_poloidal <= 0:
+            raise ProcessValueError(
+                "Sauter elliptical surfaces require a finite, positive plasma area",
+                a_plasma_poloidal=a_plasma_poloidal,
+            )
+
+        if not np.isfinite(rminor) or rminor <= 0:
+            raise ProcessValueError(
+                "Sauter elliptical surfaces require a finite, positive minor radius",
+                rminor=rminor,
+            )
+        kappa_effective = a_plasma_poloidal / (np.pi * rminor**2)
+        r_horizontal = rminor * roa
+        # Area-equivalent radius keeps the existing annulus areas and gradients.
+        r_area = np.sqrt(a_plasma_poloidal / np.pi) * roa
+
+        if (
+            not np.isfinite(rmajor)
+            or rmajor <= 0
+            or not np.isfinite(kappa_effective)
+            or kappa_effective <= 0
+            or not np.all(np.isfinite(r_horizontal))
+            or np.any(r_horizontal < 0)
+            or np.any(r_horizontal >= rmajor)
+        ):
+            raise ProcessValueError(
+                "Sauter elliptical surfaces require 0 <= r_horizontal < rmajor "
+                "and a finite, positive rmajor",
+                rmajor=rmajor,
+                rminor=rminor,
+                a_plasma_poloidal=a_plasma_poloidal,
+            )
 
         # Square root of local aspect ratio
         inverse_aspect = (rminor / rmajor) * roa
         sqrt_inverse_aspect = np.sqrt(inverse_aspect)
 
-        # Calculate electron and ion density profiles
-        ne = nd_plasma_electron_profile * 1e-19
+        # Prevent log(0) using the existing density floor in m⁻³.
+        nd_plasma_electron_profile = np.maximum(nd_plasma_electron_profile, 1.0e13)
+        nd_plasma_ions_total_profile = (
+            nd_plasma_ions_total_vol_avg / nd_plasma_electrons_vol_avg
+        ) * nd_plasma_electron_profile
 
-        # Prevent log(0) in Sauter bootstrap calculation
-        ne = np.maximum(ne, 1.0e-6)
-
-        ni = (nd_plasma_ions_total_vol_avg / nd_plasma_electrons_vol_avg) * ne
-
-        # Flat Zeff profile assumed
-        # Return tempi like array object filled with zeff
-        zeff = np.full_like(
-            temp_plasma_ion_profile_kev, n_charge_plasma_effective_vol_avg
+        # Flat effective charge profile assumed
+        n_charge_plasma_effective_profile = np.full_like(
+            temp_plasma_ion_profile_kev, n_charge_plasma_effective_vol_avg, dtype=float
         )
 
-        # inverse_q = 1/safety factor
         # Parabolic q profile assumed
-        inverse_q = 1 / (q0 + (q95 - q0) * roa**2)
-        # Create new array of average mass of fuel portion of ions
-        amain = np.full_like(inverse_q, m_ions_total_amu)
-
+        if not np.isfinite(q0) or q0 <= 0 or not np.isfinite(q95) or q95 <= 0:
+            raise ProcessValueError(
+                "Sauter safety factors q0 and q95 must be positive and finite",
+                q0=q0,
+                q95=q95,
+            )
+        q_profile = q0 + (q95 - q0) * roa**2
+        if not np.all(np.isfinite(q_profile)) or np.any(q_profile <= 0):
+            raise ProcessValueError(
+                "Sauter safety factor profile must be positive and finite",
+                q0=q0,
+                q95=q95,
+            )
+        inverse_q = 1 / q_profile
         # Create new array of average main ion charge
         zmain = np.full_like(inverse_q, 1.0 + f_plasma_fuel_helium3)
 
         # Calculate total bootstrap current (MA) by summing along profiles
         # Looping from 2 because _calculate_l31_coefficient() etc should return 0
         # @ j == 1
-        radial_elements = np.arange(2, len(ne))
+        radial_elements = np.arange(2, len(nd_plasma_electron_profile))
 
-        # Change in localised minor radius to be used as delta term in derivative
-        drho = rho[radial_elements] - rho[radial_elements - 1]
-
-        # Area of annulus, assuming circular plasma cross-section
-        da = 2 * np.pi * rho[radial_elements - 1] * drho  # area of annulus
+        # Annulus area for self-similar ellipses.
+        dr_area = r_area[radial_elements] - r_area[radial_elements - 1]
+        da = 2 * np.pi * r_area[radial_elements - 1] * dr_area
 
         # Create the partial derivatives using numpy gradient (central differences)
-        dlogte_drho = np.gradient(np.log(temp_plasma_electron_profile_kev), rho)[
+        dlogte_dr_area = np.gradient(np.log(temp_plasma_electron_profile_kev), r_area)[
             radial_elements - 1
         ]
-        dlogti_drho = np.gradient(np.log(temp_plasma_ion_profile_kev), rho)[
+        dlogti_dr_area = np.gradient(np.log(temp_plasma_ion_profile_kev), r_area)[
             radial_elements - 1
         ]
-        dlogne_drho = np.gradient(np.log(ne), rho)[radial_elements - 1]
+        dlogne_dr_area = np.gradient(np.log(nd_plasma_electron_profile), r_area)[
+            radial_elements - 1
+        ]
 
         # Calculate trapped particle fraction
         f_trapped_particles = self._trapped_particle_fraction_sauter(
@@ -1640,46 +1687,45 @@ class SauterBootstrapCurrent(Model):
             sqrt_inverse_aspect=sqrt_inverse_aspect,
         )
 
-        # Calculated electron collisionality; nu_e*
+        # Calculate normalised electron collisionality
         normalised_electron_collisionality = self._electron_collisionality_sauter(
             radial_elements=radial_elements,
             rmajor=rmajor,
-            zeff=zeff,
+            n_charge_plasma_effective=n_charge_plasma_effective_profile,
             inverse_q=inverse_q,
             sqrt_inverse_aspect=sqrt_inverse_aspect,
-            tempe=temp_plasma_electron_profile_kev,
-            ne=ne,
+            temp_plasma_electron_profile_kev=temp_plasma_electron_profile_kev,
+            nd_plasma_electron_profile=nd_plasma_electron_profile,
         )
 
-        # Calculate the ion collisionality
+        # Calculate normalised ion collisionality
         normalised_ion_collisionality = self._ion_collisionality_sauter(
             radial_elements=radial_elements,
             rmajor=rmajor,
             inverse_q=inverse_q,
             sqrt_inverse_aspect=sqrt_inverse_aspect,
-            tempi=temp_plasma_ion_profile_kev,
-            amain=amain,
-            zeff=zmain,
-            ni=ni,
+            temp_plasma_ion_profile_kev=temp_plasma_ion_profile_kev,
+            n_charge_main_ion=zmain,
+            nd_plasma_ion_profile=nd_plasma_ions_total_profile,
         )
 
         l31_coefficient = self._calculate_l31_coefficient(
             radial_elements=radial_elements,
             f_trapped_particles=f_trapped_particles,
             normalised_electron_collisionality=normalised_electron_collisionality,
-            zeff=zeff,
+            zeff=n_charge_plasma_effective_profile,
         )
         l32_coefficient = self._calculate_l32_coefficient(
             radial_elements=radial_elements,
             f_trapped_particles=f_trapped_particles,
-            zeff=zeff,
+            zeff=n_charge_plasma_effective_profile,
             normalised_electron_collisionality=normalised_electron_collisionality,
         )
         l34_coefficient = self._calculate_l34_coefficient(
             radial_elements=radial_elements,
             f_trapped_particles=f_trapped_particles,
             normalised_electron_collisionality=normalised_electron_collisionality,
-            zeff=zeff,
+            zeff=n_charge_plasma_effective_profile,
         )
         alpha_0 = self._calculate_alpha_0_coefficient(
             f_trapped_particles=f_trapped_particles
@@ -1690,52 +1736,63 @@ class SauterBootstrapCurrent(Model):
             normalised_ion_collisionality=normalised_ion_collisionality,
         )
 
-        beta_poloidal_electron = self._beta_poloidal_sauter(
-            radial_elements,
-            len(ne),
-            rmajor,
-            b_plasma_toroidal_on_axis,
-            ne,
-            temp_plasma_electron_profile_kev,
-            inverse_q,
-            rho,
+        previous = radial_elements - 1
+        ne_mid = 0.5 * (
+            nd_plasma_electron_profile[radial_elements]
+            + nd_plasma_electron_profile[previous]
         )
-        beta_poloidal_total = self._beta_poloidal_total_sauter(
-            radial_elements,
-            len(ne),
-            rmajor,
-            b_plasma_toroidal_on_axis,
-            ne,
-            ni,
-            temp_plasma_electron_profile_kev,
-            temp_plasma_ion_profile_kev,
-            inverse_q,
-            rho,
+        ni_mid = 0.5 * (
+            nd_plasma_ions_total_profile[radial_elements]
+            + nd_plasma_ions_total_profile[previous]
+        )
+        te_mid = 0.5 * (
+            temp_plasma_electron_profile_kev[radial_elements]
+            + temp_plasma_electron_profile_kev[previous]
+        )
+        ti_mid = 0.5 * (
+            temp_plasma_ion_profile_kev[radial_elements]
+            + temp_plasma_ion_profile_kev[previous]
+        )
+        # Convert density in m⁻³ and temperature in keV to pressure in Pa.
+        pressure_electron = constants.KILOELECTRON_VOLT * ne_mid * te_mid
+        pressure_ion = constants.KILOELECTRON_VOLT * ni_mid * ti_mid
+        pressure_total = pressure_electron + pressure_ion
+
+        # Effective field, not the local field on an elliptical flux surface.
+        field_scale = b_plasma_toroidal_on_axis * r_area[previous] / rmajor
+        poloidal_field_effective = field_scale * inverse_q[previous]
+
+        # Ion density follows the electron density, so both share this gradient.
+        density_gradient_term = pressure_total * l31_coefficient * dlogne_dr_area
+        electron_temperature_term = (
+            pressure_electron * (l31_coefficient + l32_coefficient) * dlogte_dr_area
+        )
+        ion_temperature_term = (
+            pressure_ion * (l31_coefficient + l34_coefficient * alpha) * dlogti_dr_area
         )
 
-        jboot = (
-            0.5
-            * (
-                beta_poloidal_total * l31_coefficient * dlogne_drho
-                + beta_poloidal_electron
-                * (l31_coefficient + l32_coefficient)
-                * dlogte_drho
-                + (beta_poloidal_total - beta_poloidal_electron)
-                * (l31_coefficient + l34_coefficient * alpha)
-                * dlogti_drho
-            )
-            * 1.0e6
-            * (
-                -b_plasma_toroidal_on_axis
-                / (0.2 * np.pi * rmajor)
-                * rho[radial_elements - 1]
-                * inverse_q[radial_elements - 1]
-            )
+        j_bootstrap_toroidal = (
+            -(density_gradient_term + electron_temperature_term + ion_temperature_term)
+            / poloidal_field_effective
         )  # A/m2
 
+        # Elliptical surfaces with j_parallel / B constant on each surface.
+        epsilon_horizontal = r_horizontal[previous] / rmajor
+        geometry_root = np.sqrt(1.0 - epsilon_horizontal**2)
+        field_pitch_scale = (
+            kappa_effective * epsilon_horizontal * inverse_q[previous] / geometry_root
+        )
+        shape_average = (1.0 + geometry_root / kappa_effective**2) / (
+            1.0 + geometry_root
+        )
+        j_bootstrap_toroidal *= geometry_root / (
+            1.0 + field_pitch_scale**2 * shape_average
+        )
+
         return SauterBootstrapCurrentParams(
-            f_cur_plasma_bootstrap=np.sum(da * jboot, axis=0) / plasma_current,
-            j_bootstrap=jboot,
+            f_cur_plasma_bootstrap=np.sum(da * j_bootstrap_toroidal, axis=0)
+            / plasma_current,
+            j_bootstrap=j_bootstrap_toroidal,
             f_trapped_particles=f_trapped_particles,
             normalised_electron_collisionality=normalised_electron_collisionality,
             normalised_ion_collisionality=normalised_ion_collisionality,
@@ -1750,220 +1807,182 @@ class SauterBootstrapCurrent(Model):
         )
 
     @staticmethod
-    @nb.njit(cache=True)
-    def _coulomb_logarithm_sauter(
-        radial_elements: int, tempe: np.ndarray, ne: np.ndarray
-    ) -> np.ndarray:
-        """Calculate the Coulomb logarithm used in the arrays for the Sauter bootstrap
-        current scaling.
-
-        This function calculates the Coulomb logarithm, which is valid for e-e
-        collisions (T_e > 0.01 keV) and for e-i collisions (T_e > 0.01*Zeff^2)
-        (Alexander, 9/5/1994).
-
-        Parameters
-        ----------
-        radial_elements:
-            The radial element indexes in the range 1 to nr.
-        tempe:
-            The electron temperature array.
-        ne:
-            The electron density array.
-
-        Returns
-        -------
-        :
-            The Coulomb logarithm at each array point.
-
-        References
-        ----------
-        C. A. Ordonez, M. I. Molina;
-        Evaluation of the Coulomb logarithm using cutoff and screened Coulomb
-        interaction potentials. Phys. Plasmas 1 August 1994; 1 (8): 2515-2518.
-        https://doi.org/10.1063/1.870578
-
-        Y. R. Shen, "Recent advances in nonlinear optics," Reviews of Modern Physics,
-        vol. 48, no. 1,pp. 1-32, Jan. 1976,
-        doi: https://doi.org/10.1103/revmodphys.48.1.
-        """
-        return (
-            15.9
-            - 0.5 * np.log(ne[radial_elements - 1])
-            + np.log(tempe[radial_elements - 1])
-        )
-
-    def _electron_collisions_sauter(
-        self, radial_elements: np.ndarray, tempe: np.ndarray, ne: np.ndarray
-    ) -> np.ndarray:
-        """Calculate the frequency of electron-electron collisions used in the arrays
-        for the Sauter bootstrap current scaling.
-
-        Parameters
-        ----------
-        radial_elements:
-            The radial element indexes in the range 1 to nr.
-        tempe:
-            The electron temperature array.
-        ne:
-            The electron density array.
-
-        Returns
-        -------
-        :
-            The frequency of electron-electron collisions (Hz).
-
-        References
-        ----------
-        Yushmanov, 25th April 1987 (?), updated by Pereverzev, 9th November 1994 (?)
-        """
-        return (
-            670.0
-            * self._coulomb_logarithm_sauter(radial_elements, tempe, ne)
-            * ne[radial_elements - 1]
-            / (tempe[radial_elements - 1] * np.sqrt(tempe[radial_elements - 1]))
-        )
-
     def _electron_collisionality_sauter(
-        self,
         radial_elements: np.ndarray,
         rmajor: float,
-        zeff: np.ndarray,
+        n_charge_plasma_effective: float | np.ndarray,
         inverse_q: np.ndarray,
-        sqrt_inverse_aspect: np.ndarray,
-        tempe: np.ndarray,
-        ne: np.ndarray,
+        sqrt_inverse_aspect: float | np.ndarray,
+        temp_plasma_electron_profile_kev: float | np.ndarray,
+        nd_plasma_electron_profile: float | np.ndarray,
     ) -> np.ndarray:
-        """Calculate the electron collisionality used in the arrays for the Sauter
-        bootstrap current scaling.
+        """Calculate normalized electron collisionality (νₑ⁎) using Sauter Eqs. 18b
+        and 18d.
 
         Parameters
         ----------
         radial_elements:
             The radial element index in the range 1 to nr.
         rmajor:
-            The plasma major radius (m).
-        zeff:
-            The effective charge array.
+            The plasma major radius (R) [m].
+        n_charge_plasma_effective:
+            Plasma effective charge (Z_eff) [-].
         inverse_q:
-            Inverse safety factor profile.
+            Inverse safety factor profile [-].
         sqrt_inverse_aspect:
-            The square root of the inverse aspect ratio array.
-        tempe:
-            The electron temperature array.
-        ne:
-            The electron density array.
+            The square root of the inverse aspect ratio array (√ε) [-].
+        temp_plasma_electron_profile_kev:
+            The electron temperature profile [keV].
+        nd_plasma_electron_profile:
+            The electron density profile [m⁻³].
 
         Returns
         -------
-        :
-            The relative frequency of electron collisions.
+        np.ndarray
+            The normalized electron collisionality (νₑ⁎).
+
+        Raises
+        ------
+        ProcessValueError
+            If an input to the selected points is non-positive or non-finite.
+
+        Notes
+        -----
+        - The normalised electron collisionality (νₑ⁎) is calculated from the
+        electron-electron coulomb logarithm given by Equation 18d in reference [1].
+        This is then used in the full equation in Equation 18b.
+
 
         References
         ----------
-        Yushmanov, 30th April 1987 (?)
-        """
+        [1] O. Sauter, C. Angioni, Y. R. Lin-Liu;
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime.
+        Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
+        """  # noqa: RUF002
+        selected = radial_elements - 1
+        ne_si = nd_plasma_electron_profile[selected]
+        temp_plasma_electron_profile_ev = (
+            temp_plasma_electron_profile_kev[selected] * 1.0e3
+        )
+        inverse_q_selected = inverse_q[selected]
+        if not all(
+            np.all(np.isfinite(value) & (value > 0))
+            for value in (
+                ne_si,
+                temp_plasma_electron_profile_ev,
+                inverse_q_selected,
+                n_charge_plasma_effective[selected],
+                sqrt_inverse_aspect[selected],
+                rmajor,
+            )
+        ):
+            raise ProcessValueError(
+                "Sauter electron collisionality inputs must be positive and finite."
+            )
+        # Electron-electron Coulomb logarithm given by Equation 18d in reference [1]
+        log_lambda_e = 31.3 - np.log(np.sqrt(ne_si) / temp_plasma_electron_profile_ev)
         return (
-            self._electron_collisions_sauter(radial_elements, tempe, ne)
-            * 1.4
-            * zeff[radial_elements - 1]
+            6.921e-18
             * rmajor
-            / np.abs(
-                inverse_q[radial_elements - 1]
-                * (sqrt_inverse_aspect[radial_elements - 1] ** 3)
-                * np.sqrt(tempe[radial_elements - 1])
-                * 1.875e7
+            * ne_si
+            * n_charge_plasma_effective[selected]
+            * log_lambda_e
+            / (
+                inverse_q_selected
+                * temp_plasma_electron_profile_ev**2
+                * sqrt_inverse_aspect[selected] ** 3
             )
         )
 
     @staticmethod
-    @nb.njit(cache=True)
-    def _ion_collisions_sauter(
-        radial_elements: np.ndarray,
-        zeff: np.ndarray,
-        ni: np.ndarray,
-        tempi: np.ndarray,
-        amain: np.ndarray,
-    ) -> np.ndarray:
-        """Calculate the full frequency of ion collisions used in the arrays for the
-         Sauter bootstrap current scaling.
-
-        This function calculates the full frequency of ion collisions using the Coulomb
-        logarithm of 15.
-
-        Parameters
-        ----------
-        radial_elements:
-            The radial element indexes in the range 1 to nr.
-        zeff:
-            The effective charge array.
-        ni:
-            The ion density array.
-        tempi:
-            The ion temperature array.
-        amain:
-            The atomic mass of the main ion species array.
-
-        Returns
-        -------
-        :
-            The full frequency of ion collisions (Hz).
-        """
-        return (
-            zeff[radial_elements - 1] ** 4
-            * ni[radial_elements - 1]
-            * 322.0
-            / (
-                tempi[radial_elements - 1]
-                * np.sqrt(tempi[radial_elements - 1] * amain[radial_elements - 1])
-            )
-        )
-
     def _ion_collisionality_sauter(
-        self,
         radial_elements: np.ndarray,
         rmajor: float,
         inverse_q: np.ndarray,
         sqrt_inverse_aspect: np.ndarray,
-        tempi: np.ndarray,
-        amain: np.ndarray,
-        zeff: np.ndarray,
-        ni: np.ndarray,
-    ) -> float:
-        """Calculate the ion collisionality to be used in the Sauter bootstrap current
-          scaling.
+        temp_plasma_ion_profile_kev: np.ndarray,
+        n_charge_main_ion: np.ndarray,
+        nd_plasma_ion_profile: np.ndarray,
+    ) -> np.ndarray:
+        """Calculate normalized ion collisionality (νᵢ⁎) using Sauter Eqs. 18c and 18e.
 
         Parameters
         ----------
         radial_elements:
             The radial element indexes in the range 1 to nr.
         rmajor:
-            The plasma major radius (m).
+            The plasma major radius (R₀) [m].
         inverse_q:
-            Inverse safety factor profile.
+            Inverse safety factor profile [-].
         sqrt_inverse_aspect:
-            The square root of the inverse aspect ratio profile.
-        tempi:
-            The ion temperature profile (keV).
-        amain:
-            The atomic mass of the main ion species profile.
-        zeff:
-            The effective charge of the main ion species.
-        ni:
-            The ion density profile (/m³).
+            The square root of the inverse aspect ratio profile [-].
+        temp_plasma_ion_profile_kev:
+            The ion temperature profile [keV].
+        n_charge_main_ion : np.ndarray
+            The charge of the main ion species [-].
+        nd_plasma_ion_profile : np.ndarray
+            The ion density profile [m⁻³].
 
         Returns
         -------
-        :
-            The ion collisionality.
-        """
+        np.ndarray
+            The normalized ion collisionality (νᵢ⁎).
+
+        Raises
+        ------
+        ProcessValueError
+            If an input to the selected points is non-positive or non-finite.
+
+        Notes
+        -----
+        - The normalised electron collisionality (νₑ⁎) is calculated from the
+        electron-electron coulomb logarithm given by Equation 18e in reference [1].
+        This is then used in the full equation in Equation 18c.
+
+
+        References
+        ----------
+        [1] O. Sauter, C. Angioni, Y. R. Lin-Liu;
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime.
+        Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
+
+        """  # noqa: RUF002
+        selected = radial_elements - 1
+        ni_si = nd_plasma_ion_profile[selected]
+        temp_plasma_ion_profile_ev = temp_plasma_ion_profile_kev[selected] * 1.0e3
+        zion_selected = n_charge_main_ion[selected]
+        inverse_q_selected = inverse_q[selected]
+        if not all(
+            np.all(np.isfinite(value) & (value > 0))
+            for value in (
+                ni_si,
+                temp_plasma_ion_profile_ev,
+                zion_selected,
+                inverse_q_selected,
+                sqrt_inverse_aspect[selected],
+                rmajor,
+            )
+        ):
+            raise ProcessValueError(
+                "Sauter ion collisionality inputs must be positive and finite."
+            )
+        # Calculate the ion-ion Coulomb logarithm. Given by Equation 18e in
+        # reference [1].
+        log_lambda_ii = 30.0 - np.log(
+            zion_selected**3 * np.sqrt(ni_si) / temp_plasma_ion_profile_ev**1.5
+        )
         return (
-            3.2e-6
-            * self._ion_collisions_sauter(radial_elements, zeff, ni, tempi, amain)
+            4.90e-18
             * rmajor
+            * ni_si
+            * zion_selected**4
+            * log_lambda_ii
             / (
-                np.abs(inverse_q[radial_elements - 1] + 1.0e-4)
-                * sqrt_inverse_aspect[radial_elements - 1] ** 3
-                * np.sqrt(tempi[radial_elements - 1] / amain[radial_elements - 1])
+                inverse_q_selected
+                * temp_plasma_ion_profile_ev**2
+                * sqrt_inverse_aspect[selected] ** 3
             )
         )
 
@@ -2506,143 +2525,6 @@ class SauterBootstrapCurrent(Model):
             ((1.0 + 1.4 / (n_charge_plasma_effective + 1.0)) * x)
             - (1.9 / (n_charge_plasma_effective + 1.0) * x**2)
             + ((0.3 * x**3 + 0.2 * x**4) / (n_charge_plasma_effective + 1.0))
-        )
-
-    @staticmethod
-    @nb.njit(cache=True)
-    def _beta_poloidal_sauter(
-        radial_elements: np.ndarray,
-        nr: int,
-        rmajor: float,
-        b_plasma_toroidal_on_axis: float,
-        ne: np.ndarray,
-        tempe: np.ndarray,
-        inverse_q: np.ndarray,
-        rho: np.ndarray,
-    ) -> np.ndarray:
-        """Calculate the local beta poloidal using only electron profiles for the Sauter
-        bootstrap current scaling.
-
-        Parameters
-        ----------
-        radial_elements:
-            Radial element indexes in range 1 to nr.
-        nr:
-            Maximum value of radial_elements.
-        rmajor:
-            Plasma major radius (m).
-        b_plasma_toroidal_on_axis:
-            Toroidal field on axis (T).
-        ne:
-            Electron density profile (/m³).
-        tempe:
-            Electron temperature profile (keV).
-        inverse_q:
-            Inverse safety factor profile.
-        rho:
-            Normalized minor radius profile.
-
-        Returns
-        -------
-        :
-            The local beta poloidal.
-        """
-        return (
-            np.where(
-                radial_elements != nr,
-                1.6e-4
-                * np.pi
-                * (ne[radial_elements] + ne[radial_elements - 1])
-                * (tempe[radial_elements] + tempe[radial_elements - 1]),
-                6.4e-4 * np.pi * ne[radial_elements - 1] * tempe[radial_elements - 1],
-            )
-            * (
-                rmajor
-                / (
-                    b_plasma_toroidal_on_axis
-                    * rho[radial_elements - 1]
-                    * np.abs(inverse_q[radial_elements - 1] + 1.0e-4)
-                )
-            )
-            ** 2
-        )
-
-    @staticmethod
-    @nb.njit(cache=True)
-    def _beta_poloidal_total_sauter(
-        radial_elements: np.ndarray,
-        nr: int,
-        rmajor: float,
-        b_plasma_toroidal_on_axis: float,
-        ne: np.ndarray,
-        ni: np.ndarray,
-        tempe: np.ndarray,
-        tempi: np.ndarray,
-        inverse_q: np.ndarray,
-        rho: np.ndarray,
-    ) -> np.ndarray:
-        """Calculate the local beta poloidal including ion pressure for the Sauter
-        bootstrap current scaling.
-
-        Parameters
-        ----------
-        radial_elements:
-            Radial element indexes in range 1 to nr.
-        nr:
-            Maximum value of radial_elements.
-        rmajor:
-            Plasma major radius (m).
-        b_plasma_toroidal_on_axis:
-            Toroidal field on axis (T).
-        ne:
-            Electron density profile (/m³).
-        ni:
-            Ion density profile (/m³).
-        tempe:
-            Electron temperature profile (keV).
-        tempi:
-            Ion temperature profile (keV).
-        inverse_q:
-            Inverse safety factor profile.
-        rho:
-            Normalized minor radius profile.
-
-        Returns
-        -------
-        :
-            The local total beta poloidal.
-        """
-        return (
-            np.where(
-                radial_elements != nr,
-                1.6e-4
-                * np.pi
-                * (
-                    (
-                        (ne[radial_elements] + ne[radial_elements - 1])
-                        * (tempe[radial_elements] + tempe[radial_elements - 1])
-                    )
-                    + (
-                        (ni[radial_elements] + ni[radial_elements - 1])
-                        * (tempi[radial_elements] + tempi[radial_elements - 1])
-                    )
-                ),
-                6.4e-4
-                * np.pi
-                * (
-                    ne[radial_elements - 1] * tempe[radial_elements - 1]
-                    + ni[radial_elements - 1] * tempi[radial_elements - 1]
-                ),
-            )
-            * (
-                rmajor
-                / (
-                    b_plasma_toroidal_on_axis
-                    * rho[radial_elements - 1]
-                    * np.abs(inverse_q[radial_elements - 1] + 1.0e-4)
-                )
-            )
-            ** 2
         )
 
     @staticmethod

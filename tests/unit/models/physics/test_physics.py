@@ -6,6 +6,7 @@ import numpy as np
 import pytest
 
 from process.core import constants
+from process.core.exceptions import ProcessValueError
 from process.data_structure.physics_variables import (
     ConfinementRadiationLossModel,
     ConfinementTimeModel,
@@ -410,7 +411,7 @@ class BootstrapFractionSauterParam(NamedTuple):
             radius_plasma_pedestal_temp_norm=0.9400000000000001,
             alphat=1.45,
             n_plasma_profile_elements=501,
-            expected_bfs=0.4052168782500341,
+            expected_bfs=0.3790845895596959,
         ),
     ],
 )
@@ -531,6 +532,296 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
         physics.data.physics.j_plasma_bootstrap_sauter_profile,
         sauter_result.j_bootstrap,
     )
+
+    full_r_area = (
+        np.sqrt(physics.data.physics.a_plasma_poloidal / np.pi)
+        * physics.plasma_profile.neprofile.profile_x
+    )
+    annulus_areas = 2 * np.pi * full_r_area[1:-1] * np.diff(full_r_area)[1:]
+    assert physics.data.current_drive.f_c_plasma_bootstrap == pytest.approx(
+        1.5
+        * np.sum(annulus_areas * sauter_result.j_bootstrap)
+        / physics.data.physics.plasma_current
+    )
+
+
+def test_sauter_collisionalities_match_paper(physics):
+    sauter = physics.plasma_bootstrap_current.sauter_bootstrap
+    radial_elements = np.array([2, 3])
+    ne = np.array([10.0, 10.0, 4.0, 2.0]) * 1.0e19
+    ni = np.array([10.0, 10.0, 3.0, 1.0]) * 1.0e19
+    tempe = np.array([10.0, 10.0, 2.0, 1.0])
+    tempi = np.array([10.0, 10.0, 3.0, 1.0])
+    zeff = np.array([2.0, 2.0, 3.0, 2.0])
+    zmain = np.array([1.0, 1.0, 1.5, 1.0])
+    inverse_q = np.array([0.5, 0.5, 0.25, 0.2])
+    sqrt_inverse_aspect = np.sqrt(np.array([0.1, 0.1, 0.2, 0.3]))
+    selected = radial_elements - 1
+    ne_si = ne[selected]
+    ni_si = ni[selected]
+    te_ev = tempe[selected] * 1.0e3
+    ti_ev = tempi[selected] * 1.0e3
+    log_e = 31.3 - np.log(np.sqrt(ne_si) / te_ev)
+    log_i = 30.0 - np.log(zmain[selected] ** 3 * np.sqrt(ni_si) / ti_ev**1.5)
+    denominator = inverse_q[selected] * sqrt_inverse_aspect[selected] ** 3
+
+    electron = sauter._electron_collisionality_sauter(
+        radial_elements, 6.0, zeff, inverse_q, sqrt_inverse_aspect, tempe, ne
+    )
+    np.testing.assert_allclose(
+        electron,
+        6.921e-18 * 6.0 * ne_si * zeff[selected] * log_e / te_ev**2 / denominator,
+    )
+    ion = sauter._ion_collisionality_sauter(
+        radial_elements, 6.0, inverse_q, sqrt_inverse_aspect, tempi, zmain, ni
+    )
+    np.testing.assert_allclose(
+        ion,
+        4.90e-18 * 6.0 * ni_si * zmain[selected] ** 4 * log_i / ti_ev**2 / denominator,
+    )
+    assert electron[0] == pytest.approx(0.0918402476)
+    assert ion[0] == pytest.approx(0.0386566936)
+
+
+@pytest.mark.parametrize("zeff", [1.0, 2.5])
+def test_sauter_uses_effective_charge_for_electron_collisionality(physics, zeff):
+    sauter = physics.plasma_bootstrap_current.sauter_bootstrap
+    roa = np.linspace(0.0, 1.0, 5)
+    ne = np.full(5, 1.0e20)
+    te = np.full(5, 10)
+    result = sauter.bootstrap_fraction_sauter(
+        a_plasma_poloidal=np.pi,
+        rminor=1.0,
+        rmajor=6.0,
+        triang=0.0,
+        n_charge_plasma_effective_vol_avg=zeff,
+        nd_plasma_electron_profile=ne,
+        roa=roa,
+        temp_plasma_electron_profile_kev=te,
+        temp_plasma_ion_profile_kev=te,
+        nd_plasma_ions_total_vol_avg=0.8e20,
+        nd_plasma_electrons_vol_avg=1e20,
+        q0=1.0,
+        q95=3.0,
+        m_ions_total_amu=2.5,
+        f_plasma_fuel_helium3=0.25,
+        b_plasma_toroidal_on_axis=5.0,
+        plasma_current=1e7,
+    )
+    q = 1.0 + 2.0 * roa[1:-1] ** 2
+    epsilon = roa[1:-1] / 6.0
+    log_lambda = 31.3 - np.log(np.sqrt(1e20) / 1e4)
+    expected = 6.921e-18 * q * 6.0 * 1e20 * zeff * log_lambda / (1e4**2 * epsilon**1.5)
+    np.testing.assert_allclose(result.normalised_electron_collisionality, expected)
+
+
+@pytest.mark.parametrize("species", ["electron", "ion"])
+@pytest.mark.parametrize("bad_input", ["density", "inverse_q", "aspect"])
+def test_sauter_collisionality_rejects_invalid_inputs(physics, species, bad_input):
+    sauter = physics.plasma_bootstrap_current.sauter_bootstrap
+    density = np.full(3, 1.0e20)
+    inverse_q = np.array([0.5, 0.5, 0.5])
+    sqrt_inverse_aspect = np.sqrt(np.array([0.1, 0.1, 0.1]))
+    if bad_input == "density":
+        density[1] = 0.0
+    elif bad_input == "inverse_q":
+        inverse_q[1] = 0.0
+    else:
+        sqrt_inverse_aspect[1] = np.nan
+
+    if species == "electron":
+        method = sauter._electron_collisionality_sauter
+        args = (
+            np.array([2]),
+            6.0,
+            np.ones(3),
+            inverse_q,
+            sqrt_inverse_aspect,
+            np.full(3, 10.0),
+            density,
+        )
+    else:
+        method = sauter._ion_collisionality_sauter
+        args = (
+            np.array([2]),
+            6.0,
+            inverse_q,
+            sqrt_inverse_aspect,
+            np.full(3, 10.0),
+            np.ones(3),
+            density,
+        )
+    with pytest.raises(ProcessValueError, match="positive and finite"):
+        method(*args)
+
+
+def test_sauter_density_floor_preserves_results(physics):
+    sauter = physics.plasma_bootstrap_current.sauter_bootstrap
+    kwargs = {
+        "a_plasma_poloidal": np.pi,
+        "rminor": 1.0,
+        "rmajor": 6.0,
+        "triang": 0.0,
+        "n_charge_plasma_effective_vol_avg": 2.0,
+        "nd_plasma_electron_profile": np.array([5e19, 3e19, 2e13, 0.0, 0.0]),
+        "roa": np.linspace(0.0, 1.0, 5),
+        "temp_plasma_electron_profile_kev": np.array([10.0, 9.0, 7.0, 4.0, 1.0]),
+        "temp_plasma_ion_profile_kev": np.array([9.0, 8.0, 6.0, 3.0, 1.0]),
+        "nd_plasma_ions_total_vol_avg": 0.9e20,
+        "nd_plasma_electrons_vol_avg": 1e20,
+        "q0": 1.0,
+        "q95": 3.0,
+        "m_ions_total_amu": 2.5,
+        "f_plasma_fuel_helium3": 0.0,
+        "b_plasma_toroidal_on_axis": 5.0,
+        "plasma_current": 1e7,
+    }
+    result = sauter.bootstrap_fraction_sauter(**kwargs)
+    floored = sauter.bootstrap_fraction_sauter(**{
+        **kwargs,
+        "nd_plasma_electron_profile": np.array([5e19, 3e19, 2e13, 1e13, 1e13]),
+    })
+    np.testing.assert_allclose(result.j_bootstrap, floored.j_bootstrap, rtol=1e-12)
+    assert np.all(np.isfinite(result.j_bootstrap))
+    np.testing.assert_allclose(
+        result.normalised_electron_collisionality,
+        [0.0731597718912268, 5.250537669650822e-8, 6.146669829940684e-8],
+        rtol=1e-12,
+    )
+    np.testing.assert_allclose(
+        result.normalised_ion_collisionality,
+        [0.03463225217746871, 2.5471044247292564e-8, 3.8303394980871553e-8],
+        rtol=1e-12,
+    )
+
+
+@pytest.mark.parametrize("kappa", [1.0, 1.8, 3.0])
+@pytest.mark.parametrize(("q0", "q95"), [(1.0, 3.0), (1.0, 20.0), (1e4, 2e4)])
+@pytest.mark.parametrize("rmajor", [3.0, 6.0])
+def test_sauter_elliptical_surfaces(physics, kappa, q0, q95, rmajor):
+    sauter = physics.plasma_bootstrap_current.sauter_bootstrap
+    roa = np.linspace(0.0, 1.0, 21)
+    kwargs = {
+        "a_plasma_poloidal": kappa * np.pi * 2.0**2,
+        "rminor": 2.0,
+        "rmajor": rmajor,
+        "triang": 0.0,
+        "n_charge_plasma_effective_vol_avg": 2.0,
+        "nd_plasma_electron_profile": 1e20 * (1.0 - 0.5 * roa**2),
+        "roa": roa,
+        "temp_plasma_electron_profile_kev": 10.0 - 7.0 * roa**2,
+        "temp_plasma_ion_profile_kev": 9.0 - 6.0 * roa**2,
+        "nd_plasma_ions_total_vol_avg": 0.9e20,
+        "nd_plasma_electrons_vol_avg": 1e20,
+        "q0": q0,
+        "q95": q95,
+        "m_ions_total_amu": 2.5,
+        "f_plasma_fuel_helium3": 0.0,
+        "b_plasma_toroidal_on_axis": 5.0,
+        "plasma_current": 1e7,
+    }
+    result = sauter.bootstrap_fraction_sauter(**kwargs)
+
+    rho = np.sqrt(kwargs["a_plasma_poloidal"] / np.pi) * roa
+    annulus_areas = 2.0 * np.pi * rho[1:-1] * np.diff(rho)[1:]
+    assert result.f_cur_plasma_bootstrap == pytest.approx(
+        np.sum(annulus_areas * result.j_bootstrap) / kwargs["plasma_current"]
+    )
+
+    theta = 2 * np.pi * np.arange(4096) / 4096
+    r = (kwargs["rminor"] * roa[1:-1])[:, np.newaxis]
+    major_radius = kwargs["rmajor"] + r * np.cos(theta)
+    q = (kwargs["q0"] + (kwargs["q95"] - kwargs["q0"]) * roa[1:-1] ** 2)[:, np.newaxis]
+    flux_function = kwargs["rmajor"] * kwargs["b_plasma_toroidal_on_axis"]
+    flux_derivative = (
+        flux_function * kappa * r * np.mean(1 / major_radius, axis=1, keepdims=True) / q
+    )
+    toroidal_field = flux_function / major_radius
+    gradient_squared = np.cos(theta) ** 2 + np.sin(theta) ** 2 / kappa**2
+    total_field_squared = (
+        flux_function**2 + flux_derivative**2 * gradient_squared
+    ) / major_radius**2
+    flux_average_b_squared = (
+        np.mean(major_radius * total_field_squared, axis=1) / kwargs["rmajor"]
+    )
+    projection = np.mean(toroidal_field, axis=1) / flux_average_b_squared
+    ne = kwargs["nd_plasma_electron_profile"]
+    ni = (
+        ne
+        * kwargs["nd_plasma_ions_total_vol_avg"]
+        / kwargs["nd_plasma_electrons_vol_avg"]
+    )
+    te = kwargs["temp_plasma_electron_profile_kev"]
+    ti = kwargs["temp_plasma_ion_profile_kev"]
+    pressure_e = (
+        constants.KILOELECTRON_VOLT * (ne[1:-1] + ne[2:]) * (te[1:-1] + te[2:]) / 4
+    )
+    pressure_i = (
+        constants.KILOELECTRON_VOLT * (ni[1:-1] + ni[2:]) * (ti[1:-1] + ti[2:]) / 4
+    )
+    pressure_gradient = (
+        (pressure_e + pressure_i)
+        * result.l31_coefficient
+        * np.gradient(np.log(ne), rho)[1:-1]
+        + pressure_e
+        * (result.l31_coefficient + result.l32_coefficient)
+        * np.gradient(np.log(te), rho)[1:-1]
+        + pressure_i
+        * (result.l31_coefficient + result.alpha * result.l34_coefficient)
+        * np.gradient(np.log(ti), rho)[1:-1]
+    )
+    expected_current = (
+        -flux_function
+        / flux_derivative[:, 0]
+        * np.sqrt(kappa)
+        * pressure_gradient
+        * projection
+    )
+    np.testing.assert_allclose(result.j_bootstrap, expected_current, rtol=1e-12)
+
+    if kappa == pytest.approx(1.0):
+        epsilon = rho[1:-1] / kwargs["rmajor"]
+        geometry = np.sqrt(1 - epsilon**2)
+        pitch = epsilon / (q[:, 0] * geometry)
+        effective_field = kwargs["b_plasma_toroidal_on_axis"] * epsilon / q[:, 0]
+        np.testing.assert_allclose(
+            result.j_bootstrap,
+            -pressure_gradient * geometry / ((1 + pitch**2) * effective_field),
+            rtol=1e-12,
+        )
+
+    with pytest.raises(ProcessValueError, match="r_horizontal < rmajor"):
+        sauter.bootstrap_fraction_sauter(**{
+            **kwargs,
+            "rmajor": kwargs["rminor"],
+        })
+    with pytest.raises(ProcessValueError, match="finite, positive minor radius"):
+        sauter.bootstrap_fraction_sauter(**{**kwargs, "rminor": 0.0})
+    with pytest.raises(ProcessValueError, match="finite, positive plasma area"):
+        sauter.bootstrap_fraction_sauter(**{
+            **kwargs,
+            "a_plasma_poloidal": -1.0,
+        })
+
+    for parameter in ("q0", "q95"):
+        for invalid in (0.0, -1.0, np.nan, np.inf):
+            with pytest.raises(ProcessValueError, match=r"safety factors.*positive"):
+                sauter.bootstrap_fraction_sauter(**{**kwargs, parameter: invalid})
+    with pytest.raises(ProcessValueError, match=r"safety factor profile.*positive"):
+        sauter.bootstrap_fraction_sauter(**{
+            **kwargs,
+            "q0": 3.0,
+            "q95": 1.0,
+            "roa": np.linspace(0.0, 1.3, len(roa)),
+        })
+
+    # A tall ellipse can be valid even if its area-equivalent radius exceeds R0.
+    low_aspect = sauter.bootstrap_fraction_sauter(**{
+        **kwargs,
+        "a_plasma_poloidal": 3 * np.pi * kwargs["rminor"] ** 2,
+        "rmajor": 3.0,
+    })
+    assert np.all(np.isfinite(low_aspect.j_bootstrap))
 
 
 class BootstrapFractionSakaiParam(NamedTuple):

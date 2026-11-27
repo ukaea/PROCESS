@@ -241,64 +241,261 @@ means that it falls off sharply at the plasma edge.
 
 ### Sauter Scaling | `bootstrap_fraction_sauter()`
 
-Sauter et al.[^4] [^5] provides a formula using the exact Fokker–Planck operator and
-without any approximation on the plasma geometry or collisionality. In this way we have been able to accurately determine the neoclassical resistivity and the coefficients for the
-bootstrap current which allows one to calculate the bootstrap fraction.
+Sauter et al.[^4] [^5] provide fitted neoclassical bootstrap coefficients for
+general axisymmetric equilibria and collisionalities. PROCESS uses these
+coefficients with the approximate geometry and profiles described below.
 
-Is selected by setting `i_bootstrap_current = 4`
+The model is selected with `i_bootstrap_current = 4`.
+
+PROCESS starts with Sauter's flux-surface-averaged parallel current, assumes
+an elliptical geometry to relate flux to radius, and approximates its
+toroidal component. It then integrates that component over the plasma
+cross-section to estimate the bootstrap current fraction.
+
+#### Assumed flux-surface shape
+
+The model assumes concentric, self-similar elliptical flux surfaces with
+horizontal minor radius $r=ax$, where $a$ is the plasma minor radius and
+$x=r/a$. Their effective elongation is
+$\kappa_{\rm eff}=A_{\rm plasma}/(\pi a^2)$, where $A_{\rm plasma}$ is the
+supplied total poloidal cross-sectional area. The outer ellipse therefore
+matches both that area and the horizontal minor radius, but not necessarily
+the actual elongation, triangularity or squareness. The inner surfaces are
+assumed to have the same elongation as the outer ellipse; their shapes are
+not calculated from a plasma equilibrium.
+
+#### Radial coordinate and profiles
+
+The area-equivalent radius $\rho=\sqrt{A_{\rm plasma}/\pi}\,x
+=\sqrt{\kappa_{\rm eff}}\,r$ (`r_area` in the code) is used for profile
+gradients and the elliptical annulus area $dA=2\pi\rho\,d\rho$. The supplied
+area can come from any PROCESS plasma geometry model.
+
+PROCESS assumes $q(x)=q_0+(q_{95}-q_0)x^2$ and a flat $Z_{\rm eff}$
+profile. The input $q_{95}$ therefore sets the value of this assumed profile
+at $x=1$.
+
+The electron density is floored at $10^{13}$ $\text{m}^{-3}$. The ion density
+profile is assumed proportional to the electron profile:
+$n_i(x)=n_e(x) \frac{\langle n_{i} \rangle} {\langle n_{e} \rangle}$, where the brackets denote the volume average. Thus their logarithmic density gradients are identical. These
+profile assumptions, the density floor, and the parabolic $q$ profile are
+PROCESS choices, not requirements of the paper. Temperatures must be positive
+throughout the profiles used in the logarithmic gradients.
+
+#### Radial discretisation
+
+The calculation uses `numpy.gradient` on the full radial grid. Coefficients
+and gradients are evaluated at indices $1,\ldots,N-2$; pressures are products
+of the neighbouring density and temperature means at indices $j$ and $j+1$.
+The annular sum uses $2\pi\rho_j(\rho_{j+1}-\rho_j)$ at those same indices.
+It omits the central interval between indices 0 and 1.
+
+#### Sauter's starting expression
+
+The expression below is the second equation in the paper's conclusions[^4],
+which assumes equal electron and ion logarithmic density gradients.
 
 $$
-\left\langle j_{\|} B\right\rangle= \sigma_{\text {neo }}\left\langle E_{\|} B\right\rangle-I(\psi) p(\psi)\left[\mathcal{L}_{31} \frac{\partial \ln n_e}{\partial \psi} \\
+\left\langle j_{\parallel} B\right\rangle= \sigma_{\text {neo }}\left\langle E_{\parallel} B\right\rangle-I(\psi) p(\psi)\left[\mathcal{L}_{31} \frac{\partial \ln n_e}{\partial \psi} \\
 +R_{p e}\left(\mathcal{L}_{31}+\mathcal{L}_{32}\right) \frac{\partial \ln T_e}{\partial \psi}+\left(1-R_{p e}\right) \times\left(1+\frac{\mathcal{L}_{34}}{\mathcal{L}_{31}} \alpha\right) \mathcal{L}_{31} \frac{\partial \ln T_i}{\partial \psi}\right]
 $$
 
-Note that the above $\left\langle j_{\|} B\right\rangle$ given by Sauter et.al.[^4]   gives the component of the current density in the direction of the field – not the toroidal component of the current.  The error is second order in the pitch angle, but can be important, especially in the outboard region of a low aspect ratio tokamak, where the pitch angle is large.  Moreover this error will always have the effect of overestimating the current. This is accounted for via poloidal correction function implemented as: [`beta_poloidal_sauter()`](#calculate-electron-only-poloidal-beta-correction-beta_poloidal_sauter) and[`beta_poloidal_total_sauter()`](#calculate-ion-and-electron-poloidal-beta-correction-beta_poloidal_total_sauter)
+The paper gives a flux-surface-averaged parallel current, including an ohmic
+term. PROCESS calculates only the bootstrap contribution and approximates the
+toroidal component of the parallel current using elliptical flux surfaces.
+The erratum also restores a missing ion-pressure factor in the paper's
+preceding pressure-form expression[^5].
 
-The correction is of the form:
+#### PROCESS bootstrap current approximation
 
-$$
-I_{\phi}^{\text{bs}} = 2\pi \int d\psi \frac{q(\psi)}{\langle B^{2}\rangle} \left\langle j_{\|} B\right\rangle
-$$
-
-where $q(\psi)$ is the safety factor.
-
-The reconstructed implementation in PROCESS looks as such:
+The PROCESS approximation is
 
 $$
-\frac{I_{\text{b}}}{I_{\text{P}}} = \sum_2^{\rho_{\text{max}}} \left(2\pi\left[\rho\right]_{-1} \times \left(\left[\rho\right] -\left[\rho\right]_{-1}\right)  \right) \times  \\
-\left(0.5 \times \left[\mathcal{L}_{31} \frac{\partial \ln n_e}{\partial \psi} 
-+\left(\mathcal{L}_{31} + \mathcal{L}_{32}\right) \frac{\partial \ln T_e}{\partial \psi} 
-+ \left(1 + \frac{\mathcal{L}_{34}}{\mathcal{L}_{31}} \alpha\right) \mathcal{L}_{31} \frac{\partial \ln T_i}{\partial \psi}\right] \times \\
- 1 \times 10^6 \times \frac{-B_{0}\left[\rho\right]_{-1}\left[\frac{1}{q}\right]_{-1}}{0.2\pi R_0}\right)
+j_{\rm bs}=-\frac{G(r,q,\kappa_{\rm eff})}{B_{p,\rm eff}}
+\left[
+p_{\rm total}\mathcal L_{31}\frac{\partial\ln n_e}{\partial\rho}
++p_e(\mathcal L_{31}+\mathcal L_{32})\frac{\partial\ln T_e}{\partial\rho}
++p_i(\mathcal L_{31}+\alpha\mathcal L_{34})\frac{\partial\ln T_i}{\partial\rho}
+\right],
+\qquad
+\frac{I_{\rm bs}}{I_p}\simeq\frac{\sum_j 2\pi\rho_j\Delta\rho_j j_{{\rm bs},j}}{I_p}.
 $$
 
-In this case square brackets denote array variables equal in length to $\rho_{\text{max}}$ representing the normalised radius elements across the profile. The $-1$ subscript denotes the previous array element in the summation.
+Here $p_e$, $p_i$ and $p_{\rm total}$ are the approximated pressures
+described below. The effective field is $B_{p,\rm eff}=B_0\rho/(R_0q)$;
+it is a factor used in the conversion from Sauter's flux-coordinate expression,
+not the local poloidal field on a flux surface. PROCESS does not simply divide
+$\langle j_\parallel B\rangle$ by this field. The conversion and the role of
+$G$ are described below. No poloidal-field regularisation is applied. The input
+safety factors $q_0$ and $q_{95}$ and the resulting $q$ profile must be positive
+and finite.
 
-It is not known fully if the $\left(\sigma_{\text {neo }}\left\langle E_{\|} B\right\rangle-I(\psi) p(\psi)\right)$ term is properly implemented into the `PROCESS` version. The $R_{pe}$ value is assumingly taken to be 0.5 as it is stated to approximately to be in Sauter et.al[^4].
+#### Concentric elliptical surfaces and magnetic fields
+
+The toroidal component of the parallel bootstrap current is approximated
+using concentric ellipses with constant $\kappa_{\rm eff}$. The calculation
+requires finite, positive area, minor radius and major radius, and
+$0 \leq r < R_0$ throughout the supplied grid. PROCESS evaluates the Sauter
+scaling for reporting even when another bootstrap model is selected, so these
+conditions apply in that case as well.
+
+Write $R=R_0+r\cos\theta$ and $Z=\kappa_{\rm eff}r\sin\theta$. Assume
+$B_\phi=F/R$, $B_p=K|\nabla r|/R$, $F=R_0B_0$ and $K=d\psi/dr$, with
+$\psi$ the poloidal flux per radian. The toroidal field follows the same
+$1/R$ dependence as `b_plasma_toroidal_profile`, but is used analytically
+around each surface; the midplane profile array is not an input. On an ellipse,
+
+$$
+|\nabla r|^2=\cos^2\theta+\frac{\sin^2\theta}{\kappa_{\rm eff}^2},
+\qquad
+K=\frac{F\kappa_{\rm eff}r}{q\sqrt{R_0^2-r^2}}.
+$$
+
+Thus $B_p/B_\phi$ varies with poloidal angle when $\kappa_{\rm eff}\ne 1$.
+
+#### Flux-surface averaging and toroidal projection
+
+The model assumes $j_\parallel/B$ is constant on each surface in order to
+convert Sauter's $J=\langle j_\parallel B\rangle$ into the poloidal-angle
+average of the parallel current's toroidal component:
+
+$$
+\overline{j_{\phi,\parallel}} =
+J\,\frac{\overline{B_\phi}}{\langle B^2\rangle}.
+$$
+
+Here the flux-surface average $\langle\cdot\rangle$ is weighted by $R$;
+the bar denotes an unweighted poloidal-angle average, as appropriate for
+integrating current through the elliptical cross-section. Define
+
+$$
+s=\sqrt{1-(r/R_0)^2},\qquad
+H=\frac{1+s/\kappa_{\rm eff}^2}{1+s},
+$$
+
+#### Converting from flux to radial gradients
+
+To convert the original formula, denote the pressure-gradient
+bracket in the PROCESS expression above by $\mathcal P_\rho$. For the
+bootstrap contribution, identify Sauter's $I(\psi)$ with the assumed
+$F=R_0B_0$ and apply the chain rule:
+
+$$
+J_{\rm bs}=\left\langle j_\parallel B\right\rangle_{\rm bs}
+=-\frac{F}{d\psi/d\rho}\,\mathcal P_\rho.
+$$
+
+The assumed $q$ profile and elliptical geometry give
+
+$$
+\frac{d\psi}{d\rho}
+=\frac{K}{\sqrt{\kappa_{\rm eff}}}
+=\frac{R_0B_{p,\rm eff}}{s},
+\qquad
+J_{\rm bs}=-\frac{B_0s}{B_{p,\rm eff}}\,\mathcal P_\rho.
+$$
+
+Thus $B_{p,\rm eff}$ is a convenient way to express the flux-gradient
+conversion in terms of $B_0$, $\rho$ and $q$. It is not a divisor applied
+directly to Sauter's surface-averaged parallel current.
+
+#### Combining the geometry and projection factors
+
+Under the assumed $j_\parallel/B$ distribution, the projection factor is
+
+$$
+\frac{\overline{B_\phi}}{\langle B^2\rangle}
+=\frac{1}{B_0\left(1+H
+\left[\kappa_{\rm eff}r/(qR_0s)\right]^2\right)}.
+$$
+
+Combining it with the flux-gradient conversion gives
+
+$$
+G(r,q,\kappa_{\rm eff})=
+\frac{s}{1+H\left[\kappa_{\rm eff}r/(qR_0s)\right]^2}.
+$$
+
+Multiplying $J_{\rm bs}$ by the projection factor cancels $B_0$ and gives
+$\overline{j_{\phi,\parallel}}=-G\mathcal P_\rho/B_{p,\rm eff}$.
+The numerator $s$ in $G$ comes from converting the flux gradient; the
+denominator comes from the field geometry and toroidal projection.
+
+#### Circular-surface limit
+
+For $\kappa_{\rm eff}=1$, the ellipses become concentric circles:
+$R=R_0+r\cos\theta$ and $Z=r\sin\theta$. In this case $\rho=r$, $H=1$,
+and the geometric factor reduces to the circular expression
+
+$$
+G(r,q,1)=\frac{\sqrt{1-(r/R_0)^2}}
+{1+\left[r/(q\sqrt{R_0^2-r^2})\right]^2}.
+$$
+
+#### Scope and limitations
+
+The output profile is the unweighted poloidal-angle average of the toroidal
+component of the parallel bootstrap current, not a local current density.
+This model does not account for perpendicular currents, triangularity in the
+elliptical geometry, axis shifts, or radial changes in shape. The default
+trapped-fraction fit does not depend on triangularity; that fit and the
+collisionality fits use the physical minor radius. It is a geometric
+approximation, not an equilibrium-validated correction; the fields and pressure
+are not required to satisfy an equilibrium solution. The elliptical geometry
+changes the previously calculated Sauter current and fraction.
 
 !!! warning "Validity of the Sauter Bootstrap Scaling"
 
-    In its current state the several base functions called by the Sauter scaling have no reference and cannot be verified. The ad-hoc adaption of the Sauter scaling for use in `PROCESS` is done knowing that `PROCESS` does not calculate flux surfaces across the plasma.
+    The Sauter coefficients are fitted for general axisymmetric equilibria,
+    but PROCESS does not calculate the flux-surface geometry needed to evaluate
+    the paper's expression exactly. Its trapped-fraction fit, profile assumptions,
+    area-equivalent integration and current-density approximation are described here
+    separately from the paper's formulas.
 
 -----------
 
 #### Calculate the trapped particle fraction | `_trapped_particle_fraction_sauter()`
 
-This function calculates the trapped particle fraction $\left(f_t\right)$ used within other key internal Sauter scaling functions.
+The original paper defines $f_t$ using a flux-surface integral (Eq. 12)[^4].
+PROCESS instead uses one of three geometric fits; `bootstrap_fraction_sauter()`
+uses the default `fit=0`. With $\epsilon=(a/R_0)x$, the default is
 
 $$
-f_t = \frac{1.0 - (1.0-\epsilon_{-1})\sqrt{1.0-\epsilon_{-1}}}{\left(1.0+1.46 \sqrt{\epsilon_{-1}}\right)}
+f_t = 1.0-\frac{(1.0-\epsilon_{-1})\sqrt{1.0-\epsilon_{-1}}}{\left(1.0+1.46 \sqrt{\epsilon_{-1}}\right)}
 $$
 
-$\epsilon$ in this case is the local aspect ratio at that normalised radial point in the profile given by $\epsilon = \rho \left(\frac{a}{R}\right)$. The value of $\rho$ varies from 0 to 1 across the profile.
+The subscript $-1$ denotes the preceding array index used by the calculation.
+This ASTRA fit is attributed in the source to private communication with
+Emiliano Fable; it is not the integral in the 1999 paper. Its implementation
+omits the additional $h$ term mentioned in the source. It does not depend on
+triangularity.
 
-The $-1$ subscript in this case refers to the value of the variable in the previous array index value.
+The optional `fit=1` is the 2002 approximation, Eq. 4[^15],
+
+$$
+f_t=1-\frac{(1-\epsilon)^2}
+{(1+1.46\sqrt{\epsilon})\sqrt{1-\epsilon^2}}.
+$$
+
+The optional `fit=2` uses the 2016 geometric fit[^16], including triangularity
+$\delta$:
+
+$$
+\epsilon_{\rm eff}=0.67(1-1.4\delta|\delta|)\epsilon,\qquad
+f_t=1-\frac{1-\epsilon_{\rm eff}}{1+2\sqrt{\epsilon_{\rm eff}}}
+\sqrt{\frac{1-\epsilon}{1+\epsilon}}.
+$$
+
+These are alternative approximations, not the paper's general
+flux-surface integral. The caller must supply parameters for which the
+square roots and denominators are defined.
 
 -------------
 
 #### Calculate electron density coefficient | `_calculate_l31_coefficient()`
 
-This function calculates and returns the $\mathcal{L}_{31}$ coefficient value for $\frac{\partial \ln n_e}{\partial \psi}$
+This function calculates and returns the $\mathcal{L}_{31}$ coefficient value
+for $\frac{\partial \ln n_e}{\partial \psi}$ (Eqs. 14a–14b)[^4].
 
 $$
 \mathcal{L}_{31}= F_{31}\left(X=f_{\text {teff }}^{31}\right) \equiv\left(1+\frac{1.4}{Z+1}\right) X-\frac{1.9}{Z+1} X^2+\frac{0.3}{Z+1} X^3 +\frac{0.2}{Z+1} X^4 \\
@@ -307,13 +504,14 @@ $$
 
 This returns the dimensionless $\mathcal{L}_{31}$ coefficient, exposed in
 `SauterBootstrapCurrentParams.l31_coefficient`. In `bootstrap_fraction_sauter()`,
-it is multiplied by the total poloidal beta.
+it is multiplied by the total pressure.
 
 ---------------
 
 #### Calculate electron temperature coefficient | `_calculate_l32_coefficient()`
 
-This function calculates and returns the dimensionless $\mathcal{L}_{32}$ coefficient.
+This function calculates and returns the dimensionless $\mathcal{L}_{32}$
+coefficient (Eqs. 15a–15e)[^4].
 
 $$
 \begin{align*}
@@ -325,20 +523,22 @@ f_{\text {teff }}^{32_{-e e}}\left(\nu_{e *}\right) &= \frac{f_t}{1+0.26\left(1-
 $$
 
 $$
-F_{32 \_e i}(Y) = -\frac{0.56+1.93 Z}{Z(1+0.44 Z)}\left(Y-Y^4\right)+\frac{4.95}{1+2.48 Z}\left[Y^2-Y^4\right] \\
--0.55\left(Y^3-Y^4\right)-\frac{1.2}{1+0.5 Z} Y^4 \\
+F_{32 \_e i}(Y) = -\frac{0.56+1.93 Z}{Z(1+0.44 Z)}\left(Y-Y^4\right)+\frac{4.95}{1+2.48 Z}\left[Y^2-Y^4\right. \\
+\left.-0.55\left(Y^3-Y^4\right)\right]-\frac{1.2}{1+0.5 Z} Y^4 \\
 f_{\text {teff }}^{32 \_e i}\left(\nu_{e *}\right) = \frac{f_t}{1+\left(1+0.6 f_t\right) \sqrt{\nu_{e *}}+0.85\left(1-0.37 f_t\right) \nu_{e *}(1+Z)}
 $$
 
 `SauterBootstrapCurrentParams` returns the L31 and L32 profiles separately as
 `l31_coefficient` and `l32_coefficient`. In `bootstrap_fraction_sauter()`, their
-sum is multiplied by the electron-only poloidal beta.
+sum is multiplied by the electron pressure.
 
 ---------------
 
 #### Calculate ion temperature coefficient | `_calculate_l34_coefficient()`
 
-This function calculates and returns the dimensionless $\mathcal{L}_{34}$ coefficient.
+This function calculates and returns the dimensionless $\mathcal{L}_{34}$
+coefficient (Eqs. 16a–16b)[^4]. The $\alpha_0$ and $\alpha$ expressions
+below use Eqs. 17a–17b and the erratum[^4] [^5].
 
 $$
 \mathcal{L}_{34}=F_{31}\left(X=f_{\text {teff }}^{34}\right) 
@@ -362,110 +562,107 @@ The definition of $\alpha\left(\nu_{i *}\right)$ is that found in the erratum pa
 `SauterBootstrapCurrentParams` returns the L34, $\alpha_0$, and $\alpha$ profiles
 separately as `l34_coefficient`, `alpha_0`, and `alpha`. In
 `bootstrap_fraction_sauter()`, the ion-temperature term uses
-$\mathcal{L}_{31}+\mathcal{L}_{34}\alpha$ and is multiplied by the difference
-between total and electron-only poloidal beta.
+$\mathcal{L}_{31}+\mathcal{L}_{34}\alpha$ and is multiplied by the ion
+pressure.
 
 The three gradient terms are combined there as
 
 $$
-\beta_{p,\mathrm{total}}\mathcal{L}_{31}\frac{\partial\ln n_e}{\partial\rho}
-+\beta_{p,e}(\mathcal{L}_{31}+\mathcal{L}_{32})\frac{\partial\ln T_e}{\partial\rho}
-+(\beta_{p,\mathrm{total}}-\beta_{p,e})(\mathcal{L}_{34}\alpha+\mathcal{L}_{31})\frac{\partial\ln T_i}{\partial\rho}
+p_{\mathrm{total}}\mathcal{L}_{31}\frac{\partial\ln n_e}{\partial\rho}
++p_e(\mathcal{L}_{31}+\mathcal{L}_{32})\frac{\partial\ln T_e}{\partial\rho}
++p_i(\mathcal{L}_{34}\alpha+\mathcal{L}_{31})\frac{\partial\ln T_i}{\partial\rho}
 $$
 
 
 
 -------------
 
-#### Calculate the Coulomb logarithm | `_coulomb_logarithm_sauter()`
+#### Calculate the normalized collisionalities
+
+The electron and ion collisionalities use Sauter et al. Eqs. 18b–18e.
+The Coulomb logarithms are evaluated separately:
 
 $$
-\ln \Lambda = 15.9 -0.5 \times \ln{n_{\text{e}}}+\ln{T_{\text{e}}}
+\ln \Lambda_e = 31.3-\ln\left(\frac{\sqrt{n_e}}{T_e}\right),
+\qquad
+\ln \Lambda_{ii} = 30-\ln\left(\frac{Z_i^3\sqrt{n_i}}{T_i^{3/2}}\right).
 $$
 
------------
-
-#### Calculate frequency of electron collisions | `_electron_collisions_sauter()`
-
-Using the Coulomb logarithm ($\ln \Lambda$) calculated from [`_coulomb_logarithm_sauter()`](#calculate-the-coulomb-logarithm--_coulomb_logarithm_sauter) we get:
-
 $$
-\nu_{\text{e}} = 670 \times \frac{\ln \Lambda \times n_{\text{e}}}{T_{\text{e}}^{3/2}}
+\nu_{e*}=6.921\times10^{-18}
+\frac{q R n_e Z_{\mathrm{eff}}\ln\Lambda_e}{T_e^2\epsilon^{3/2}},
+\qquad
+\nu_{i*}=4.90\times10^{-18}
+\frac{q R n_i Z_i^4\ln\Lambda_{ii}}{T_i^2\epsilon^{3/2}}.
 $$
 
-------------
-
-#### Calculate electron collisionality | `_electron_collisionality_sauter()`
-
-The origins of the coefficients values are not known, but thought to be derived from a condition of the [Bohm diffusion coefficient](https://en.wikipedia.org/wiki/Bohm_diffusion)
-
-Using the electron collision frequency ($\nu_{\text{e}}$) calculated from [`_electron_collisions_sauter()`](#calculate-frequency-of-electron-collisions--_electron_collisions_sauter) we get:
-$$
-\nu_{\text{e*}} = \frac{1.4 \ R \ \nu_{\text{e}}  \ Z_{\text{eff}}}{\left|\frac{1}{q}\epsilon^{3/2}\sqrt{T_{\text{e}}}\times 1.875\times10^7\right|}
-$$
-
--------------
-
-#### Calculate frequency of ion collisions | `_ion_collisions_sauter()`
-
-
-$$
-\nu_{\text{i}} = 320 \times \frac{Z_{\text{eff}}^4n_{\text{i}}}{T_{\text{i}}^{3/2}\sqrt{a_{\text{i}}}}
-$$
-
------
-
-#### Calculate ion collisionality | `_ion_collisionality_sauter()`
-
-The origins of the coefficients values are not known, but thought to be derived from a condition of the [Bohm diffusion coefficient](https://en.wikipedia.org/wiki/Bohm_diffusion)
-
-Using the ion collision frequency ($\nu_{\text{i}}$) calculated from [`_ion_collisions_sauter()`](#calculate-frequency-of-ion-collisions--_ion_collisions_sauter) we get:
-
-$$
-\nu_{\text{e*}} = \frac{3.2\times10^{-6} \nu_{\text{i}} R}{\left|\left(\frac{1}{q}+0.0001\right)\epsilon^{3/2} \sqrt{\frac{T_{\text{i}}}{a_{\text{i}}}} \right|}
-$$
+In these equations, densities are in $\text{m}^{-3}$, temperatures in eV, and $R$ in
+metres. The implementation uses density profiles in $\text{m}^{-3}$ and converts
+temperatures from keV. It uses the volume-averaged
+effective charge for $Z_{\mathrm{eff}}$. The erratum explicitly specifies
+that $Z$ is $Z_{\mathrm{eff}}$ except in the ion collisionality and ion-ion
+Coulomb logarithm, Eqs. 18c and 18e, where it is the **main-ion charge**
+$Z_i$[^5]. PROCESS approximates that charge as
+$Z_i=1+f_{\mathrm{helium3}}$ with the total ion density, rather than calculating
+each ion species separately. The expression is the average charge of the
+D–T–He-3 fuel mixture, not an impurity-weighted charge. The total density
+includes thermal ash, impurities and hot beam ions; they are all treated as one
+population at the thermal ion temperature.
+This is a PROCESS approximation: the paper does not derive a multispecies or
+fast-ion model. Fast-alpha pressure is not included in the bootstrap calculation.
+The paper's ion formula does not depend on ion mass.
+The `m_ions_total_amu` argument is retained for API compatibility but is not
+used by this calculation.
+Both collisionality functions check that density, temperature, $1/q$, charge,
+$\sqrt{\epsilon}$ and $R_0$ are positive and finite at the selected grid points,
+raising `ProcessValueError` otherwise.
 
 ----------------
 
-#### Calculate electron only poloidal beta correction | `_beta_poloidal_sauter()`
+#### Calculate the pressures
 
-This function returns an electron only local poloidal beta correction dependant on the array index of the profile.
-
-If the current index is not equal to the size value (or end of the array) then the following is returned:
+The implementation estimates the electron and ion pressures as
 
 $$
-\frac{1.6\times 10^{-4}\pi R \left(n_{\text{e}}+n_{\text{e-1}}\right)\times \left(T_{\text{e}}+T_{\text{e-1}}\right)}{\left(B_{\text{T}}\rho_{-1}\left|\left(\frac{1}{q}\right)_{-1}+1\times 10^{-4}\right|\right)^2}
+p_s=\overbrace{1.602176634\times10^{-16}}^{\text{keV}}\times\bar n_s\bar T_s\ {\rm Pa},
+\quad s\in\{e,i\},
+\qquad p_{\rm total}=p_e+p_i.
 $$
 
-Otherwise the following is returned:
+Here density is in m$^{-3}$, temperature in keV, and each
+bar denotes the arithmetic mean of two neighbouring profile values. The code
+uses the product of those means rather than the mean of the pressures.
 
-$$
-\frac{6.4\times 10^{-4}\pi R \left(n_{\text{e-1}}T_{\text{e-1}}\right)}{\left(B_{\text{T}}\rho_{-1}\left|\left(\frac{1}{q}\right)_{-1}+1\times 10^{-4}\right|\right)^2}
-$$
+The electron pressure ratio is represented implicitly by
+$R_{pe}=p_e/p_{\rm total}$, and the ion ratio by
+$1-R_{pe}=p_i/p_{\rm total}$.
 
-The $-1$ subscript in this case refers to the value of the variable in the previous array index value
+#### Sauter class function references
 
+The following maps every method of `SauterBootstrapCurrent` to its role and
+source. Equation numbers refer to the 1999 paper[^4], with corrections from
+the erratum[^5]; the PROCESS-specific assumptions above apply to their inputs.
 
-
----------------
-
-#### Calculate ion and electron poloidal beta correction | `_beta_poloidal_total_sauter()`
-
-This function returns the local poloidal beta correction with both electron and ion pressure dependant on the array index of the profile.
-
-If the current index is not equal to the size value (or end of the array) then the following is returned:
-
-$$
-\frac{1.6\times 10^{-4}\pi R \left[\left(\left(n_{\text{e}}+n_{\text{e-1}}\right)\times \left(T_{\text{e}}+T_{\text{e-1}}\right)\right)+\left(\left(n_{\text{i}}+n_{\text{i-1}}\right)\times \left(T_{\text{i}}+T_{\text{i-1}}\right)\right)\right]}{\left(B_{\text{T}}\rho_{-1}\left|\left(\frac{1}{q}\right)_{-1}+1\times 10^{-4}\right|\right)^2}
-$$
-
-Otherwise the following is returned:
-
-$$
-\frac{6.4\times 10^{-4}\pi R \left[\left(n_{\text{e-1}}T_{\text{e-1}}\right)+\left(n_{\text{i-1}}T_{\text{i-1}}\right)\right]}{\left(B_{\text{T}}\rho_{-1}\left|\left(\frac{1}{q}\right)_{-1}+1\times 10^{-4}\right|\right)^2}
-$$
-
-The $-1$ subscript in this case refers to the value of the variable in the previous array index value
+| Method | Role and reference |
+|---|---|
+| `run()` | No-op required by the PROCESS model interface; not a paper formula. |
+| `output()` | No-op required by the PROCESS model interface; not a paper formula. |
+| `bootstrap_fraction_sauter()` | Combines the coefficients and pressure gradients using the corrected bootstrap expression on p. 2839[^4] [^5], then applies the PROCESS geometry and integration assumptions above. |
+| `_electron_collisionality_sauter()` | Electron collisionality and Coulomb logarithm, Eqs. 18b and 18d[^4], with the charge convention clarified by the erratum[^5]. |
+| `_ion_collisionality_sauter()` | Ion collisionality and Coulomb logarithm, Eqs. 18c and 18e[^4], with main-ion charge as clarified by the erratum[^5]. |
+| `_calculate_l31_coefficient()` | Assembles $\mathcal L_{31}$ from Eq. 14[^4]. |
+| `_calculate_l32_coefficient()` | Assembles $\mathcal L_{32}$ from Eq. 15[^4]. |
+| `_calculate_l34_coefficient()` | Assembles $\mathcal L_{34}$ from Eq. 16[^4]. |
+| `_calculate_f_teff_31_coefficient()` | Effective trapped fraction in Eq. 14b[^4]. |
+| `_calculate_f_teff_32ee_coefficient()` | Electron-electron effective trapped fraction in Eq. 15d[^4]. |
+| `_calculate_f_teff_32ei_coefficient()` | Electron-ion effective trapped fraction in Eq. 15e[^4]. |
+| `_calculate_f_teff_34_coefficient()` | Effective trapped fraction in Eq. 16b[^4]. |
+| `_calculate_alpha_0_coefficient()` | Collisionless ion-temperature coefficient in Eq. 17a[^4]. |
+| `_calculate_alpha_coefficient()` | Finite-collisionality coefficient in Eq. 17b[^4], using the corrected positive $0.315$ term[^5]. |
+| `_calculate_f_32_ee_factor()` | $F_{32ee}$ in Eq. 15b[^4]. |
+| `_calculate_f_32_ei_factor()` | $F_{32ei}$ in Eq. 15c[^4]. |
+| `_calculate_f_31_factor()` | $F_{31}$ in Eq. 14a, reused by Eq. 16a[^4]. |
+| `_trapped_particle_fraction_sauter()` | PROCESS fit, or optional 2002[^15] and 2016[^16] fits; these approximate rather than evaluate Eq. 12[^4]. |
 
 
 ------------------
@@ -826,4 +1023,6 @@ Fusion Engineering and Design, Volume 89, Issue 11, 2014, Pages 2709-2715, ISSN 
 [^12]: Miller, R L, "Stable bootstrap-current driven equilibria for low aspect ratio tokamaks". Switzerland: N. p., 1996. Web.https://fusion.gat.com/pubs-ext/MISCONF96/A22433.pdf
 [^13]: K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, “Bootstrap current fraction scaling for a tokamak reactor design study,” Fusion Engineering and Design, vol. 89, no. 11, pp. 2709–2715, Aug. 2014, doi: https://doi.org/10.1016/j.fusengdes.2014.07.009.
 [^14]: S. Sugiyama, T. Goto, H. Utoh, and Y. Sakamoto, “Improvement of core plasma power and current balance models for tokamak systems code considering H-mode plasma profiles,” Fusion Engineering and Design, vol. 216, p. 115022, Jul. 2025, doi: https://doi.org/10.1016/j.fusengdes.2025.115022.
+[^15]: O. Sauter, R. J. Buttery, R. Felton, T. C. Hender, D. F. Howell, and contributors to the E.-J. Workprogramme, “Marginal-limit for neoclassical tearing modes in JET H-mode discharges,” Plasma Physics and Controlled Fusion, vol. 44, no. 9, pp. 1999–2019, 2002. https://doi.org/10.1088/0741-3335/44/9/315.
+[^16]: O. Sauter, “Geometric formulas for system codes including the effect of negative triangularity,” Fusion Engineering and Design, vol. 112, pp. 633–645, 2016. https://doi.org/10.1016/j.fusengdes.2016.04.033.
 ‌ 
