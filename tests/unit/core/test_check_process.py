@@ -1,4 +1,6 @@
-"""Unit tests for input sanity checks in process.core.init.check_process."""
+"""Unit tests for input sanity checks in
+process.core.data_structure.check_input.check_process.
+"""
 
 import pytest
 
