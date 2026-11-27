@@ -4786,10 +4786,7 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
         match AvailabilityModel(self.data.costs.i_plant_availability):
             # Only calculate temperature margin if required
             case AvailabilityModel.MORRIS | AvailabilityModel.ST:
-                if self.data.tfcoil.i_str_wp == 0:
-                    strain = self.data.tfcoil.str_tf_con_res
-                else:
-                    strain = self.data.tfcoil.str_wp
+                strain = self._get_tf_superconductor_strain(self.data)
 
                 temp_margin = self.calculate_superconductor_temperature_margin(
                     i_tf_superconductor=self.data.tfcoil.i_tf_sc_mat,
@@ -5204,10 +5201,7 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
                 "superconductors."
             )
 
-        if self.data.tfcoil.i_str_wp == 0:
-            strain = self.data.tfcoil.str_tf_con_res
-        else:
-            strain = self.data.tfcoil.str_wp
+        strain = self._get_tf_superconductor_strain(self.data)
 
         match SuperconductorModel(i_tf_superconductor):
             # =================================================================
