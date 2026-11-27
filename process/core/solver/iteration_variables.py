@@ -24,7 +24,7 @@ class IterationVariable:
     name: str
     """The name of the variable"""
     module: str | Any
-    """The Fortran module that this variable should be set on."""
+    """The data structure that this variable should be set on."""
     lower_bound: float
     """The default lower bound of the iteration variable"""
     upper_bound: float
@@ -37,7 +37,6 @@ class IterationVariable:
     """If `module.name` is an array, the iteration variable can only modify
     `array_index` of that array.
 
-    NOTE: The indexes start at 0 (despite indexing Fortran arrays).
     """
 
 
@@ -292,6 +291,7 @@ def load_iteration_variables(data):
         variable_index = data.numerics.ixc[i]
         iteration_variable = ITERATION_VARIABLES[variable_index]
 
+# use ... sentinel because None is a valid initial/default value for variables
         # use ... as the default return value because
         # None might be a valid return from Fortran?
 
