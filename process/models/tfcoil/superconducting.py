@@ -4526,12 +4526,6 @@ class STEPIntegerTurnGeometry(TFGeneralTurnGeometry):
 
 class STEPSuperconductingTFCoil(SuperconductingTFCoil):
     """STEP Vertically Stacked Tapes Superconducting TF Coil class.
-
-
-    Raises
-    ------
-    ProcessValueError
-
     References
     ----------
     [1] E. Nasr, S. C. Wimbush, P. Noonan, P. Harris, R. Gowland, and A. Petrov,
@@ -5072,9 +5066,10 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
 
         Returns
         -------
-        SuperconTFAreasFractions
+        :
             Object containing the calculated areas and fractions of the inboard TF
             coil components.
+
         """
         # Areas and fractions
         # -------------------
@@ -5093,10 +5088,6 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
         # Area of inter-turn insulation: total [m²]
         a_tf_coil_wp_turn_insulation = n_tf_coil_turns * a_tf_turn_insulation
 
-        a_tf_turn_steel = 0.0
-
-        # Area of steel structure in winding pack [m²]
-        a_tf_wp_steel = n_tf_coil_turns * a_tf_turn_steel
 
         # Inboard coil steel area [m²]
         a_tf_coil_inboard_steel = a_tf_coil_inboard_case + a_tf_wp_steel
@@ -5121,7 +5112,7 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
             a_tf_wp_conductor=a_tf_wp_conductor,
             a_tf_wp_extra_void=a_tf_wp_extra_void,
             a_tf_coil_wp_turn_insulation=a_tf_coil_wp_turn_insulation,
-            a_tf_wp_steel=a_tf_wp_steel,
+            a_tf_wp_steel=0.0, # STEP WP has no steel
             a_tf_coil_inboard_steel=a_tf_coil_inboard_steel,
             f_a_tf_coil_inboard_steel=f_a_tf_coil_inboard_steel,
             a_tf_coil_inboard_insulation=a_tf_coil_inboard_insulation,
@@ -5352,7 +5343,6 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
         )
 
         # Masses of conductor constituents
-        # ---------------------------------
         # Superconductor mass [kg]
         m_tf_coil_superconductor = (
             coil_length
@@ -5377,10 +5367,6 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
             )
         ) * constants.DEN_COPPER
 
-        # Steel conduit (sheath) mass [kg]
-        # No steel conduit in the STEP design it is all copper stabiliser
-        m_tf_wp_steel_conduit = 0.0
-
         # Conduit insulation mass [kg]
         m_tf_coil_wp_turn_insulation = (
             coil_length
@@ -5394,7 +5380,7 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
             m_tf_coil_wp_insulation=m_tf_coil_wp_insulation,
             m_tf_coil_superconductor=m_tf_coil_superconductor,
             m_tf_coil_copper=m_tf_coil_copper,
-            m_tf_wp_steel_conduit=m_tf_wp_steel_conduit,
+            m_tf_wp_steel_conduit=0.0, # No steel conduit in the STEP design it is all copper stabiliser
             m_tf_coil_wp_turn_insulation=m_tf_coil_wp_turn_insulation,
         )
 
