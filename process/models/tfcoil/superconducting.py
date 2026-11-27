@@ -4831,7 +4831,9 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
         self.output_general_superconducting_tf_info()
         self.output_step_turn_info()
         self.output_tf_superconductor_info()
-        self.run_and_output_stress()
+        self.run_and_output_stress(
+            dx_tf_turn_steel=self.data.superconducting_tfcoil.dx_tf_turn_stabiliser
+        )
 
     @staticmethod
     def tf_step_vertical_tape_integer_turn_geometry(

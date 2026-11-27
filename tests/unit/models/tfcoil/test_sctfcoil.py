@@ -2608,6 +2608,20 @@ def test_step_run_preserves_calculation_order_and_results(
         expected_calls.append(("general",))
     assert calls == expected_calls
 
+    monkeypatch.setattr(
+        step_sctfcoil, "output_general_superconducting_tf_info", lambda: None
+    )
+    monkeypatch.setattr(step_sctfcoil, "output_step_turn_info", lambda: None)
+    monkeypatch.setattr(step_sctfcoil, "output_tf_superconductor_info", lambda: None)
+    step_sctfcoil.output()
+
+    assert calls[len(expected_calls) :] == [
+        ("general",),
+        ("stress", 500, 0.15),
+        ("output", stress_result),
+    ]
+    assert tf.sig_tf_wp == 17
+
 
 @pytest.mark.parametrize("itart", [0, 1])
 def test_step_superconductor_length_includes_st_inboard_leg(step_sctfcoil, itart):
