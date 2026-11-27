@@ -26,47 +26,51 @@ from process.core.exceptions import ProcessValidationError, ProcessValueError
 from process.core.io.in_dat.base import InDat, INVariable
 from process.core.solver import iteration_variables
 from process.core.solver.constraints import ConstraintManager
-from process.data_structure.blanket_variables import BlanketData  # noqa: TC001
-from process.data_structure.build_variables import BuildData  # noqa: TC001
-from process.data_structure.buildings_variables import BuildingsData  # noqa: TC001
-from process.data_structure.ccfe_hcpb_variables import CCFEHCPBData  # noqa: TC001
-from process.data_structure.constraint_variables import ConstraintData  # noqa: TC001
-from process.data_structure.cost_2015_variables import Cost2015Data  # noqa: TC001
-from process.data_structure.cost_variables import CostData  # noqa: TC001
-from process.data_structure.cs_fatigue_variables import CSFatigueData  # noqa: TC001
-from process.data_structure.current_drive_variables import CurrentDriveData  # noqa: TC001
-from process.data_structure.dcll_variables import DCLLData  # noqa: TC001
-from process.data_structure.divertor_variables import DivertorData  # noqa: TC001
-from process.data_structure.first_wall_variables import FirstWallData  # noqa: TC001
-from process.data_structure.fwbs_variables import FWBSData  # noqa: TC001
-from process.data_structure.global_variables import GlobalData  # noqa: TC001
-from process.data_structure.heat_transport_variables import HeatTransportData  # noqa: TC001
-from process.data_structure.ife_variables import IFEData  # noqa: TC001
-from process.data_structure.impurity_radiation_variables import ImpurityRadiationData  # noqa: TC001
-from process.data_structure.neoclassics_variables import NeoclassicsData  # noqa: TC001
+
+# ruff: disable[TC001]
+from process.data_structure.blanket_variables import BlanketData
+from process.data_structure.build_variables import BuildData
+from process.data_structure.buildings_variables import BuildingsData
+from process.data_structure.ccfe_hcpb_variables import CCFEHCPBData
+from process.data_structure.constraint_variables import ConstraintData
+from process.data_structure.cost_2015_variables import Cost2015Data
+from process.data_structure.cost_variables import CostData
+from process.data_structure.cs_fatigue_variables import CSFatigueData
+from process.data_structure.current_drive_variables import CurrentDriveData
+from process.data_structure.dcll_variables import DCLLData
+from process.data_structure.divertor_variables import DivertorData
+from process.data_structure.first_wall_variables import FirstWallData
+from process.data_structure.fwbs_variables import FWBSData
+from process.data_structure.global_variables import GlobalData
+from process.data_structure.heat_transport_variables import HeatTransportData
+from process.data_structure.ife_variables import IFEData
+from process.data_structure.impurity_radiation_variables import ImpurityRadiationData
+from process.data_structure.neoclassics_variables import NeoclassicsData
 from process.data_structure.numerics import FiguresOfMerit, NumericsData, PROCESSRunMode
-from process.data_structure.pf_power_variables import PFPowerData  # noqa: TC001
-from process.data_structure.pfcoil_variables import PFCoilData  # noqa: TC001
-from process.data_structure.physics_variables import PhysicsData  # noqa: TC001
-from process.data_structure.power_variables import PowerData  # noqa: TC001
-from process.data_structure.primary_pumping_variables import PrimaryPumpingData  # noqa: TC001
-from process.data_structure.pulse_variables import PulseData  # noqa: TC001
-from process.data_structure.rebco_variables import RebcoData  # noqa: TC001
-from process.data_structure.reinke_variables import ReinkeData  # noqa: TC001
-from process.data_structure.scan_variables import ScanData  # noqa: TC001
-from process.data_structure.stellarator_configuration import StellaratorConfigData  # noqa: TC001
+from process.data_structure.pf_power_variables import PFPowerData
+from process.data_structure.pfcoil_variables import PFCoilData
+from process.data_structure.physics_variables import PhysicsData
+from process.data_structure.power_variables import PowerData
+from process.data_structure.primary_pumping_variables import PrimaryPumpingData
+from process.data_structure.pulse_variables import PulseData
+from process.data_structure.rebco_variables import RebcoData
+from process.data_structure.reinke_variables import ReinkeData
+from process.data_structure.scan_variables import ScanData
+from process.data_structure.stellarator_configuration import StellaratorConfigData
 from process.data_structure.stellarator_variables import (
     StellaratorData,
     StellaratorModel,
 )
-from process.data_structure.structure_variables import StructureData  # noqa: TC001
+from process.data_structure.structure_variables import StructureData
 from process.data_structure.superconducting_tf_coil_variables import (
-    SuperconductingTFData,  # noqa: TC001
+    SuperconductingTFData,
 )
-from process.data_structure.tfcoil_variables import TFData  # noqa: TC001
-from process.data_structure.times_variables import TimesData  # noqa: TC001
-from process.data_structure.vacuum_variables import VacuumData  # noqa: TC001
-from process.data_structure.water_usage_variables import WaterUseData  # noqa: TC001
+from process.data_structure.tfcoil_variables import TFData
+from process.data_structure.times_variables import TimesData
+from process.data_structure.vacuum_variables import VacuumData
+from process.data_structure.water_usage_variables import WaterUseData
+
+# ruff: enable[TC001]
 from process.models.stellarator.initialization import st_init
 
 logger = logging.getLogger(__name__)
