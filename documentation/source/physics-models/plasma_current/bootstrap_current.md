@@ -434,7 +434,8 @@ $$
 
 #### Scope and limitations
 
-The output profile is a poloidal-angle average, not a local current density.
+The output profile is the unweighted poloidal-angle average of the toroidal
+component of the parallel bootstrap current, not a local current density.
 This model does not account for perpendicular currents, triangularity in the
 elliptical geometry, axis shifts, or radial changes in shape. The default
 trapped-fraction fit does not depend on triangularity; that fit and the
