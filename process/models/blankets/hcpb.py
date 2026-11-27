@@ -76,6 +76,19 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             self.data.blanket.deg_blkt_inboard_poloidal_plasma / 360.0
         )
 
+        self.data.blanket.len_blkt_inboard_segment_toroidal = self.calculate_blanket_inboard_module_geometry(  # noqa: E501
+            n_blkt_inboard_modules_toroidal=self.data.fwbs.n_blkt_inboard_modules_toroidal,
+            rmajor=self.data.physics.rmajor,
+            rminor=self.data.physics.rminor,
+            dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
+        )
+        self.data.blanket.len_blkt_outboard_segment_toroidal = self.calculate_blanket_outboard_module_geometry(  # noqa: E501
+            n_blkt_outboard_modules_toroidal=self.data.fwbs.n_blkt_outboard_modules_toroidal,
+            rmajor=self.data.physics.rmajor,
+            rminor=self.data.physics.rminor,
+            dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
+        )
+
         dia_blkt_channel = pipe_hydraulic_diameter(
             i_channel_shape=1,
             radius_fw_channel=self.data.fwbs.radius_fw_channel,
@@ -93,19 +106,6 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         )
 
         self.set_blanket_module_geometry()
-
-        self.data.blanket.len_blkt_inboard_segment_toroidal = self.calculate_blanket_inboard_module_geometry(  # noqa: E501
-            n_blkt_inboard_modules_toroidal=self.data.fwbs.n_blkt_inboard_modules_toroidal,
-            rmajor=self.data.physics.rmajor,
-            rminor=self.data.physics.rminor,
-            dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
-        )
-        self.data.blanket.len_blkt_outboard_segment_toroidal = self.calculate_blanket_outboard_module_geometry(  # noqa: E501
-            n_blkt_outboard_modules_toroidal=self.data.fwbs.n_blkt_outboard_modules_toroidal,
-            rmajor=self.data.physics.rmajor,
-            rminor=self.data.physics.rminor,
-            dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
-        )
 
         # Centrepost neutronics
         if self.data.physics.itart == 1:
@@ -830,7 +830,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                     psurffwi=self.data.fwbs.psurffwi,
                     psurffwo=self.data.fwbs.psurffwo,
                     p_blkt_nuclear_heat_total_mw=self.data.fwbs.p_blkt_nuclear_heat_total_mw,
-                    p_shld_nuclear_heat_mw=self.data.heat_transport.p_shld_nuclear_heat_mw,
+                    p_shld_nuclear_heat_mw=self.data.heat_transport.p_shld_secondary_heat_mw,
                     p_cp_shield_nuclear_heat_mw=self.data.fwbs.p_cp_shield_nuclear_heat_mw,
                     p_plasma_separatrix_mw=self.data.physics.p_plasma_separatrix_mw,
                     p_div_nuclear_heat_total_mw=self.data.fwbs.p_div_nuclear_heat_total_mw,
