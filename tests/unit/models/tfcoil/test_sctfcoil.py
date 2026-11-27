@@ -2557,9 +2557,10 @@ def test_step_run_preserves_calculation_order_and_results(
     sc.a_tf_wp_ground_insulation = 0.2
     sc.a_tf_wp_with_insulation = 0.7
     sc.a_tf_wp_no_insulation = 0.64
-    sc.dx_tf_hts_tape_total = 0.0001
+    sc.dx_tf_hts_tape_total = 0.0002
     sc.dx_tf_hts_tape_rebco = 0.000001
     sc.dx_tf_hts_tape_copper = 0.00002
+    sc.dx_tf_hts_tape_hastelloy = 0.000079
     data.build.z_tf_inside_half = 9.0
     data.build.dr_tf_inboard = 1.2
     data.costs.i_plant_availability = sctf.AvailabilityModel.USER_INPUT
@@ -2591,6 +2592,7 @@ def test_step_run_preserves_calculation_order_and_results(
 
     step_sctfcoil.run(output=output)
 
+    assert sc.dx_tf_hts_tape_total == pytest.approx(0.0001)
     assert tf.a_tf_turn == pytest.approx(0.001)
     assert tf.j_tf_wp_critical == pytest.approx(190842830981.11948, rel=1e-12)
     assert tf.j_tf_wp_temp_margin_min == pytest.approx(158854598266.70135, rel=1e-12)
@@ -2644,14 +2646,29 @@ def test_step_superconductor_length_includes_st_inboard_leg(step_sctfcoil, itart
     tf.len_tf_coil = 50.0
     sc.dx_tf_wp_toroidal_min = 0.8
     sc.c_tf_coil = 2.0e6
-    sc.dx_tf_hts_tape_total = 0.0001
 
     step_sctfcoil._run_step_turn_geometry(sc)
 
+    assert sc.dx_tf_hts_tape_total == pytest.approx(151.0e-6)
+    assert sc.n_tf_turn_superconducting_strands == 397
+    assert sc.n_tf_turn_superconducting_strands * sc.dx_tf_hts_tape_total <= (
+        sc.dx_tf_turn_tape_stack
+    )
+    assert (sc.n_tf_turn_superconducting_strands + 1) * sc.dx_tf_hts_tape_total > (
+        sc.dx_tf_turn_tape_stack
+    )
     length = 50.0 + (20.4 if itart else 0.0)
     expected = length * tf.n_tf_coil_turns * sc.n_tf_turn_superconducting_strands
     assert sc.len_tf_coil_superconductor == pytest.approx(expected)
     assert sc.len_tf_superconductor_total == pytest.approx(expected * tf.n_tf_coils)
+
+    sc.dx_tf_hts_tape_copper = 200.0e-6
+    step_sctfcoil._run_step_turn_geometry(sc)
+    assert sc.dx_tf_hts_tape_total == pytest.approx(251.0e-6)
+    assert sc.n_tf_turn_superconducting_strands == 239
+    assert sc.len_tf_coil_superconductor == pytest.approx(
+        length * tf.n_tf_coil_turns * 239
+    )
 
 
 def test_step_run_rejects_non_integer_turns(step_sctfcoil, monkeypatch):

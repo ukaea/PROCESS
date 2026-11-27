@@ -754,7 +754,18 @@ stabiliser region. The channel diameter is calculated as the smaller of 30% of
 the stabiliser's toroidal dimension and 80% of its radial dimension; it is
 not taken from an input value of `dia_tf_turn_coolant_channel`.
 
-The number of tapes per turn is
+The total tape thickness is calculated from the REBCO, copper and Hastelloy
+layer thicknesses on each run, overriding any input value of
+`dx_tf_hts_tape_total`:
+
+$$
+\Delta x_\mathrm{tape} =
+\texttt{dx\_tf\_hts\_tape\_rebco} +
+\texttt{dx\_tf\_hts\_tape\_copper} +
+\texttt{dx\_tf\_hts\_tape\_hastelloy}.
+$$
+
+The number of whole tapes per turn that fit in the stack is
 
 $$
 N_\mathrm{tapes} =
@@ -762,11 +773,12 @@ N_\mathrm{tapes} =
 {\texttt{dx\_tf\_hts\_tape\_total}}\right\rfloor.
 $$
 
-`dx_tf_hts_tape_total` must be positive. The radial tape width
-`dr_tf_hts_tape` is overwritten with the calculated stack radial width.
-The stack is assumed perfectly packed, with no extra void; there is no steel
-turn conduit. The model logs errors for invalid turn dimensions or a coolant
-channel conflicting with the conductor geometry.
+The calculated `dx_tf_hts_tape_total` must be positive. The radial tape width
+`dr_tf_hts_tape` is overwritten with the calculated stack radial width. The
+area model treats the whole stack region as conductor, including any remainder
+too narrow for another whole tape; it does not report that remainder as extra
+void. There is no steel turn conduit. The model logs errors for invalid turn
+dimensions or a coolant channel conflicting with the conductor geometry.
 
 ### Critical current, lengths and masses
 

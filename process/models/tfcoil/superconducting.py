@@ -4658,10 +4658,15 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
             * self.data.tfcoil.n_tf_coil_turns
         )
 
-        self.data.superconducting_tfcoil.n_tf_turn_superconducting_strands = (
+        d_sc_tf.dx_tf_hts_tape_total = (
+            d_sc_tf.dx_tf_hts_tape_rebco
+            + d_sc_tf.dx_tf_hts_tape_copper
+            + d_sc_tf.dx_tf_hts_tape_hastelloy
+        )
+        d_sc_tf.n_tf_turn_superconducting_strands = (
             self.calculate_stacked_tape_strand_count(
-                dx_tape_stack=self.data.superconducting_tfcoil.dx_tf_turn_tape_stack,
-                dx_hts_tape=self.data.superconducting_tfcoil.dx_tf_hts_tape_total,
+                dx_tape_stack=d_sc_tf.dx_tf_turn_tape_stack,
+                dx_hts_tape=d_sc_tf.dx_tf_hts_tape_total,
             )
         )
 
