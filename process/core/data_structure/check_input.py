@@ -35,7 +35,10 @@ from process.models.superconductors import (
     SuperconductorType,
 )
 from process.models.tfcoil.base import TFCoilShapeModel, TFConductorModel
-from process.models.tfcoil.superconducting import SuperconductingTFWPShapeType
+from process.models.tfcoil.superconducting import (
+    SuperconductingTFTurnType,
+    SuperconductingTFWPShapeType,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -1048,6 +1051,25 @@ def check_process(data, _inputs):
         logger.warning(
             "Non H-mode or I-mode confinement time scaling should not be used"
             " with a pedestal profile"
+        )
+
+    if (
+        data.stellarator.istell == StellaratorModel.DISABLED
+        and data.ife.ife == 0
+        and data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING
+        and data.superconducting_tfcoil.i_tf_turn_type
+        == SuperconductingTFTurnType.STEP_STACKED_TAPE
+        and (
+            data.numerics.icc[
+                : data.numerics.n_equality_constraints
+                + data.numerics.n_inequality_constraints
+            ]
+            == 35
+        ).any()
+    ):
+        raise ProcessValidationError(
+            "Constraint 35 is not supported for STEP HTS TF coils: "
+            "the quench hotspot model assumes Nb3Sn. Remove icc = 35."
         )
 
     # Cannot use temperature margin constraint with REBCO TF coils

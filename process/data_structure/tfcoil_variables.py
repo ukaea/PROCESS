@@ -354,7 +354,7 @@ class TFData:
     """critical current density for winding pack (A/m²)"""
 
     j_tf_wp_quench_heat_max: float = 0.0
-    """allowable TF coil winding pack current density, for dump temperature rise protection (A/m²)"""
+    """Allowable WP current density for quench heat protection (A/m²); NaN for STEP."""
 
     j_tf_wp: float = 0.0
     """winding pack engineering current density (A/m²)"""

@@ -279,6 +279,14 @@ $$
 
 - `Constraint 35` -- To ensure that $J_{\mbox{op}}$ does not exceed the quench protection current density limit, $J_{TF,\mathrm{quench}}$, turn on constraint equation no.\ 35.
 
+The hotspot model assumes Nb$_3$Sn superconductor properties and is not a valid
+quench protection model for the STEP stacked-tape HTS conductor
+(`i_tf_turn_type = 3`). For STEP, `j_tf_wp_quench_heat_max` is reported as NaN
+(unavailable), and constraint 35 must not be enabled. The dump voltage is still
+calculated independently and may be constrained using constraint 34. This does
+not demonstrate that an HTS coil is protected against quench heating; an
+appropriate HTS protection assessment is required.
+
 -----------------------
 
 

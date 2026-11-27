@@ -1290,6 +1290,14 @@ class SuperconductingTFCoil(TFCoil):
             self.data.tfcoil.v_tf_coil_dump_quench_kv,
             "OP ",
         )
+        if (
+            SuperconductingTFTurnType(d_sc_tf.i_tf_turn_type)
+            == SuperconductingTFTurnType.STEP_STACKED_TAPE
+        ):
+            po.ocmmnt(
+                self.outfile,
+                "Quench heat protection current density is unavailable for STEP HTS.",
+            )
         po.ovarre(
             self.outfile,
             "Maximum winding pack current density for protection (A/m²)",
@@ -4805,40 +4813,14 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
         self.data.tfcoil.temp_tf_superconductor_margin = temp_margin
 
     def _run_step_quench_protection(self):
-        """Calculate STEP quench protection limits."""
-        # Do current density protection calculation
-        # Only setup for Nb3Sn at present.
-        if (
-            SuperconductorModel(self.data.tfcoil.i_tf_sc_mat).material
-            != SuperconductorMaterial.NB3SN
-        ):
-            logger.warning(
-                "Calculating current density protection limit for Nb3Sn TF coil "
-                "(LTS windings only)"
-            )
-        # Find the current density limited by the protection limit
-        # At present only valid for LTS windings (Nb3Sn properties assumed)
-        self.data.tfcoil.j_tf_wp_quench_heat_max, v_tf_coil_dump_quench = (
-            self.quench_heat_protection_current_density(
-                c_tf_turn=self.data.tfcoil.c_tf_turn,
-                e_tf_coil_magnetic_stored=self.data.tfcoil.e_tf_coil_magnetic_stored,
-                a_tf_turn_cable_space=self.data.tfcoil.a_tf_turn_cable_space_no_void,
-                a_tf_turn=self.data.tfcoil.a_tf_turn,
-                t_tf_quench_dump=self.data.tfcoil.t_tf_superconductor_quench,
-                f_a_tf_turn_cable_copper=0.0,
-                f_a_tf_turn_cable_space_cooling=0.0,
-                temp_tf_coolant_peak_field=self.data.tfcoil.temp_tf_operating,
-                temp_tf_conductor_quench_max=self.data.tfcoil.temp_tf_conductor_quench_max,
-                b_tf_inboard_peak=self.data.tfcoil.b_tf_inboard_peak_with_ripple,
-                cu_rrr=self.data.tfcoil.rrr_tf_cu,
-                t_tf_quench_detection=self.data.tfcoil.t_tf_quench_detection,
-                flu_tf_neutron_fast_max=self.data.constraints.flu_tf_neutron_fast_max,
-            )
-        )
-
+        """Calculate dump voltage; the Nb3Sn hotspot model is not valid for STEP."""
+        self.data.tfcoil.j_tf_wp_quench_heat_max = float("nan")
         self.data.tfcoil.v_tf_coil_dump_quench_kv = (
-            v_tf_coil_dump_quench / 1.0e3
-        )  # TFC Quench voltage in kV
+            2.0
+            * self.data.tfcoil.e_tf_coil_magnetic_stored
+            / (self.data.tfcoil.t_tf_superconductor_quench * self.data.tfcoil.c_tf_turn)
+            / 1.0e3
+        )
 
     def _run_step_area_report(self):
         """Report non-positive STEP inboard areas and fractions."""
