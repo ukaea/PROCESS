@@ -4823,20 +4823,19 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
         )
 
     def _run_step_area_report(self):
-        """Report non-positive STEP inboard areas and fractions."""
-        # Negative areas or fractions error reporting
+        """Report invalid STEP inboard areas and fractions."""
         if (
             self.data.tfcoil.a_tf_wp_conductor <= 0.0e0
-            or self.data.tfcoil.a_tf_wp_extra_void <= 0.0e0
+            or self.data.tfcoil.a_tf_wp_extra_void < 0.0e0
             or self.data.tfcoil.a_tf_coil_wp_turn_insulation <= 0.0e0
-            or self.data.tfcoil.a_tf_wp_steel <= 0.0e0
+            or self.data.tfcoil.a_tf_wp_steel < 0.0e0
             or self.data.superconducting_tfcoil.a_tf_coil_inboard_steel <= 0.0e0
             or self.data.superconducting_tfcoil.f_a_tf_coil_inboard_steel <= 0.0e0
             or self.data.superconducting_tfcoil.a_tf_coil_inboard_insulation <= 0.0e0
             or self.data.superconducting_tfcoil.f_a_tf_coil_inboard_insulation <= 0.0e0
         ):
             logger.error(
-                "One of the areas or fractions is negative in the internal SC TF "
+                "One of the areas or fractions is invalid in the internal SC TF "
                 "coil geometry "
                 f"{self.data.tfcoil.a_tf_wp_conductor=} "
                 f"{self.data.tfcoil.a_tf_wp_extra_void=} "

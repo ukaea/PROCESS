@@ -2784,3 +2784,33 @@ def test_tf_step_inboard_areas_and_fractions(step_sctfcoil):
     assert result.f_a_tf_coil_inboard_insulation == pytest.approx(
         16 * (20 * 0.00117 + 0.2) / 30.0
     )
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        (None, None),
+        ("a_tf_wp_extra_void", -0.01),
+        ("a_tf_wp_steel", -0.01),
+        ("a_tf_wp_conductor", 0.0),
+    ],
+)
+def test_step_area_report_allows_zero_void_and_steel(
+    step_sctfcoil, caplog, field, value
+):
+    tf = step_sctfcoil.data.tfcoil
+    sc = step_sctfcoil.data.superconducting_tfcoil
+    tf.a_tf_wp_conductor = 1.0
+    tf.a_tf_wp_extra_void = 0.0
+    tf.a_tf_coil_wp_turn_insulation = 1.0
+    tf.a_tf_wp_steel = 0.0
+    sc.a_tf_coil_inboard_steel = 1.0
+    sc.f_a_tf_coil_inboard_steel = 1.0
+    sc.a_tf_coil_inboard_insulation = 1.0
+    sc.f_a_tf_coil_inboard_insulation = 1.0
+    if field is not None:
+        setattr(tf, field, value)
+
+    step_sctfcoil._run_step_area_report()
+
+    assert ("One of the areas or fractions" in caplog.text) == (field is not None)
