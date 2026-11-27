@@ -602,14 +602,17 @@ class ResistiveTFCoil(TFCoil):
                 # Outer legs/CP weights
                 if self.data.physics.itart == 1:
                     # Weight of all the TF legs
-                    self.data.tfcoil.whttflgs = self.data.tfcoil.n_tf_coils * (
-                        constants.DEN_COPPER * vol_cond_leg
-                        + self.data.tfcoil.den_tf_wp_turn_insulation
-                        * (vol_ins_leg + vol_gr_ins_leg)
+                    self.data.tfcoil.m_tf_return_legs_total = (
+                        self.data.tfcoil.n_tf_coils
+                        * (
+                            constants.DEN_COPPER * vol_cond_leg
+                            + self.data.tfcoil.den_tf_wp_turn_insulation
+                            * (vol_ins_leg + vol_gr_ins_leg)
+                        )
                     )
 
                     # CP weight
-                    self.data.tfcoil.whtcp = (
+                    self.data.tfcoil.m_cp_total = (
                         constants.DEN_COPPER * self.data.tfcoil.vol_cond_cp
                         + self.data.tfcoil.den_tf_wp_turn_insulation
                         * (
@@ -635,14 +638,17 @@ class ResistiveTFCoil(TFCoil):
                 # Outer legs/CP weights
                 if self.data.physics.itart == 1:
                     # Weight of all the TF legs
-                    self.data.tfcoil.whttflgs = self.data.tfcoil.n_tf_coils * (
-                        constants.DEN_ALUMINIUM * vol_cond_leg
-                        + self.data.tfcoil.den_tf_wp_turn_insulation
-                        * (vol_ins_leg + vol_gr_ins_leg)
+                    self.data.tfcoil.m_tf_return_legs_total = (
+                        self.data.tfcoil.n_tf_coils
+                        * (
+                            constants.DEN_ALUMINIUM * vol_cond_leg
+                            + self.data.tfcoil.den_tf_wp_turn_insulation
+                            * (vol_ins_leg + vol_gr_ins_leg)
+                        )
                     )
 
                     # CP weight
-                    self.data.tfcoil.whtcp = (
+                    self.data.tfcoil.m_cp_total = (
                         constants.DEN_ALUMINIUM * self.data.tfcoil.vol_cond_cp
                         + self.data.tfcoil.den_tf_wp_turn_insulation
                         * (

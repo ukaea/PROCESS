@@ -354,7 +354,7 @@ class TFData:
     """critical current density for winding pack (A/m²)"""
 
     j_tf_wp_quench_heat_max: float = 0.0
-    """allowable TF coil winding pack current density, for dump temperature rise protection (A/m²)"""
+    """Allowable WP current density for quench heat protection (A/m²); NaN for STEP."""
 
     j_tf_wp: float = 0.0
     """winding pack engineering current density (A/m²)"""
@@ -841,11 +841,11 @@ class TFData:
     vol_cond_cp: float = 0.0
     """Exact conductor volume in the centrepost (m3)"""
 
-    whtcp: float = 0.0
-    """mass of TF coil inboard legs (kg)"""
+    m_cp_total: float = 0.0
+    """Mass of TF coil inboard legs or entire centrepost [kg]"""
 
-    whttflgs: float = 0.0
-    """mass of the TF coil legs (kg)"""
+    m_tf_return_legs_total: float = 0.0
+    """Total mass of all TF coil return legs (this includes both horizontal and outboard vertical sections) [kg]"""
 
     cryo_cool_req: float = 0.0
     """Cryo cooling requirement at helium temp 4.5K (kW)"""

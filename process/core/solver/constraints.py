@@ -22,6 +22,7 @@ from process.models.physics.physics import (
     PlasmaIgnitionModel,
 )
 from process.models.tfcoil.base import TFConductorModel
+from process.models.tfcoil.superconducting import SuperconductingTFTurnType
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Hashable
@@ -1030,7 +1031,23 @@ def constraint_equation_35(constraint_registration, data):
         rise protection (A/m²)
     j_tf_wp:
         winding pack current density (A/m²)
+
+    Raises
+    ------
+    ProcessValueError
+        If the TF coil model is STEP HTS, as this constraint assumes Nb3Sn.
     """
+    if (
+        data.stellarator.istell == StellaratorModel.DISABLED
+        and data.ife.ife == 0
+        and data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING
+        and data.superconducting_tfcoil.i_tf_turn_type
+        == SuperconductingTFTurnType.STEP_STACKED_TAPE
+    ):
+        raise ProcessValueError(
+            "Constraint 35 is not supported for STEP HTS TF coils: "
+            "the quench hotspot model assumes Nb3Sn."
+        )
     return leq(
         data.tfcoil.j_tf_wp,
         data.tfcoil.j_tf_wp_quench_heat_max,

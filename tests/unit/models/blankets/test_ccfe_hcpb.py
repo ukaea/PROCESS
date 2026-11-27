@@ -64,7 +64,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
 
     m_tf_coils_total: Any = None
 
-    whttflgs: Any = None
+    m_tf_return_legs_total: Any = None
 
     armour_density: Any = None
 
@@ -133,7 +133,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             p_fusion_total_mw=1986.0623241661431,
             itart=0,
             m_tf_coils_total=19649856.627845347,
-            whttflgs=0,
+            m_tf_return_legs_total=0,
             armour_density=0,
             fw_density=0,
             blanket_density=0,
@@ -179,7 +179,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             p_fusion_total_mw=1985.4423932312809,
             itart=0,
             m_tf_coils_total=19662548.210142396,
-            whttflgs=0,
+            m_tf_return_legs_total=0,
             armour_density=13202.434141839649,
             fw_density=5349.557730199961,
             blanket_density=2504.4899999999998,
@@ -263,7 +263,7 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
 
     for field in [
         "m_tf_coils_total",
-        "whttflgs",
+        "m_tf_return_legs_total",
     ]:
         monkeypatch.setattr(
             ccfe_hcpb.data.tfcoil,

@@ -279,6 +279,14 @@ $$
 
 - `Constraint 35` -- To ensure that $J_{\mbox{op}}$ does not exceed the quench protection current density limit, $J_{TF,\mathrm{quench}}$, turn on constraint equation no.\ 35.
 
+The hotspot model assumes Nb$_3$Sn superconductor properties and is not a valid
+quench protection model for the STEP stacked-tape HTS conductor
+(`i_tf_turn_type = 3`). For STEP, `j_tf_wp_quench_heat_max` is reported as NaN
+(unavailable), and constraint 35 must not be enabled. The dump voltage is still
+calculated independently and may be constrained using constraint 34. This does
+not demonstrate that an HTS coil is protected against quench heating; an
+appropriate HTS protection assessment is required.
+
 -----------------------
 
 
@@ -629,6 +637,25 @@ It is also worth mentioning that the the ripple must be evaluated layer-by-layer
 used to quantify the SC cross-section area per layer. Finally, resistive
 coils do not suffer from on-coil ripple as there is no radial case present.
 
+## TF turn mass calculation
+
+Each TF turn model calculates its own component masses and stores them in the
+common TF coil outputs. For CICC turns, the copper fraction is applied to the
+cable area after both the central coolant channel and extra void have been
+removed. CroCo masses use the REBCO and copper areas of the strands and the
+central copper bar; STEP masses use the tape layers and copper stabiliser.
+
+For `itart = 1`, the winding-pack masses include both the inboard centrepost
+length and the return-coil length. They assume the inboard winding-pack
+cross-section applies over the full conductor length. Centrepost and return-leg
+masses use their respective case areas and sum to the total TF coil mass.
+`m_tf_coil_copper` is per coil; `m_tf_coils_copper_total` is for all coils.
+The existing case mass estimate includes an ITER-derived scaling factor of 2.2.
+
+The CroCo and STEP mass totals currently omit the tape substrate, and CroCo
+also omits solder. These totals therefore do not include every conductor
+material.
+
 -----------------------------
 
 ## Cable in Conduit TF coil class | `CICCSuperconductingTFCoil(SuperconductingTFCoil)`
@@ -678,3 +705,109 @@ $$
 ### Superconductor properties | `tf_croco_superconductor_properties()`
 
 ### Quench voltage | `croco_voltage()`
+
+-----------------------------
+
+## STEP stacked-tape TF coil class | `STEPSuperconductingTFCoil(SuperconductingTFCoil)`
+
+This model represents a TF turn containing a vertical stack of REBCO tapes,
+surrounded by copper stabiliser and turn insulation, with a circular coolant
+channel. It is inspired by the STEP magnet concept described in
+[Nasr et al., *The magnetic cage*](https://doi.org/10.1098/rsta.2023.0407).
+The implementation is a simplified systems model, not a detailed conductor or
+quench design.
+
+### Selecting the model
+
+Set `i_tf_sup = 1` for superconducting TF coils and `i_tf_turn_type = 3` for
+STEP stacked tapes. Only integer turns are implemented: use
+`i_tf_turns_integer = 1` and a rectangular winding pack (`i_tf_wp_geom = 0`).
+Set the numbers of radial layers and toroidal pancakes with `n_tf_wp_layers`
+and `n_tf_wp_pancakes`.
+
+The critical-current calculation requires a tape superconductor model.
+`i_tf_sc_mat = 8` selects the Durham REBCO model and `i_tf_sc_mat = 9` the
+Hazelton-Zhai REBCO model. Although the STEP properties function also implements
+the `i_tf_sc_mat = 6` REBCO parameterisation, standard input validation
+currently rejects that option with integer turns.
+
+### Turn geometry and tape count
+
+The model divides the available winding-pack dimensions into rectangular
+turns. With $g$ denoting the sum of `dx_tf_wp_insulation` and
+`dx_tf_wp_insertion_gap`, the radial and toroidal turn dimensions are
+
+$$
+\Delta r_\mathrm{turn} =
+\frac{\texttt{dr\_tf\_wp\_with\_insulation} - 2g}{\texttt{n\_tf\_wp\_layers}},
+\qquad
+\Delta x_\mathrm{turn} =
+\frac{\texttt{dx\_tf\_wp\_toroidal\_min} - 2g}{\texttt{n\_tf\_wp\_pancakes}}.
+$$
+
+The number of turns is the product of the layer and pancake counts, and the
+current per turn is the coil current divided by that number. The model removes
+`dx_tf_turn_insulation` from each side of the turn to obtain the stabiliser
+region. The tape stack occupies 80% of that region's radial width and, in the
+toroidal direction, extends from the turn centre to 10% below the top of the
+stabiliser region. The channel diameter is calculated as the smaller of 30% of
+the stabiliser's toroidal dimension and 80% of its radial dimension; it is
+not taken from an input value of `dia_tf_turn_coolant_channel`.
+
+The total tape thickness is calculated from the REBCO, copper and Hastelloy
+layer thicknesses on each run, overriding any input value of
+`dx_tf_hts_tape_total`:
+
+$$
+\Delta x_\mathrm{tape} =
+\texttt{dx\_tf\_hts\_tape\_rebco} +
+\texttt{dx\_tf\_hts\_tape\_copper} +
+\texttt{dx\_tf\_hts\_tape\_hastelloy}.
+$$
+
+The number of whole tapes per turn that fit in the stack is
+
+$$
+N_\mathrm{tapes} =
+\left\lfloor\frac{\texttt{dx\_tf\_turn\_tape\_stack}}
+{\texttt{dx\_tf\_hts\_tape\_total}}\right\rfloor.
+$$
+
+The calculated `dx_tf_hts_tape_total` must be positive. The radial tape width
+`dr_tf_hts_tape` is overwritten with the calculated stack radial width. The
+area model treats the whole stack region as conductor, including any remainder
+too narrow for another whole tape; it does not report that remainder as extra
+void. There is no steel turn conduit. The model logs errors for invalid turn
+dimensions or a coolant channel conflicting with the conductor geometry.
+
+### Critical current, lengths and masses
+
+At the peak TF field, the chosen REBCO parameterisation calculates the tape
+critical current density. The model multiplies it by the full tape
+cross-section and tape count to obtain the turn critical current, then divides
+by `a_tf_turn` to obtain `j_tf_wp_critical`. It evaluates this limit at both
+the operating temperature and the operating temperature plus
+`temp_tf_superconductor_margin_min`. The actual temperature-margin calculation
+depends on the selected availability model. The REBCO models log an error at
+peak fields of 14 T or above because this is outside the stated interpolation
+range.
+
+Tape length per coil is the number of turns times the conductor length times
+the tape count; total tape length also multiplies by the number of coils.
+The mass calculation includes the REBCO layer, copper in the tapes and the
+surrounding copper stabiliser, but currently omits the tape substrate. See
+[TF turn mass calculation](#tf-turn-mass-calculation) for the coil-length and
+case-mass assumptions.
+
+### Quench and stress
+
+The STEP model calculates the dump voltage as
+$2 E_\mathrm{coil}/(\tau_\mathrm{dump} I_\mathrm{turn})$ and converts it to kV.
+It does not calculate an HTS hotspot current-density limit: the available
+hotspot model assumes Nb$_3$Sn. Consequently, `j_tf_wp_quench_heat_max` is NaN
+and constraint 35 is not supported for STEP. Constraint 34 can still limit the
+calculated dump voltage, but this does not establish protection against quench
+heating. A separate HTS quench protection assessment is required.
+
+The class also runs the shared TF stress calculation, passing the calculated
+stabiliser dimension, and the vacuum-vessel quench stress calculation.
