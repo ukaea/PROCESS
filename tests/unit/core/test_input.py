@@ -3,8 +3,8 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-import process.core.input as process_input
-from process.core import init
+import process.core.data_structure.input as process_input
+from process.core.data_structure import check_input
 from process.core.data_structure.base import DataStructure
 from process.core.exceptions import ProcessValidationError
 from process.data_structure.numerics import PROCESSRunMode
@@ -13,7 +13,7 @@ from process.data_structure.numerics import PROCESSRunMode
 @pytest.fixture(autouse=True)
 def turn_off_check_process(monkeypatch):
     """These are parser tests; configuration validation is not a part of test."""
-    monkeypatch.setattr(init, "check_process", lambda *_: None)
+    monkeypatch.setattr(check_input, "check_process", lambda *_: None)
 
 
 @pytest.fixture
@@ -74,7 +74,7 @@ def test_parse_real(epsvmc, expected, tmp_path, data_structure_obj):
     data_structure_obj.globals.fileprefix = _create_input_file(
         tmp_path, f"epsvmc = {epsvmc}"
     )
-    init.init_process(data_structure_obj)
+    data_structure_obj.init_process(update_obsolete=False)
 
     assert data_structure_obj.numerics.epsvmc == expected
 
@@ -100,7 +100,7 @@ def test_exact_parsing(value, tmp_path, data_structure_obj):
     data_structure_obj.globals.fileprefix = _create_input_file(
         tmp_path, f"epsvmc = {value}"
     )
-    init.init_process(data_structure_obj)
+    data_structure_obj.init_process(update_obsolete=False)
 
     assert data_structure_obj.numerics.epsvmc == value
 
@@ -113,7 +113,7 @@ def test_parse_input(tmp_path, data_structure_obj):
             "= 0.5"
         ),
     )
-    init.init_process(data_structure_obj)
+    data_structure_obj.init_process(update_obsolete=False)
 
     assert data_structure_obj.globals.runtitle == "my run title"
     assert data_structure_obj.numerics.i_process_run_mode == PROCESSRunMode.EVALUATION
@@ -127,7 +127,7 @@ def test_input_choices(tmp_path, data_structure_obj):
     )
 
     with pytest.raises(ProcessValidationError, match="i_process_run_mode"):
-        init.init_process(data_structure_obj)
+        data_structure_obj.init_process(update_obsolete=False)
 
 
 @pytest.mark.parametrize(
@@ -142,7 +142,7 @@ def test_input_range(tmp_path, input_file_value, data_structure_obj):
     assert process_input.INPUT_VARIABLES["epsvmc"].range == (0.0, 1.0)
 
     with pytest.raises(ProcessValidationError, match="epsvmc"):
-        init.init_process(data_structure_obj)
+        data_structure_obj.init_process(update_obsolete=False)
 
 
 def test_input_array_when_not(tmp_path, data_structure_obj):
@@ -151,7 +151,7 @@ def test_input_array_when_not(tmp_path, data_structure_obj):
     )
 
     with pytest.raises(ProcessValidationError, match="epsvmc"):
-        init.init_process(data_structure_obj)
+        data_structure_obj.init_process(update_obsolete=False)
 
 
 def test_input_not_array_when_is(tmp_path, data_structure_obj):
@@ -160,7 +160,7 @@ def test_input_not_array_when_is(tmp_path, data_structure_obj):
     )
 
     with pytest.raises(ProcessValidationError, match="boundl"):
-        init.init_process(data_structure_obj)
+        data_structure_obj.init_process(update_obsolete=False)
 
 
 def test_input_float_when_int(tmp_path, data_structure_obj):
@@ -169,7 +169,7 @@ def test_input_float_when_int(tmp_path, data_structure_obj):
     )
 
     with pytest.raises(ProcessValidationError, match="i_process_run_mode"):
-        init.init_process(data_structure_obj)
+        data_structure_obj.init_process(update_obsolete=False)
 
 
 def test_input_array(tmp_path, data_structure_obj):
@@ -177,7 +177,7 @@ def test_input_array(tmp_path, data_structure_obj):
         tmp_path, ("f_nd_impurity_electrons = 0.1, 0.2, 1.0, 0.0, 1.0e2")
     )
 
-    init.init_process(data_structure_obj)
+    data_structure_obj.init_process(update_obsolete=False)
     np.testing.assert_array_equal(
         data_structure_obj.impurity_radiation.f_nd_impurity_electrons[:6],
         [0.1, 0.2, 1.0, 0.0, 1.0e2, 0],
@@ -189,5 +189,5 @@ def test_input_on_new_data_structure(tmp_path, data_structure_obj):
         tmp_path, ("windspeed = 1.22")
     )
 
-    init.init_process(data_structure_obj)
+    data_structure_obj.init_process(update_obsolete=False)
     assert data_structure_obj.water_use.windspeed == pytest.approx(1.22)

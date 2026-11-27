@@ -1,9 +1,12 @@
 """Module containing PF coil and CS coil models."""
 
+from __future__ import annotations
+
 import logging
 import math
 from dataclasses import dataclass
 from enum import IntEnum, unique
+from typing import TYPE_CHECKING
 
 import numba
 import numpy as np
@@ -14,7 +17,6 @@ from tabulate import tabulate
 
 from process.core import constants
 from process.core import process_output as op
-from process.core.data_structure.base import DataStructure
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure.pfcoil_variables import (
@@ -37,6 +39,9 @@ from process.models.superconductors import (
     SuperconductorModel,
 )
 from process.models.tfcoil.base import TFCoilShapeModel
+
+if TYPE_CHECKING:
+    from process.core.data_structure.base import DataStructure
 
 logger = logging.getLogger(__name__)
 
