@@ -2596,7 +2596,7 @@ def test_step_run_preserves_calculation_order_and_results(
     assert sc.c_tf_turn_cables_critical == pytest.approx(190842830.98111948, rel=1e-12)
     assert tf.m_tf_coils_total == pytest.approx(23595391.70560271, rel=1e-12)
     assert sc.n_tf_turn_superconducting_strands == 600
-    assert tf.str_wp == 20
+    assert tf.strain_z_tf_inboard_wp == 20
     assert tf.sig_tf_wp == 17
     assert tf.v_tf_coil_dump_quench_kv == pytest.approx(4.0)
     expected_calls = [("stress", 500 if output else 37, 0.15)]
