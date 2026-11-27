@@ -3496,6 +3496,14 @@ class CROCOAveragedTurnGeometry(TFGeneralTurnGeometry):
 
 
 @dataclass(slots=True)
+class CroCoSuperconductorLimits(TFSuperconductorLimits):
+    """Superconducting TF coil limits including the CroCo strand current."""
+
+    cur_tf_turn_croco_strand_critical: float
+    """Critical current in a CroCo strand (A)."""
+
+
+@dataclass(slots=True)
 class CroCoCableSpaceGeometry:
     """Data class for the geometry of the cable space in a CroCo conductor."""
 
@@ -3779,8 +3787,11 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         d_sc_tf.temp_tf_superconductor_critical_zero_field_strain = (
             superconductor_critical_properties.tc0m
         )
-        d_sc_tf.cur_tf_turn_croco_strand_critical = d_sc_tf.c_tf_turn_cables_critical = (
+        d_sc_tf.c_tf_turn_cables_critical = (
             superconductor_critical_properties.c_turn_cables_critical
+        )
+        d_sc_tf.cur_tf_turn_croco_strand_critical = (
+            superconductor_critical_properties.cur_tf_turn_croco_strand_critical
         )
 
         match AvailabilityModel(self.data.costs.i_plant_availability):
@@ -3980,7 +3991,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         dx_tf_hts_tape_rebco: float,
         dx_tf_hts_tape_total: float,
         a_tf_croco_strand: float,
-    ) -> TFSuperconductorLimits:
+    ) -> CroCoSuperconductorLimits:
         """TF superconducting CroCo conductor using REBCO tape
 
         Parameters
@@ -4001,11 +4012,13 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             Width of the REBCO layer in the HTS tape (m)
         dx_tf_hts_tape_total :
             Total width of the HTS tape (m)
+        a_tf_croco_strand :
+            Cross-sectional area of a CroCo strand (m²)
 
         Returns
         -------
         :
-            TF superconductor limits dataclass
+            CroCo TF superconductor limits dataclass
 
         Raises
         ------
@@ -4129,7 +4142,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         #  when we have found the desired value of tmarg
         j_superconductor = f_c_tf_turn_operating_critical * j_superconductor_critical
 
-        return TFSuperconductorLimits(
+        return CroCoSuperconductorLimits(
             j_tf_wp_critical=j_tf_wp_critical,
             j_superconductor_critical=j_superconductor_critical,
             f_c_tf_turn_operating_critical=f_c_tf_turn_operating_critical,
@@ -4137,7 +4150,8 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             j_tf_coil_turn=j_tf_coil_turn,
             bc20m=bc20m,
             tc0m=tc0m,
-            c_turn_cables_critical=cur_tf_turn_croco_strand_critical,
+            c_turn_cables_critical=cur_tf_turn_critical,
+            cur_tf_turn_croco_strand_critical=cur_tf_turn_croco_strand_critical,
         )
 
     @staticmethod
